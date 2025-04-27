@@ -1,0 +1,6 @@
+package org.example.data.repositories.authentication_repository
+
+import org.example.logic.repositories.authentication_repository.AuthenticationRepository
+
+class AuthenticationRepositoryImpl : AuthenticationRepository{
+}
