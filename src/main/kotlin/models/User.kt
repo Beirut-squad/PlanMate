@@ -1,12 +1,15 @@
 package org.example.models
 
+import java.util.UUID
+
 data class User(
-    val id:String,
-    val name:String,
-    val password:String,
-    val role:Role
+    val id: UUID,
+    val name: String,
+    val password: String,
+    val role: Role,
+    val isDeleted: Boolean = false,
 )
 
-enum class Role{
-    ADMIN,MATE
+enum class Role {
+    ADMIN, MATE
 }

@@ -4,12 +4,12 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class Task(
-    val id: String,
+    val id: UUID,
     val projectId: String,
     val title: String,
     val description: String,
-    val state: State,
-    val creatorUserID: String,
+    val taskState: TaskState,
+    val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-)
+): Loggable
