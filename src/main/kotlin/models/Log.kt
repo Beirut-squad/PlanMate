@@ -1,17 +1,17 @@
 package org.example.models
 
 import java.time.LocalDateTime
+import java.util.UUID
 
-data class Audit(
-    val id:String,
+data class Log(
+    val id: UUID,
     val entityType: EntityType, // PROJECT or TASK
-    val entityID: String, // ProjectID or TaskID
-    val userID: String,
-    val oldState: State,
-    val newState: State,
+    val userID: UUID,
+    val previousEntity: Loggable?,
+    val currentEntity: Loggable?,
     val createdAt: LocalDateTime = LocalDateTime.now(),
+)
 
-    )
 enum class EntityType {
- PROJECT , TASK
+    PROJECT, TASK
 }

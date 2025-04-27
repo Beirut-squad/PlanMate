@@ -1,15 +1,14 @@
 package org.example.models
 
-import java.sql.Date
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class Project(
-    val id:String,
-    val name:String,
-    val description:String,
-    val creatorUserID: String,
+    val id: UUID,
+    val name: String,
+    val description: String,
+    val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-    val state: State,
-)
+    val taskState: TaskState,
+) : Loggable
