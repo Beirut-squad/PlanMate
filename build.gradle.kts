@@ -40,20 +40,21 @@ tasks.jacocoTestReport {
 }
 
 tasks.jacocoTestCoverageVerification {
-    violationRules {
-        classDirectories.setFrom(
-            classDirectories.files.forEach {
-                fileTree(it) {
-                    exclude("**/model/**")
-                    exclude("**/di/**")
-                }
+    dependsOn(tasks.test)
+
+    classDirectories.setFrom(
+        files(
+            fileTree("build/classes/kotlin/main") {
+                exclude("**/model/**", "**/di/**")
             }
         )
+    )
+
+    violationRules {
         rule {
             limit {
                 minimum = "0.8".toBigDecimal()
             }
-
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
