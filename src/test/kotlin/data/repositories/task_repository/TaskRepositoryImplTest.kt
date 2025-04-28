@@ -8,14 +8,10 @@ import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.data.repositories.task_repository.TaskRepositoryImpl
 import org.example.logic.repositories.task_repository.TaskRepository
-import org.example.models.EntityType
-import org.example.models.Log
-import org.example.models.Loggable
-import org.example.models.Task
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import java.util.UUID
+import kotlin.test.*
+
 
 class TaskRepositoryImpl {
     private var taskDataSource: TaskDataSource = mockk(relaxed = true)
@@ -25,19 +21,20 @@ class TaskRepositoryImpl {
     fun setup() {
         taskRepository = TaskRepositoryImpl(taskDataSource, logDataSource)
     }
+
     @Test
-    fun `create Task should call createTask in taskDataSource`() {
+    fun `createTask should return success when data source returns success`() {
         // Given
         val task = createTaskHelper()
+        every { taskDataSource.createTask(any()) } returns Result.success("Task created successfully")
 
         // When
-        taskRepository.createTask(task)
+        val result = taskRepository.createTask(task)
 
         // Then
-        verify(exactly = 1) { taskDataSource.createTask(task) }
+        assertTrue(result.isSuccess)
+        assertEquals("Task created successfully", result.getOrNull())
     }
-
-
 
 
 }

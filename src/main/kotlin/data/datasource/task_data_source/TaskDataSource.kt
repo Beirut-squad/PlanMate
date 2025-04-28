@@ -4,9 +4,9 @@ import org.example.models.Task
 import java.util.*
 
 interface TaskDataSource {
-    fun createTask(task: Task)
-    fun editTask(task: Task)
-    fun deleteTask(id:UUID)
-    fun getAllTasks() :List<Task>
-    fun getTask(id: UUID) :Task
+    fun createTask(task: Task) : Result<String>
+    fun editTask(task: Task) : Result<String>
+    fun deleteTask(id:UUID) : Result<String>
+    fun getAllTasks() : Result<List<Task>>
+    fun getTask(id: UUID) : Result<Task>
 }
