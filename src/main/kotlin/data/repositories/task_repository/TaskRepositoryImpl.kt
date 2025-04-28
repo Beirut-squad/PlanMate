@@ -15,7 +15,9 @@ class TaskRepositoryImpl(
     override fun createTask(task: Task, log: Log): Result<String> {
         return taskDataSource.createTask(task)
             .fold(
-                onSuccess = { Result.success(it) },
+                onSuccess = {
+                    logDataSource.createLog(log)
+                    Result.success(it) },
                 onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
             )
 
