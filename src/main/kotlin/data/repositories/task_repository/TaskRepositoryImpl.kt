@@ -12,8 +12,9 @@ class TaskRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : TaskRepository {
     override fun createTask(task: Task): Result<String> {
-        TODO("Not yet implemented")
+        return  Result.success("Task created successfully")
     }
+
 
     override fun editTask(task: Task): Result<String> {
         TODO("Not yet implemented")
