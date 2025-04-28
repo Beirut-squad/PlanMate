@@ -1,6 +1,7 @@
 package data.repositories.task_repository
 
 import creator_helper.createTaskHelper
+import creator_helper.createTestLog
 import io.mockk.*
 
 import io.mockk.mockk
@@ -27,10 +28,11 @@ class TaskRepositoryImpl {
     fun `createTask should return success when data source returns success`() {
         // Given
         val task = createTaskHelper()
+        val log = createTestLog()
         every { taskDataSource.createTask(any()) } returns Result.success("Task created successfully")
 
         // When
-        val result = taskRepository.createTask(task)
+        val result = taskRepository.createTask(task,log)
 
         // Then
         assertTrue(result.isSuccess)
@@ -40,14 +42,30 @@ class TaskRepositoryImpl {
     fun `createTask should return failure when data source returns failure`() {
         // Given
         val task = createTaskHelper()
+        val log = createTestLog()
         every { taskDataSource.createTask(any()) } returns Result.failure(RuntimeException())
 
         // When
-        val result = taskRepository.createTask(task)
+        val result = taskRepository.createTask(task,log)
 
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskCreationException)
+    }
+
+    @Test
+    fun `createTask should create a log entry after saving the task`() {
+        // Given
+        val task = createTaskHelper()
+        val log = createTestLog()
+        every { taskDataSource.createTask(any()) } returns Result.success("Task created successfully")
+        every { logDataSource.createLog(any()) } just Runs
+
+        // When
+        taskRepository.createTask(task, log)
+
+        // Then
+        verify(exactly = 1) { logDataSource.createLog(log) }
     }
 
 

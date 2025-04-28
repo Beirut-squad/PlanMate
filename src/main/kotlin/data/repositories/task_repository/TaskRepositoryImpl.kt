@@ -4,6 +4,7 @@ import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.repositories.task_repository.TaskRepository
+import org.example.models.Log
 import org.example.models.Task
 import java.util.*
 
@@ -11,7 +12,7 @@ class TaskRepositoryImpl(
     private val taskDataSource: TaskDataSource,
     private val logDataSource: LogDataSource
 ) : TaskRepository {
-    override fun createTask(task: Task): Result<String> {
+    override fun createTask(task: Task, log: Log): Result<String> {
         return taskDataSource.createTask(task)
             .fold(
                 onSuccess = { Result.success(it) },
@@ -21,7 +22,7 @@ class TaskRepositoryImpl(
     }
 
 
-    override fun editTask(task: Task): Result<String> {
+    override fun editTask(task: Task, log: Log): Result<String> {
         TODO("Not yet implemented")
     }
 
