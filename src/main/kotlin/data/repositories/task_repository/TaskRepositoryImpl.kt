@@ -18,7 +18,7 @@ class TaskRepositoryImpl(
                 onSuccess = {
                     logDataSource.createLog(log)
                     Result.success("Task created successfully")
-                            },
+                },
                 onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
             )
 
@@ -26,7 +26,7 @@ class TaskRepositoryImpl(
 
 
     override fun editTask(task: Task, log: Log): Result<String> {
-        TODO("Not yet implemented")
+        return taskDataSource.editTask(task)
     }
 
     override fun deleteTask(id: UUID): Result<String> {
