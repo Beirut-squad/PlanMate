@@ -26,7 +26,9 @@ class TaskRepositoryImpl(
 
 
     override fun editTask(task: Task, log: Log): Result<String> {
-        return taskDataSource.editTask(task)
+        taskDataSource.editTask(task)
+        return Result.success("Task edited successfully")
+
     }
 
     override fun deleteTask(id: UUID): Result<String> {
