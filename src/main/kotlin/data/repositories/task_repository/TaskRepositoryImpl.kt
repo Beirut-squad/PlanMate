@@ -7,8 +7,8 @@ import org.example.models.Task
 import java.util.*
 
 class TaskRepositoryImpl (
-    taskDataSource: TaskDataSource,
-    logDataSource: LogDataSource
+    private val taskDataSource: TaskDataSource,
+    private val logDataSource: LogDataSource
 ) :TaskRepository {
     override fun createTask(task: Task) {
         TODO("Not yet implemented")
