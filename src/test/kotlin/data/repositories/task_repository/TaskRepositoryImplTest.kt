@@ -99,7 +99,7 @@ class TaskRepositoryImpl {
         // Given
         val task = createTaskHelper()
         val log = createTestLog()
-        every { taskDataSource.editTask(any()) } returns Result.failure(TaskEditException("Task edit failed"))
+        every { taskDataSource.editTask(any()) } returns Result.failure(TaskEditException("Failed to edit task"))
 
         // When
         val result = taskRepository.editTask(task, log)
