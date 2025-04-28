@@ -4,6 +4,7 @@ import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.Task
+import java.util.*
 
 class TaskRepositoryImpl (
     taskDataSource: TaskDataSource,
@@ -25,7 +26,7 @@ class TaskRepositoryImpl (
         TODO("Not yet implemented")
     }
 
-    override fun fetchTask(): Task {
+    override fun fetchTask(id: UUID): Task {
         TODO("Not yet implemented")
     }
 }
