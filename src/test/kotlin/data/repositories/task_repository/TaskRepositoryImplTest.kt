@@ -7,6 +7,7 @@ import io.mockk.mockk
 import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.data.repositories.task_repository.TaskRepositoryImpl
+import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,6 +35,19 @@ class TaskRepositoryImpl {
         // Then
         assertTrue(result.isSuccess)
         assertEquals("Task created successfully", result.getOrNull())
+    }
+    @Test
+    fun `createTask should return failure when data source returns failure`() {
+        // Given
+        val task = createTaskHelper()
+        every { taskDataSource.createTask(any()) } returns Result.failure(RuntimeException())
+
+        // When
+        val result = taskRepository.createTask(task)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is TaskCreationException)
     }
 
 
