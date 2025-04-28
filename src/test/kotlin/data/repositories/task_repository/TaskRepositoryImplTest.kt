@@ -3,8 +3,6 @@ package data.repositories.task_repository
 import creator_helper.createTaskHelper
 import creator_helper.createTestLog
 import io.mockk.*
-
-import io.mockk.mockk
 import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.data.repositories.task_repository.TaskRepositoryImpl
@@ -43,7 +41,7 @@ class TaskRepositoryImpl {
         // Given
         val task = createTaskHelper()
         val log = createTestLog()
-        every { taskDataSource.createTask(any()) } returns Result.failure(RuntimeException())
+        every { taskDataSource.createTask(any()) } returns Result.failure(TaskCreationException("Task creation failed"))
 
         // When
         val result = taskRepository.createTask(task,log)
@@ -54,7 +52,7 @@ class TaskRepositoryImpl {
     }
 
     @Test
-    fun `createTask should create a log entry after saving the task`() {
+    fun `createTask should create a log entry after saving the task when success`() {
         // Given
         val task = createTaskHelper()
         val log = createTestLog()
@@ -66,6 +64,34 @@ class TaskRepositoryImpl {
 
         // Then
         verify(exactly = 1) { logDataSource.createLog(log) }
+    }
+
+    @Test
+    fun `createTask should not create a log entry when task creation fails`() {
+        // Given
+        val task = createTaskHelper()
+        val log = createTestLog()
+        every { taskDataSource.createTask(any()) } returns Result.failure(TaskCreationException("Task creation failed"))
+
+        // When
+         taskRepository.createTask(task, log)
+
+        // Then
+        verify(exactly = 0) { logDataSource.createLog(log) }
+    }
+    @Test
+    fun `editTask should return success when data source returns success`() {
+        // Given
+        val task = createTaskHelper()
+        val log = createTestLog()
+        every { taskDataSource.editTask(any()) } returns Result.success("Task edited successfully")
+
+        // When
+        val result = taskRepository.editTask(task, log)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals("Task edited successfully", result.getOrNull())
     }
 
 

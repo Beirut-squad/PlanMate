@@ -17,7 +17,8 @@ class TaskRepositoryImpl(
             .fold(
                 onSuccess = {
                     logDataSource.createLog(log)
-                    Result.success(it) },
+                    Result.success("Task created successfully")
+                            },
                 onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
             )
 
