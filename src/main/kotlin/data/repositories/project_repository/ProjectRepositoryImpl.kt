@@ -4,6 +4,7 @@ import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
+import java.util.*
 
 class ProjectRepositoryImpl(
     projectDataSource: ProjectDataSource,
@@ -25,7 +26,7 @@ class ProjectRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun fetchProject(): Project {
+    override fun fetchProject(id: UUID): Project {
         TODO("Not yet implemented")
     }
 
@@ -40,5 +41,6 @@ class ProjectRepositoryImpl(
     override fun removeStateFromProject(projectId: String, state: String): Result<Project> {
         TODO("Not yet implemented")
     }
+
 
 }
