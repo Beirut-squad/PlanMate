@@ -12,7 +12,12 @@ class TaskRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : TaskRepository {
     override fun createTask(task: Task): Result<String> {
-        return  Result.success("Task created successfully")
+        return taskDataSource.createTask(task)
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
+            )
+
     }
 
 
