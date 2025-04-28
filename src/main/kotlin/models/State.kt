@@ -2,7 +2,7 @@ package org.example.models
 
 import java.util.UUID
 
-data class TaskState(
+data class State(
     val id: UUID,
     val name: String,
 )

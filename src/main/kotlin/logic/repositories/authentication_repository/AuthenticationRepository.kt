@@ -5,6 +5,6 @@ import org.example.models.User
 
 interface AuthenticationRepository {
     fun login(email: String, password: String)
-    fun register(user: User)
+    fun register(name: String, password: String, email: String)
     fun logout()
 }

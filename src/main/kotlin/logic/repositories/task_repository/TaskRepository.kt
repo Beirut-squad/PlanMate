@@ -6,7 +6,7 @@ import java.util.*
 interface TaskRepository {
     fun createTask(task: Task)
     fun editTask(task: Task)
-    fun deleteTask(task: Task)
-    fun fetchAllTasks() :List<Task>
-    fun fetchTask(id: UUID) :Task
+    fun deleteTask(id:UUID)
+    fun getAllTasks() :List<Task>
+    fun getTask(id: UUID) :Task
 }

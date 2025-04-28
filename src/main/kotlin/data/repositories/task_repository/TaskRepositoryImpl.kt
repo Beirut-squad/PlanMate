@@ -18,15 +18,15 @@ class TaskRepositoryImpl (
         TODO("Not yet implemented")
     }
 
-    override fun deleteTask(task: Task) {
+    override fun deleteTask(id: UUID) {
         TODO("Not yet implemented")
     }
 
-    override fun fetchAllTasks(): List<Task> {
+    override fun getAllTasks(): List<Task> {
         TODO("Not yet implemented")
     }
 
-    override fun fetchTask(id: UUID): Task {
+    override fun getTask(id: UUID): Task {
         TODO("Not yet implemented")
     }
 }

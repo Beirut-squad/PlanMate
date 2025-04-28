@@ -1,9 +1,8 @@
 package org.example.data.datasource.authentication_data_source
 
-import org.example.models.User
 
 interface AuthenticationDataSource {
-    fun login(name: String, password: String)
-    fun register(user: User)
+    fun login(email: String, password: String)
+    fun register(name: String, password: String, email:String)
     fun logout()
 }
