@@ -109,5 +109,19 @@ class TaskRepositoryImpl {
         assertTrue(result.exceptionOrNull() is TaskEditException)
     }
 
+    @Test
+    fun `editTask should create a log entry after editing the task when success`() {
+        // Given
+        val task = createTaskHelper()
+        val log = createTestLog()
+        every { taskDataSource.editTask(any()) } returns Result.success("Task edited successfully")
+        every { logDataSource.createLog(any()) } just Runs
+
+        // When
+        taskRepository.editTask(task, log)
+
+        // Then
+        verify(exactly = 1) { logDataSource.createLog(log) }
+    }
 
 }
