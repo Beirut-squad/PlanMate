@@ -7,8 +7,8 @@ import org.example.models.Project
 import java.util.*
 
 class ProjectRepositoryImpl(
-    projectDataSource: ProjectDataSource,
-    logDataSource: LogDataSource
+    private val projectDataSource: ProjectDataSource,
+    private val logDataSource: LogDataSource
 ) : ProjectRepository {
     override fun createProject() {
         TODO("Not yet implemented")
@@ -22,11 +22,11 @@ class ProjectRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun fetchAllProjects(): List<Project> {
+    override fun getAllProjects(): List<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun fetchProject(id: UUID): Project {
+    override fun getProject(id: UUID): Project {
         TODO("Not yet implemented")
     }
 

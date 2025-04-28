@@ -4,11 +4,11 @@ import org.example.logic.repositories.authentication_repository.AuthenticationRe
 import org.example.models.User
 
 class AuthenticationRepositoryImpl : AuthenticationRepository {
-    override fun login(email: String, password: String) {
+    override fun login(email: String,password: String) {
         TODO("Not yet implemented")
     }
 
-    override fun register(user: User) {
+    override fun register(name: String, password: String, email: String) {
         TODO("Not yet implemented")
     }
 
