@@ -6,4 +6,6 @@ interface TaskRepository {
     fun createTask(task: Task)
     fun editTask(task: Task)
     fun deleteTask(task: Task)
+    fun fetchAllTasks() :List<Task>
+    fun fetchTask() :Task
 }
