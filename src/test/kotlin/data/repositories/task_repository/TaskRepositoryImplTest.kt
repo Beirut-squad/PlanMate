@@ -123,5 +123,17 @@ class TaskRepositoryImpl {
         // Then
         verify(exactly = 1) { logDataSource.createLog(log) }
     }
+    @Test
+    fun `editTask should not create a log entry when task creation fails`() {
+        // Given
+        val task = createTaskHelper()
+        val log = createTestLog()
+        every { taskDataSource.editTask(any()) } returns Result.failure(TaskEditException("Failed to edit task"))
 
+        // When
+        taskRepository.editTask(task, log)
+
+        // Then
+        verify(exactly = 0) { logDataSource.createLog(log) }
+    }
 }

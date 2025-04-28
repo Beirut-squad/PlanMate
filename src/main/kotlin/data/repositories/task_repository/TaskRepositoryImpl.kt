@@ -28,7 +28,9 @@ class TaskRepositoryImpl(
 
     override fun editTask(task: Task, log: Log): Result<String> {
         return taskDataSource.editTask(task).fold(
-            onSuccess = { Result.success("Task edited successfully") },
+            onSuccess = {
+                logDataSource.createLog(log)
+                Result.success("Task edited successfully") },
             onFailure = { Result.failure(TaskEditException("Failed to edit task: ${it.message}")) }
         )
     }
