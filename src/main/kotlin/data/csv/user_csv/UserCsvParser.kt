@@ -7,11 +7,18 @@ import java.util.*
 
 class UserCsvParser: CsvParser<User> {
     override fun parseLine(line: String): User? {
+
+        val trimmedLine = line.trim()
         if (line.isBlank()) {
             println("Error: Empty CSV line.")
             return null
         }
-        val fields = line.split(",").map { it.trim() }
+        val regex = "\"([^\"]*)\"|([^,]+)".toRegex()
+        val fields = regex.findAll(trimmedLine)
+            .map { it.groupValues.drop(1).filter { it.isNotEmpty() } }
+            .flatten()
+            .toList()
+
         try {
             val idStr = UUID.fromString(fields[0])
             val name = fields[1]
