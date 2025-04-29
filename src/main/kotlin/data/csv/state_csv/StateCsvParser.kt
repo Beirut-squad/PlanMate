@@ -1,14 +1,32 @@
 package org.example.data.csv.state_csv
 
 import CsvParser
+import org.example.models.State
+import java.util.*
 
-class StateCsvParser : CsvParser<StateCsvParser> {
-    override fun parseLine(line: String): StateCsvParser {
-        TODO("Not yet implemented")
+class StateCsvParser : CsvParser<State> {
+
+    override fun parseFile(csvLines: List<String>): List<State> {
+
+        if (csvLines.isEmpty())
+            return emptyList()
+        return csvLines.mapNotNull { parseLine(it) }
+
+
     }
 
-    override fun parseFile(csvLines: List<String>): List<StateCsvParser> {
-        TODO("Not yet implemented")
-    }
+    override fun parseLine(line: String): State? {
+        val noSpaces = line.replace(" ", "")
 
+        if (noSpaces == "[]")
+            return null
+
+        val cleanLine = line.removeSurrounding("[", "]")
+        val parts = cleanLine.split(",").map { it.trim() }
+
+        return State(
+            id = UUID.fromString(parts[StateColumnIndex.ID]),
+            name = parts[StateColumnIndex.NAME]
+        )
+    }
 }
