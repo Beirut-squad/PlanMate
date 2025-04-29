@@ -66,5 +66,25 @@ class UserCsvParserTest
         assertThat(result).isNull()
     }
 
+    @Test
+    fun `given CSV line with different role , when parseLine called , then return User with correct role`() {
+        // given
+        val csvLine = "550e8400-e29b-41d4-a716-446655440000,Ismail,secret123,ismail.elkalili@gmail.com,MATE,false"
+
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+        println(result)
+        // then
+        assertThat(result).isEqualTo(
+            User(
+                id = UUID.fromString("550e8400-e29b-41d4-a716-446655440000"),
+                name = "Ismail",
+                password = "secret123",
+                email = "ismail.elkalili@gmail.com",
+                role = Role.MATE,
+                isDeleted = false
+            )
+        )
+    }
 
 }
