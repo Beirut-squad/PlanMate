@@ -4,5 +4,5 @@ import org.example.models.Log
 
 interface LogDataSource {
     fun getHistory(): List<Log>
-    fun createLog(log: Log)
+    fun createLog(log: Log):Boolean
 }
