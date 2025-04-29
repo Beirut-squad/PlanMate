@@ -18,7 +18,8 @@ class UserCsvParser: CsvParser<User> {
         val password = fields[2]
         val email =fields[3]
         val role = Role.valueOf(fields[4])
-        if (idStr.toString().isBlank() || name.isBlank() || password.isBlank() || email.isBlank() || role.toString().isBlank()) {
+        val isDeleted = fields[5].toBoolean()
+        if (idStr.toString().isBlank() || name.isBlank() || password.isBlank() || email.isBlank() || role.toString().isBlank() || isDeleted.toString().isBlank()) {
             println("Error: Missing or empty field(s) in CSV line.")
             return null
         }
@@ -29,7 +30,7 @@ class UserCsvParser: CsvParser<User> {
                 password = password,
                 email = email,
                 role = role,
-                isDeleted = fields[5].toBoolean()
+                isDeleted = isDeleted
             )
         } catch (e :Exception){
             println("Error while parsing user $e")
@@ -38,6 +39,6 @@ class UserCsvParser: CsvParser<User> {
     }
 
     override fun parseFile(csvLines: List<String>): List<User> {
-        TODO("Not yet implemented")
+        return csvLines.mapNotNull { parseLine(it) }
     }
 }
