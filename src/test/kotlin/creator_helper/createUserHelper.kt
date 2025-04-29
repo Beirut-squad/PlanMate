@@ -5,11 +5,11 @@ import org.example.models.User
 import java.util.*
 
 fun createUserHelper(
-     name: String,
-     password: String,
-     email: String,
-     id: UUID,
-     role: Role,
+     name: String = "",
+     password: String = "",
+     email: String = "",
+     id: UUID = UUID.randomUUID(),
+     role: Role = Role.MATE,
      isDeleted: Boolean = false,
 ): User {
     return User(
