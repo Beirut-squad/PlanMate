@@ -5,18 +5,18 @@ import creator_helper.createUserHelper
 import io.mockk.every
 import io.mockk.mockk
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.AddAdminUseCase
+import org.example.logic.use_case.authentication.RegisterAdminUseCase
 import org.example.models.User
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AddAdminUseCaseTest {
+class RegisterAdminUseCaseTest {
     private val authenticationRepository: AuthenticationRepository = mockk(relaxed = true)
-    private lateinit var addAdminUseCase: AddAdminUseCase
+    private lateinit var registerAdminUseCase: RegisterAdminUseCase
 
     @BeforeEach
     fun setup() {
-        addAdminUseCase = AddAdminUseCase(authenticationRepository)
+        registerAdminUseCase = RegisterAdminUseCase(authenticationRepository)
     }
 
     @Test
@@ -27,7 +27,7 @@ class AddAdminUseCaseTest {
         every { authenticationRepository.checkIfFirstRegister() } returns repositoryResult
 
         // When
-        val result = addAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(repositoryResult)
@@ -42,7 +42,7 @@ class AddAdminUseCaseTest {
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
 
         // When
-        val result = addAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(repositoryResult)
@@ -57,7 +57,7 @@ class AddAdminUseCaseTest {
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
 
         // When
-        val result = addAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(repositoryResult)

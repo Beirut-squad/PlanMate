@@ -3,7 +3,7 @@ package org.example.logic.use_case.authentication
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 import org.example.models.User
 
-class AddAdminUseCase(
+class RegisterAdminUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
 
