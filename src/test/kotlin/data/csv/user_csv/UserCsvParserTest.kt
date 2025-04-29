@@ -165,6 +165,16 @@ class UserCsvParserTest
             )
         )
     }
+    @Test
+    fun `given CSV line with malformed UUID, when parseLine called, then return null`() {
+        // given
+        val csvLine = "invalid-uuid,John Doe,secret123,ismail.elkalili@gmail.com,ADMIN,false"
 
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+
+        // then
+        assertThat(result).isNull()
+    }
 
 }
