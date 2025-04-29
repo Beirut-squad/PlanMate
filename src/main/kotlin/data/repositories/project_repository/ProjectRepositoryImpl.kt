@@ -1,14 +1,21 @@
 package org.example.data.repositories.project_repository
 
-import org.example.data.datasource.log_data_source.LogDataSource
+import CsvParser
+import org.example.constants.StringConstants
+import org.example.data.csv.CsvReader
 import org.example.data.datasource.project_data_source.ProjectDataSource
+import org.example.data.repositories.log_repository.LogRepositoryImpl
+import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
+import org.example.models.State
 import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val logDataSource: LogDataSource
+    private val logRepositoryImpl: LogRepositoryImpl,
+    private val reader: CsvReader,
+    private val parser: CsvParser,
 ) : ProjectRepository {
     override fun createProject() {
         TODO("Not yet implemented")
@@ -26,21 +33,20 @@ class ProjectRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getProject(id: UUID): Project {
+    override fun getProject(id: UUID): Result<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun addStateToProject(projectId: String, state: String): Result<Project> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<String> {
         TODO("Not yet implemented")
     }
 
-    override fun editStateToProject(projectId: String, state: String): Result<Project> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<String> {
         TODO("Not yet implemented")
     }
 
-    override fun removeStateFromProject(projectId: String, state: String): Result<Project> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<String> {
         TODO("Not yet implemented")
     }
-
 
 }

@@ -7,13 +7,13 @@ import java.time.LocalDateTime
 import java.util.*
 
 fun createProjectHelper(
-    id: UUID,
-    name: String,
-    description: String,
-    creatorUserID: UUID,
+    id: UUID = UUID.randomUUID(),
+    name: String = "",
+    description: String = "",
+    creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
-    state: List<State>,
+    states: List<State> = emptyList(),
 ): Project {
     return Project(
         id = id,
@@ -22,6 +22,6 @@ fun createProjectHelper(
         creatorUserID = creatorUserID,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        state = state
+        states = states
     )
 }

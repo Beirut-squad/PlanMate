@@ -1,6 +1,7 @@
 package org.example.logic.repositories.project_repository
 
 import org.example.models.Project
+import org.example.models.State
 import java.util.UUID
 
 interface ProjectRepository {
@@ -8,8 +9,8 @@ interface ProjectRepository {
     fun editProject(project: Project)
     fun deleteProject(project: Project)
     fun getAllProjects() : List<Project>
-    fun getProject(id:UUID) : Project
-    fun addStateToProject(projectId: String, state: String): Result<Project>
-    fun editStateToProject(projectId: String, state: String): Result<Project>
-    fun removeStateFromProject(projectId: String, state: String): Result<Project>
+    fun getProject(id:UUID) : Result<Project>
+    fun addStateToProject(projectId: UUID, state: State): Result<String>
+    fun editStateToProject(projectId: UUID, state: State): Result<String>
+    fun removeStateFromProject(projectId: UUID, state: State): Result<String>
 }
