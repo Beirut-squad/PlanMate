@@ -41,6 +41,7 @@ class ProjectRepositoryImplTest {
         assertTrue(result.isSuccess)
         verify(exactly = 1) { projectDataSource.createProject(project) }
     }
+
     @Test
     fun `should return failure when project creation fails to create`() {
         // Given
@@ -57,5 +58,20 @@ class ProjectRepositoryImplTest {
         verify(exactly = 0) { logDataSource.createLog(any()) }
     }
 
+
+    @Test
+    fun `should return failure when project creation success and log failure`() {
+        // Given
+        every { projectDataSource.createProject(project) } returns
+                Result.success("Project could not be created")
+        every { logDataSource.createLog(createProjectLogHelper()) } returns Unit
+        // When
+        val result = projectRepositoryImpl.createProject(project)
+
+        // Then
+        assertTrue(result.isSuccess)
+        verify(exactly = 1) { projectDataSource.createProject(project) }
+        verify(exactly = 0) { logDataSource.createLog(any()) }
+    }
 
 }
