@@ -42,6 +42,18 @@ class UserCsvParserTest
   )
  }
 
+    @Test
+    fun `given CSV line with missing fields , when parseLine called , then return null`() {
+        // given
+        val csvLine = createCsvLineForUser()
+
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+
+        // then
+        assertThat(result).isNull()
+    }
+
 
 
 
