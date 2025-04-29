@@ -145,5 +145,26 @@ class UserCsvParserTest
             )
         )
     }
+    @Test
+    fun `given CSV line with comma inside quotes, when parseLine called, then return User with correct fields`() {
+        // given
+        val csvLine = "\"550e8400-e29b-41d4-a716-446655440000\",\"te,s,t\",secret123,ismail.elkalili@gmail.com,ADMIN,false"
+
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+        println(result)
+        // then
+        assertThat(result).isEqualTo(
+            User(
+                id = UUID.fromString("550e8400-e29b-41d4-a716-446655440000"),
+                name = "te,s,t",
+                password = "secret123",
+                email = "ismail.elkalili@gmail.com",
+                role = Role.ADMIN,
+                isDeleted = false
+            )
+        )
+    }
+
 
 }
