@@ -1,20 +1,38 @@
 package org.example.logic.use_case.authentication
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
+import org.example.logic.use_case.authentication.encryption.EncryptPasswordUseCase
 import org.example.models.User
 
 class RegisterMateUseCase(
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val encryptPasswordUseCase: EncryptPasswordUseCase
 ) {
     fun addUser(
         name: String,
         password: String,
         email: String
     ): Result<User> {
-        return authenticationRepository.register(
+        return saveUserWithEncryptedPassword(
             name = name,
             password = password,
             email = email
         )
+    }
+
+    private fun saveUserWithEncryptedPassword(password: String, name: String, email: String): Result<User> {
+        return encryptPasswordUseCase.encryptPassword(password = password)
+            .fold(
+                onSuccess = { encryptedPassword ->
+                    authenticationRepository.register(
+                        name = name,
+                        password = encryptedPassword,
+                        email = email
+                    )
+                },
+                onFailure = {
+                    Result.failure(it)
+                }
+            )
     }
 }

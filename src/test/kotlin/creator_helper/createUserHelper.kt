@@ -5,9 +5,9 @@ import org.example.models.User
 import java.util.*
 
 fun createUserHelper(
-     name: String = "",
-     password: String = "",
-     email: String = "",
+     name: String = "name",
+     password: String = "password",
+     email: String = "email",
      id: UUID = UUID.randomUUID(),
      role: Role = Role.MATE,
      isDeleted: Boolean = false,
