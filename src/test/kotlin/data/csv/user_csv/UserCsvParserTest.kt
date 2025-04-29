@@ -197,5 +197,15 @@ class UserCsvParserTest
             )
         )
     }
+    @Test
+    fun `given CSV line with extra commas, when parseLine called, then return null`() {
+        // given
+        val csvLine = "550e8400-e29b-41d4-a716-446655440000,,secret123,ismail.elkalili@gmail.com,ADMIN,false,,"
 
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+
+        // then
+        assertThat(result).isNull()
+    }
 }
