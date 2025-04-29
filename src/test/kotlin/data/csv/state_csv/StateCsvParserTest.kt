@@ -23,7 +23,7 @@ class StateCsvParserTest {
     fun `parseLine should return empty state when the string is empty `() {
 
         // When
-        val result = stateCsvParser.parseLine("[      ]")
+        val result = stateCsvParser.parseLine("    ")
 
         // Then
         assertThat(result).isNull()

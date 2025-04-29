@@ -18,7 +18,7 @@ class StateCsvParser : CsvParser<State> {
     override fun parseLine(line: String): State? {
         val cleanedLine = line.replace(" ", "")
 
-        if (cleanedLine == "[]")
+        if (cleanedLine == "[]" || cleanedLine == "")
             return null
 
         val cleanLine = line.removeSurrounding("[", "]")

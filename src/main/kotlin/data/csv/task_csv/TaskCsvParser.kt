@@ -20,11 +20,15 @@ class TaskCsvParser(
     override fun parseLine(line: String): Task? {
         var cleanedLine = line.replace(" ", "")
 
-        if (cleanedLine == "[]")
+        if (cleanedLine == "[]" || cleanedLine == "")
             return null
 
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
+
+//        if (stateCsvParser.parseLine(parts[4]) == null){
+//            throw Exception("state of the task is unavailable")
+//        }
 
         return Task(
             id = UUID.fromString(parts[0]),
