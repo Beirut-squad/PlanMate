@@ -7,6 +7,10 @@ import java.util.*
 
 class UserCsvParser: CsvParser<User> {
     override fun parseLine(line: String): User? {
+        if (line.isBlank()) {
+            println("Error: Empty CSV line.")
+            return null
+        }
         val fields = line.split(",").map { it.trim() }
 
         val idStr = UUID.fromString(fields[0])
