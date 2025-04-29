@@ -12,29 +12,38 @@ class UserCsvParser: CsvParser<User> {
             return null
         }
         val fields = line.split(",").map { it.trim() }
+        try {
+            val idStr = UUID.fromString(fields[0])
+            val name = fields[1]
+            val password = fields[2]
+            val email = fields[3]
+            val role = Role.valueOf(fields[4])
+            val isDeleted = fields[5].toBoolean()
+            if (name.isBlank() || password.isBlank() || email.isBlank() || role.toString()
+                    .isBlank() || isDeleted.toString().isBlank()
+            ) {
+                println("Error: Missing or empty field(s) in CSV line.")
+                return null
+            } else {
+                return try {
+                    User(
+                        id = idStr,
+                        name = name,
+                        password = password,
+                        email = email,
+                        role = role,
+                        isDeleted = isDeleted
+                    )
+                } catch (e: Exception) {
+                    println("Error while parsing user $e")
+                    return null
+                }
+            }
 
-        val idStr = UUID.fromString(fields[0])
-        val name = fields[1]
-        val password = fields[2]
-        val email =fields[3]
-        val role = Role.valueOf(fields[4])
-        val isDeleted = fields[5].toBoolean()
-        if (idStr.toString().isBlank() || name.isBlank() || password.isBlank() || email.isBlank() || role.toString().isBlank() || isDeleted.toString().isBlank()) {
-            println("Error: Missing or empty field(s) in CSV line.")
+        } catch (e: IllegalArgumentException) {
+            println("Invalid field format: ${e.message}")
             return null
-        }
-        return try {
-            User(
-                id = idStr,
-                name = name,
-                password = password,
-                email = email,
-                role = role,
-                isDeleted = isDeleted
-            )
-        } catch (e :Exception){
-            println("Error while parsing user $e")
-           return null
+
         }
     }
 
