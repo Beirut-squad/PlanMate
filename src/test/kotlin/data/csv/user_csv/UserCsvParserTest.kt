@@ -177,4 +177,25 @@ class UserCsvParserTest
         assertThat(result).isNull()
     }
 
+    @Test
+    fun `given CSV line with special characters, when parseLine called, then return User with correct fields`() {
+        // given
+        val csvLine = "550e8400-e29b-41d4-a716-446655440000,John Doe,pass!@#123,john@example.com,ADMIN,true"
+
+        // when
+        val result = userCvsParser.parseLine(csvLine)
+            println(result)
+        // then
+        assertThat(result).isEqualTo(
+            User(
+                id = UUID.fromString("550e8400-e29b-41d4-a716-446655440000"),
+                name = "John Doe",
+                password = "pass!@#123",
+                email = "john@example.com",
+                role = Role.ADMIN,
+                isDeleted = true
+            )
+        )
+    }
+
 }
