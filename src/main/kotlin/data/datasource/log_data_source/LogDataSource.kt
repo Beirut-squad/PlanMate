@@ -1,8 +1,9 @@
 package org.example.data.datasource.log_data_source
 
-import org.example.models.Log
+import org.example.models.TaskLog
 
 interface LogDataSource {
-    fun getHistory(): List<Log>
-    fun createLog(log: Log)
+    fun getTasksHistory(): List<TaskLog>
+    fun createTaskLog(taskLog: TaskLog)
+    fun createProjectLog(taskLog: TaskLog)
 }
