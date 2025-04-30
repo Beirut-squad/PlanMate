@@ -20,12 +20,12 @@ class UserCsvParser: CsvParser<User> {
             .toList()
 
         try {
-            val idStr = UUID.fromString(fields[0])
-            val name = fields[1]
-            val password = fields[2]
-            val email = fields[3]
-            val role = Role.valueOf(fields[4])
-            val isDeleted = fields[5].toBoolean()
+            val idToString = UUID.fromString(fields[UserColumnIndex.ID])
+            val name = fields[UserColumnIndex.NAME]
+            val password = fields[UserColumnIndex.PASSWORD]
+            val email = fields[UserColumnIndex.EMAIL]
+            val role = Role.valueOf(fields[UserColumnIndex.ROLE])
+            val isDeleted = fields[UserColumnIndex.IS_DELETED].toBoolean()
             if (name.isBlank() || password.isBlank() || email.isBlank() || role.toString()
                     .isBlank() || isDeleted.toString().isBlank()
             ) {
@@ -34,7 +34,7 @@ class UserCsvParser: CsvParser<User> {
             } else {
                 return try {
                     User(
-                        id = idStr,
+                        id = idToString,
                         name = name,
                         password = password,
                         email = email,
