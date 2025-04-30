@@ -1,4 +1,12 @@
 package org.example.data.csv
 
-interface CsvReader{
+import CsvParser
+
+class CsvReader<T>(private val parser: CsvParser<T>){
+
+    fun read(csvLines:List<String>): List<T>{
+        return csvLines.mapNotNull { line ->
+            parser.parseLine(line)
+        }
+    }
 }
