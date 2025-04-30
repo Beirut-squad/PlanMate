@@ -1,4 +1,4 @@
-import org.example.models.Log
+import org.example.models.User
 
 interface CsvParser<T> {
 

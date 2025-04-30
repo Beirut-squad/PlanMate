@@ -12,4 +12,4 @@ data class Task(
     val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-): Loggable
+)

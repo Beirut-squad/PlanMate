@@ -1,6 +1,6 @@
 package org.example.data.repositories.task_repository
 
-import org.example.data.datasource.log_data_source.LogDataSource
+import org.example.data.datasource.log_data_source.LogDataSourceForProject
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.Task
@@ -8,7 +8,7 @@ import java.util.*
 
 class TaskRepositoryImpl (
     taskDataSource: TaskDataSource,
-    logDataSource: LogDataSource
+    logDataSource: LogDataSourceForProject
 ) :TaskRepository {
     override fun createTask(task: Task) {
         TODO("Not yet implemented")
