@@ -2,6 +2,7 @@ package data.csv.user_csv
 
 import creator_helper.createCsvLineForUser
 import creator_helper.createUserForCsvWriter
+import creator_helper.createUserForCsvWriterInvalid
 import creator_helper.createUserHelper
 import org.example.data.csv.user_csv.UserCsvWriter
 import org.example.models.Role
@@ -83,5 +84,22 @@ class UserCsvWriterTest{
 
  }
 
+    @Test
+    fun `give list with invalid user when writeToFile is called then skip or handle invalid user`(){
+        //given
+        val userValid = createUserForCsvWriter()
+        val userInvalid = createUserForCsvWriterInvalid()
+        val users = listOf<User>(userValid, userInvalid)
+
+        //when
+        val result = userCsvWriter.writeToFile(users,filePath)
+
+        //then
+        val file = File(filePath)
+        assertTrue(file.exists())
+        val lines = file.readLines()
+        assertTrue(lines.first().contains("id,name,password,email,role,isDeleted"))
+        assertTrue(lines.size == 2)
+    }
 
  }
