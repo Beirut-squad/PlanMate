@@ -1,6 +1,6 @@
 package org.example.data.csv.log_csv_parser
 
-object LogsColumnIndex {
+object LogsColumnIndexForProject {
     const val LOG_ID = 0
     const val ENTITY_TYPE = 1
     const val USER_ID = 2
