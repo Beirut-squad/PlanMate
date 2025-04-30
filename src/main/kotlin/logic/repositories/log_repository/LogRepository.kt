@@ -5,8 +5,10 @@ import org.example.models.TaskLog
 import java.util.*
 
 interface LogRepository {
-    fun getProjectHistory(id: UUID): List<ProjectLog>
-    fun getTaskHistory(id: UUID): List<TaskLog>
-    fun createTaskLog(taskLog: TaskLog)
-    fun createProjectLog(projectLog: ProjectLog)
+    fun getProjectLogs(id: UUID): List<ProjectLog>
+    fun getTaskLogs(id: UUID): List<TaskLog>
+    fun saveProjectLog(projectLog: ProjectLog): Result<Unit>
+    fun saveTaskLog(taskLog: TaskLog): Result<Unit>
+    fun getAllProjectLogs(): List<ProjectLog>
+    fun getAllTaskLogs(): List<TaskLog>
 }
