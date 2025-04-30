@@ -4,7 +4,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.logic.use_case.project_manegement.CreateProjectUseCase
-import org.example.models.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
