@@ -15,7 +15,7 @@ class UserCsvWriter: CsvWriter<User> {
             writer.write("id,name,password,email,role,isDeleted\n")
 
             for (user in items){
-                writer.write("${user.id},${user.name},${user.password},${user.role},${user.isDeleted}")
+                writer.write("${user.id},${user.name},${user.password},${user.role},${user.isDeleted}\n")
             }
             writer.close()
             Result.success(Unit)
