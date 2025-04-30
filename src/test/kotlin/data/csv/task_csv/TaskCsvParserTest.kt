@@ -52,7 +52,7 @@ class TaskCsvParserTest{
                 "d1234567-89ab-cdef-0123-456789abcdef",
                 "Project Name",
                 "Project Description",
-                state,
+                state!!,
                 UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"),
                 LocalDateTime.parse("2024-04-01T12:00:00"),
                 LocalDateTime.parse("2024-04-02T12:00:00")
@@ -93,7 +93,7 @@ class TaskCsvParserTest{
                     "d1234567-89ab-cdef-0123-456789abcdef",
                     "Project Name",
                     "Project Description",
-                    state,
+                    state!!,
                     UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"),
                     LocalDateTime.parse("2024-04-01T12:00:00"),
                     LocalDateTime.parse("2024-04-02T12:00:00")

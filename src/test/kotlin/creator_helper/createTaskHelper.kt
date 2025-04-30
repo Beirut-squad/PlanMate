@@ -10,7 +10,7 @@ fun createTaskHelper(
     projectId: String = "test-project-id",
     title: String = "Test Task Title",
     description: String = "Test Task Description",
-    state: State? = createTestTaskState(),
+    state: State = createTestTaskState(),
     creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now()

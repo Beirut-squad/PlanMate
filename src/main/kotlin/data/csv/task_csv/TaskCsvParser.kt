@@ -36,7 +36,7 @@ class TaskCsvParser(
             projectId = parts[1],
             title = parts[2],
             description = parts[3],
-            state = stateCsvParser.parseLine(parts[4]),
+            state = stateCsvParser.parseLine(parts[4])!!,
             creatorUserID = UUID.fromString(parts[5]),
             createdAt = LocalDateTime.parse(parts[6]),
             updatedAt = LocalDateTime.parse(parts[7])
