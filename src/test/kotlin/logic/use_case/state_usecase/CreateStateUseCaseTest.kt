@@ -54,7 +54,7 @@ class CreateStateUseCaseTest {
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is IllegalArgumentException)
-        assertEquals("Empty name", result.exceptionOrNull()?.message)
+        assertEquals("Create failed : name is Blank !!", result.exceptionOrNull()?.message)
     }
 
     @Test
