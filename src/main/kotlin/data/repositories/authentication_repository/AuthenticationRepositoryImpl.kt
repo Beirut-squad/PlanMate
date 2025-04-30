@@ -1,7 +1,6 @@
 package org.example.data.repositories.authentication_repository
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.models.User
 
 class AuthenticationRepositoryImpl : AuthenticationRepository {
     override fun login(email: String,password: String) {

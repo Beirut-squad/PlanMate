@@ -11,4 +11,4 @@ data class Project(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
     val states: List<State>,
-) : Loggable
+)
