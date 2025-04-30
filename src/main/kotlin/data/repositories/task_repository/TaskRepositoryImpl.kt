@@ -5,6 +5,7 @@ import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.exceptions.TaskDeletionException
 import org.example.logic.exceptions.TaskEditException
+import org.example.logic.exceptions.TaskRetrievalException
 import org.example.logic.repositories.task_repository.TaskRepository
 
 import org.example.models.Task
@@ -38,7 +39,10 @@ class TaskRepositoryImpl(
     }
 
     override fun getAllTasks(): Result<List<Task>> {
-        TODO("Not yet implemented")
+        return taskDataSource.getAllTasks().fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(TaskRetrievalException("Failed to retrieve tasks")) }
+        )
     }
 
     override fun getTask(id: UUID): Result<Task> {

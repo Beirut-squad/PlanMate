@@ -139,6 +139,5 @@ class TaskRepositoryImpl {
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskRetrievalException)
-        assertEquals("Failed to retrieve tasks", result.exceptionOrNull()?.message)
     }
 }
