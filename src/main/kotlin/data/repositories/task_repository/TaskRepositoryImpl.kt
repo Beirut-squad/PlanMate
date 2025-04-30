@@ -1,15 +1,12 @@
 package org.example.data.repositories.task_repository
 
-import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.exceptions.TaskDeletionException
 import org.example.logic.exceptions.TaskEditException
 import org.example.logic.exceptions.TaskRetrievalException
 import org.example.logic.repositories.task_repository.TaskRepository
-
 import org.example.models.Task
-import java.time.LocalDateTime
 import java.util.*
 
 class TaskRepositoryImpl(
@@ -46,6 +43,8 @@ class TaskRepositoryImpl(
     }
 
     override fun getTask(id: UUID): Result<Task> {
-        TODO("Not yet implemented")
-    }
+        return taskDataSource.getTask(id).fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(TaskRetrievalException("Failed to retrieve tasks")) }
+        )    }
 }
