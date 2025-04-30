@@ -4,4 +4,7 @@ import kotlin.Exception
 
 
 class TaskCreationException(massage: String) : Exception(massage)
+
 class TaskEditException(massage: String) : Exception(massage)
+
+class TaskDeletionException(massage: String) : Exception(massage)
