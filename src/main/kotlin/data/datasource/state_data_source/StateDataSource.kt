@@ -1,4 +1,4 @@
-package org.example.data.datasource.task_state_data_source
+package data.datasource.state_data_source
 
 import org.example.models.State
 
