@@ -140,4 +140,35 @@ class TaskRepositoryImpl {
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskRetrievalException)
     }
+
+    @Test
+    fun `getTask should return success when data source returns task`() {
+        // Given
+        val taskId = UUID.randomUUID()
+        val task = createTaskHelper(id = taskId)
+        every { taskDataSource.getTask(taskId) } returns Result.success(task)
+
+        // When
+        val result = taskRepository.getTask(taskId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals(task, result.getOrNull())
+    }
+    @Test
+    fun `getTask should return failure when data source returns failure`() {
+        // Given
+        val taskId = UUID.randomUUID()
+        val exception = TaskRetrievalException("Failed to retrieve task")
+        every { taskDataSource.getTask(taskId) } returns Result.failure(exception)
+
+        // When
+        val result = taskRepository.getTask(taskId)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is TaskRetrievalException)
+        assertEquals("Failed to retrieve task", result.exceptionOrNull()?.message)
+    }
+
 }
