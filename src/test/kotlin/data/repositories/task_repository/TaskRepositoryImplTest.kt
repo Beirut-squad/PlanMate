@@ -8,6 +8,7 @@ import org.example.data.repositories.task_repository.TaskRepositoryImpl
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.exceptions.TaskDeletionException
 import org.example.logic.exceptions.TaskEditException
+import org.example.logic.exceptions.TaskRetrievalException
 import org.example.logic.repositories.task_repository.TaskRepository
 
 import org.example.models.Task
@@ -126,5 +127,18 @@ class TaskRepositoryImpl {
         assertTrue(result.isSuccess)
         assertEquals(tasks, result.getOrNull())
     }
+    @Test
+    fun `getAllTasks should return failure when data source throws exception`() {
+        // Given
+        val exception = TaskRetrievalException("Failed to retrieve tasks")
+        every { taskDataSource.getAllTasks() } returns Result.failure(exception)
 
+        // When
+        val result = taskRepository.getAllTasks()
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is TaskRetrievalException)
+        assertEquals("Failed to retrieve tasks", result.exceptionOrNull()?.message)
+    }
 }
