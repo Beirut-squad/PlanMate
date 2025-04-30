@@ -5,37 +5,31 @@ import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.exceptions.TaskEditException
 import org.example.logic.repositories.task_repository.TaskRepository
-import org.example.models.Log
+
 import org.example.models.Task
+import java.time.LocalDateTime
 import java.util.*
 
 class TaskRepositoryImpl(
     private val taskDataSource: TaskDataSource,
-    private val logDataSource: LogDataSource
 ) : TaskRepository {
-    override fun createTask(task: Task, log: Log): Result<String> {
+    override fun createTask(task: Task): Result<Unit> {
         return taskDataSource.createTask(task)
             .fold(
-                onSuccess = {
-                    logDataSource.createLog(log)
-                    Result.success("Task created successfully")
-                },
+                onSuccess = { Result.success(Unit) },
                 onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
             )
-
     }
 
 
-    override fun editTask(task: Task, log: Log): Result<String> {
+    override fun editTask(task: Task): Result<Unit> {
         return taskDataSource.editTask(task).fold(
-            onSuccess = {
-                logDataSource.createLog(log)
-                Result.success("Task edited successfully") },
+            onSuccess = { Result.success(Unit) },
             onFailure = { Result.failure(TaskEditException("Failed to edit task: ${it.message}")) }
         )
     }
 
-    override fun deleteTask(id: UUID): Result<String> {
+    override fun deleteTask(id: UUID): Result<Unit> {
         TODO("Not yet implemented")
     }
 
