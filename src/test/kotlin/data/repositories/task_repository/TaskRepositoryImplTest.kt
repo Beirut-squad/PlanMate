@@ -113,4 +113,18 @@ class TaskRepositoryImpl {
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskDeletionException)
     }
+    @Test
+    fun `getAllTasks should return success when data source returns tasks`() {
+        // Given
+        val tasks = listOf(createTaskHelper(), createTaskHelper())
+        every { taskDataSource.getAllTasks() } returns Result.success(tasks)
+
+        // When
+        val result = taskRepository.getAllTasks()
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals(tasks, result.getOrNull())
+    }
+
 }
