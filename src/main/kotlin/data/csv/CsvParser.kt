@@ -1,1 +1,2 @@
-class CsvParser
+interface CsvParser{
+}

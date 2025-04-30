@@ -1,4 +1,4 @@
 package org.example.data.csv
 
-interface CsvReader{
+interface CsvEditor {
 }
