@@ -30,7 +30,7 @@ class TaskRepositoryImpl(
     }
 
     override fun deleteTask(id: UUID): Result<Unit> {
-        TODO("Not yet implemented")
+        return Result.success(Unit)
     }
 
     override fun getAllTasks(): Result<List<Task>> {
