@@ -62,4 +62,22 @@ class CsvReaderTest{
         // then
         assertThat(result).isEqualTo(listOf(user))
     }
+
+    @Test
+    fun `given all invalid CVS lines, when read called, then return empty list`() {
+        //given
+        val lines = listOf(
+            createCsvLineForUserInvalid(),
+            createCsvLineForUserInvalid()
+        )
+        every { parser.parseLine(lines[0]) } returns null
+
+        //when
+        val result = reader.read(lines)
+
+        //then
+        assertThat(result).isEmpty()
+    }
+
+
 }
