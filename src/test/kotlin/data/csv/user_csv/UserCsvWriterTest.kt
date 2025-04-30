@@ -105,4 +105,20 @@ class UserCsvWriterTest{
         file.delete()
     }
 
+    @Test
+    fun `given invalid file name when writeToFile is called then return failure`(){
+        //given
+        val invalidFilePath = "invalid|file/name.csv"
+        val users   = listOf(createUserForCsvWriter())
+
+        //when
+        val result = userCsvWriter.writeToFile(users  , invalidFilePath)
+
+        //then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IllegalArgumentException)
+
+
+    }
+
  }
