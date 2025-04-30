@@ -5,7 +5,7 @@ import org.example.models.ProjectLog
 import java.io.File
 
 class LogCsvWriterForProject: CsvWriter<ProjectLog> {
-    override fun writeToFile(items: List<ProjectLog>, filePath: String) {
+    override fun writeToFile(items: List<ProjectLog>, filePath: String): Result<Unit> {
         TODO("Not yet implemented")
     }
 
