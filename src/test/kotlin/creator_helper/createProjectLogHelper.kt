@@ -6,17 +6,19 @@ import java.time.LocalDateTime
 import java.util.*
 
 fun createProjectLogHelper(
+    id: UUID = UUID.randomUUID(),
     userId: UUID = UUID.randomUUID(),
     entityId: UUID = UUID.randomUUID(),
     previousEntity: Project? = null,
-    currentEntity: Project? = null
+    currentEntity: Project? = null ,
+    createdAt: LocalDateTime = LocalDateTime.now()
+
 ): ProjectLog {
     return ProjectLog(
-        id = UUID.randomUUID(),
+        id = id,
         userId = userId,
         entityId = entityId,
         previousEntity = previousEntity,
         currentEntity = currentEntity,
-        createdAt = LocalDateTime.now(),
-    )
+        createdAt = createdAt)
 }
