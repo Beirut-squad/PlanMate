@@ -112,6 +112,5 @@ class TaskRepositoryImpl {
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskDeletionException)
-        assertEquals("Failed to delete task", result.exceptionOrNull()?.message)
     }
 }

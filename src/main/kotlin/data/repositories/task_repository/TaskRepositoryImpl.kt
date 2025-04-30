@@ -3,6 +3,7 @@ package org.example.data.repositories.task_repository
 import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.logic.exceptions.TaskCreationException
+import org.example.logic.exceptions.TaskDeletionException
 import org.example.logic.exceptions.TaskEditException
 import org.example.logic.repositories.task_repository.TaskRepository
 
@@ -30,7 +31,10 @@ class TaskRepositoryImpl(
     }
 
     override fun deleteTask(id: UUID): Result<Unit> {
-        return Result.success(Unit)
+        return taskDataSource.deleteTask(id).fold(
+            onSuccess = { Result.success(Unit) },
+            onFailure = { Result.failure(TaskDeletionException("Failed to delete task ${it.message}")) }
+        )
     }
 
     override fun getAllTasks(): Result<List<Task>> {
