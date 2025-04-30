@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class DeleteProjectUseCaseTest {
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
-    private lateinit var deleteProjectUseCase: DeleteProjectUseCase
+    private var deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
 
     @BeforeEach
     fun setup(){
