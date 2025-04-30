@@ -18,8 +18,11 @@ class StateCsvParser : CsvParser<State> {
     override fun parseLine(line: String): State? {
         val cleanedLine = line.replace(" ", "")
 
+        println(cleanedLine)
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
+
+
 
         val cleanLine = line.removeSurrounding("[", "]")
         val parts = cleanLine.split(",").map { it.trim() }
@@ -29,4 +32,5 @@ class StateCsvParser : CsvParser<State> {
             name = parts[StateColumnIndex.NAME]
         )
     }
+
 }

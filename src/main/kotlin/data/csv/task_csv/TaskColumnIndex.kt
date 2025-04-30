@@ -7,6 +7,6 @@ object TaskColumnIndex {
     const val DESCRIPTION = 3
     const val STATE = 4
     const val CREATOR_USER_ID = 5
-    const val CREATED_AT = 5
-    const val UPDATED_AT = 6
+    const val CREATED_AT = 6
+    const val UPDATED_AT = 7
  }

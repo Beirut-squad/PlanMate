@@ -1,6 +1,7 @@
 package org.example.data.csv.task_csv_parser
 
 import CsvParser
+import data.csv.task_csv.TaskColumnIndex
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.models.State
 import org.example.models.Task
@@ -26,29 +27,30 @@ class TaskCsvParser(
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-        if (stateCsvParser.parseLine(parts[4]) == null){
+        if (stateCsvParser.parseLine(parts[TaskColumnIndex.STATE]) == null){
             throw Exception("state of the task is unavailable")
         }
 
         // TODO : REFACTORING
         return Task(
-            id = UUID.fromString(parts[0]),
-            projectId = parts[1],
-            title = parts[2],
-            description = parts[3],
-            state = stateCsvParser.parseLine(parts[4])!!,
-            creatorUserID = UUID.fromString(parts[5]),
-            createdAt = LocalDateTime.parse(parts[6]),
-            updatedAt = LocalDateTime.parse(parts[7])
+            id = UUID.fromString(parts[TaskColumnIndex.TASK_ID]),
+            projectId = parts[TaskColumnIndex.PROJECT_ID],
+            title = parts[TaskColumnIndex.TITLE],
+            description = parts[TaskColumnIndex.DESCRIPTION],
+            state = stateCsvParser.parseLine(parts[TaskColumnIndex.STATE])!!,
+            creatorUserID = UUID.fromString(parts[TaskColumnIndex.CREATOR_USER_ID]),
+            createdAt = LocalDateTime.parse(parts[TaskColumnIndex.CREATED_AT]),
+            updatedAt = LocalDateTime.parse(parts[TaskColumnIndex.UPDATED_AT])
         )
     }
 
-    private fun smartCsvSplit(line: String): List<String> {
-        val fields = mutableListOf<String>()
-        var current = StringBuilder()
+    fun smartCsvSplit(input: String): List<String> {
+        val cleanedLine = input.removeSurrounding("[", "]")
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
         var bracketDepth = 0
 
-        for (char in line) {
+        for (char in cleanedLine) {
             when (char) {
                 '[' -> {
                     bracketDepth++
@@ -60,8 +62,8 @@ class TaskCsvParser(
                 }
                 ',' -> {
                     if (bracketDepth == 0) {
-                        fields.add(current.toString().trim())
-                        current = StringBuilder()
+                        result.add(current.toString().trim())
+                        current.clear()
                     } else {
                         current.append(char)
                     }
@@ -69,8 +71,12 @@ class TaskCsvParser(
                 else -> current.append(char)
             }
         }
-        fields.add(current.toString().trim()) // add last field
-        return fields
+
+        if (current.isNotEmpty()) {
+            result.add(current.toString().trim())
+        }
+
+        return result.filter { it.isNotEmpty() }
     }
 
 }
