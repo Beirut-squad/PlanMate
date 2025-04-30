@@ -1,5 +1,6 @@
 package org.example.data.datasource.log_data_source
 
+import org.example.models.ProjectLog
 import org.example.models.TaskLog
 
 interface LogDataSource {
