@@ -5,7 +5,7 @@ import org.example.models.State
 import java.util.UUID
 
 interface ProjectRepository {
-    fun createProject() :Result<String>
+    fun createProject(project: Project) :Result<String>
     fun editProject(project: Project) :Result<String>
     fun deleteProject(project: Project) :Result<String>
     fun getAllProjects() : Result<List<Project>>

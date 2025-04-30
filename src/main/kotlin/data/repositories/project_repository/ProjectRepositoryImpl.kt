@@ -1,6 +1,5 @@
 package org.example.data.repositories.project_repository
 
-import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.exceptions.ProjectNotCreatedException
 import org.example.logic.repositories.project_repository.ProjectRepository
@@ -10,18 +9,15 @@ import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val logDataSource: LogDataSource,
 ) : ProjectRepository {
+
     override fun createProject(project: Project): Result<String> {
-        return projectDataSource.createProject(project).fold(
+        return projectDataSource.createProject().fold(
             onSuccess = {
-                // create log
-                Result.success("Project created successfully")
-            },
-            onFailure = {
-                Result.failure(ProjectNotCreatedException("Project could not be created"))
-            }
-        )
+            Result.success("Project created successfully")
+        }, onFailure = {
+            Result.failure(ProjectNotCreatedException("Project could not be created"))
+        })
     }
 
     override fun editProject(project: Project): Result<String> {
