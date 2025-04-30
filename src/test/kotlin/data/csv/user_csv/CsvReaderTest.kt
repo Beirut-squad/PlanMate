@@ -78,6 +78,16 @@ class CsvReaderTest{
         //then
         assertThat(result).isEmpty()
     }
+    @Test
+    fun `given empty CSV lines, when read called, then return empty list`() {
+        // given
+        val lines = emptyList<String>()
 
+        // when
+        val result = reader.read(lines)
+
+        // then
+        assertThat(result).isEmpty()
+    }
 
 }
