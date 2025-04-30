@@ -33,17 +33,35 @@ class StateRepositoryImplTest {
     }
 
     @Test
-    fun `should fail to create state when name is blank and return failure result`() {
+    fun `should fail to create state and return failure result`() {
         // When
-        val state = State(UUID.randomUUID(), "")
-        val exceptionMessage = "Create failed : name is Blank !!"
+        val state = State(UUID.randomUUID(), "ERROR")
+        val exception = RuntimeException("Create failed")
 
+        // Given
+        every { stateDataSource.createState(state) } throws exception
 
         // Then
         val result = stateRepository.createState(state)
 
         assertTrue(result.isFailure)
-        assertEquals(exceptionMessage, result.exceptionOrNull()?.message)
+        assertEquals(exception, result.exceptionOrNull())
+    }
+
+   @Test
+    fun `should fail to create state when name is blank and return failure result`() {
+        // When
+        val state = State(UUID.randomUUID(), "")
+        val exception = RuntimeException("Create failed! : name is Blank !!")
+
+       // Given
+        every { stateDataSource.createState(state) } throws exception
+
+       // Then
+        val result = stateRepository.createState(state)
+
+        assertTrue(result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
     }
 
     @Test
@@ -60,16 +78,18 @@ class StateRepositoryImplTest {
 
     @Test
     fun `should fail to edit state when name is blank and return failure result`() {
-        // Given
-        val state = State(UUID.randomUUID(), "")
-        val exceptionMessage = "Edit failed : name is Blank !!"
-
         // When
-        val result = stateRepository.editState(state)
+        val state = State(UUID.randomUUID(), "")
+        val exception = RuntimeException("Edit failed : name is Blank !!")
+
+        // Given
+        every { stateDataSource.editState(state) } throws exception
 
         // Then
+        val result = stateRepository.editState(state)
+
         assertTrue(result.isFailure)
-        assertEquals(exceptionMessage, result.exceptionOrNull()?.message)
+        assertEquals(exception, result.exceptionOrNull())
     }
 
     @Test
@@ -86,17 +106,17 @@ class StateRepositoryImplTest {
 
     @Test
     fun `should fail to delete state and return failure result`() {
-        // Given
-        val id = UUID.randomUUID()
-        val exceptionMessage = RuntimeException("Delete failed")
-        
         // When
-        every { stateDataSource.deleteState(id) } throws exceptionMessage
+        val id = UUID.randomUUID()
+        val exception = RuntimeException("Delete failed")
+
+        // Given
+        every { stateDataSource.deleteState(id) } throws exception
 
         // Then
         val result = stateRepository.deleteState(id)
-        assertTrue(result.isFailure)
-        assertEquals(exceptionMessage.message, result.exceptionOrNull()?.message)
-    }
 
+        assertTrue(result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
+    }
 }
