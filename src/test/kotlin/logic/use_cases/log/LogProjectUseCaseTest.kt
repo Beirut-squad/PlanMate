@@ -1,4 +1,4 @@
-package logic.use_cases
+package logic.use_cases.log
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
@@ -83,5 +83,20 @@ class LogProjectUseCaseTest {
                         projectLog.currentEntity == null
             })
         }
+    }
+
+    @Test
+    fun `should return failure when logRepository returns failure`() {
+        val userId = UUID.randomUUID()
+        val previousProject = createProjectHelper(name = "Previous Project")
+        val currentProject = createProjectHelper(name = "Current Project")
+        val exception = Exception("Error saving log")
+
+        every { logRepository.saveProjectLog(any()) } returns Result.failure(exception)
+
+        val result = logProjectUseCase.createProjectLog(userId, previousProject, currentProject)
+
+        assert(result.isFailure)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
     }
 }

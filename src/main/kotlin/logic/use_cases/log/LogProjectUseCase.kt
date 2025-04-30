@@ -28,11 +28,11 @@ class LogProjectUseCase(
         )
     }
 
-    fun getProjectLogsByProjectId(projectId: UUID): List<ProjectLog> {
+    fun getProjectLogsByProjectId(projectId: UUID): Result<List<ProjectLog>> {
         TODO()
     }
 
-    fun getAllProjectLogs(): List<ProjectLog> {
+    fun getAllProjectLogs(): Result<List<ProjectLog>> {
         TODO()
     }
 }
