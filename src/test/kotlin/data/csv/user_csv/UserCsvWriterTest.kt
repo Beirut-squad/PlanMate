@@ -98,7 +98,7 @@ class UserCsvWriterTest{
         val file = File(filePath)
         assertTrue(file.exists())
         val lines = file.readLines()
-        assertTrue(lines.first().contains("id,name,password,email,role,isDeleted"))
+        assertTrue(lines[0].contains("id,name,password,email,role,isDeleted"))
         assertTrue(lines.size == 2)
     }
 
