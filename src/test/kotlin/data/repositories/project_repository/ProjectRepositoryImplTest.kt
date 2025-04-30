@@ -106,4 +106,19 @@ class ProjectRepositoryImplTest {
         verify(exactly = 0) { logDataSource.createLog(any()) }
     }
 
+    @Test
+    fun `should return failure when project edited success and log failure`() {
+        // Given
+        every { projectDataSource.editProject(project) } returns
+                Result.success(true)
+        every { logDataSource.createLog(createProjectLogHelper()) } returns Unit
+        // When
+        val result = projectRepositoryImpl.editProject(project)
+
+        // Then
+        assertTrue(result.isSuccess)
+        verify(exactly = 1) { projectDataSource.editProject(project) }
+        verify(exactly = 0) { logDataSource.createLog(any()) }
+    }
+
 }
