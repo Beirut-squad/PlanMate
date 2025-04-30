@@ -3,13 +3,29 @@ package org.example.logic.use_cases.log
 import org.example.logic.repositories.log_repository.LogRepository
 import org.example.models.Project
 import org.example.models.ProjectLog
+import java.time.LocalDateTime
 import java.util.UUID
 
 class LogProjectUseCase(
     private val logRepository: LogRepository
 ) {
     fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?): Result<Unit> {
-        TODO()
+        if (previousProject == null && currentProject == null) return Result.failure(
+            IllegalArgumentException("Both previous and current projects cannot be null")
+        )
+
+        val entityId = currentProject?.id ?: previousProject!!.id
+
+        return logRepository.saveProjectLog(
+            ProjectLog(
+                id = UUID.randomUUID(),
+                userId = userId,
+                entityId = entityId,
+                previousEntity = previousProject,
+                currentEntity = currentProject,
+                createdAt = LocalDateTime.now()
+            )
+        )
     }
 
     fun getProjectLogsByProjectId(projectId: UUID): List<ProjectLog> {
