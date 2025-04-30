@@ -26,10 +26,11 @@ class TaskCsvParser(
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-//        if (stateCsvParser.parseLine(parts[4]) == null){
-//            throw Exception("state of the task is unavailable")
-//        }
+        if (stateCsvParser.parseLine(parts[4]) == null){
+            throw Exception("state of the task is unavailable")
+        }
 
+        // TODO : REFACTORING
         return Task(
             id = UUID.fromString(parts[0]),
             projectId = parts[1],

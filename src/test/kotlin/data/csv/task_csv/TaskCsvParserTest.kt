@@ -124,7 +124,7 @@ class TaskCsvParserTest{
 
     @Test
     fun `should throw exception if the stat of task is null `(){
-
+        // Given
         every {
             stateCsvParser.parseLine(match {
                 val cleaned = it.trim()
@@ -134,22 +134,10 @@ class TaskCsvParserTest{
 
         // When
         val taskString = "[d1234567-89ab-cdef-0123-456789abcdef, d1234567-89ab-cdef-0123-456789abcdef ,Project Name,Project Description,[], 5481551e-2b45-49a0-b5fc-123456789012 ,2024-04-01T12:00:00,2024-04-02T12:00:00]"
-        val result = taskCsvParser.parseLine(taskString)
 
         // then
-
-        assertThat(result).isEqualTo(
-            createTaskHelper(
-                UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
-                "d1234567-89ab-cdef-0123-456789abcdef",
-                "Project Name",
-                "Project Description",
-                null,
-                UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"),
-                LocalDateTime.parse("2024-04-01T12:00:00"),
-                LocalDateTime.parse("2024-04-02T12:00:00")
-            )
-        )
-
+        assertThrows<Exception> {
+            taskCsvParser.parseLine(taskString)
+        }
     }
 }
