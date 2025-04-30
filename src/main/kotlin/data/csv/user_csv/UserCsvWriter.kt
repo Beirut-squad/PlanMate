@@ -11,6 +11,13 @@ class UserCsvWriter: CsvWriter<User> {
 
         return try {
             val file = File(filePath)
+            if (file.parentFile != null && !file.parentFile.exists()) {
+                return Result.failure(IllegalArgumentException())
+            }
+            if (!isValidFileName(file.name)){
+                return Result.failure(IllegalArgumentException())
+            }
+
             val writer = BufferedWriter(FileWriter(file))
 
             writer.write("id,name,password,email,role,isDeleted\n")
@@ -29,6 +36,11 @@ class UserCsvWriter: CsvWriter<User> {
 
     private fun isValidUser(user : User): Boolean{
         return user.name.isNotBlank() && user.id.toString().isNotBlank() && user.password.isNotBlank() && user.email.isNotBlank() && user.isDeleted != null
+    }
+
+    private fun isValidFileName(fileName: String): Boolean{
+        val invalidChars = "[\\\\/:*?\"<>|]".toRegex()
+        return !invalidChars.containsMatchIn(fileName) && fileName.length <= 255
     }
 
 }
