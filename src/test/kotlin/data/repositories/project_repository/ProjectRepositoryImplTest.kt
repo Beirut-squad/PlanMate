@@ -131,4 +131,17 @@ class ProjectRepositoryImplTest {
         verify(exactly = 1) { projectDataSource.deleteProject(project) }
     }
 
+    @Test
+    fun `should return failure when project deleted success and log failure`() {
+        // Given
+        every { projectDataSource.deleteProject(project) } returns
+                Result.success("true")
+        // When
+        val result = projectRepositoryImpl.deleteProject(project)
+
+        // Then
+        assertTrue(result.isSuccess)
+        verify(exactly = 1) { projectDataSource.deleteProject(project) }
+    }
+
 }
