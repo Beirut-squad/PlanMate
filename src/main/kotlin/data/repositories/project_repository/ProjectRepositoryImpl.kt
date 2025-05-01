@@ -2,6 +2,8 @@ package org.example.data.repositories.project_repository
 
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.exceptions.ProjectNotCreatedException
+import org.example.logic.exceptions.ProjectNotDeletedException
+import org.example.logic.exceptions.ProjectNotEditedException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
 import org.example.models.State
@@ -12,20 +14,30 @@ class ProjectRepositoryImpl(
 ) : ProjectRepository {
 
     override fun createProject(project: Project): Result<String> {
-        return projectDataSource.createProject().fold(
+        return projectDataSource.createProject(project).fold(
             onSuccess = {
-            Result.success("Project created successfully")
-        }, onFailure = {
-            Result.failure(ProjectNotCreatedException("Project could not be created"))
-        })
+                Result.success("Project created successfully")
+            }, onFailure = {
+                Result.failure(ProjectNotCreatedException("Project could not be created"))
+            })
     }
 
     override fun editProject(project: Project): Result<String> {
-        TODO("Not yet implemented")
+        return projectDataSource.editProject(project).fold(
+            onSuccess = {
+                Result.success("Project created successfully")
+            }, onFailure = {
+                Result.failure(ProjectNotEditedException("Project could not be created"))
+            })
     }
 
     override fun deleteProject(project: Project): Result<String> {
-        TODO("Not yet implemented")
+        return projectDataSource.deleteProject(project).fold(
+            onSuccess = {
+                Result.success("Project created successfully")
+            }, onFailure = {
+                Result.failure(ProjectNotDeletedException("Project could not be created"))
+            })
     }
 
     override fun getAllProjects(): Result<List<Project>> {
