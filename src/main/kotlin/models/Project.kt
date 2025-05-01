@@ -5,10 +5,10 @@ import java.util.UUID
 
 data class Project(
     val id: UUID,
-    val name: String,
-    val description: String,
+    var name: String,
+    var description: String,
     val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
-    val states: List<State>,
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var state: List<State>,
 )

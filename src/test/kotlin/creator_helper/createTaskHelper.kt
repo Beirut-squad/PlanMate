@@ -7,7 +7,7 @@ import java.util.*
 
 fun createTaskHelper(
     id: UUID = UUID.randomUUID(),
-    projectId: String = "test-project-id",
+    projectId: UUID = UUID.randomUUID(),
     title: String = "Test Task Title",
     description: String = "Test Task Description",
     state: State = createStateHelper(),
