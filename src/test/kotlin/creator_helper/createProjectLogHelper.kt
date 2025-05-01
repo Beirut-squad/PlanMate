@@ -23,7 +23,6 @@ fun createProjectLogHelper(
     )
 }
 
-//val testUserId: UUID = UUID.fromString("11111111-1111-1111-1111-111111111111")
 val testUserId: UUID = UUID.randomUUID()
 
 val projectLogsForTestUser =

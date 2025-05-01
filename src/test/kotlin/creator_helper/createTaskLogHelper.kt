@@ -24,3 +24,36 @@ fun createTaskLogHelper(
         createdAt = createdAt,
     )
 }
+
+
+val taskLogsForTestUser =
+    listOf(
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+    )
+
+val taskLogsForAllUsers =
+    listOf(
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+    )
