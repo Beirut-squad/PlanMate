@@ -20,7 +20,7 @@ class CreateProjectLogUseCaseTest {
     }
 
     @Test
-    fun `should return failure when previous and new project name are null`() {
+    fun `should return failure when previous and current project are null`() {
         val userId = UUID.randomUUID()
 
         val result = createProjectLogUseCase.createProjectLog(userId, null, null)
@@ -29,7 +29,7 @@ class CreateProjectLogUseCaseTest {
     }
 
     @Test
-    fun `should create project log and return success when both previous and new project name are not null`() {
+    fun `should create project log and return success when both previous and current project are not null`() {
         val userId = UUID.randomUUID()
         val previousProject = createProjectHelper(name = "Previous Project")
         val currentProject = createProjectHelper(name = "Current Project")
