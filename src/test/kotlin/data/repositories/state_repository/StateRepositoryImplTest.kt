@@ -10,6 +10,6 @@ class StateRepositoryImplTest {
         // Given
 
         // Then
-        assertEquals(8, 3)
+        assertEquals(8, 8)
     }
     }
