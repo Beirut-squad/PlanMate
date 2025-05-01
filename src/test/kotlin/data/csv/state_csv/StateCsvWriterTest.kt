@@ -69,4 +69,26 @@ fun `given list of state when writeToFile is called then should create file with
 
     file.delete()
 }
+
+    @Test
+    fun `given list of state with invalid state when writeToFile is called then should create file and don't writer invalid state`(){
+        //Given
+        val listOfState = listOf(
+            createTestTaskState(id= UUID.randomUUID(),name="To Do"),
+            createTestTaskState(id= UUID.randomUUID(),name="")
+        )
+        //When
+        stateCsvWriter.writeToFile(listOfState , filePath)
+        val file = File(filePath)
+        val lines = file.readLines()
+
+        //then
+        assertTrue(file.exists())
+        assertTrue(lines[0].contains("id,name"))
+        assertTrue(lines[1].contains("To Do"))
+        assertTrue(lines.size == 2)
+
+        file.delete()
+
+    }
  }
