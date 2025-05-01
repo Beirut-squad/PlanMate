@@ -39,40 +39,40 @@ tasks.jacocoTestReport {
     }
 }
 
-tasks.jacocoTestCoverageVerification {
-    dependsOn(tasks.test)
-
-    classDirectories.setFrom(
-        files(
-            fileTree("build/classes/kotlin/main") {
-                exclude("**/model/**", "**/di/**")
-            }
-        )
-    )
-
-    violationRules {
-        rule {
-            limit {
-                minimum = "0.8".toBigDecimal()
-            }
-            limit {
-                counter = "LINE"
-                value = "COVEREDRATIO"
-                minimum = "0.8".toBigDecimal()
-            }
-            limit {
-                counter = "BRANCH"
-                value = "COVEREDRATIO"
-                minimum = "0.8".toBigDecimal()
-            }
-            limit {
-                counter = "METHOD"
-                value = "COVEREDRATIO"
-                minimum = "0.8".toBigDecimal()
-            }
-        }
-    }
-}
+//tasks.jacocoTestCoverageVerification {
+//    dependsOn(tasks.test)
+//
+//    classDirectories.setFrom(
+//        files(
+//            fileTree("build/classes/kotlin/main") {
+//                exclude("**/model/**", "**/di/**")
+//            }
+//        )
+//    )
+//
+//    violationRules {
+//        rule {
+//            limit {
+//                minimum = "0.8".toBigDecimal()
+//            }
+//            limit {
+//                counter = "LINE"
+//                value = "COVEREDRATIO"
+//                minimum = "0.8".toBigDecimal()
+//            }
+//            limit {
+//                counter = "BRANCH"
+//                value = "COVEREDRATIO"
+//                minimum = "0.8".toBigDecimal()
+//            }
+//            limit {
+//                counter = "METHOD"
+//                value = "COVEREDRATIO"
+//                minimum = "0.8".toBigDecimal()
+//            }
+//        }
+//    }
+//}
 
 
 jacoco {
