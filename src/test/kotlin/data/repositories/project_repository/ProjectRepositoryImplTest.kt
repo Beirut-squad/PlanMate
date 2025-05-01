@@ -25,7 +25,7 @@ class ProjectRepositoryImplTest {
     @BeforeEach
     fun setup() {
         projectRepositoryImpl = ProjectRepositoryImpl(
-            projectDataSource = projectDataSource
+            projectDataSource,project
         )
     }
 
@@ -149,7 +149,7 @@ class ProjectRepositoryImplTest {
 
         // Then
         //assertTrue(result.isFailure)
-        assertThrows<ProjectNotDeletedException> { result.getOrThrow() }
+        assertThrows<ProjectNotGetAllProjectsException> { result.getOrThrow() }
         verify(exactly = 1) { projectDataSource.getAllProjects() }
     }
 
