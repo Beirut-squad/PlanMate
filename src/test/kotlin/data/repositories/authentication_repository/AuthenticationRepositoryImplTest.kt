@@ -231,4 +231,78 @@ class AuthenticationRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(sourceResult)
     }
+
+    @Test
+    fun `should call data source checkEmail when repository checkEmail is called`() {
+        // Given
+        val email = "example@example.com"
+        every { authenticationDataSource.checkEmail(email) } returns Result.success(Unit)
+
+        // When
+        val result = authenticationRepository.checkEmail(email)
+
+        // Then
+        verify(exactly = 1) { authenticationDataSource.checkEmail(email) }
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `should return failure when data source checkEmail returns failure`() {
+        // Given
+        val email = "example@example.com"
+        val expectedError = Exception("Email not found")
+        every { authenticationDataSource.checkEmail(email) } returns Result.failure(expectedError)
+
+        // When
+        val result = authenticationRepository.checkEmail(email)
+
+        // Then
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isEqualTo(expectedError)
+    }
+
+    @Test
+    fun `should call data source getCurrentLoggedInUser when repository getCurrentLoggedInUser is called`() {
+        // Given
+        val expectedUser: User = createUserHelper(name = "John Doe", email = "john.doe@example.com")
+        every { authenticationDataSource.getCurrentLoggedInUser() } returns Result.success(expectedUser)
+
+        // When
+        val result = authenticationRepository.getCurrentLoggedInUser()
+
+        // Then
+        verify(exactly = 1) { authenticationDataSource.getCurrentLoggedInUser() }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrNull()).isEqualTo(expectedUser)
+    }
+
+    @Test
+    fun `should return null when data source getCurrentLoggedInUser returns null`() {
+        // Given
+        every { authenticationDataSource.getCurrentLoggedInUser() } returns Result.success(null)
+
+        // When
+        val result = authenticationRepository.getCurrentLoggedInUser()
+
+        // Then
+        verify(exactly = 1) { authenticationDataSource.getCurrentLoggedInUser() }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrNull()).isNull()
+    }
+
+    @Test
+    fun `should return failure when data source getCurrentLoggedInUser returns failure`() {
+        // Given
+        val expectedError = Exception("No user currently logged in")
+        every { authenticationDataSource.getCurrentLoggedInUser() } returns Result.failure(expectedError)
+
+        // When
+        val result = authenticationRepository.getCurrentLoggedInUser()
+
+        // Then
+        verify(exactly = 1) { authenticationDataSource.getCurrentLoggedInUser() }
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isEqualTo(expectedError)
+    }
+
 }

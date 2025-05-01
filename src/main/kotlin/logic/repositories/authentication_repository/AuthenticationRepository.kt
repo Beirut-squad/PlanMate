@@ -9,4 +9,5 @@ interface AuthenticationRepository {
     fun registerAdmin(name: String, password: String, email: String): Result<User>
     fun logout(): Result<Unit>
     fun checkIfFirstRegister(): Result<Unit>
+    fun getCurrentLoggedInUser(): Result<User?>
 }

@@ -12,7 +12,7 @@ class AuthenticationRepositoryImpl(
     }
 
     override fun checkEmail(email: String): Result<Unit> {
-        TODO("Not yet implemented")
+        return authenticationDataSource.checkEmail(email)
     }
 
     override fun register(name: String, password: String, email: String): Result<User> {
@@ -29,5 +29,9 @@ class AuthenticationRepositoryImpl(
 
     override fun checkIfFirstRegister(): Result<Unit> {
         return authenticationDataSource.checkIfFirstRegister()
+    }
+
+    override fun getCurrentLoggedInUser(): Result<User?> {
+        return authenticationDataSource.getCurrentLoggedInUser()
     }
 }
