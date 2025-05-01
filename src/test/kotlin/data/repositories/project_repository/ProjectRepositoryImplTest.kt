@@ -115,5 +115,20 @@ class ProjectRepositoryImplTest {
         verify(exactly = 1) { projectDataSource.deleteProject(project) }
     }
 
+    @Test
+    fun `should return failure when project deleting fails `() {
+        // Given
+        val exception = ProjectNotDeletedException("Project not edited yet")
+        every { projectDataSource.deleteProject(project) } returns
+                Result.failure(exception)
+
+        // When
+        val result = projectRepositoryImpl.deleteProject(project)
+
+        // Then
+        //assertTrue(result.isFailure)
+        assertThrows<ProjectNotDeletedException> { result.getOrThrow() }
+        verify(exactly = 1) { projectDataSource.deleteProject(project) }
+    }
 
 }
