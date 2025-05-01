@@ -25,9 +25,6 @@ class CreateTaskLogUseCase(
                 currentEntity = currentTask,
                 createdAt = LocalDateTime.now()
             )
-        ).fold(
-            onSuccess = { Result.success(Unit) },
-            onFailure = { Result.failure(it) }
         )
     }
 }
