@@ -1,8 +1,6 @@
 package data.csv.project_csv
 
 import CsvParser
-import data.csv.task_csv.TaskColumnIndex
-import org.example.data.csv.project_csv_parser.ProjectColumnIndex
 import org.example.models.Project
 import org.example.models.State
 import java.time.LocalDateTime
@@ -84,9 +82,5 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
 
         return result.filter { it.isNotEmpty() }
     }
-
-
-
-
 
 }
