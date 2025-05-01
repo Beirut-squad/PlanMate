@@ -22,5 +22,4 @@ class LogRepositoryImpl : LogRepository {
         TODO("Not yet implemented")
     }
 
-
 }
