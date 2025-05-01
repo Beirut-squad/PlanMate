@@ -14,7 +14,7 @@ class CreateProjectLogUseCase(
             IllegalArgumentException("Both previous and current projects cannot be null")
         )
 
-        val entityId = currentProject?.id ?: previousProject!!.id
+        val entityId = listOfNotNull(currentProject?.id, previousProject?.id).first()
 
         return logRepository.saveProjectLog(
             ProjectLog(
