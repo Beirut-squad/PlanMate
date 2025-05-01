@@ -7,6 +7,7 @@ import io.mockk.verify
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.data.repositories.project_repository.ProjectRepositoryImpl
 import org.example.logic.exceptions.ProjectNotCreatedException
+import org.example.logic.exceptions.ProjectNotDeletedException
 import org.example.logic.exceptions.ProjectNotEditedException
 import org.example.models.Project
 import org.junit.jupiter.api.Assertions.*
@@ -31,7 +32,7 @@ class ProjectRepositoryImplTest {
     fun `should return success when project creation succeeds`() {
         // Given
         every { projectDataSource.createProject(project) } returns
-                Result.success(true)
+                Result.success("true")
         // When
         val result = projectRepositoryImpl.createProject(project)
 
@@ -55,13 +56,12 @@ class ProjectRepositoryImplTest {
         verify(exactly = 1) { projectDataSource.createProject(project) }
     }
 
-
     //editProject Test
     @Test
     fun `should return success when project edit succeeds`(){
         //Given
         every { projectDataSource.editProject(project) } returns
-                Result.success(true)
+                Result.success("true")
 
         //When
         val result = projectRepositoryImpl.editProject(project)
@@ -82,7 +82,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.editProject(project)
 
         // Then
-        assertTrue(result.isFailure)
+        //assertTrue(result.isFailure)
         assertThrows<ProjectNotEditedException> { result.getOrThrow() }
         verify(exactly = 1) { projectDataSource.editProject(project) }
     }
@@ -91,7 +91,7 @@ class ProjectRepositoryImplTest {
     fun `should return failure when project edited success and log failure`() {
         // Given
         every { projectDataSource.editProject(project) } returns
-                Result.success(true)
+                Result.success("true")
         // When
         val result = projectRepositoryImpl.editProject(project)
 
@@ -99,5 +99,21 @@ class ProjectRepositoryImplTest {
         assertTrue(result.isSuccess)
         verify(exactly = 1) { projectDataSource.editProject(project) }
     }
+
+    //delete project
+    @Test
+    fun `should return success when project delete succeeds`(){
+        //Given
+        every { projectDataSource.deleteProject(project) } returns
+                Result.success("true")
+
+        //When
+        val result = projectRepositoryImpl.deleteProject(project)
+
+        // Then
+        assertTrue(result.isSuccess)
+        verify(exactly = 1) { projectDataSource.deleteProject(project) }
+    }
+
 
 }
