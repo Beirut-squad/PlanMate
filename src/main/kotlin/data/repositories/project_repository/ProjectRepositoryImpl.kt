@@ -8,6 +8,7 @@ import org.example.logic.exceptions.ProjectNotGetAllProjectsException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
 import org.example.models.State
+import org.koin.core.context.unloadKoinModules
 import java.util.*
 
 class ProjectRepositoryImpl(
@@ -15,30 +16,33 @@ class ProjectRepositoryImpl(
     private val project: Project
 ) : ProjectRepository {
 
-    override fun createProject(project: Project): Result<String> {
+    override fun createProject(project: Project): Result<Unit> {
         return projectDataSource.createProject(project).fold(
             onSuccess = {
-                Result.success("Project created successfully")
+                Result.success(Unit)
             }, onFailure = {
-                Result.failure(ProjectNotCreatedException("Project could not be created"))
+                Result.failure(
+                    ProjectNotCreatedException("Project could not be created"))
             })
     }
 
-    override fun editProject(project: Project): Result<String> {
+    override fun editProject(project: Project): Result<Project> {
         return projectDataSource.editProject(project).fold(
             onSuccess = {
-                Result.success("Project edited successfully")
+                Result.success(project)
             }, onFailure = {
-                Result.failure(ProjectNotEditedException("Project could not be edited"))
+                Result.failure(
+                    ProjectNotEditedException("Project could not be edited"))
             })
     }
 
-    override fun deleteProject(project: Project): Result<String> {
-        return projectDataSource.deleteProject(project).fold(
+    override fun deleteProject(id: UUID): Result<Unit> {
+        return projectDataSource.deleteProject(project.id).fold(
             onSuccess = {
-                Result.success("Project deleted successfully")
+                Result.success(Unit)
             }, onFailure = {
-                Result.failure(ProjectNotDeletedException("Project could not be deleted"))
+                Result.failure(
+                    ProjectNotDeletedException("Project could not be deleted"))
             })
     }
 
@@ -47,7 +51,8 @@ class ProjectRepositoryImpl(
             onSuccess = {
                 Result.success(listOf(project, project))
             }, onFailure = {
-                Result.failure(ProjectNotGetAllProjectsException("you have no projects to show"))
+                Result.failure(
+                    ProjectNotGetAllProjectsException("you have no projects to show"))
             })    }
 
     override fun getProject(id: UUID): Result<Project> {

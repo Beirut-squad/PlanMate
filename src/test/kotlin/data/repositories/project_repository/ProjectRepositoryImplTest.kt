@@ -34,7 +34,7 @@ class ProjectRepositoryImplTest {
     fun `should return success when project creation succeeds`() {
         // Given
         every { projectDataSource.createProject(project) } returns
-                Result.success("true")
+                Result.success(Unit)
         // When
         val result = projectRepositoryImpl.createProject(project)
 
@@ -63,7 +63,7 @@ class ProjectRepositoryImplTest {
     fun `should return success when project edit succeeds`(){
         //Given
         every { projectDataSource.editProject(project) } returns
-                Result.success("true")
+                Result.success(Unit)
 
         //When
         val result = projectRepositoryImpl.editProject(project)
@@ -94,31 +94,31 @@ class ProjectRepositoryImplTest {
     @Test
     fun `should return success when project delete succeeds`(){
         //Given
-        every { projectDataSource.deleteProject(project) } returns
-                Result.success("true")
+        every { projectDataSource.deleteProject(project.id) } returns
+                Result.success(Unit)
 
         //When
-        val result = projectRepositoryImpl.deleteProject(project)
+        val result = projectRepositoryImpl.deleteProject(project.id)
 
         // Then
         assertTrue(result.isSuccess)
-        verify(exactly = 1) { projectDataSource.deleteProject(project) }
+        verify { projectDataSource.deleteProject(project.id) }
     }
 
     @Test
     fun `should return failure when project deleting fails `() {
         // Given
         val exception = ProjectNotDeletedException("Project not edited yet")
-        every { projectDataSource.deleteProject(project) } returns
+        every { projectDataSource.deleteProject(project.id) } returns
                 Result.failure(exception)
 
         // When
-        val result = projectRepositoryImpl.deleteProject(project)
+        val result = projectRepositoryImpl.deleteProject(project.id)
 
         // Then
         //assertTrue(result.isFailure)
         assertThrows<ProjectNotDeletedException> { result.getOrThrow() }
-        verify(exactly = 1) { projectDataSource.deleteProject(project) }
+        verify { projectDataSource.deleteProject(project.id) }
     }
 
     //get all projects
