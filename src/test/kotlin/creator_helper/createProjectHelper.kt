@@ -12,16 +12,7 @@ fun createProjectHelper(
     creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
-    state: List<State> = listOf(
-        State(
-            id = UUID.randomUUID(),
-            name = "To Do"
-        ),
-        State(
-            id = UUID.randomUUID(),
-            name = "Done"
-        ),
-    ),
+    state: List<State> = listOf(createStateHelper()),
 ): Project {
     return Project(
         id = id,
