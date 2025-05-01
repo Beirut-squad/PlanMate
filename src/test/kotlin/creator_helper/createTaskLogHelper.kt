@@ -8,17 +8,19 @@ import java.time.LocalDateTime
 import java.util.*
 
 fun createTaskLogHelper(
+    id: UUID = UUID.randomUUID(),
     userId: UUID = UUID.randomUUID(),
     entityId: UUID = UUID.randomUUID(),
     previousEntity: Task? = null,
-    currentEntity: Task? = null
+    currentEntity: Task? = null,
+    createdAt: LocalDateTime = LocalDateTime.now()
 ): TaskLog {
     return TaskLog(
-        id = UUID.randomUUID(),
+        id = id,
         userId = userId,
         entityId = entityId,
         previousEntity = previousEntity,
         currentEntity = currentEntity,
-        createdAt = LocalDateTime.now(),
+        createdAt = createdAt,
     )
 }

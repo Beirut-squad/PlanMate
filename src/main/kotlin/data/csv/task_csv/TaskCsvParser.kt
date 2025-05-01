@@ -31,7 +31,6 @@ class TaskCsvParser(
             throw Exception("state of the task is unavailable")
         }
 
-        // TODO : REFACTORING
         return Task(
             id = UUID.fromString(parts[TaskColumnIndex.TASK_ID]),
             projectId = parts[TaskColumnIndex.PROJECT_ID],

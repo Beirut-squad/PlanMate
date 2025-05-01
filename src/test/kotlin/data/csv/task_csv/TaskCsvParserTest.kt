@@ -27,13 +27,19 @@ class TaskCsvParserTest{
 
     @Test
     fun `parseLine should return null when the string is empty `(){
-
         // When
         val result = taskCsvParser.parseLine("[      ]")
 
         // Then
         assertThat(result).isNull()
+    }
+    @Test
+    fun `parseLine should return null when  the string is empty `(){
+        // When
+        val result = taskCsvParser.parseLine("  ")
 
+        // Then
+        assertThat(result).isNull()
     }
 
     @Test
