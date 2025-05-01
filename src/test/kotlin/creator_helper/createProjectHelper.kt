@@ -12,7 +12,7 @@ fun createProjectHelper(
     creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
-    state: List<State> = listOf(createTestTaskState()),
+    state: List<State> = listOf(createStateHelper()),
 ): Project {
     return Project(
         id = id,

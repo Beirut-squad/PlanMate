@@ -10,9 +10,8 @@ fun createProjectLogHelper(
     userId: UUID = UUID.randomUUID(),
     entityId: UUID = UUID.randomUUID(),
     previousEntity: Project? = null,
-    currentEntity: Project? = null ,
+    currentEntity: Project? = null,
     createdAt: LocalDateTime = LocalDateTime.now()
-
 ): ProjectLog {
     return ProjectLog(
         id = id,
@@ -20,5 +19,6 @@ fun createProjectLogHelper(
         entityId = entityId,
         previousEntity = previousEntity,
         currentEntity = currentEntity,
-        createdAt = createdAt)
+        createdAt = createdAt,
+    )
 }
