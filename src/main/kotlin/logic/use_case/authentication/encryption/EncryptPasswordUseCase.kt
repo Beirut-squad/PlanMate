@@ -6,8 +6,4 @@ class EncryptPasswordUseCase(
     fun encryptPassword(password: String): Result<String> {
         return encryptor.encodePassword(password)
     }
-
-    fun decryptPassword(password: String): Result<String> {
-        return encryptor.decodePassword(password)
-    }
 }
