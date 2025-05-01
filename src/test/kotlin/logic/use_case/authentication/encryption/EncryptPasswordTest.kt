@@ -4,19 +4,19 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.example.logic.use_case.authentication.encryption.EncryptPasswordUseCase
+import org.example.logic.use_case.authentication.encryption.EncryptPassword
 import org.example.logic.use_case.authentication.encryption.Encryptor
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class EncryptPasswordUseCaseTest {
+class EncryptPasswordTest {
 
     private val encryptor: Encryptor = mockk(relaxed = true)
-    private lateinit var encryptPasswordUseCase: EncryptPasswordUseCase
+    private lateinit var encryptPassword: EncryptPassword
 
     @BeforeEach
     fun setup() {
-        encryptPasswordUseCase = EncryptPasswordUseCase(encryptor)
+        encryptPassword = EncryptPassword(encryptor)
     }
 
     @Test
@@ -27,7 +27,7 @@ class EncryptPasswordUseCaseTest {
         every { encryptor.encodePassword(password) } returns encryptedPassword
 
         // When
-        val result = encryptPasswordUseCase.encryptPassword(password)
+        val result = encryptPassword.encryptPassword(password)
 
         // Then
         assertThat(result).isEqualTo(encryptedPassword)
@@ -42,7 +42,7 @@ class EncryptPasswordUseCaseTest {
         every { encryptor.encodePassword(password) } returns encryptionFailure
 
         // When
-        val result = encryptPasswordUseCase.encryptPassword(password)
+        val result = encryptPassword.encryptPassword(password)
 
         // Then
         assertThat(result.isFailure).isTrue()
@@ -57,7 +57,7 @@ class EncryptPasswordUseCaseTest {
         every { encryptor.encodePassword(password) } returns encryptedPassword
 
         // When
-        encryptPasswordUseCase.encryptPassword(password)
+        encryptPassword.encryptPassword(password)
 
         // Then
         verify(exactly = 1) { encryptor.encodePassword(password) }

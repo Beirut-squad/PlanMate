@@ -7,19 +7,19 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 import org.example.logic.use_case.authentication.RegisterAdminUseCase
-import org.example.logic.use_case.authentication.encryption.EncryptPasswordUseCase
+import org.example.logic.use_case.authentication.encryption.EncryptPassword
 import org.example.models.User
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class RegisterAdminUseCaseTest {
     private val authenticationRepository: AuthenticationRepository = mockk(relaxed = true)
-    private val encryptPasswordUseCase: EncryptPasswordUseCase = mockk(relaxed = true)
+    private val encryptPassword: EncryptPassword = mockk(relaxed = true)
     private lateinit var registerAdminUseCase: RegisterAdminUseCase
 
     @BeforeEach
     fun setup() {
-        registerAdminUseCase = RegisterAdminUseCase(authenticationRepository, encryptPasswordUseCase)
+        registerAdminUseCase = RegisterAdminUseCase(authenticationRepository, encryptPassword)
     }
 
     @Test
@@ -27,7 +27,7 @@ class RegisterAdminUseCaseTest {
         // Given
         val user = createUserHelper()
         val encryptionResult: Result<String> = Result.success(user.password)
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptionResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
         val repositoryResult: Result<Unit> = Result.failure(Exception())
         every { authenticationRepository.checkIfFirstRegister() } returns repositoryResult
 
@@ -43,7 +43,7 @@ class RegisterAdminUseCaseTest {
         // Given
         val user = createUserHelper()
         val encryptionResult: Result<String> = Result.success(user.password)
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptionResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
         val repositoryResult: Result<User> = Result.failure(Exception())
         every { authenticationRepository.checkIfFirstRegister() } returns Result.success(Unit)
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
@@ -60,7 +60,7 @@ class RegisterAdminUseCaseTest {
         // Given
         val user = createUserHelper()
         val encryptionResult: Result<String> = Result.success(user.password)
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptionResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
         val repositoryResult: Result<User> = Result.success(user)
         every { authenticationRepository.checkIfFirstRegister() } returns Result.success(Unit)
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
@@ -78,7 +78,7 @@ class RegisterAdminUseCaseTest {
         val user = createUserHelper()
         val encryptionResult: Result<String> = Result.success("encrypted")
         every { authenticationRepository.checkIfFirstRegister() } returns Result.success(Unit)
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptionResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns Result.success(user)
 
         // When
@@ -100,7 +100,7 @@ class RegisterAdminUseCaseTest {
         val user = createUserHelper()
         val encryptionResult: Result<String> = Result.failure(Exception())
         every { authenticationRepository.checkIfFirstRegister() } returns Result.success(Unit)
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptionResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
 
         // When
         val result = registerAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)

@@ -8,19 +8,19 @@ import org.example.models.User
 import creator_helper.createUserHelper
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 import org.example.logic.use_case.authentication.LoginUseCase
-import org.example.logic.use_case.authentication.encryption.EncryptPasswordUseCase
+import org.example.logic.use_case.authentication.encryption.EncryptPassword
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class LoginUseCaseTest {
 
     private val authenticationRepository: AuthenticationRepository = mockk(relaxed = true)
-    private val encryptPasswordUseCase: EncryptPasswordUseCase = mockk(relaxed = true)
+    private val encryptPassword: EncryptPassword = mockk(relaxed = true)
     private lateinit var loginUseCase: LoginUseCase
 
     @BeforeEach
     fun setup() {
-        loginUseCase = LoginUseCase(authenticationRepository, encryptPasswordUseCase)
+        loginUseCase = LoginUseCase(authenticationRepository, encryptPassword)
     }
 
     @Test
@@ -45,7 +45,7 @@ class LoginUseCaseTest {
         val emailCheckResult: Result<Unit> = Result.success(Unit)
         every { authenticationRepository.checkEmail(user.email) } returns emailCheckResult
         val encryptResult: Result<String> = Result.failure(Exception("encryption failed"))
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns encryptResult
+        every { encryptPassword.encryptPassword(user.password) } returns encryptResult
 
         // When
         val result = loginUseCase.login(email = user.email, password = user.password)
@@ -61,7 +61,7 @@ class LoginUseCaseTest {
         val emailCheckResult: Result<Unit> = Result.success(Unit)
         every { authenticationRepository.checkEmail(user.email) } returns emailCheckResult
         val encryptedPassword = "encryptedPassword"
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns Result.success(encryptedPassword)
+        every { encryptPassword.encryptPassword(user.password) } returns Result.success(encryptedPassword)
         val loginResult: Result<User> = Result.failure(Exception("Login failed"))
         every { authenticationRepository.login(user.email, encryptedPassword) } returns loginResult
 
@@ -79,7 +79,7 @@ class LoginUseCaseTest {
         val emailCheckResult: Result<Unit> = Result.success(Unit)
         every { authenticationRepository.checkEmail(user.email) } returns emailCheckResult
         val encryptedPassword = "encryptedPassword"
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns Result.success(encryptedPassword)
+        every { encryptPassword.encryptPassword(user.password) } returns Result.success(encryptedPassword)
         val loginResult: Result<User> = Result.success(user)
         every { authenticationRepository.login(user.email, encryptedPassword) } returns loginResult
 
@@ -97,7 +97,7 @@ class LoginUseCaseTest {
         val emailCheckResult: Result<Unit> = Result.success(Unit)
         every { authenticationRepository.checkEmail(user.email) } returns emailCheckResult
         val encryptedPassword = "encryptedPassword"
-        every { encryptPasswordUseCase.encryptPassword(user.password) } returns Result.success(encryptedPassword)
+        every { encryptPassword.encryptPassword(user.password) } returns Result.success(encryptedPassword)
         every { authenticationRepository.login(user.email, encryptedPassword) } returns Result.success(user)
 
         // When
@@ -105,7 +105,7 @@ class LoginUseCaseTest {
 
         // Then
         verify(exactly = 1) { authenticationRepository.checkEmail(user.email) }
-        verify(exactly = 1) { encryptPasswordUseCase.encryptPassword(user.password) }
+        verify(exactly = 1) { encryptPassword.encryptPassword(user.password) }
         verify(exactly = 1) { authenticationRepository.login(user.email, encryptedPassword) }
     }
 }
