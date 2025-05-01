@@ -8,7 +8,7 @@ data class Project(
     var name: String,
     var description: String,
     val creatorUserID: UUID,
-    var createdAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var state: List<State>,
 )
