@@ -28,9 +28,11 @@ class StateCsvWriterTest{
 
      //when
          stateCsvWriter.writeToFile(listOfState , filePath)
-
+     val file = File(filePath)
      //then
      assertTrue(File(filePath).exists())
+
+     file.delete()
 
  }
     @Test
