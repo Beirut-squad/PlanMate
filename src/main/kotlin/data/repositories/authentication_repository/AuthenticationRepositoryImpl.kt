@@ -11,6 +11,10 @@ class AuthenticationRepositoryImpl(
         return authenticationDataSource.login(email = email, password = password)
     }
 
+    override fun checkEmail(email: String): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
     override fun register(name: String, password: String, email: String): Result<User> {
         return authenticationDataSource.register(email = email, password = password, name = name)
     }
