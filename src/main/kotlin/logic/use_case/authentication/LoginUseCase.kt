@@ -1,12 +1,12 @@
 package org.example.logic.use_case.authentication
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.encryption.DecryptPasswordUseCase
+import org.example.logic.use_case.authentication.encryption.EncryptPasswordUseCase
 import org.example.models.User
 
 class LoginUseCase(
     private val authenticationRepository: AuthenticationRepository,
-    private val decryptPasswordUseCase: DecryptPasswordUseCase
+    private val encryptPasswordUseCase: EncryptPasswordUseCase
 ) {
 
     fun login(
@@ -25,12 +25,12 @@ class LoginUseCase(
     }
 
     private fun authenticateUser(email: String, password: String): Result<User> {
-        return decryptPasswordUseCase.decryptPassword(password = password)
+        return encryptPasswordUseCase.encryptPassword(password = password)
             .fold(
-                onSuccess = { decryptedPassword ->
+                onSuccess = { encryptedPassword ->
                     authenticationRepository.login(
                         email = email,
-                        password = decryptedPassword
+                        password = encryptedPassword
                     )
                 },
                 onFailure = {
