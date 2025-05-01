@@ -8,6 +8,15 @@ class GetUserTaskLogsUseCase(
     private val logRepository: LogRepository
 ) {
     fun getUserTaskLogs(userId: UUID): Result<List<TaskLog>> {
-        TODO()
+        return logRepository.getAllTaskLogs().fold(
+            onSuccess = { taskLogs ->
+                Result.success(
+                    taskLogs.filter { log ->
+                        log.userId == userId
+                    }
+                )
+            },
+            onFailure = { Result.failure(it) }
+        )
     }
 }
