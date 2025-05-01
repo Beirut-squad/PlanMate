@@ -22,3 +22,38 @@ fun createProjectLogHelper(
         createdAt = createdAt,
     )
 }
+
+//val testUserId: UUID = UUID.fromString("11111111-1111-1111-1111-111111111111")
+val testUserId: UUID = UUID.randomUUID()
+
+val projectLogsForTestUser =
+    listOf(
+        createProjectLogHelper(
+            userId = testUserId,
+            previousEntity = createProjectHelper(name = "Project 1"),
+            currentEntity = createProjectHelper(name = "Project 2")
+        ),
+        createProjectLogHelper(
+            userId = testUserId,
+            previousEntity = createProjectHelper(name = "Project 2"),
+            currentEntity = createProjectHelper(name = "Project 3")
+        )
+    )
+
+val projectLogsForAllUsers =
+    listOf(
+        createProjectLogHelper(
+            userId = testUserId,
+            previousEntity = createProjectHelper(name = "Project 1"),
+            currentEntity = createProjectHelper(name = "Project 2")
+        ),
+        createProjectLogHelper(
+            userId = testUserId,
+            previousEntity = createProjectHelper(name = "Project 2"),
+            currentEntity = createProjectHelper(name = "Project 3")
+        ),
+        createProjectLogHelper(
+            previousEntity = createProjectHelper(name = "Project 2"),
+            currentEntity = createProjectHelper(name = "Project 3")
+        )
+    )
