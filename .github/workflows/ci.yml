@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main,develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main,develop ]
+    branches: [ main, develop ]
   workflow_dispatch:
 
 permissions:
@@ -53,7 +53,7 @@ jobs:
         run: ./gradlew jacocoTestCoverageVerification
 
   analyze-pr:
-    name: Analyze PR Code Coverage
+    name: Analyze PR Code Coverage (Only Changed Files)
     needs: run-tests
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -61,37 +61,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check if artifact exists
-        id: check_artifact
-        uses: actions/github-script@v6
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId
-            });
-            const matchArtifact = artifacts.data.artifacts.find(artifact => {
-              return artifact.name === "jacoco-coverage-report"
-            });
-            return !!matchArtifact;
+          python-version: '3.11'
+
+      - name: Install diff-cover
+        run: pip install diff-cover
 
       - name: Download coverage reports
         uses: actions/download-artifact@v4
-        if: steps.check_artifact.outputs.result == 'true'
         with:
           name: jacoco-coverage-report
           path: build/reports/jacoco/
 
-      - name: Add coverage results to PR
-        id: jacoco-pr-comment
-        uses: madrapps/jacoco-report@v1.7.1
+      - name: Compare coverage on changed files
+        run: |
+          diff-cover build/reports/jacoco/test/jacocoTestReport.xml \
+            --compare-branch=origin/main \
+            --html-report diffcover-report.html
+
+      - name: Upload diffcover report
+        uses: actions/upload-artifact@v4
         with:
-          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 80
-          min-coverage-changed-files: 80
-          update-comment: true
-          title: Code Coverage Summary
-          pass-emoji: '✅'
-          fail-emoji: '❌'
+          name: diff-coverage-report
+          path: diffcover-report.html
