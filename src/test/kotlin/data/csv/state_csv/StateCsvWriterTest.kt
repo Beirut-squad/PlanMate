@@ -2,6 +2,8 @@ package data.csv.state_csv
 
 import creator_helper.createTestTaskState
 import org.example.data.csv.state_csv.StateCsvWriter
+import org.example.models.State
+import org.example.models.User
 import org.junit.jupiter.api.Assertions.*
 import java.io.File
 import java.util.*
@@ -30,6 +32,17 @@ class StateCsvWriterTest{
      //then
      assertTrue(File(filePath).exists())
 
-
  }
+    @Test
+    fun `given empty List Of State when writeToFile is called then should not create file`(){
+    //Given
+        val state = emptyList<State>()
+
+        //then
+        stateCsvWriter.writeToFile(state, filePath)
+        val file = File(filePath)
+
+        //then
+        assertTrue(!file.exists())
+    }
  }
