@@ -6,25 +6,24 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repositories.log_repository.LogRepository
-import org.example.logic.use_cases.log.LogProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
-class LogProjectUseCaseTest {
+class CreateProjectLogUseCaseTest {
     private val logRepository: LogRepository = mockk(relaxed = true)
-    private lateinit var logProjectUseCase: LogProjectUseCase
+    private lateinit var createProjectLogUseCase: CreateProjectLogUseCase
 
     @BeforeEach
     fun setup() {
-        logProjectUseCase = LogProjectUseCase(logRepository)
+        createProjectLogUseCase = CreateProjectLogUseCase(logRepository)
     }
 
     @Test
     fun `should return failure when previous and new project name are null`() {
         val userId = UUID.randomUUID()
 
-        val result = logProjectUseCase.createProjectLog(userId, null, null)
+        val result = createProjectLogUseCase.createProjectLog(userId, null, null)
 
         assert(result.isFailure)
     }
@@ -36,7 +35,7 @@ class LogProjectUseCaseTest {
         val currentProject = createProjectHelper(name = "Current Project")
         every { logRepository.saveProjectLog(any()) } returns Result.success(Unit)
 
-        val result = logProjectUseCase.createProjectLog(userId, previousProject, currentProject)
+        val result = createProjectLogUseCase.createProjectLog(userId, previousProject, currentProject)
 
         assertThat(result.isSuccess)
         verify {
@@ -55,7 +54,7 @@ class LogProjectUseCaseTest {
         val currentProject = createProjectHelper()
         every { logRepository.saveProjectLog(any()) } returns Result.success(Unit)
 
-        val result = logProjectUseCase.createProjectLog(userId, null, currentProject)
+        val result = createProjectLogUseCase.createProjectLog(userId, null, currentProject)
 
         assert(result.isSuccess)
         verify {
@@ -73,7 +72,7 @@ class LogProjectUseCaseTest {
         val previousProject = createProjectHelper()
         every { logRepository.saveProjectLog(any()) } returns Result.success(Unit)
 
-        val result = logProjectUseCase.createProjectLog(userId, previousProject, null)
+        val result = createProjectLogUseCase.createProjectLog(userId, previousProject, null)
 
         assert(result.isSuccess)
         verify {
@@ -94,7 +93,7 @@ class LogProjectUseCaseTest {
 
         every { logRepository.saveProjectLog(any()) } returns Result.failure(exception)
 
-        val result = logProjectUseCase.createProjectLog(userId, previousProject, currentProject)
+        val result = createProjectLogUseCase.createProjectLog(userId, previousProject, currentProject)
 
         assert(result.isFailure)
         assertThat(result.exceptionOrNull()).isEqualTo(exception)

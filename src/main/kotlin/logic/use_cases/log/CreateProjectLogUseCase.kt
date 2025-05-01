@@ -1,4 +1,4 @@
-package org.example.logic.use_cases.log
+package logic.use_cases.log
 
 import org.example.logic.repositories.log_repository.LogRepository
 import org.example.models.Project
@@ -6,7 +6,7 @@ import org.example.models.ProjectLog
 import java.time.LocalDateTime
 import java.util.UUID
 
-class LogProjectUseCase(
+class CreateProjectLogUseCase(
     private val logRepository: LogRepository
 ) {
     fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?): Result<Unit> {
@@ -29,13 +29,5 @@ class LogProjectUseCase(
             onSuccess = { Result.success(Unit) },
             onFailure = { Result.failure(it) }
         )
-    }
-
-    fun getProjectLogsByProjectId(projectId: UUID): Result<List<ProjectLog>> {
-        TODO()
-    }
-
-    fun getAllProjectLogs(): Result<List<ProjectLog>> {
-        TODO()
     }
 }
