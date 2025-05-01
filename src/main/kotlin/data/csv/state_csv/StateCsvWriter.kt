@@ -10,11 +10,12 @@ import java.io.IOException
 class StateCsvWriter: CsvWriter<State> {
     override fun writeToFile(items: List<State>, filePath: String): Result<Unit> {
      return runCatching {
-         if (items.isEmpty()) {
-             throw IllegalArgumentException("Empty state")
+         if (items.isNotEmpty()) {
+             val file = File(filePath)
+             val writer = BufferedWriter(FileWriter(file))
+
+             writer.close()
          }
-         val file = File(filePath)
-         val writer = BufferedWriter(FileWriter(file))
 
      }.fold(
          onSuccess = {

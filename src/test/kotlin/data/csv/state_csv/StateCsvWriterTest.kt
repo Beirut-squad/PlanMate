@@ -27,13 +27,12 @@ class StateCsvWriterTest{
      val listOfState = listOf(state)
 
      //when
-         stateCsvWriter.writeToFile(listOfState , filePath)
+     stateCsvWriter.writeToFile(listOfState , filePath)
      val file = File(filePath)
      //then
-     assertTrue(File(filePath).exists())
+     assertTrue(file.exists())
 
      file.delete()
-
  }
     @Test
     fun `given empty List Of State when writeToFile is called then should not create file`(){
