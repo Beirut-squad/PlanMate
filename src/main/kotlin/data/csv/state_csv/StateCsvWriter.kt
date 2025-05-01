@@ -13,7 +13,10 @@ class StateCsvWriter: CsvWriter<State> {
          if (items.isNotEmpty()) {
              val file = File(filePath)
              val writer = BufferedWriter(FileWriter(file))
-
+             writer.write("id,name\n")
+             for (state in items){
+                 writer.write("${state.id},${state.name}\n")
+             }
              writer.close()
          }
 
