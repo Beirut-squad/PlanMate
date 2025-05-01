@@ -10,7 +10,7 @@ interface ProjectRepository {
     fun deleteProject(project: Project)
     fun getAllProjects() : List<Project>
     fun getProject(id:UUID) : Result<Project>
-    fun addStateToProject(projectId: UUID, state: State): Result<String>
-    fun editStateToProject(projectId: UUID, state: State): Result<String>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<String>
+    fun addStateToProject(projectId: UUID, state: State): Result<Unit>
+    fun editStateToProject(projectId: UUID, state: State): Result<Unit>
+    fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
 }
