@@ -15,7 +15,8 @@ class StateCsvWriter: CsvWriter<State> {
              val writer = BufferedWriter(FileWriter(file))
              writer.write("id,name\n")
              for (state in items){
-                 writer.write("${state.id},${state.name}\n")
+                 if (isValidState(state))
+                    writer.write("${state.id},${state.name}\n")
              }
              writer.close()
          }
@@ -29,5 +30,9 @@ class StateCsvWriter: CsvWriter<State> {
          }
      )
 
+    }
+
+    private fun isValidState(state: State): Boolean {
+        return state.name.isNotBlank() && state.id.toString().isNotBlank()
     }
 }
