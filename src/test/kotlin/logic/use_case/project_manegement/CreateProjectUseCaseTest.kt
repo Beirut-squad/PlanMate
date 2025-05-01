@@ -18,17 +18,17 @@ class CreateProjectUseCaseTest {
     @Test
     fun `should create project successfully when call createProject function`() {
         // Given
-        val userId = UUID.randomUUID()
+        val creatorUserID : UUID = UUID.randomUUID()
         val name = "Test Project"
         val description = "Test Description"
         val stateNames = listOf("Todo", "In Progress", "Done")
 
         // When
         createProjectUseCase.createProject(
-            userId = userId,
             name = name,
             description = description,
-            stateNames = stateNames
+            stateNames = stateNames,
+            creatorUserID = creatorUserID,
         )
 
         // Then
@@ -36,7 +36,7 @@ class CreateProjectUseCaseTest {
             projectRepository.createProject(match { project ->
                 project.name == name &&
                         project.description == description &&
-                        project.creatorUserID == userId &&
+                        project.creatorUserID == creatorUserID &&
                         project.state.size == stateNames.size &&
                         project.state.map { it.name } == stateNames
             })

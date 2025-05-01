@@ -8,19 +8,19 @@ import java.util.*
 
 
 class EditProjectUseCase(private val projectRepository: ProjectRepository) {
-    fun editProjectName(project: Project, newName: String, userId: UUID): Result<String> {
+    fun editProjectName(project: Project, newName: String, creatorUserID:UUID): Result<String> {
         project.name = newName
         project.updatedAt = LocalDateTime.now()
         //fun createProjectLog(userId, previousProject = project, currentProject =  project)
         return projectRepository.editProject(buildProject())
     }
-    fun editProjectDescription(project: Project, newDescription: String, userId: UUID): Result<String> {
+    fun editProjectDescription(project: Project, newDescription: String, creatorUserID:UUID): Result<String> {
         project.description = newDescription
         project.updatedAt = LocalDateTime.now()
         //fun createProjectLog(userId, previousProject = project, currentProject =  project)
         return projectRepository.editProject(buildProject())
     }
-    fun editProjectNameAndDescription(project: Project, newName: String, newDescription: String, userId: UUID): Result<String> {
+    fun editProjectNameAndDescription(project: Project, newName: String, newDescription: String, creatorUserID: UUID): Result<String> {
         project.name = newName
         project.description = newDescription
         project.updatedAt = LocalDateTime.now()

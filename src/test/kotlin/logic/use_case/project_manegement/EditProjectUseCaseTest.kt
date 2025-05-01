@@ -26,7 +26,7 @@ class EditProjectUseCaseTest {
         editProjectUseCase.editProjectName(
             project = project,
             newName = "Bassant",
-            userId = userId
+            creatorUserID = userId
         )
         //When
         projectRepository.editProject(project)
@@ -42,7 +42,7 @@ class EditProjectUseCaseTest {
         editProjectUseCase.editProjectDescription(
             project = project,
             newDescription = "Bassant",
-            userId = userId
+            creatorUserID = userId
         )
         //When
         projectRepository.editProject(project)
@@ -59,7 +59,7 @@ class EditProjectUseCaseTest {
             project = project,
             newName = "",
             newDescription = "Bassant",
-            userId = userId
+            creatorUserID = userId
         )
         //When
         projectRepository.editProject(project)

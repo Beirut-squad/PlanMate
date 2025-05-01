@@ -9,7 +9,7 @@ import java.util.*
 class DeleteProjectUseCase(private val projectRepository: ProjectRepository) {
     fun deleteProject() {
 
-        //fun createProjectLog(userId, previousProject = null, currentProject =  project)
+        //fun createProjectLog(previousProject = null, currentProject =  project)
         projectRepository.deleteProject(buildProject())
     }
     private fun buildProject(): Project{
