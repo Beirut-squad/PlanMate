@@ -46,4 +46,27 @@ class StateCsvWriterTest{
         //then
         assertTrue(!file.exists())
     }
+
+@Test
+fun `given list of state when writeToFile is called then should create file with header`(){
+   //Given
+    val listOfState = listOf(
+        createTestTaskState(id= UUID.randomUUID(),name="To Do"),
+        createTestTaskState(id= UUID.randomUUID(),name="In Processing")
+    )
+
+    //when
+    stateCsvWriter.writeToFile(listOfState , filePath)
+    val file = File(filePath)
+    val lines = file.readLines()
+
+    //then
+    assertTrue(file.exists())
+    assertTrue(lines[0].contains("id,name"))
+    assertTrue(lines[1].contains("To Do"))
+    assertTrue(lines[2].contains("In Processing"))
+    assertTrue(lines.size == 3)
+
+    file.delete()
+}
  }
