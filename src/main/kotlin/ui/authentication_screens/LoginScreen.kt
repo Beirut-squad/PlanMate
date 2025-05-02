@@ -4,21 +4,19 @@ import org.example.ui.Reader
 import org.example.ui.UiScreen
 import ui.Viewer
 
-class RegisterScreen(
+class LoginScreen(
     private val reader: Reader,
     private val viewer: Viewer
-
-) : UiScreen {
+): UiScreen {
     override fun show() {
-        viewer.printTitle("Register for Plan Mate")
+        viewer.printTitle("Login for Plan Mate")
 
-        viewer.printInfoLine("Please enter your details to register:")
+        viewer.printInfoLine("Please enter your information to login:")
 
-        takeUserRegisterInput()
+        takeUserLoginInput()
     }
 
-    private fun takeUserRegisterInput() {
-        val name = takeUserInput("Name")
+    private fun takeUserLoginInput() {
         val email = takeUserInput("Email")
         val password = takeUserInput("Password")
 
