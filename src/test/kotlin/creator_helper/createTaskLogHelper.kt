@@ -1,7 +1,5 @@
 package creator_helper
 
-import org.example.models.Project
-import org.example.models.ProjectLog
 import org.example.models.Task
 import org.example.models.TaskLog
 import java.time.LocalDateTime
@@ -26,6 +24,11 @@ fun createTaskLogHelper(
 }
 
 val testTaskId: UUID = UUID.randomUUID()
+
+val taskLog = createTaskLogHelper(
+    previousEntity = createTaskHelper(title = "Task 1"),
+    currentEntity = createTaskHelper(title = "Task 2")
+)
 
 val taskLogsByTaskId = listOf(
     createTaskLogHelper(

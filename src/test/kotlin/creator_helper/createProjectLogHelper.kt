@@ -59,6 +59,11 @@ val projectLogsForAllUsers =
 
 val testProjectId: UUID = UUID.randomUUID()
 
+val projectLog = createProjectLogHelper(
+    previousEntity = createProjectHelper(name = "Project 1"),
+    currentEntity = createProjectHelper(name = "Project 2")
+)
+
 val projectLogsByProjectId = listOf(
     createProjectLogHelper(
         entityId = testProjectId,
@@ -71,3 +76,6 @@ val projectLogsByProjectId = listOf(
         currentEntity = createProjectHelper(name = "Project 3")
     )
 )
+
+
+
