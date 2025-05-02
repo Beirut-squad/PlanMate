@@ -19,9 +19,9 @@ class TaskDataSourceImpl(
 
     override fun createTask(task: Task): Result<Unit> {
         return try {
-            val currentTasks = readTasksFromFile()
+            val currentTasks = csvReader.read(TASK_FILE)
             val updatedTasks = addTaskToList(currentTasks, task)
-            writeTasksToFile(updatedTasks)
+            csvWriter.writeToFile(updatedTasks, TASK_FILE)
             Result.success(Unit)
         } catch (exception: Exception) {
             Result.failure(TaskCreationException("Failed to create task: ${exception.message}"))
@@ -30,14 +30,14 @@ class TaskDataSourceImpl(
 
     override fun editTask(task: Task): Result<Unit> {
         return try {
-            val currentTasks = readTasksFromFile()
+            val currentTasks = csvReader.read(TASK_FILE)
             validateTasksExist(currentTasks, "No tasks found to edit")
 
             val taskIndex = findTaskIndexById(currentTasks, task.id)
             validateTaskExists(taskIndex, task.id, "No tasks found to edit")
 
             val updatedTasks = updateTaskInList(currentTasks, taskIndex, task)
-            writeTasksToFile(updatedTasks)
+            csvWriter.writeToFile(updatedTasks, TASK_FILE)
 
             Result.success(Unit)
         } catch (exception: Exception) {
@@ -47,14 +47,14 @@ class TaskDataSourceImpl(
 
     override fun deleteTask(id: UUID): Result<Unit> {
         return try {
-            val currentTasks = readTasksFromFile()
+            val currentTasks =csvReader.read(TASK_FILE)
             validateTasksExist(currentTasks, "No tasks found to delete")
 
             val taskIndex = findTaskIndexById(currentTasks, id)
             validateTaskExists(taskIndex, id, "Cannot delete task")
 
             val updatedTasks = removeTaskFromList(currentTasks, taskIndex)
-            writeTasksToFile(updatedTasks)
+            csvWriter.writeToFile(updatedTasks, TASK_FILE)
 
             Result.success(Unit)
         } catch (e: Exception) {
@@ -64,7 +64,7 @@ class TaskDataSourceImpl(
 
     override fun getAllTasks(): Result<List<Task>> {
         return try {
-            val tasks = readTasksFromFile()
+            val tasks = csvReader.read(TASK_FILE)
             validateTasksExist(tasks, "No tasks found")
 
             Result.success(tasks)
@@ -76,7 +76,7 @@ class TaskDataSourceImpl(
 
     override fun getTask(id: UUID): Result<Task> {
         return try {
-            val tasks = readTasksFromFile()
+            val tasks =csvReader.read(TASK_FILE)
             val task = tasks.find { it.id == id }
             if (task != null) {
                 Result.success(task)
@@ -88,18 +88,10 @@ class TaskDataSourceImpl(
         }
     }
 
-    private fun readTasksFromFile(): List<Task> {
-        return csvReader.read(TASK_FILE)
-    }
-
     private fun validateTasksExist(tasks: List<Task>, errorMessage: String) {
         if (tasks.isEmpty()) {
             throw TaskEditException(errorMessage)
         }
-    }
-
-    private fun writeTasksToFile(tasks: List<Task>) {
-        csvWriter.writeToFile(tasks, TASK_FILE)
     }
 
     private fun findTaskIndexById(tasks: List<Task>, id: UUID): Int {
