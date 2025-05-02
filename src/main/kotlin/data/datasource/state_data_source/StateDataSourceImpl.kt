@@ -14,18 +14,14 @@ class StateDataSourceImpl(
     override fun createState(state: State): Result<State> = runCatching {
 
         val states = reader.read(filePath)
-
         val newList = states + state
-
         writer.writeToFile(newList, filePath)
-
         state
     }
 
     override fun editState(state: State): Result<State> = runCatching {
 
         val states = reader.read(filePath)
-
         val updatedStates = states.map {
             if (it.id == state.id) state else it
         }
@@ -35,20 +31,18 @@ class StateDataSourceImpl(
         }
 
         writer.writeToFile(updatedStates, filePath)
-
         state
     }
 
     override fun deleteState(id: UUID): Result<Unit> = runCatching {
 
         val states = reader.read(filePath)
-
         if (states.none { it.id == id }) {
             throw IllegalStateException("State not found")
         }
 
         val updatedStates = states.filterNot { it.id == id }
-
         writer.writeToFile(updatedStates, filePath)
     }
 }
+
