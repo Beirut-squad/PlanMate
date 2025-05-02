@@ -4,9 +4,9 @@ import org.example.models.Task
 import java.util.*
 
 interface TaskRepository {
-    fun createTask(task: Task)
-    fun editTask(task: Task)
-    fun deleteTask(id:UUID)
-    fun getAllTasks() :List<Task>
-    fun getTask(id: UUID) :Task
+    fun createTask(task: Task)  : Result<Unit>
+    fun editTask(task: Task) : Result<Unit>
+    fun deleteTask(id:UUID) : Result<Unit>
+    fun getAllTasks() : Result<List<Task>>
+    fun getTask(id: UUID) : Result<Task>
 }
