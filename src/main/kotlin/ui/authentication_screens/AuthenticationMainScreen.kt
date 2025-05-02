@@ -6,7 +6,8 @@ import ui.Viewer
 
 class AuthenticationMainScreen(
     private val reader: Reader,
-    private val viewer: Viewer
+    private val viewer: Viewer,
+    private val registerScreen: RegisterScreen
 ) : UiScreen {
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate, what would you like to do?")
@@ -16,9 +17,9 @@ class AuthenticationMainScreen(
                 "Register",
                 "Login"
             )
-            val input = reader.readInt()
 
-            when (input) {
+
+            when (reader.readInt()) {
                 1 -> {
                     goToRegisterScreen()
                     break
@@ -37,7 +38,7 @@ class AuthenticationMainScreen(
     }
 
     private fun goToRegisterScreen() {
-        // TODO
+        registerScreen.show()
     }
 
     private fun goToLoginScreen() {
