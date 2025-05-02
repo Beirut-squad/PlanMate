@@ -19,6 +19,25 @@ class LogCsvWriterForProjectTest{
          logCsvWriterForProject = LogCsvWriterForProject()
          filePath = "test_projectLog.csv"
      }
+    @Test
+    fun `given empty list of projects when writeToFile is called then file shoud contain only header`(){
+        //Given
+        val listOfProjectLogs = emptyList<ProjectLog>()
+        val file = File(filePath)
+        assertTrue(file.length() == 0L)
+
+        //when
+        logCsvWriterForProject.writeToFile(listOfProjectLogs,filePath)
+
+        val content = file.readText()
+        //then
+
+        assertTrue(file.exists())
+        assertTrue(content.contains("id,userId,entityId,previousEntity,currentEntity,createdAt"))
+        assertTrue(content.lines().size == 2)
+        assertTrue(content.lines()[1].isBlank())
+        file.delete()
+    }
 
     @Test
     fun `given list of projects when writeToFile is called then file should be created`(){
@@ -34,25 +53,6 @@ class LogCsvWriterForProjectTest{
         assertTrue(file.exists())
         file.delete()
     }
-
-    @Test
-    fun `given empty list of projects when writeToFile is called then file shoud contain only header`(){
-    //Given
-    val listOfProjectLogs = emptyList<ProjectLog>()
-    val file = File(filePath)
-    assertTrue(file.length() == 0L)
-    val content = file.readText()
-    //when
-    logCsvWriterForProject.writeToFile(listOfProjectLogs,filePath)
-
-    //then
-
-    assertTrue(file.exists())
-    assertTrue(content.contains("id,userId,entityId,previousEntity,currentEntity,createdAt"))
-    assertTrue(content.lines().size == 2)
-    assertTrue(content.lines()[1].isBlank())
-    file.delete()
-}
 
     @Test
     fun `given invalid file name when writeToFile is called then return failure`() {
@@ -123,6 +123,22 @@ class LogCsvWriterForProjectTest{
         assertTrue(result)
     }
 
+    @Test
+    fun `given invalid project log when writeToFile is called then it should be skipped`() {
+        val invalidLog = createProjectLogHelper(id = UUID(0, 0))
+        val validLog = createProjectLogHelper()
+        val logs = listOf(invalidLog, validLog)
 
+        val filePath = "test_projectLog.csv"
+        val writer = LogCsvWriterForProject()
+        writer.writeToFile(logs, filePath)
+
+        val file = File(filePath)
+        val lines = file.readLines()
+
+        assertEquals(2, lines.size)
+        assertTrue(lines[1].contains(validLog.id.toString()))
+        file.delete()
+    }
 }
 
