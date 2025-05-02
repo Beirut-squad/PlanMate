@@ -29,7 +29,7 @@ class ProjectRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getAllProjects(): List<Project> {
+    override fun getAllProjects(): Result<List<Project>> {
         TODO("Not yet implemented")
     }
 

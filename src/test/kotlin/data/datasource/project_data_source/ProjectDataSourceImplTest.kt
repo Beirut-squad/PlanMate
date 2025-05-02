@@ -3,30 +3,38 @@ package data.datasource.project_data_source
 import FileName
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
+import creator_helper.createStateHelper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
 import org.example.data.csv.CsvReader
+import org.example.data.csv.CsvWriter
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.data.datasource.project_data_source.ProjectDataSourceImpl
+import org.example.logic.exceptions.DuplicateStateException
 import org.example.logic.exceptions.NoProjectFoundException
 import org.example.models.Project
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.io.IOException
+import java.time.LocalDateTime
+import java.util.UUID
 
 class ProjectDataSourceImplTest {
 
+    private lateinit var writer: CsvWriter<Project>
     private lateinit var reader: CsvReader<Project>
     private lateinit var dataSource: ProjectDataSource
     private val fileName = FileName.PROJECTS_FILE
 
     @BeforeEach
     fun setUp() {
+        writer = mockk(relaxed = true)
         reader = mockk(relaxed = true)
-        dataSource = ProjectDataSourceImpl(reader)
+        dataSource = ProjectDataSourceImpl(writer, reader)
     }
 
     //region Test cases for getProject()
@@ -111,6 +119,103 @@ class ProjectDataSourceImplTest {
         val exception = result.exceptionOrNull()
         assertTrue(exception is NoProjectFoundException)
         assertEquals(StringConstants.Project.NO_PROJECT_FOUND, exception?.message)
+    }
+    //endregion
+
+    //region Test cases for addStateToProject()
+    @Test
+    fun `addStateToProject should call writeToFile form csv writer and read from csv reader exactly once`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val existingProject1 = createProjectHelper(id = id)
+        val existingProject2 = createProjectHelper()
+        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        val newState = createStateHelper(name = "New State")
+        every { writer.writeToFile(listOf(existingProject1, existingProject2), eq(fileName)) } returns Unit
+
+        // When
+        val result = dataSource.addStateToProject(id, newState)
+
+        // Then
+        verify(exactly = 1) {
+            reader.read(fileName)
+            writer.writeToFile(any(), fileName)
+        }
+    }
+
+    @Test
+    fun `addStateToProject should return success with Unit when project exists and state is valid`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val existingProject1 = createProjectHelper(id = id)
+        val existingProject2 = createProjectHelper()
+        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        val newState = createStateHelper(name = "New State")
+        val updatedProject = existingProject1.copy(
+            state = existingProject1.state + newState, updatedAt = LocalDateTime.now()
+        )
+        val expectedProjects = listOf(updatedProject, createProjectHelper())
+        every { writer.writeToFile(expectedProjects, fileName) } returns Unit
+
+        // When
+        val result = dataSource.addStateToProject(id, newState)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertNotNull(result.getOrNull())
+        assertEquals(updatedProject.state.size, 2)
+        assertEquals(existingProject1.state + newState, updatedProject.state)
+    }
+
+    @Test
+    fun `addStateToProject should return failure with NoProjectFoundException when project does not exist`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        every { reader.read(fileName) } returns listOf(createProjectHelper(), createProjectHelper())
+        val newState = createStateHelper(name = "New State")
+
+        // When
+        val result = dataSource.addStateToProject(id, newState)
+
+        // Then
+        assertTrue(result.isFailure)
+        val exception = result.exceptionOrNull()
+        assertTrue(exception is NoProjectFoundException)
+        assertEquals(StringConstants.Project.NO_PROJECT_FOUND, exception?.message)
+    }
+
+    @Test
+    fun `addStateToProject should propagate IOException when file read fails`() {
+        // Given
+        val id = UUID.randomUUID()
+        every { reader.read(fileName) } throws IOException("Read failed")
+        val state = createStateHelper()
+
+        // When
+        val result = dataSource.addStateToProject(id, state)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IOException)
+    }
+
+    @Test
+    fun `addStateToProject should return failure with DuplicateStateException when state name exists`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val existingProject1 = createProjectHelper(id = id, state = listOf(createStateHelper(name = "To Do")))
+        val existingProject2 = createProjectHelper()
+        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        val newState = createStateHelper(name = "to do")
+
+        // When
+        val result = dataSource.addStateToProject(id, newState)
+
+        // Then
+        kotlin.test.assertTrue(result.isFailure)
+        val exception = result.exceptionOrNull()
+        kotlin.test.assertTrue(exception is DuplicateStateException)
+        kotlin.test.assertEquals(StringConstants.Project.DUPLICATE_STATE, exception.message)
     }
     //endregion
 
