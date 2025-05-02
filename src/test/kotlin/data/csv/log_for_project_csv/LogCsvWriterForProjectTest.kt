@@ -1,11 +1,9 @@
 package data.csv.log_for_project_csv
 
 import creator_helper.createProjectLogHelper
-import org.example.data.csv.log_csv_parser.LogCsvWriterForProject
 import org.example.models.ProjectLog
 import org.junit.jupiter.api.Assertions.*
 import java.io.File
-import java.io.FileNotFoundException
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
