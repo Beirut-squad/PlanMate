@@ -1,2 +1,19 @@
 package org.example.di
 
+import org.example.ui.Reader
+import org.example.ui.authentication_screens.AuthenticationMainScreen
+import org.example.ui.authentication_screens.LoginScreen
+import org.example.ui.authentication_screens.RegisterScreen
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+import ui.Colors
+import ui.Viewer
+
+val uiModule = module {
+    singleOf(::AuthenticationMainScreen)
+    singleOf(::LoginScreen)
+    singleOf(::RegisterScreen)
+    singleOf(::Colors)
+    singleOf(::Viewer)
+    singleOf(::Reader)
+}
