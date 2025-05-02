@@ -8,9 +8,6 @@ import java.time.LocalDateTime
 import java.util.*
 
 class LogCsvParserForProject(private val projectCsvParser: ProjectCsvParser):CsvParser<ProjectLog> {
-
-
-
     override fun parseFile(csvLines: List<String>): List<ProjectLog> {
         if (csvLines.isEmpty())
             return emptyList()
@@ -20,14 +17,13 @@ class LogCsvParserForProject(private val projectCsvParser: ProjectCsvParser):Csv
 
     override fun parseLine(line: String): ProjectLog? {
         var cleanedLine = line.replace(" ", "")
-
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
 
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-            if (projectCsvParser.parseLine(parts[LogsColumnIndexForProject.PREVIOUS_ENTITY]) == null || projectCsvParser.parseLine(parts[LogsColumnIndexForProject.CURRENT_ENTITY]) == null)
+        if (projectCsvParser.parseLine(parts[LogsColumnIndexForProject.PREVIOUS_ENTITY]) == null || projectCsvParser.parseLine(parts[LogsColumnIndexForProject.CURRENT_ENTITY]) == null)
             throw Exception("entity is missing")
 
         return ProjectLog(
