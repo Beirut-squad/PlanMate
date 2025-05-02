@@ -1,6 +1,6 @@
 package org.example.data.repositories.project_repository
 
-import org.example.data.datasource.log_data_source.LogDataSource
+import org.example.data.datasource.log_data_source.LogDataSourceForProject
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
@@ -8,7 +8,7 @@ import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val logDataSource: LogDataSource
+    private val logDataSource: LogDataSourceForProject
 ) : ProjectRepository {
     override fun createProject() {
         TODO("Not yet implemented")
