@@ -1,6 +1,6 @@
 package data.csv.state_csv
 
-import creator_helper.createTestTaskState
+import creator_helper.createStateHelper
 import creator_helper.createUserForCsvWriter
 import org.example.data.csv.state_csv.StateCsvWriter
 import org.example.models.State
@@ -24,7 +24,7 @@ class StateCsvWriterTest{
     @Test
     fun `given list of State when writeToFile is called then should be created`(){
   //Given
-     val state = createTestTaskState(id= UUID.randomUUID(),name="To Do")
+     val state = createStateHelper(id= UUID.randomUUID(),name="To Do")
      val listOfState = listOf(state)
 
      //when
@@ -53,8 +53,8 @@ class StateCsvWriterTest{
     fun `given list of state when writeToFile is called then should create file with header`(){
    //Given
     val listOfState = listOf(
-        createTestTaskState(id= UUID.randomUUID(),name="To Do"),
-        createTestTaskState(id= UUID.randomUUID(),name="In Processing")
+        createStateHelper(id= UUID.randomUUID(),name="To Do"),
+        createStateHelper(id= UUID.randomUUID(),name="In Processing")
     )
 
     //when
@@ -77,8 +77,8 @@ class StateCsvWriterTest{
     fun `given list of state with invalid state when writeToFile is called then should create file and don't writer invalid state`(){
         //Given
         val listOfState = listOf(
-            createTestTaskState(id= UUID.randomUUID(),name="To Do"),
-            createTestTaskState(id= UUID.randomUUID(),name="")
+            createStateHelper(id= UUID.randomUUID(),name="To Do"),
+            createStateHelper(id= UUID.randomUUID(),name="")
         )
         //When
         val file = File(filePath)
@@ -102,7 +102,7 @@ class StateCsvWriterTest{
         //given
         val filePath = "invalid|file/na|me.csv"
         val listOfState = listOf(
-            createTestTaskState(id= UUID.randomUUID(),name="To Do")
+            createStateHelper(id= UUID.randomUUID(),name="To Do")
         )
 
         //when
