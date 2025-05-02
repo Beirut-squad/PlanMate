@@ -5,6 +5,7 @@ import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.logic.exceptions.DuplicateStateException
 import org.example.logic.exceptions.NoProjectFoundException
+import org.example.logic.exceptions.NoStateException
 import org.example.models.Project
 import org.example.models.State
 import java.time.LocalDateTime
@@ -39,48 +40,63 @@ class ProjectDataSourceImpl(
         }
     }
 
-    //region Test cases for addStateToProject()
     override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
-        return getAllProjects()
-            .mapCatching { projects ->
-                val updatedProjects = addStateToProjectInList(projects, projectId, state)
-                writer.writeToFile(updatedProjects, fileName)
-            }
-    }
-
-    private fun addStateToProjectInList(projects: List<Project>, projectId: UUID, newState: State): List<Project> {
-        val updated = mutableListOf<Project>()
-        var projectFound = false
-        for (project in projects) {
-            if (project.id == projectId) {
-                validateStateNotDuplicate(newState, project.state)
-                projectFound = true
-                updated += project.copy(
-                    state = project.state + newState,
-                    updatedAt = LocalDateTime.now()
-                )
-            } else {
-                updated += project
-            }
+        return modifyProjectState(projectId) { states ->
+            if(states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
+            states + state
         }
-        if (!projectFound) throw NoProjectFoundException()
-        return updated
     }
-
-    private fun validateStateNotDuplicate(newState: State, existingStates: List<State>) {
-        if (hasDuplicateState(newState, existingStates)) throw DuplicateStateException()
-    }
-
-    private fun hasDuplicateState(newState: State, existingStates: List<State>): Boolean {
-        return existingStates.any { it.name.lowercase() == newState.name.lowercase() }
-    }
-    //endregion
 
     override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
-        TODO("Not yet implemented")
+        return modifyProjectState(projectId) { states ->
+            val updatedStates = mutableListOf<State>()
+            states.forEach { oldState ->
+                if (!haveSameStateId(oldState, state)) throw NoStateException()
+                if (haveSameStateName(oldState, state)) throw DuplicateStateException()
+                updatedStates += if (oldState.id == state.id) state else oldState
+            }
+            updatedStates
+        }
     }
 
     override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
         TODO("Not yet implemented")
+    }
+
+    fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
+        return getAllProjects().mapCatching { projects ->
+            val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
+                project.copy(
+                    state = stateModifier(project.state),
+                    updatedAt = LocalDateTime.now()
+                )
+            }
+            writer.writeToFile(updatedProjects, fileName)
+        }
+    }
+
+    private fun findAndUpdateProject(projects: List<Project>, projectId: UUID, projectModifier: (Project) -> Project): List<Project> {
+        val updated = mutableListOf<Project>()
+        var projectFound = false
+
+        for (project in projects) {
+            if (project.id == projectId) {
+                projectFound = true
+                updated += projectModifier(project)
+            } else {
+                updated += project
+            }
+        }
+
+        if (!projectFound) throw NoProjectFoundException()
+        return updated
+    }
+
+    private fun haveSameStateName(oldState: State, newState: State): Boolean {
+        return oldState.name.equals(newState.name, ignoreCase = true)
+    }
+
+    private fun haveSameStateId(oldState: State, newState: State): Boolean {
+        return oldState.id == newState.id
     }
 }
