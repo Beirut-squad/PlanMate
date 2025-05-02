@@ -1,7 +1,7 @@
 package data.csv.state_csv
 
 import com.google.common.truth.Truth.assertThat
-import creator_helper.createTestTaskState
+import creator_helper.createStateHelper
 import org.example.data.csv.state_csv.StateCsvParser
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +37,7 @@ class StateCsvParserTest {
 
         // Then
         assertThat(result).isEqualTo(
-            createTestTaskState(
+            createStateHelper(
                 UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"),
                 name = "name"
             )
@@ -71,10 +71,10 @@ class StateCsvParserTest {
         // Then
         assertThat(result).isEqualTo(
             listOf(
-                createTestTaskState(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
-                createTestTaskState(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
-                createTestTaskState(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
-                createTestTaskState(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name")
+                createStateHelper(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
+                createStateHelper(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
+                createStateHelper(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name"),
+                createStateHelper(UUID.fromString("5481551e-2b45-49a0-b5fc-123456789012"), name = "name")
 
             )
         )

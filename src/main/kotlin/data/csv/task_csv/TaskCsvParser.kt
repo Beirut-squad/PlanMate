@@ -34,7 +34,7 @@ class TaskCsvParser(
         // TODO : REFACTORING
         return Task(
             id = UUID.fromString(parts[TaskColumnIndex.TASK_ID]),
-            projectId = parts[TaskColumnIndex.PROJECT_ID],
+            projectId = UUID.fromString(parts[TaskColumnIndex.PROJECT_ID]),
             title = parts[TaskColumnIndex.TITLE],
             description = parts[TaskColumnIndex.DESCRIPTION],
             state = stateCsvParser.parseLine(parts[TaskColumnIndex.STATE])!!,
