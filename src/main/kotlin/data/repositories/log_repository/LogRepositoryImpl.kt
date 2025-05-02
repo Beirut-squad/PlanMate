@@ -9,11 +9,11 @@ import java.util.*
 class LogRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : LogRepository {
-    override fun getProjectLogs(id: UUID): Result<List<ProjectLog>> {
+    override fun getProjectLogs(projectId: UUID): Result<List<ProjectLog>> {
         TODO("Not yet implemented")
     }
 
-    override fun getTaskLogs(id: UUID): Result<List<TaskLog>> {
+    override fun getTaskLogs(taskId: UUID): Result<List<TaskLog>> {
         TODO("Not yet implemented")
     }
 
