@@ -15,37 +15,22 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
     override fun createTask(task: Task): Result<Unit> {
         return taskDataSource.createTask(task)
-            .fold(
-                onSuccess = { Result.success(Unit) },
-                onFailure = { Result.failure(TaskCreationException("Failed to create task: ${it.message}")) }
-            )
     }
 
 
     override fun editTask(task: Task): Result<Unit> {
-        return taskDataSource.editTask(task).fold(
-            onSuccess = { Result.success(Unit) },
-            onFailure = { Result.failure(TaskEditException("Failed to edit task: ${it.message}")) }
-        )
+        return taskDataSource.editTask(task)
     }
 
     override fun deleteTask(id: UUID): Result<Unit> {
-        return taskDataSource.deleteTask(id).fold(
-            onSuccess = { Result.success(Unit) },
-            onFailure = { Result.failure(TaskDeletionException("Failed to delete task ${it.message}")) }
-        )
+        return taskDataSource.deleteTask(id)
     }
 
     override fun getAllTasks(): Result<List<Task>> {
-        return taskDataSource.getAllTasks().fold(
-            onSuccess = { Result.success(it) },
-            onFailure = { Result.failure(GetAllTasksException("Failed to retrieve tasks")) }
-        )
+        return taskDataSource.getAllTasks()
     }
 
     override fun getTask(id: UUID): Result<Task> {
-        return taskDataSource.getTask(id).fold(
-            onSuccess = { Result.success(it) },
-            onFailure = { Result.failure(GetTaskException("Failed to retrieve task")) }
-        )    }
+        return taskDataSource.getTask(id)
+    }
 }
