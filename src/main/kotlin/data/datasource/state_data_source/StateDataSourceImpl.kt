@@ -31,7 +31,7 @@ class StateDataSourceImpl(
         }
 
         if (states.none { it.id == state.id }) {
-            throw NoSuchElementException("State not found")
+            throw IllegalStateException("State not found")
         }
 
         writer.writeToFile(updatedStates, filePath)
