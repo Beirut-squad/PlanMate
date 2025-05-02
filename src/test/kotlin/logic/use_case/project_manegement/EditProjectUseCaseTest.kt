@@ -6,8 +6,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.exceptions.BlankFieldsException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.repositories.use_case.log.CreateProjectLogUseCase
-import org.example.logic.repositories.use_case.project_manegment.EditProjectUseCase
+import org.example.logic.use_case.project_manegment.EditProjectUseCase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -17,13 +16,13 @@ import java.util.UUID
 
 class EditProjectUseCaseTest {
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
-    private val logUseCase: CreateProjectLogUseCase = mockk(relaxed = true)
+    //private val logUseCase: CreateProjectLogUseCase = mockk(relaxed = true)
     private var editProjectUseCase: EditProjectUseCase = mockk(relaxed = true)
     private val creatorUserID: UUID = UUID.randomUUID()
 
     @BeforeEach
     fun setup() {
-        editProjectUseCase = EditProjectUseCase(projectRepository, logUseCase)
+        editProjectUseCase = EditProjectUseCase(projectRepository)
     }
 
     @Test
@@ -50,13 +49,13 @@ class EditProjectUseCaseTest {
             projectRepository.editProject(project)
         }
 
-        verify(exactly = 1) {
-            logUseCase.createProjectLog(
-                previousProject = match { it.name == newName },
-                currentProject = match { it.name == newName },
-                userId = creatorUserID
-            )
-        }
+//        verify(exactly = 1) {
+//            logUseCase.createProjectLog(
+//                previousProject = match { it.name == newName },
+//                currentProject = match { it.name == newName },
+//                userId = creatorUserID
+//            )
+//        }
 
         assertEquals(newName, project.name)
         assertEquals(newDescription, project.description)
