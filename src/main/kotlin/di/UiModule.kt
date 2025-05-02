@@ -4,6 +4,7 @@ import org.example.ui.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
+import org.example.ui.home_screens.HomeScreen
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import ui.Colors
@@ -16,4 +17,5 @@ val uiModule = module {
     singleOf(::Colors)
     singleOf(::Viewer)
     singleOf(::Reader)
+    singleOf(::HomeScreen)
 }
