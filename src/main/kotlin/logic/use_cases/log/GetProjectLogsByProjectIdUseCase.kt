@@ -8,6 +8,6 @@ class GetProjectLogsByProjectIdUseCase(
     private val logRepository: LogRepository
 ) {
     fun getProjectLogsByProjectId(projectId: UUID): Result<List<ProjectLog>> {
-        TODO()
+        return logRepository.getProjectLogs(projectId)
     }
 }
