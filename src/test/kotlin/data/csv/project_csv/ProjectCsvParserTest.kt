@@ -34,6 +34,15 @@ class ProjectCsvParserTest{
     }
 
     @Test
+    fun `parseLine should return null when  the string is empty `(){
+        // When
+        val result = projectCsvParser.parseLine("  ")
+
+        // Then
+        assertThat(result).isNull()
+    }
+
+    @Test
     fun `parseLine should return a Project object when the string is not empty `(){
         // When
         val taskString = "[d1234567-89ab-cdef-0123-456789abcdef, Project Name,Project Description, 5481551e-2b45-49a0-b5fc-123456789012 ,2024-04-01T12:00:00,2024-04-02T12:00:00 ,[[5481551e-2b45-49a0-b5fc-123456789012 , name] , [5481551e-2b45-49a0-b5fc-123456789012 , name]]]"

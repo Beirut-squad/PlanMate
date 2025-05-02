@@ -1,32 +1,39 @@
 package org.example.data.csv
 
- fun smartCsvSplit(line: String): List<String> {
-    val fields = mutableListOf<String>()
-    var current = StringBuilder()
-     var insideQuotes = false
-    var bracketDepth = 0
+     fun smartCsvSplit(input: String): List<String> {
+        val cleanedLine = input.removeSurrounding("[", "]")
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var bracketDepth = 0
 
-    for (char in line) {
-        when{
-             char == '"' -> {
-                insideQuotes = !insideQuotes
-                current.append(char)
+        for (char in cleanedLine) {
+            when (char) {
+                '[' -> {
+                    bracketDepth++
+                    current.append(char)
+                }
+
+                ']' -> {
+                    bracketDepth--
+                    current.append(char)
+                }
+
+                ',' -> {
+                    if (bracketDepth == 0) {
+                        result.add(current.toString().trim())
+                        current.clear()
+                    } else {
+                        current.append(char)
+                    }
+                }
+
+                else -> current.append(char)
             }
-            char == '[' -> {
-                bracketDepth++
-                current.append(char)
-            }
-            char == ']' -> {
-                bracketDepth--
-                current.append(char)
-            }
-            char == ',' && !insideQuotes && bracketDepth == 0  -> {
-                    fields.add(current.toString().trim())
-                    current = StringBuilder()
-            }
-            else -> current.append(char)
         }
+
+        if (current.isNotEmpty()) {
+            result.add(current.toString().trim())
+        }
+
+        return result.filter { it.isNotEmpty() }
     }
-    fields.add(current.toString().trim()) // add last field
-    return fields
-}

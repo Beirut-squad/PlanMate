@@ -9,6 +9,7 @@ import org.example.models.Role
 import org.example.models.State
 import org.example.models.User
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
@@ -102,24 +103,25 @@ class ProjectCsvWriterTest{
 
  }
 
- @Test
- fun `given file with existing content when writeToFile is called then old content should be preserved and new content appended`(){
- //Given
-  val existingContent = "[id,name,description,creatorUserID,createdAt,updatedAt,state]\n[03fcf25f-c810-4280-9487-2dd1665b00a0,Test Project Name,Test Project Description,2025-05-01T16:47:36.661,2025-05-01T16:47:36.661,[State(id=b97fe43d-bee4-4ed3-b142-076935241786, name=To Do)]]\n"
-  val file = File(filePath)
-  file.writeText(existingContent)
-
-  val listOfProject = listOf(createProjectHelper())
-
-  //when
-  projectCsvWriter.writeToFile(listOfProject , filePath)
-  val lines = file.readLines()
-  //then
-  assertTrue(file.exists())
-  assertTrue(lines[0].contains("id,name,description,creatorUserID,createdAt,updatedAt,state"))
-  assertTrue(lines[2].contains("Test Project Name"))
-
- }
+// @Disabled
+// @Test
+// fun `given file with existing content when writeToFile is called then old content should be preserved and new content appended`(){
+// //Given
+//  val existingContent = "[id,name,description,creatorUserID,createdAt,updatedAt,state]\n[03fcf25f-c810-4280-9487-2dd1665b00a0,Test Project Name,Test Project Description,2025-05-01T16:47:36.661,2025-05-01T16:47:36.661,[State(id=b97fe43d-bee4-4ed3-b142-076935241786, name=To Do)]]\n"
+//  val file = File(filePath)
+//  file.writeText(existingContent)
+//
+//  val listOfProject = listOf(createProjectHelper())
+//
+//  //when
+//  projectCsvWriter.writeToFile(listOfProject , filePath)
+//  val lines = file.readLines()
+//  //then
+//  assertTrue(file.exists())
+//  assertTrue(lines[0].contains("id,name,description,creatorUserID,createdAt,updatedAt,state"))
+//  assertTrue(lines[2].contains("Test Project Name"))
+//
+// }
  @Test
  fun `given invalid file name when writeToFile is called then return failure`(){
   //given

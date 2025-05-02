@@ -1,6 +1,7 @@
 package data.csv.project_csv
 
 import CsvParser
+import org.example.data.csv.smartCsvSplit
 import org.example.models.Project
 import org.example.models.State
 import java.time.LocalDateTime
@@ -49,39 +50,39 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
         return stateCsvParser.parseFile(statesLines)
 
     }
-    fun smartCsvSplit(input: String): List<String> {
-        val cleanedLine = input.removeSurrounding("[", "]")
-        val result = mutableListOf<String>()
-        val current = StringBuilder()
-        var bracketDepth = 0
-
-        for (char in cleanedLine) {
-            when (char) {
-                '[' -> {
-                    bracketDepth++
-                    current.append(char)
-                }
-                ']' -> {
-                    bracketDepth--
-                    current.append(char)
-                }
-                ',' -> {
-                    if (bracketDepth == 0) {
-                        result.add(current.toString().trim())
-                        current.clear()
-                    } else {
-                        current.append(char)
-                    }
-                }
-                else -> current.append(char)
-            }
-        }
-
-        if (current.isNotEmpty()) {
-            result.add(current.toString().trim())
-        }
-
-        return result.filter { it.isNotEmpty() }
-    }
+//    fun smartCsvSplit(input: String): List<String> {
+//        val cleanedLine = input.removeSurrounding("[", "]")
+//        val result = mutableListOf<String>()
+//        val current = StringBuilder()
+//        var bracketDepth = 0
+//
+//        for (char in cleanedLine) {
+//            when (char) {
+//                '[' -> {
+//                    bracketDepth++
+//                    current.append(char)
+//                }
+//                ']' -> {
+//                    bracketDepth--
+//                    current.append(char)
+//                }
+//                ',' -> {
+//                    if (bracketDepth == 0) {
+//                        result.add(current.toString().trim())
+//                        current.clear()
+//                    } else {
+//                        current.append(char)
+//                    }
+//                }
+//                else -> current.append(char)
+//            }
+//        }
+//
+//        if (current.isNotEmpty()) {
+//            result.add(current.toString().trim())
+//        }
+//
+//        return result.filter { it.isNotEmpty() }
+//    }
 
 }

@@ -2,6 +2,7 @@ package data.csv.log_for_project_csv
 
 import CsvParser
 import data.csv.project_csv.ProjectCsvParser
+import org.example.data.csv.smartCsvSplit
 import org.example.models.ProjectLog
 import java.time.LocalDateTime
 import java.util.*
@@ -38,43 +39,5 @@ class LogCsvParserForProject(private val projectCsvParser: ProjectCsvParser):Csv
             createdAt = LocalDateTime.parse(parts[LogsColumnIndexForProject.CREATED_AT])
         )
     }
-
-
-
-    fun smartCsvSplit(input: String): List<String> {
-        val cleanedLine = input.removeSurrounding("[", "]")
-        val result = mutableListOf<String>()
-        val current = StringBuilder()
-        var bracketDepth = 0
-
-        for (char in cleanedLine) {
-            when (char) {
-                '[' -> {
-                    bracketDepth++
-                    current.append(char)
-                }
-                ']' -> {
-                    bracketDepth--
-                    current.append(char)
-                }
-                ',' -> {
-                    if (bracketDepth == 0) {
-                        result.add(current.toString().trim())
-                        current.clear()
-                    } else {
-                        current.append(char)
-                    }
-                }
-                else -> current.append(char)
-            }
-        }
-
-        if (current.isNotEmpty()) {
-            result.add(current.toString().trim())
-        }
-
-        return result.filter { it.isNotEmpty() }
-    }
-
 }
 

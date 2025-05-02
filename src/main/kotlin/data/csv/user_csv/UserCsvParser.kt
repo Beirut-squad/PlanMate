@@ -8,7 +8,6 @@ import java.util.*
 
 class UserCsvParser: CsvParser<User> {
     override fun parseLine(line: String): User? {
-
         return runCatching {
             val trimmedLine = line.trim()
             if (trimmedLine.isBlank()){

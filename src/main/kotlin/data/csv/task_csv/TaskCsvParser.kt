@@ -2,6 +2,7 @@ package org.example.data.csv.task_csv_parser
 
 import CsvParser
 import data.csv.task_csv.TaskColumnIndex
+import org.example.data.csv.smartCsvSplit
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.models.State
 import org.example.models.Task
@@ -10,7 +11,7 @@ import java.util.*
 
 class TaskCsvParser(
     private val stateCsvParser: CsvParser<State>
-): CsvParser<Task> {
+) : CsvParser<Task> {
 
     override fun parseFile(csvLines: List<String>): List<Task> {
         if (csvLines.isEmpty())
@@ -28,7 +29,7 @@ class TaskCsvParser(
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-        if (stateCsvParser.parseLine(parts[TaskColumnIndex.STATE]) == null){
+        if (stateCsvParser.parseLine(parts[TaskColumnIndex.STATE]) == null) {
             throw Exception("state of the task is unavailable")
         }
 
@@ -44,39 +45,42 @@ class TaskCsvParser(
         )
     }
 
-    fun smartCsvSplit(input: String): List<String> {
-        val cleanedLine = input.removeSurrounding("[", "]")
-        val result = mutableListOf<String>()
-        val current = StringBuilder()
-        var bracketDepth = 0
-
-        for (char in cleanedLine) {
-            when (char) {
-                '[' -> {
-                    bracketDepth++
-                    current.append(char)
-                }
-                ']' -> {
-                    bracketDepth--
-                    current.append(char)
-                }
-                ',' -> {
-                    if (bracketDepth == 0) {
-                        result.add(current.toString().trim())
-                        current.clear()
-                    } else {
-                        current.append(char)
-                    }
-                }
-                else -> current.append(char)
-            }
-        }
-
-        if (current.isNotEmpty()) {
-            result.add(current.toString().trim())
-        }
-
-        return result.filter { it.isNotEmpty() }
-    }
+//     fun smartCsvSplit(input: String): List<String> {
+//        val cleanedLine = input.removeSurrounding("[", "]")
+//        val result = mutableListOf<String>()
+//        val current = StringBuilder()
+//        var bracketDepth = 0
+//
+//        for (char in cleanedLine) {
+//            when (char) {
+//                '[' -> {
+//                    bracketDepth++
+//                    current.append(char)
+//                }
+//
+//                ']' -> {
+//                    bracketDepth--
+//                    current.append(char)
+//                }
+//
+//                ',' -> {
+//                    if (bracketDepth == 0) {
+//                        result.add(current.toString().trim())
+//                        current.clear()
+//                    } else {
+//                        current.append(char)
+//                    }
+//                }
+//
+//                else -> current.append(char)
+//            }
+//        }
+//
+//        if (current.isNotEmpty()) {
+//            result.add(current.toString().trim())
+//        }
+//
+//        return result.filter { it.isNotEmpty() }
+//    }
 
 }

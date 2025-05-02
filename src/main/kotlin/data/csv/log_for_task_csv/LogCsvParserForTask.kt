@@ -3,6 +3,7 @@ package org.example.data.csv.log_for_task_csv
 import CsvParser
 import data.csv.log_for_project_csv.LogsColumnIndexForProject
 import data.csv.project_csv.ProjectCsvParser
+import org.example.data.csv.smartCsvSplit
 import org.example.data.csv.task_csv_parser.TaskCsvParser
 import org.example.models.ProjectLog
 import org.example.models.Task
@@ -42,40 +43,4 @@ class LogCsvParserForTask (private val taskCsvParser: TaskCsvParser):CsvParser<T
             createdAt = LocalDateTime.parse(parts[LogColumnIndexForTask.CREATED_AT])
         )
     }
-
-    fun smartCsvSplit(input: String): List<String> {
-        val cleanedLine = input.removeSurrounding("[", "]")
-        val result = mutableListOf<String>()
-        val current = StringBuilder()
-        var bracketDepth = 0
-
-        for (char in cleanedLine) {
-            when (char) {
-                '[' -> {
-                    bracketDepth++
-                    current.append(char)
-                }
-                ']' -> {
-                    bracketDepth--
-                    current.append(char)
-                }
-                ',' -> {
-                    if (bracketDepth == 0) {
-                        result.add(current.toString().trim())
-                        current.clear()
-                    } else {
-                        current.append(char)
-                    }
-                }
-                else -> current.append(char)
-            }
-        }
-
-        if (current.isNotEmpty()) {
-            result.add(current.toString().trim())
-        }
-
-        return result.filter { it.isNotEmpty() }
-    }
-
 }

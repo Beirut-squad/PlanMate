@@ -35,6 +35,16 @@ class LogCsvParserForProjectTest{
     }
 
     @Test
+    fun `parseLine should return null when the string is empty without square brackets`(){
+        // When
+        val result = logCsvParserForProject.parseLine("     ")
+
+        // Then
+        assertThat(result).isNull()
+
+    }
+
+    @Test
     fun `parseLine should return a Project log object when the string is not empty `(){
         // When
         val sampleLine =
