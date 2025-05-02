@@ -17,7 +17,6 @@ class TaskRepositoryImpl(
         return taskDataSource.createTask(task)
     }
 
-
     override fun editTask(task: Task): Result<Unit> {
         return taskDataSource.editTask(task)
     }
