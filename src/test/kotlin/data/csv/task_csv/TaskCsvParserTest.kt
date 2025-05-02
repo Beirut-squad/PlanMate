@@ -2,7 +2,6 @@ package data.csv.task_csv
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createTaskHelper
-import creator_helper.createTestTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.example.data.csv.state_csv.StateCsvParser
@@ -27,13 +26,19 @@ class TaskCsvParserTest{
 
     @Test
     fun `parseLine should return null when the string is empty `(){
-
         // When
         val result = taskCsvParser.parseLine("[      ]")
 
         // Then
         assertThat(result).isNull()
+    }
+    @Test
+    fun `parseLine should return null when  the string is empty `(){
+        // When
+        val result = taskCsvParser.parseLine("  ")
 
+        // Then
+        assertThat(result).isNull()
     }
 
     @Test
@@ -49,7 +54,7 @@ class TaskCsvParserTest{
         assertThat(result).isEqualTo(
             createTaskHelper(
                 UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
-                "d1234567-89ab-cdef-0123-456789abcdef",
+                UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
                 "Project Name",
                 "Project Description",
                 state!!,
@@ -90,7 +95,7 @@ class TaskCsvParserTest{
             listOf(
                 createTaskHelper(
                     UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
-                    "d1234567-89ab-cdef-0123-456789abcdef",
+                    UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
                     "Project Name",
                     "Project Description",
                     state!!,
@@ -100,7 +105,7 @@ class TaskCsvParserTest{
                 ),
                 createTaskHelper(
                     UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
-                    "d1234567-89ab-cdef-0123-456789abcdef",
+                    UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
                     "Project Name",
                     "Project Description",
                     state,
@@ -110,7 +115,7 @@ class TaskCsvParserTest{
                 ),
                 createTaskHelper(
                     UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
-                    "d1234567-89ab-cdef-0123-456789abcdef",
+                    UUID.fromString("d1234567-89ab-cdef-0123-456789abcdef"),
                     "Project Name",
                     "Project Description",
                     state,

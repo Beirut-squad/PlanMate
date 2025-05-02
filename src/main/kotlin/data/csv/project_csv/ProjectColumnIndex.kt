@@ -1,4 +1,4 @@
-package org.example.data.csv.project_csv_parser
+package data.csv.project_csv
 
 object ProjectColumnIndex {
     const val PROJECT_ID = 0

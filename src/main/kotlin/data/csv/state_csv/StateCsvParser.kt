@@ -7,12 +7,9 @@ import java.util.*
 class StateCsvParser : CsvParser<State> {
 
     override fun parseFile(csvLines: List<String>): List<State> {
-
         if (csvLines.isEmpty())
             return emptyList()
         return csvLines.mapNotNull { parseLine(it) }
-
-
     }
 
     override fun parseLine(line: String): State? {
@@ -21,8 +18,6 @@ class StateCsvParser : CsvParser<State> {
         println(cleanedLine)
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
-
-
 
         val cleanLine = line.removeSurrounding("[", "]")
         val parts = cleanLine.split(",").map { it.trim() }

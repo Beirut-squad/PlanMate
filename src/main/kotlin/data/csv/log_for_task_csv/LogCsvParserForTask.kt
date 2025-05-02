@@ -1,4 +1,80 @@
 package org.example.data.csv.log_for_task_csv
 
-class LogCsvParserForTask {
+import CsvParser
+import data.csv.log_for_project_csv.LogsColumnIndexForProject
+import data.csv.project_csv.ProjectCsvParser
+import org.example.data.csv.task_csv_parser.TaskCsvParser
+import org.example.models.ProjectLog
+import org.example.models.Task
+import org.example.models.TaskLog
+import java.time.LocalDateTime
+import java.util.*
+
+class LogCsvParserForTask (private val taskCsvParser: TaskCsvParser):CsvParser<TaskLog> {
+
+
+
+    override fun parseFile(csvLines: List<String>): List<TaskLog> {
+        if (csvLines.isEmpty())
+            return emptyList()
+        return csvLines.mapNotNull { parseLine(it) }
+    }
+
+    override fun parseLine(line: String): TaskLog? {
+        var cleanedLine = line.replace(" ", "")
+
+        if (cleanedLine == "[]" || cleanedLine == "")
+            return null
+
+        cleanedLine = line.removeSurrounding("[", "]")
+        val parts = smartCsvSplit(cleanedLine)
+
+        if (taskCsvParser.parseLine(parts[LogColumnIndexForTask.PREVIOUS_ENTITY]) == null || taskCsvParser.parseLine(parts[LogsColumnIndexForProject.CURRENT_ENTITY]) == null)
+            throw Exception("entity is missing")
+
+        return TaskLog(
+            id = UUID.fromString(parts[LogColumnIndexForTask.LOG_ID]),
+            userId = UUID.fromString(parts[LogColumnIndexForTask.USER_ID]),
+            entityId = UUID.fromString(parts[LogColumnIndexForTask.ENTITY_ID]),
+            previousEntity = taskCsvParser.parseLine(parts[LogColumnIndexForTask.PREVIOUS_ENTITY]),
+            currentEntity =  taskCsvParser.parseLine(parts[LogColumnIndexForTask.CURRENT_ENTITY]),
+            createdAt = LocalDateTime.parse(parts[LogColumnIndexForTask.CREATED_AT])
+        )
+    }
+
+    fun smartCsvSplit(input: String): List<String> {
+        val cleanedLine = input.removeSurrounding("[", "]")
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var bracketDepth = 0
+
+        for (char in cleanedLine) {
+            when (char) {
+                '[' -> {
+                    bracketDepth++
+                    current.append(char)
+                }
+                ']' -> {
+                    bracketDepth--
+                    current.append(char)
+                }
+                ',' -> {
+                    if (bracketDepth == 0) {
+                        result.add(current.toString().trim())
+                        current.clear()
+                    } else {
+                        current.append(char)
+                    }
+                }
+                else -> current.append(char)
+            }
+        }
+
+        if (current.isNotEmpty()) {
+            result.add(current.toString().trim())
+        }
+
+        return result.filter { it.isNotEmpty() }
+    }
+
 }
