@@ -9,5 +9,7 @@ class LogCsvWriterForProject: CsvWriter<ProjectLog> {
         TODO("Not yet implemented")
     }
 
-
+    internal fun isValidProjectLog(projectLog: ProjectLog): Boolean {
+        return true
+    }
 }
