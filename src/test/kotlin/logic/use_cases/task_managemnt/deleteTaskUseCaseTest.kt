@@ -3,7 +3,7 @@ package logic.use_cases.task_managemnt
 import creator_helper.createTaskHelper
 import io.mockk.*
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.TaskDeletionException
+import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +32,7 @@ class deleteTaskUseCaseTest {
 
         // Then
         verify { taskRepository.deleteTask(taskId) }
-        verify {  createTaskLogUseCase.createTaskLog(task, null, task.creatorUserID)}
+        verify {  createTaskLogUseCase.createTaskLog(task.creatorUserID, task, null)}
 
     }
     @Test
@@ -49,7 +49,7 @@ class deleteTaskUseCaseTest {
         }
 
         verify { taskRepository.deleteTask(taskId) }
-        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(task, null, task.creatorUserID) }
+        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(task.creatorUserID, task, null) }
     }
 
 

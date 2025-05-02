@@ -1,8 +1,8 @@
 package org.example.logic.use_cases.task_managemnt
 
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.NoFieldsToUpdateException
-import org.example.logic.exceptions.TaskEditException
+import org.example.logic.exceptions.task_managment_exception.NoFieldsToUpdateException
+import org.example.logic.exceptions.task_managment_exception.TaskEditException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.Task
 import java.time.LocalDateTime
@@ -18,7 +18,7 @@ class EditTaskUseCase(
 
         saveUpdatedTask(updatedTask)
 
-        createTaskLogUseCase.createTaskLog(task, updatedTask, task.creatorUserID)
+        createTaskLogUseCase.createTaskLog(task.creatorUserID, task, updatedTask)
     }
 
     private fun validateInputFields(newTitle: String?, newDescription: String?, newState: String?) {

@@ -1,7 +1,6 @@
 package org.example.logic.use_cases.task_managemnt
 
-import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.GetTaskException
+import org.example.logic.exceptions.task_managment_exception.GetTaskException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.log.GetTaskLogsByTaskIdUseCase
 import org.example.models.Task

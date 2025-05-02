@@ -2,14 +2,14 @@ package org.example.data.datasource.task_data_source
 
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
-import org.example.logic.exceptions.GetAllTasksException
-import org.example.logic.exceptions.GetTaskException
-import org.example.logic.exceptions.TaskCreationException
-import org.example.logic.exceptions.TaskDeletionException
-import org.example.logic.exceptions.TaskEditException
+
+import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
+import org.example.logic.exceptions.task_managment_exception.GetTaskException
+import org.example.logic.exceptions.task_managment_exception.TaskCreationException
+import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
+import org.example.logic.exceptions.task_managment_exception.TaskEditException
 import org.example.models.Task
 import java.util.UUID
-import kotlin.jvm.Throws
 
 class TaskDataSourceImpl(
     private val csvReader: CsvReader<Task>,

@@ -3,8 +3,9 @@ package logic.use_cases.task_managemnt
 import creator_helper.createTaskHelper
 import io.mockk.*
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.NoFieldsToUpdateException
-import org.example.logic.exceptions.TaskEditException
+import org.example.logic.exceptions.task_managment_exception.NoFieldsToUpdateException
+import org.example.logic.exceptions.task_managment_exception.TaskEditException
+
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
 import org.example.models.Task
@@ -99,7 +100,7 @@ class editTaskUseCaseTest {
         assertEquals(newDescription, capturedTask.description)
         assertEquals(newState, capturedTask.state.name)
         assertNotNull(capturedTask.updatedAt)
-        verify { createTaskLogUseCase.createTaskLog(task, capturedTask, task.creatorUserID) }
+        verify { createTaskLogUseCase.createTaskLog(task.creatorUserID, task, capturedTask) }
 
     }
 
@@ -119,7 +120,7 @@ class editTaskUseCaseTest {
         }
 
         verify { taskRepository.editTask(any()) }
-        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(any(), any(), task.creatorUserID) }
+        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(task.creatorUserID, any(), any()) }
     }
 
     @Test

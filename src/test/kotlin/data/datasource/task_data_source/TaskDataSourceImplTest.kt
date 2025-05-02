@@ -5,11 +5,11 @@ import io.mockk.*
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.data.datasource.task_data_source.TaskDataSourceImpl
-import org.example.logic.exceptions.GetAllTasksException
-import org.example.logic.exceptions.GetTaskException
-import org.example.logic.exceptions.TaskCreationException
-import org.example.logic.exceptions.TaskDeletionException
-import org.example.logic.exceptions.TaskEditException
+import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
+import org.example.logic.exceptions.task_managment_exception.GetTaskException
+import org.example.logic.exceptions.task_managment_exception.TaskCreationException
+import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
+import org.example.logic.exceptions.task_managment_exception.TaskEditException
 import org.example.models.Task
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
@@ -35,7 +35,7 @@ class TaskDataSourceImplTest {
         val newTask = createTaskHelper()
 
         every { csvReader.read(TaskDataSourceImpl.TASK_FILE) } returns existingTasks
-        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } just Runs
+        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } returns Result.success(Unit)
 
         // When
         val result = taskdataSource.createTask(newTask)
@@ -79,7 +79,7 @@ class TaskDataSourceImplTest {
 
         val existingTasks = listOf(existingTask)
         every { csvReader.read(TaskDataSourceImpl.TASK_FILE) } returns existingTasks
-        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } just Runs
+        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } returns Result.success(Unit)
 
         // When
         val result = taskdataSource.editTask(updatedTask)
@@ -164,7 +164,7 @@ class TaskDataSourceImplTest {
         val tasksList = listOf(existingTask)
 
         every { csvReader.read(TaskDataSourceImpl.TASK_FILE) } returns tasksList
-        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } just Runs
+        every { csvWriter.writeToFile(any(), TaskDataSourceImpl.TASK_FILE) } returns Result.success(Unit)
 
         // When
         val result = taskdataSource.deleteTask(taskId)

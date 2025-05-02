@@ -2,8 +2,9 @@ package logic.use_cases.task_managemnt
 
 import io.mockk.*
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.BlankFieldsException
-import org.example.logic.exceptions.TaskCreationException
+import org.example.logic.exceptions.task_managment_exception.BlankFieldsException
+import org.example.logic.exceptions.task_managment_exception.TaskCreationException
+
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
 import org.junit.jupiter.api.Assertions.*
@@ -34,7 +35,7 @@ class createTaskUseCaseTest {
 
         // Then
         verify{ taskRepository.createTask(any()) }
-        verify { createTaskLogUseCase.createTaskLog(null, any(), any()) }
+        verify { createTaskLogUseCase.createTaskLog(any(), null, any()) }
     }
     @Test
     fun `createTask should throw exception when title is blank`() {
@@ -64,7 +65,7 @@ class createTaskUseCaseTest {
             createTaskUseCase.createTask(title,description,state)
         }
 
-        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(null, any(), any()) }
+        verify(exactly = 0) { createTaskLogUseCase.createTaskLog(any(), null, any()) }
     }
     @Test
     fun `createTask should throw exception when state is blank`() {
