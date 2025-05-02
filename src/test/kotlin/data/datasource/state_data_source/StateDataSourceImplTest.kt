@@ -181,7 +181,7 @@ class StateDataSourceImplTest {
         val newState = State(UUID.randomUUID(), "IN PROGRESS")
         File(filePath).delete()
 
-        every { reader.read(emptyList()) } returns emptyList()
+        every { reader.read(filePath) } returns emptyList()
 
         // When
         val result = dataSource.editState(newState)
@@ -278,13 +278,13 @@ class StateDataSourceImplTest {
         val nonExistentId = UUID.randomUUID()
         File(filePath).delete()
 
-        every { reader.read(emptyList()) } returns emptyList()
+        every { reader.read(filePath) } returns emptyList()
 
         // When
         val result = dataSource.deleteState(nonExistentId)
 
         // Then
-        verify(exactly = 1) { reader.read(emptyList()) }
+        verify(exactly = 1) { reader.read(filePath) }
         verify(exactly = 0) { writer.writeToFile(any(), any()) }
 
         assertTrue(result.isFailure)
