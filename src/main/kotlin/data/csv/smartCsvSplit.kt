@@ -1,27 +1,28 @@
 package org.example.data.csv
 
-private fun smartCsvSplit(line: String): List<String> {
+ fun smartCsvSplit(line: String): List<String> {
     val fields = mutableListOf<String>()
     var current = StringBuilder()
+     var insideQuotes = false
     var bracketDepth = 0
 
     for (char in line) {
-        when (char) {
-            '[' -> {
+        when{
+             char == '"' -> {
+                insideQuotes = !insideQuotes
+                current.append(char)
+            }
+            char == '[' -> {
                 bracketDepth++
                 current.append(char)
             }
-            ']' -> {
+            char == ']' -> {
                 bracketDepth--
                 current.append(char)
             }
-            ',' -> {
-                if (bracketDepth == 0) {
+            char == ',' && !insideQuotes && bracketDepth == 0  -> {
                     fields.add(current.toString().trim())
                     current = StringBuilder()
-                } else {
-                    current.append(char)
-                }
             }
             else -> current.append(char)
         }

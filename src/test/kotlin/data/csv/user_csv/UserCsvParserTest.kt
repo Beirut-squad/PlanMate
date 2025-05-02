@@ -11,6 +11,7 @@ import org.example.models.User
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 
@@ -22,14 +23,14 @@ class UserCsvParserTest
   userCvsParser = UserCsvParser()
  }
 
- @Test
- fun `given valid CSV line , when parserLine called , then return User`(){
+    @Test
+    fun `given valid CSV line , when parserLine called , then return User`(){
 
   //given
  val csvLine = createCsvLineForUser()
   //when
  val result = userCvsParser.parseLine(csvLine)
-
+    println(result)
   //then
   assertThat(result).isEqualTo(
    User(
@@ -55,7 +56,7 @@ class UserCsvParserTest
         assertThat(result).isNull()
     }
 
-@Test
+    @Test
     fun `given empty CSV line , when parseLine called , then return null`() {
         // given
         val csvLine = ""
@@ -148,7 +149,7 @@ class UserCsvParserTest
     @Test
     fun `given CSV line with comma inside quotes, when parseLine called, then return User with correct fields`() {
         // given
-        val csvLine = "\"550e8400-e29b-41d4-a716-446655440000\",\"te,s,t\",secret123,ismail.elkalili@gmail.com,ADMIN,false"
+        val csvLine = "550e8400-e29b-41d4-a716-446655440000,\"te,s,t\",secret123,ismail.elkalili@gmail.com,ADMIN,false"
 
         // when
         val result = userCvsParser.parseLine(csvLine)
@@ -208,4 +209,47 @@ class UserCsvParserTest
         // then
         assertThat(result).isNull()
     }
+
+    @Test
+    fun `given user with empty UUID when parsing then throw IllegalArgumentException`() {
+
+        //Given
+        val invalidLine = "00000000-0000-0000-0000-000000000000,Ismail,secret123,ismail.elkalili@gmail.com,ADMIN,false"
+        //when && then
+        assertThat(userCvsParser.parseLine(invalidLine)).isNull()
+    }
+    @Test
+    fun `given user with empty name when parsing then throw IllegalArgumentException`() {
+
+        //Given
+        val invalidLine = "550e8400-e29b-41d4-a716-446655440000,,secret123,ismail.elkalili@gmail.com,ADMIN,false"
+        //when && then
+        assertThat(userCvsParser.parseLine(invalidLine)).isNull()
+    }
+    @Test
+    fun `given user with empty passowrd when parsing then throw IllegalArgumentException`() {
+
+        //Given
+        val invalidLine = "550e8400-e29b-41d4-a716-446655440000,ismail,,ismail.elkalili@gmail.com,ADMIN,false"
+        //when && then
+        assertThat(userCvsParser.parseLine(invalidLine)).isNull()
+    }
+
+    @Test
+    fun `given user with empty email when parsing then throw IllegalArgumentException`() {
+
+        //Given
+        val invalidLine = "550e8400-e29b-41d4-a716-446655440000,ismail,secret123,,ADMIN,false"
+        //when && then
+        assertThat(userCvsParser.parseLine(invalidLine)).isNull()
+    }
+    @Test
+    fun `given user with empty role when parsing then throw IllegalArgumentException`() {
+
+        //Given
+        val invalidLine = "550e8400-e29b-41d4-a716-446655440000,ismail,secret123,ismail.elkalili@gmail.com,,false"
+        //when && then
+        assertThat(userCvsParser.parseLine(invalidLine)).isNull()
+    }
+
 }
