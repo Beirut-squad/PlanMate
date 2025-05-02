@@ -5,8 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.exceptions.BlankFieldsException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.repositories.use_case.log.CreateProjectLogUseCase
-import org.example.logic.repositories.use_case.project_manegment.CreateProjectUseCase
+import org.example.logic.use_case.project_manegment.CreateProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,14 +15,14 @@ import kotlin.test.assertEquals
 
 class CreateProjectUseCaseTest {
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
-    private val logUseCase: CreateProjectLogUseCase = mockk(relaxed = true)
+    //private val logUseCase: CreateProjectLogUseCase = mockk(relaxed = true)
     private var createProjectUseCase: CreateProjectUseCase = mockk()
     private val creatorUserID = UUID.randomUUID()
 
 
     @BeforeEach
     fun setup() {
-        createProjectUseCase = CreateProjectUseCase(projectRepository,logUseCase)
+        createProjectUseCase = CreateProjectUseCase(projectRepository)
     }
 
     @Test
@@ -74,7 +73,7 @@ class CreateProjectUseCaseTest {
         // Then
         assertEquals("must not be blank", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
-        verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
+        //verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }
 
     @Test
@@ -97,7 +96,7 @@ class CreateProjectUseCaseTest {
         // Then
         assertEquals("must not be blank", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
-        verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
+        //verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }
 
     @Test
@@ -120,7 +119,7 @@ class CreateProjectUseCaseTest {
         // Then
         assertEquals("must not be blank", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
-        verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
+        //verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }
 
 }

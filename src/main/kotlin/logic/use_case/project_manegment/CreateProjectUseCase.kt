@@ -1,9 +1,8 @@
-package org.example.logic.repositories.use_case.project_manegment
+package org.example.logic.use_case.project_manegment
 
 import org.example.logic.exceptions.BlankFieldsException
 import org.example.logic.exceptions.ProjectNotCreatedException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.repositories.use_case.log.CreateProjectLogUseCase
 import org.example.models.Project
 import org.example.models.State
 import java.time.LocalDateTime
@@ -11,14 +10,14 @@ import java.util.*
 
 class CreateProjectUseCase(
     private val projectRepository: ProjectRepository,
-    private val logUseCase: CreateProjectLogUseCase
+    //private val logUseCase: CreateProjectLogUseCase
 ) {
     fun createProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>) {
         if (name.isBlank() || description.isBlank()) {
             throw BlankFieldsException("must not be blank")
         } else {
             val project = buildProject(creatorUserID,name, description, stateNames)
-            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
+            //logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
             projectRepository.createProject(project)
         }
     }
