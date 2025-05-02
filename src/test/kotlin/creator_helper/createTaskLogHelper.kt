@@ -25,6 +25,20 @@ fun createTaskLogHelper(
     )
 }
 
+val testTaskId: UUID = UUID.randomUUID()
+
+val taskLogsByTaskId = listOf(
+    createTaskLogHelper(
+        entityId = testTaskId,
+        previousEntity = createTaskHelper(title = "Task 1"),
+        currentEntity = createTaskHelper(title = "Task 2")
+    ),
+    createTaskLogHelper(
+        entityId = testTaskId,
+        previousEntity = createTaskHelper(title = "Task 2"),
+        currentEntity = createTaskHelper(title = "Task 3")
+    )
+)
 
 val taskLogsForTestUser =
     listOf(

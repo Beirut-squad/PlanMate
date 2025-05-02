@@ -7,7 +7,7 @@ import java.util.UUID
 class GetTaskLogsByTaskIdUseCase(
     private val logRepository: LogRepository
 ) {
-    fun getTaskLogsByTaskId(taskId: UUID): List<TaskLog> {
+    fun getTaskLogsByTaskId(taskId: UUID): Result<List<TaskLog>> {
         TODO()
     }
 }
