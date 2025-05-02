@@ -1,0 +1,15 @@
+package org.example.logic.exceptions.task_managment_exception
+
+class TaskCreationException(massage: String) : Exception(massage)
+
+class TaskEditException(massage: String) : Exception(massage)
+
+class TaskDeletionException(massage: String) : Exception(massage)
+
+class GetAllTasksException(massage: String) : Exception(massage)
+
+class GetTaskException(massage: String) : Exception(massage)
+
+class BlankFieldsException(message: String) : IllegalArgumentException(message)
+
+class NoFieldsToUpdateException(message: String) : IllegalArgumentException(message)
