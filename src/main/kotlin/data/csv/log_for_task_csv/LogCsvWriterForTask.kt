@@ -2,6 +2,7 @@ package org.example.data.csv.log_for_task_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
+import org.example.models.ProjectLog
 import org.example.models.TaskLog
 import org.example.models.Task
 import java.io.BufferedWriter
@@ -13,29 +14,25 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
     override fun writeToFile(items: List<TaskLog>, filePath: String): Result<Unit> {
         return runCatching {
             val file = File(filePath)
-            if (!isValidFileName(file.name)) {
+            if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
-            }
             val writer = BufferedWriter(FileWriter(file))
-            if (file.length() == 0L){
+            if (file.length() == 0L)
                 writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
-            }
-            if (items.isNotEmpty()){
-                for (taskLog in items){
-                    if (isValidTaskLog(taskLog)){
-                        writer.write("${taskLog.id},${taskLog.userId},${taskLog.entityId},${taskLog.currentEntity},${taskLog.currentEntity},${taskLog.createdAt}\n")
-                    }
-                }
-            }
+            if (items.isNotEmpty())
+                writeTaskLog(items,writer)
             writer.close()
         }.fold(
-            onSuccess = {
-                return Result.success(Unit)
-            },
-            onFailure = {
-                return Result.failure(it)
-            }
+            onSuccess = { return Result.success(Unit) },
+            onFailure = { return Result.failure(it) }
         )
+    }
+
+    private fun writeTaskLog(items: List<TaskLog>, writer: BufferedWriter) {
+        items.forEach { taskLog ->
+            if (isValidTaskLog(taskLog))
+                writer.write("${taskLog.id},${taskLog.userId},${taskLog.entityId},${taskLog.currentEntity},${taskLog.currentEntity},${taskLog.createdAt}\n")
+        }
     }
 
     internal fun isValidTaskLog(taskLog: TaskLog): Boolean {

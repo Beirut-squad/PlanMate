@@ -14,11 +14,9 @@ class LogCsvWriterForProject: CsvWriter<ProjectLog> {
             val file = File(filePath)
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
-
             val writer = BufferedWriter(FileWriter(file))
-            if (file.length() == 0L){
+            if (file.length() == 0L)
                 writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
-            }
             if (items.isNotEmpty())
                 writeProjectLog(items,writer)
             writer.close()
