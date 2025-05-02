@@ -37,9 +37,10 @@ class StateDataSourceImplTest {
 
         // Given
         every { reader.read(any()) } returns states
-        every { writer.writeToFile(any(), filePath) } just Runs
+        every { writer.writeToFile(any(), filePath) } returns Result.success(Unit)
 
-        // Then
+
+    // Then
         val result = dataSource.createState(state)
 
         verify(exactly = 1) { reader.read(any()) }
@@ -57,7 +58,9 @@ class StateDataSourceImplTest {
         File(filePath).writeText("text")
 
         every { reader.read(any()) } returns listOf(states)
-        every { writer.writeToFile(listOf(states, state), filePath) } just Runs
+        every { writer.writeToFile(listOf(states, state), filePath) } returns
+                Result.success(Unit)
+
 
         val result = dataSource.createState(state)
 
@@ -120,9 +123,11 @@ class StateDataSourceImplTest {
         val existingStates = listOf(oldState)
 
         every { reader.read(any()) } returns existingStates
-        every { writer.writeToFile(listOf(updatedState), filePath) } just Runs
+        every { writer.writeToFile(listOf(updatedState), filePath) } returns
+                Result.success(Unit)
 
-        // When
+
+    // When
         val result = dataSource.editState(updatedState)
 
         // Then
@@ -203,7 +208,9 @@ class StateDataSourceImplTest {
         val existingStates = listOf(stateToDelete, otherState)
 
         every { reader.read(any()) } returns existingStates
-        every { writer.writeToFile(listOf(otherState), filePath) } just Runs
+        every { writer.writeToFile(listOf(otherState), filePath) } returns
+                Result.success(Unit)
+
 
         // When
         val result = dataSource.deleteState(stateToDelete.id)
