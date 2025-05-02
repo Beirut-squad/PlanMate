@@ -17,6 +17,7 @@ class LogCsvParserForTask (private val taskCsvParser: TaskCsvParser):CsvParser<T
     override fun parseFile(csvLines: List<String>): List<TaskLog> {
         if (csvLines.isEmpty())
             return emptyList()
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 

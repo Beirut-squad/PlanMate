@@ -9,6 +9,7 @@ class StateCsvParser : CsvParser<State> {
     override fun parseFile(csvLines: List<String>): List<State> {
         if (csvLines.isEmpty())
             return emptyList()
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 

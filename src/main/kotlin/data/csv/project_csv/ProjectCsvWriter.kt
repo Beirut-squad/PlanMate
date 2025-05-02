@@ -16,7 +16,7 @@ class ProjectCsvWriter: CsvWriter<Project> {
            if(!isValidFileName(file.name)){
                throw IllegalArgumentException("Error : Invalid file name")
            }
-            val writer = BufferedWriter(FileWriter(file,true))
+            val writer = BufferedWriter(FileWriter(file))
             if (file.length() == 0L){
                 writer.write("[id,name,description,creatorUserID,createdAt,updatedAt,state]\n")
             }

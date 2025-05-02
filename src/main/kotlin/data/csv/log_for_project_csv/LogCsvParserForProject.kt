@@ -13,6 +13,7 @@ class LogCsvParserForProject(private val projectCsvParser: ProjectCsvParser):Csv
     override fun parseFile(csvLines: List<String>): List<ProjectLog> {
         if (csvLines.isEmpty())
             return emptyList()
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 

@@ -12,6 +12,7 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
     override fun parseFile(csvLines: List<String>): List<Project> {
         if (csvLines.isEmpty())
             return emptyList()
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 

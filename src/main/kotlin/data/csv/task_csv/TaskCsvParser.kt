@@ -15,6 +15,7 @@ class TaskCsvParser(
     override fun parseFile(csvLines: List<String>): List<Task> {
         if (csvLines.isEmpty())
             return emptyList()
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 

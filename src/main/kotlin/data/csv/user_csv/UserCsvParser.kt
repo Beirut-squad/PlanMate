@@ -44,6 +44,7 @@ class UserCsvParser: CsvParser<User> {
     }
 
     override fun parseFile(csvLines: List<String>): List<User> {
+        csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
