@@ -10,7 +10,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.util.UUID
 
-class StateCsvWriter: CsvWriter<State> {
+class StateCsvWriter : CsvWriter<State> {
     override fun writeToFile(items: List<State>, filePath: String): Result<Unit> {
         return runCatching {
             val file = File(filePath)
@@ -27,13 +27,15 @@ class StateCsvWriter: CsvWriter<State> {
             onFailure = { return Result.failure(it) }
         )
     }
+
     private fun writeState(items: List<State>, writer: BufferedWriter) {
         items.forEach { state ->
             if (isValidState(state))
                 writer.write("[${state.id},${state.name}]\n")
         }
     }
+
     internal fun isValidState(state: State): Boolean {
-        return state.name.isNotBlank() && state.id != UUID(0,0)
+        return state.name.isNotBlank() && state.id != UUID(0, 0)
     }
 }

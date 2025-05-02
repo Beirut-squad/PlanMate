@@ -13,12 +13,12 @@ class TaskCsvWriter : CsvWriter<Task> {
     override fun writeToFile(items: List<Task>, filePath: String): Result<Unit> {
         return runCatching {
             val file = File(filePath)
-            if(!isValidFileName(file.name))
+            if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
             val writer = BufferedWriter(FileWriter(file))
             if (file.length() == 0L)
                 writer.write("[id,projectId,title,description,state,creatorUserID,createdAt,updatedAt]\n")
-            writeTask(items,writer)
+            writeTask(items, writer)
             writer.close()
         }.fold(
             onSuccess = { Result.success(Unit) },

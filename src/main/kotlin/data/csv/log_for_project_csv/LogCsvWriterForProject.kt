@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileWriter
 import java.util.UUID
 
-class LogCsvWriterForProject: CsvWriter<ProjectLog> {
+class LogCsvWriterForProject : CsvWriter<ProjectLog> {
     override fun writeToFile(items: List<ProjectLog>, filePath: String): Result<Unit> {
         return runCatching {
             val file = File(filePath)
@@ -18,20 +18,22 @@ class LogCsvWriterForProject: CsvWriter<ProjectLog> {
             if (file.length() == 0L)
                 writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
             if (items.isNotEmpty())
-                writeProjectLog(items,writer)
+                writeProjectLog(items, writer)
             writer.close()
         }.fold(
             onSuccess = { return Result.success(Unit) },
             onFailure = { return Result.failure(it) }
         )
     }
+
     private fun writeProjectLog(items: List<ProjectLog>, writer: BufferedWriter) {
         items.forEach { projectLog ->
             if (isValidProjectLog(projectLog))
                 writer.write("${projectLog.id},${projectLog.userId},${projectLog.entityId},${projectLog.currentEntity},${projectLog.currentEntity},${projectLog.createdAt}\n")
         }
     }
+
     internal fun isValidProjectLog(projectLog: ProjectLog): Boolean {
-        return projectLog.id != UUID(0,0) && projectLog.userId != UUID(0,0) && projectLog.entityId != UUID(0,0)
+        return projectLog.id != UUID(0, 0) && projectLog.userId != UUID(0, 0) && projectLog.entityId != UUID(0, 0)
     }
 }

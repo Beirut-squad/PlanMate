@@ -20,7 +20,7 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
             if (file.length() == 0L)
                 writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
             if (items.isNotEmpty())
-                writeTaskLog(items,writer)
+                writeTaskLog(items, writer)
             writer.close()
         }.fold(
             onSuccess = { return Result.success(Unit) },
@@ -36,6 +36,6 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
     }
 
     internal fun isValidTaskLog(taskLog: TaskLog): Boolean {
-        return taskLog.id != UUID(0,0) && taskLog.userId != UUID(0,0) && taskLog.entityId != UUID(0,0)
+        return taskLog.id != UUID(0, 0) && taskLog.userId != UUID(0, 0) && taskLog.entityId != UUID(0, 0)
     }
 }
