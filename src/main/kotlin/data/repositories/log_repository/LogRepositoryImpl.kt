@@ -10,26 +10,26 @@ class LogRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : LogRepository {
     override fun getProjectLogs(projectId: UUID): Result<List<ProjectLog>> {
-        TODO("Not yet implemented")
+        return logDataSource.getProjectLogs(projectId)
     }
 
     override fun getTaskLogs(taskId: UUID): Result<List<TaskLog>> {
-        TODO("Not yet implemented")
+        return logDataSource.getTaskLogs(taskId)
     }
 
     override fun saveProjectLog(projectLog: ProjectLog): Result<Unit> {
-        TODO("Not yet implemented")
+        return logDataSource.saveProjectLog(projectLog)
     }
 
     override fun saveTaskLog(taskLog: TaskLog): Result<Unit> {
-        TODO("Not yet implemented")
+        return logDataSource.saveTaskLog(taskLog)
     }
 
     override fun getAllProjectLogs(): Result<List<ProjectLog>> {
-        TODO("Not yet implemented")
+        return logDataSource.getAllProjectLogs()
     }
 
     override fun getAllTaskLogs(): Result<List<TaskLog>> {
-        TODO("Not yet implemented")
+        return logDataSource.getAllTaskLogs()
     }
 }
