@@ -6,6 +6,7 @@ import org.example.data.csv.task_csv_parser.TaskCsvWriter
 import org.example.models.Task
 import org.junit.jupiter.api.Assertions.*
 import java.io.File
+import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -44,7 +45,10 @@ class TaskCsvWriterTest{
         taskCsvWriter.writeToFile(tasks, filePath)
 
         // Then
+        val lines = file.readLines()
+        assertTrue(lines.first().contains("id,projectId,title,description,state,creatorUserID,createdAt,updatedAt"))
         assertTrue(file.exists())
+        file.delete()
     }
 
     @Test
@@ -55,6 +59,7 @@ class TaskCsvWriterTest{
         // When
         taskCsvWriter.writeToFile(tasks, filePath)
         val file = File(filePath)
+        assertTrue(file.length() != 0L)
         val lines = file.readLines()
 
         // Then
@@ -70,7 +75,7 @@ class TaskCsvWriterTest{
     @Test
     fun `given invalid task with empty title when writeToFile is called then should not write invalid task`() {
         // Given
-        val tasks = listOf(createTaskHelper(), createTaskHelper(title = ""))
+        val tasks = listOf(createTaskHelper(title = "Task 1"), createTaskHelper(title = ""))
 
         // When
         taskCsvWriter.writeToFile(tasks, filePath)
@@ -100,5 +105,35 @@ class TaskCsvWriterTest{
         assertTrue(result.exceptionOrNull() is IllegalArgumentException)
     }
 
+    @Test
+    fun `isValidTask returns false when id is default UUID (0, 0)`() {
+        val task = createTaskHelper(id = UUID(0, 0))
+        assertFalse(taskCsvWriter.isValidTask(task))
+    }
+    @Test
+    fun `isValidTask returns false when title is blank`() {
+        val task = createTaskHelper(title = "")
+        assertFalse(taskCsvWriter.isValidTask(task))
+    }
+    @Test
+    fun `isValidTask returns false when description is blank`() {
+        val task = createTaskHelper(description = "")
+        assertFalse(taskCsvWriter.isValidTask(task))
+    }
+    @Test
+    fun `isValidTask returns false when creatorUserID is default UUID (0, 0)`() {
+        val task = createTaskHelper(creatorUserID = UUID(0, 0))
+        assertFalse(taskCsvWriter.isValidTask(task))
+    }
+    @Test
+    fun `isValidTask returns false when all fields are invalid`() {
+        val task = createTaskHelper(
+            id = UUID(0, 0),
+            title = "",
+            description = "",
+            creatorUserID = UUID(0, 0)
+        )
+        assertFalse(taskCsvWriter.isValidTask(task))
+    }
 
 }

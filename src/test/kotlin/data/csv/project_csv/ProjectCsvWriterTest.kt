@@ -192,10 +192,10 @@ class ProjectCsvWriterTest{
  @Test
  fun `isValidProject should return false when state is empty`() {
   val project = Project(
-   id = UUID.randomUUID(), // invalid
+   id = UUID.randomUUID(),
    name = "new name",
    description = "new description",
-   creatorUserID = UUID(0,0),
+   creatorUserID =UUID.randomUUID(),
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
    state = emptyList()
