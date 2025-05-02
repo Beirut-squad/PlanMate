@@ -2,6 +2,7 @@ package data.csv.log_for_task_csv
 
 import creator_helper.createProjectLogHelper
 import creator_helper.createTaskLogHelper
+import org.example.data.csv.log_csv_parser.LogCsvWriterForProject
 import org.example.data.csv.log_for_task_csv.LogCsvWriterForTask
 import org.example.models.ProjectLog
 import org.example.models.TaskLog
@@ -117,6 +118,20 @@ class LogCsvWriterForTaskTest{
   assertTrue(result)
  }
 
+ @Test
+ fun `given invalid project log when writeToFile is called then it should be skipped`() {
+  val invalidLog = createTaskLogHelper(id = UUID(0, 0))
+  val validLog = createTaskLogHelper()
+  val taskLogs = listOf(invalidLog, validLog)
 
+  val writer = LogCsvWriterForProject()
+  logCsvWriterForTask.writeToFile(taskLogs, filePath)
 
+  val file = File(filePath)
+  val lines = file.readLines()
+
+  assertEquals(2, lines.size)
+  assertTrue(lines[1].contains(validLog.id.toString()))
+  file.delete()
+ }
 }

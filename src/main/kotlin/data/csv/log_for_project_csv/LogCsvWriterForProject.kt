@@ -22,7 +22,7 @@ class LogCsvWriterForProject: CsvWriter<ProjectLog> {
             if (items.isNotEmpty()){
                 for (projectLog in items){
                     if (isValidProjectLog(projectLog)){
-                        writer.write("${projectLog.id},${projectLog.userId},${projectLog.entityId},${projectLog.currentEntity},${projectLog.currentEntity},${projectLog.createdAt}\n")
+                        writer.write("[${projectLog.id},${projectLog.userId},${projectLog.entityId},${projectLog.currentEntity},${projectLog.currentEntity},${projectLog.createdAt}]\n")
                     }
                 }
             }
