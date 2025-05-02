@@ -1,9 +1,10 @@
 package org.example.logic.repositories.state_repository
 
 import org.example.models.State
+import java.util.UUID
 
 interface StateRepository {
-    fun createTaskState(state: State)
-    fun editTaskState(state: State)
-    fun deleteTaskState(state: State)
+    fun createState(state: State): Result<State>
+    fun editState(state: State): Result<State>
+    fun deleteState(id: UUID): Result<Unit>
 }
