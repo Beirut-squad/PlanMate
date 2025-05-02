@@ -11,28 +11,46 @@ class EditTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase,
 ) {
-
     fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: String?) {
-        val isTitleValid = newTitle.isNullOrBlank()
-        val isDescriptionValid = newDescription.isNullOrBlank()
-        val isStateValid = newState.isNullOrBlank()
+        validateInputFields(newTitle, newDescription, newState)
 
-        if (isTitleValid && isDescriptionValid && isStateValid) {
+        val updatedTask = createUpdatedTask(task, newTitle, newDescription, newState)
+
+        saveUpdatedTask(updatedTask)
+
+        createTaskLogUseCase.createTaskLog(task, updatedTask, task.creatorUserID)
+    }
+
+    private fun validateInputFields(newTitle: String?, newDescription: String?, newState: String?) {
+        val isTitleEmpty = newTitle.isNullOrBlank()
+        val isDescriptionEmpty = newDescription.isNullOrBlank()
+        val isStateEmpty = newState.isNullOrBlank()
+
+        if (isTitleEmpty && isDescriptionEmpty && isStateEmpty) {
             throw NoFieldsToUpdateException("At least one non-blank field must be provided")
-        } else {
-            val updatedTask = task.copy(
-                title = if (!isTitleValid) newTitle else task.title,
-                description = if (!isDescriptionValid) newDescription else task.description,
-                state = if (!isStateValid) task.state.copy(name = newState!!) else task.state,
-                updatedAt = LocalDateTime.now()
-            )
-            val result = taskRepository.editTask(updatedTask)
-            if (result.isFailure) {
-                throw TaskEditException("Failed to edit task")
-            }
-            createTaskLogUseCase.createTaskLog(task, updatedTask, task.creatorUserID)
         }
     }
+
+    private fun createUpdatedTask(task: Task, newTitle: String?, newDescription: String?, newState: String?): Task {
+        val isTitleEmpty = newTitle.isNullOrBlank()
+        val isDescriptionEmpty = newDescription.isNullOrBlank()
+        val isStateEmpty = newState.isNullOrBlank()
+
+        return task.copy(
+            title = if (!isTitleEmpty) newTitle else task.title,
+            description = if (!isDescriptionEmpty) newDescription else task.description,
+            state = if (!isStateEmpty) task.state.copy(name = newState) else task.state,
+            updatedAt = LocalDateTime.now()
+        )
+    }
+
+    private fun saveUpdatedTask(updatedTask: Task) {
+        val result = taskRepository.editTask(updatedTask)
+        if (result.isFailure) {
+            throw TaskEditException("Failed to edit task")
+        }
+    }
+
 
 }
 

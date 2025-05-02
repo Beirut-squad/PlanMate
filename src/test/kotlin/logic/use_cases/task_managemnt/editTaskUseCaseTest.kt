@@ -16,11 +16,12 @@ import kotlin.test.assertFailsWith
 
 class editTaskUseCaseTest {
     private var taskRepository: TaskRepository = mockk(relaxed = true)
-    private var createTaskLogUseCase: CreateTaskLogUseCase =mockk(relaxed = true)
+    private var createTaskLogUseCase: CreateTaskLogUseCase = mockk(relaxed = true)
     private lateinit var editTaskUseCase: EditTaskUseCase
+
     @BeforeEach
     fun setup() {
-        editTaskUseCase = EditTaskUseCase(taskRepository,createTaskLogUseCase)
+        editTaskUseCase = EditTaskUseCase(taskRepository, createTaskLogUseCase)
     }
 
     @Test
@@ -75,6 +76,7 @@ class editTaskUseCaseTest {
         assertEquals("To Do", capturedTask.state.name)
         assertNotNull(capturedTask.updatedAt)
     }
+
     @Test
     fun `editTask should update description and state when only they are provided`() {
         // Given
@@ -100,6 +102,7 @@ class editTaskUseCaseTest {
         verify { createTaskLogUseCase.createTaskLog(task, capturedTask, task.creatorUserID) }
 
     }
+
     @Test
     fun `editTask should throw exception when edit fails`() {
         // Given
@@ -112,17 +115,18 @@ class editTaskUseCaseTest {
 
         // Then&When
         assertFailsWith<TaskEditException> {
-            editTaskUseCase.editTask(task,newTitle,newDescription,newState)
+            editTaskUseCase.editTask(task, newTitle, newDescription, newState)
         }
 
         verify { taskRepository.editTask(any()) }
         verify(exactly = 0) { createTaskLogUseCase.createTaskLog(any(), any(), task.creatorUserID) }
     }
+
     @Test
     fun `editTask should update description and title when only they are provided`() {
         // Given
         val task = createTaskHelper()
-        val newTitle =null
+        val newTitle = null
         val newDescription = null
         val newState = "to do"
 
@@ -141,6 +145,7 @@ class editTaskUseCaseTest {
         assertEquals(newState, capturedTask.state.name)
         assertNotNull(capturedTask.updatedAt)
     }
+
     @Test
     fun `editTask should not edit task if title is blank but other fields are valid`() {
         // Given
@@ -180,6 +185,7 @@ class editTaskUseCaseTest {
 
         assertEquals("At least one non-blank field must be provided", exception.message)
     }
+
     @Test
     fun `editTask should throw BlankFieldsException when all fields are null`() {
         // Given
@@ -194,5 +200,55 @@ class editTaskUseCaseTest {
         }
 
         assertEquals("At least one non-blank field must be provided", exception.message)
+    }
+
+
+    @Test
+    fun ` should edit  when description is blank and other fields are not`() {
+        // Given
+        val task = createTaskHelper()
+        val newTitle = "test"
+        val newDescription = " "
+        val newState = "to do"
+
+        every { taskRepository.editTask(any()) } returns Result.success(Unit)
+
+        // When
+        editTaskUseCase.editTask(task, newTitle, newDescription, newState)
+
+        // Then
+        val updatedTaskSlot = slot<Task>()
+        verify { taskRepository.editTask(capture(updatedTaskSlot)) }
+
+        val capturedTask = updatedTaskSlot.captured
+        assertEquals(newTitle, capturedTask.title)
+        assertEquals(task.description, capturedTask.description)
+        assertEquals(newState, capturedTask.state.name)
+        assertNotNull(capturedTask.updatedAt)
+    }
+
+
+    @Test
+    fun ` should edit  when State is blank and other fields are not`() {
+        // Given
+        val task = createTaskHelper()
+        val newTitle = "test"
+        val newDescription = "desc"
+        val newState = " "
+
+        every { taskRepository.editTask(any()) } returns Result.success(Unit)
+
+        // When
+        editTaskUseCase.editTask(task, newTitle, newDescription, newState)
+
+        // Then
+        val updatedTaskSlot = slot<Task>()
+        verify { taskRepository.editTask(capture(updatedTaskSlot)) }
+
+        val capturedTask = updatedTaskSlot.captured
+        assertEquals(newTitle, capturedTask.title)
+        assertEquals(newDescription, capturedTask.description)
+        assertEquals(task.state.name, capturedTask.state.name)
+        assertNotNull(capturedTask.updatedAt)
     }
 }
