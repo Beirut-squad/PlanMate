@@ -1,93 +1,67 @@
 package data.csv.user_csv
 
 import CsvParser
-import io.mockk.mockk
-import org.example.data.csv.CsvReader
-import org.example.models.User
-import org.junit.jupiter.api.Assertions.*
-import java.util.UUID
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import com.google.common.truth.Truth.assertThat
-import creator_helper.createCsvLineForUser
-import creator_helper.createCsvLineForUserInvalid
+import creator_helper.createProjectHelper
 import io.mockk.every
-import org.example.models.Role
+import io.mockk.mockk
+import io.mockk.verify
+import org.example.data.csv.CsvReader
+import kotlin.test.Test
+import org.example.models.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
+import java.io.File
+import java.time.LocalDateTime
+import java.util.*
 
 class CsvReaderTest{
 
-  private lateinit var parser: CsvParser<User>
-  private lateinit var reader: CsvReader<User>
 
-  @BeforeTest
-  fun setup(){
-   parser = mockk()
-   reader = CsvReader<User>(parser)
-  }
-    @Test
-    fun `given valid CSV lines, when read called, then return parsed Users`() {
-        // given
-        val lines = listOf(
-            createCsvLineForUser(),
-            createCsvLineForUser()
-        )
-        val user1 = User(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Ismail", "secret123", "ismail.elkalili@gmail.com", Role.ADMIN, false)
-        val user2 = User(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Ismail", "secret123", "ismail.elkalili@gmail.com", Role.ADMIN, false)
+    private lateinit var stateCsvParser: CsvParser<State>
+    private lateinit var projectCsvParser: CsvParser<Project>
+    private lateinit var taskCsvParser: CsvParser<Task>
+    private lateinit var logCsvParserForProject: CsvParser<ProjectLog>
+    private lateinit var logCsvParserForTask: CsvParser<TaskLog>
+    private lateinit var csvReader: CsvReader<Project>
 
-        every { parser.parseLine(lines[0]) } returns user1
-        every { parser.parseLine(lines[1]) } returns user2
 
-        // when
-        val result = reader.read(lines)
+    @BeforeEach
+    fun setup() {
+        stateCsvParser = mockk<CsvParser<State>>(relaxed = true)
+        projectCsvParser = mockk<CsvParser<Project>>(relaxed = true)
+        taskCsvParser = mockk<CsvParser<Task>>(relaxed = true)
+        logCsvParserForProject = mockk<CsvParser<ProjectLog>>(relaxed = true)
+        logCsvParserForTask = mockk<CsvParser<TaskLog>>(relaxed = true)
 
-        // then
-        assertThat(result).isEqualTo(listOf(user1, user2))
+
+        csvReader = CsvReader(projectCsvParser)
     }
 
     @Test
-    fun `given CSV lines with some invalid entries, when read called, then return only valid Users`() {
-        // given
-        val lines = listOf(
-            createCsvLineForUserInvalid(),
-            createCsvLineForUser()
-        )
-        val user = User(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Ismail", "secret123", "ismail.elkalili@gmail.com", Role.ADMIN, false)
-
-        every { parser.parseLine(lines[0]) } returns null
-        every { parser.parseLine(lines[1]) } returns user
-
-        // when
-        val result = reader.read(lines)
-
-        // then
-        assertThat(result).isEqualTo(listOf(user))
+    fun `should throw exception if the file is not found in file names `() {
+        // When && Then
+        assertThrows<Exception>{
+            csvReader.read("non_existing_file.csv")
+        }
     }
 
     @Test
-    fun `given all invalid CVS lines, when read called, then return empty list`() {
-        //given
-        val lines = listOf(
-            createCsvLineForUserInvalid(),
-            createCsvLineForUserInvalid()
-        )
-        every { parser.parseLine(lines[0]) } returns null
-
-        //when
-        val result = reader.read(lines)
-
-        //then
-        assertThat(result).isEmpty()
+    fun `should throw exception if the file is not found in the required path`() {
+        // When && Then
+        assertThrows<Exception>{
+            csvReader.read("tasks.csv")
+        }
     }
+
     @Test
-    fun `given empty CSV lines, when read called, then return empty list`() {
-        // given
-        val lines = emptyList<String>()
+    fun `should call parser if the file exists `(){
+        // When
+        csvReader.read("projects.csv")
 
-        // when
-        val result = reader.read(lines)
-
-        // then
-        assertThat(result).isEmpty()
+        // Then
+        verify { projectCsvParser.parseFile(any()) }
     }
-
 }
