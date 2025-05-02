@@ -8,6 +8,6 @@ class GetTaskLogsByTaskIdUseCase(
     private val logRepository: LogRepository
 ) {
     fun getTaskLogsByTaskId(taskId: UUID): Result<List<TaskLog>> {
-        TODO()
+        return logRepository.getTaskLogs(taskId)
     }
 }
