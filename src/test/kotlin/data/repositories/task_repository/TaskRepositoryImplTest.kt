@@ -2,16 +2,15 @@ package data.repositories.task_repository
 
 import creator_helper.createTaskHelper
 import io.mockk.*
-import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.data.repositories.task_repository.TaskRepositoryImpl
 import org.example.logic.exceptions.TaskCreationException
 import org.example.logic.exceptions.TaskDeletionException
 import org.example.logic.exceptions.TaskEditException
-import org.example.logic.exceptions.TaskRetrievalException
+import org.example.logic.exceptions.GetAllTasksException
+import org.example.logic.exceptions.GetTaskException
 import org.example.logic.repositories.task_repository.TaskRepository
 
-import org.example.models.Task
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -46,7 +45,7 @@ class TaskRepositoryImpl {
     fun `createTask should return failure when data source returns failure`() {
         // Given
         val task = createTaskHelper()
-        every { taskDataSource.createTask(any()) } returns Result.failure(TaskCreationException("Task creation failed"))
+        every { taskDataSource.createTask(any()) } returns Result.failure(TaskCreationException("Failed to create task"))
 
         // When
         val result = taskRepository.createTask(task)
@@ -130,7 +129,7 @@ class TaskRepositoryImpl {
     @Test
     fun `getAllTasks should return failure when data source throws exception`() {
         // Given
-        val exception = TaskRetrievalException("Failed to retrieve tasks")
+        val exception = GetAllTasksException("Failed to retrieve tasks")
         every { taskDataSource.getAllTasks() } returns Result.failure(exception)
 
         // When
@@ -138,7 +137,7 @@ class TaskRepositoryImpl {
 
         // Then
         assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is TaskRetrievalException)
+        assertTrue(result.exceptionOrNull() is GetAllTasksException)
     }
 
     @Test
@@ -159,7 +158,7 @@ class TaskRepositoryImpl {
     fun `getTask should return failure when data source returns failure`() {
         // Given
         val taskId = UUID.randomUUID()
-        val exception = TaskRetrievalException("Failed to retrieve task")
+        val exception = GetTaskException("Failed to retrieve task")
         every { taskDataSource.getTask(taskId) } returns Result.failure(exception)
 
         // When
@@ -167,7 +166,7 @@ class TaskRepositoryImpl {
 
         // Then
         assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is TaskRetrievalException)
+        assertTrue(result.exceptionOrNull() is GetTaskException)
     }
 
 }
