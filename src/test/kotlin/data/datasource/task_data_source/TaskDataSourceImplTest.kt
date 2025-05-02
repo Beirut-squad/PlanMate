@@ -134,7 +134,7 @@ class TaskDataSourceImplTest {
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskEditException)
-        assertEquals("No tasks found to edit", result.exceptionOrNull()?.message)
+        assertEquals("Failed to edit task: No tasks found to edit", result.exceptionOrNull()?.message)
         verify { csvReader.read(any()) }
         verify(exactly = 0) { csvWriter.writeToFile(any(), any()) }
     }
@@ -188,7 +188,7 @@ class TaskDataSourceImplTest {
         // Then
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is TaskDeletionException)
-        assertEquals("No tasks found to delete", result.exceptionOrNull()?.message)
+        assertEquals("Failed to delete task: No tasks found to delete", result.exceptionOrNull()?.message)
         verify { csvReader.read(any()) }
         verify(exactly = 0) { csvWriter.writeToFile(any(), any()) }
     }
@@ -263,7 +263,7 @@ class TaskDataSourceImplTest {
 
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is GetAllTasksException)
-        assertEquals("No tasks found", result.exceptionOrNull()?.message)
+        assertEquals("Failed to read tasks: No tasks found", result.exceptionOrNull()?.message)
     }
 
     @Test
