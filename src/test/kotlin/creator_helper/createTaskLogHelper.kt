@@ -1,7 +1,5 @@
 package creator_helper
 
-import org.example.models.Project
-import org.example.models.ProjectLog
 import org.example.models.Task
 import org.example.models.TaskLog
 import java.time.LocalDateTime
@@ -24,3 +22,56 @@ fun createTaskLogHelper(
         createdAt = createdAt,
     )
 }
+
+
+val testTaskId: UUID = UUID.randomUUID()
+
+val taskLog = createTaskLogHelper(
+    previousEntity = createTaskHelper(title = "Task 1"),
+    currentEntity = createTaskHelper(title = "Task 2")
+)
+
+val taskLogsByTaskId = listOf(
+    createTaskLogHelper(
+        entityId = testTaskId,
+        previousEntity = createTaskHelper(title = "Task 1"),
+        currentEntity = createTaskHelper(title = "Task 2")
+    ),
+    createTaskLogHelper(
+        entityId = testTaskId,
+        previousEntity = createTaskHelper(title = "Task 2"),
+        currentEntity = createTaskHelper(title = "Task 3")
+    )
+)
+
+val taskLogsForTestUser =
+    listOf(
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+    )
+
+val taskLogsForAllUsers =
+    listOf(
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            userId = testUserId,
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+        createTaskLogHelper(
+            previousEntity = createTaskHelper(title = "Task 1"),
+            currentEntity = createTaskHelper(title = "Task 2")
+        ),
+    )

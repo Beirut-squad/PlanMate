@@ -1,12 +1,12 @@
-package org.example.logic.repositories.log_repository
+package org.example.data.datasource.log_data_source
 
 import org.example.models.ProjectLog
 import org.example.models.TaskLog
-import java.util.*
+import java.util.UUID
 
-interface LogRepository {
-    fun getProjectLogs(projectId: UUID): Result<List<ProjectLog>>
-    fun getTaskLogs(taskId: UUID): Result<List<TaskLog>>
+interface LogDataSource {
+    fun getProjectLogs(id: UUID): Result<List<ProjectLog>>
+    fun getTaskLogs(id: UUID): Result<List<TaskLog>>
     fun saveProjectLog(projectLog: ProjectLog): Result<Unit>
     fun saveTaskLog(taskLog: TaskLog): Result<Unit>
     fun getAllProjectLogs(): Result<List<ProjectLog>>
