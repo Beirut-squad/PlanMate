@@ -4,9 +4,10 @@ import org.example.logic.repositories.authentication_repository.AuthenticationRe
 import org.example.logic.use_case.authentication.encryption.EncryptPassword
 import org.example.models.User
 
-class RegisterAdminUseCase(
+class RegisterUserOrAdminUseCase(
     private val authenticationRepository: AuthenticationRepository,
-    private val encryptPassword: EncryptPassword
+    private val encryptPassword: EncryptPassword,
+    private val registerMateUseCase: RegisterMateUseCase
 ) {
 
     fun addAdmin(
@@ -20,7 +21,7 @@ class RegisterAdminUseCase(
                     saveUserWithEncryptedPassword(password, name, email)
                 },
                 onFailure = {
-                    Result.failure(it)
+                    registerMateUseCase.addUser(name, password, email)
                 }
             )
     }
@@ -51,13 +52,5 @@ class RegisterAdminUseCase(
             password = password,
             email = email
         )
-            .fold(
-                onSuccess = {
-                    Result.success(it)
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
     }
 }

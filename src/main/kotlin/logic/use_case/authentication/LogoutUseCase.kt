@@ -8,13 +8,5 @@ class LogoutUseCase(
 
     fun logout(): Result<Unit> {
         return authenticationRepository.logout()
-            .fold(
-                onSuccess = {
-                    Result.success(it)
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
     }
 }

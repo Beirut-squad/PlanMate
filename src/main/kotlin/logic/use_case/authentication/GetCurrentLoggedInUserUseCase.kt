@@ -13,13 +13,5 @@ class GetCurrentLoggedInUserUseCase(
 
     private fun getCurrentUserFromRepository(): Result<User?> {
         return authenticationRepository.getCurrentLoggedInUser()
-            .fold(
-                onSuccess = { user ->
-                    Result.success(user)
-                },
-                onFailure = { exception ->
-                    Result.failure(exception)
-                }
-            )
     }
 }
