@@ -22,10 +22,7 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
             if (items.isNotEmpty())
                 writeTaskLog(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
 
     private fun writeTaskLog(items: List<TaskLog>, writer: BufferedWriter) {

@@ -22,10 +22,7 @@ class StateCsvWriter : CsvWriter<State> {
             if (items.isNotEmpty())
                 writeState(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
 
     private fun writeState(items: List<State>, writer: BufferedWriter) {

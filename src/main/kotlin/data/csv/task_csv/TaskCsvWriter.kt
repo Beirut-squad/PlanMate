@@ -20,10 +20,7 @@ class TaskCsvWriter : CsvWriter<Task> {
                 writer.write("[id,projectId,title,description,state,creatorUserID,createdAt,updatedAt]\n")
             writeTask(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { Result.success(Unit) },
-            onFailure = { Result.failure(it) }
-        )
+        }
     }
 
     private fun writeTask(items: List<Task>, writer: BufferedWriter) {
