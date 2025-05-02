@@ -1,10 +1,15 @@
 package ui.authentication_screens
 
+import creator_helper.createUserHelper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
+import org.example.logic.use_case.authentication.RegisterUserOrAdminUseCase
+import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.RegisterScreen
+import org.example.ui.home_screens.HomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.Viewer
@@ -12,15 +17,20 @@ import ui.Viewer
 class RegisterScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewer: Viewer = mockk(relaxed = true)
+    private val registerUseCase: RegisterUserOrAdminUseCase = mockk()
+    private val homeScreen: HomeScreen = mockk(relaxed = true)
     private lateinit var registerScreen: RegisterScreen
 
     @BeforeEach
     fun setUp() {
-        registerScreen = RegisterScreen(reader, viewer)
+        registerScreen = RegisterScreen(reader, viewer, registerUseCase, homeScreen)
     }
 
     @Test
     fun `should show title`() {
+        // Given
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+
         // When
         registerScreen.show()
 
@@ -29,9 +39,10 @@ class RegisterScreenTest {
     }
 
     @Test
-       fun `should prompt user for username`() {
+    fun `should prompt user for name`() {
         // Given
-        every { reader.readInput() } returns "testuser"
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returns "John Doe"
 
         // When
         registerScreen.show()
@@ -41,8 +52,22 @@ class RegisterScreenTest {
     }
 
     @Test
+    fun `should prompt user for email`() {
+        // Given
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returns "user@example.com"
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verify { viewer.printInfoLine("Email: ") }
+    }
+
+    @Test
     fun `should prompt user for password`() {
         // Given
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
         every { reader.readInput() } returns "password123"
 
         // When
@@ -53,9 +78,23 @@ class RegisterScreenTest {
     }
 
     @Test
-    fun `should print error on invalid username input`() {
+    fun `should print error on invalid name input`() {
         // Given
-        every { reader.readInput() } returnsMany listOf(null, "testuser")
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returnsMany listOf(null, "John Doe")
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verify { viewer.printError("Invalid input") }
+    }
+
+    @Test
+    fun `should print error on invalid email input`() {
+        // Given
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returnsMany listOf("John Doe", null, "user@example.com")
 
         // When
         registerScreen.show()
@@ -67,12 +106,133 @@ class RegisterScreenTest {
     @Test
     fun `should print error on invalid password input`() {
         // Given
-        every { reader.readInput() } returnsMany listOf(null, "password123")
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returnsMany listOf("John Doe", "user@example.com", null, "password123")
 
         // When
         registerScreen.show()
 
         // Then
         verify { viewer.printError("Invalid input") }
+    }
+
+    @Test
+    fun `should loop until valid name, email, and password are entered`() {
+        // Given
+        every { registerUseCase.add(any(), any(), any()) } returns Result.success(createUserHelper())
+        every { reader.readInput() } returnsMany listOf(null, "John Doe", null, "user@example.com", null, "password123")
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verifyOrder {
+            viewer.printInfoLine("Name: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Name: ")
+            viewer.printInfoLine("Email: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Email: ")
+            viewer.printInfoLine("Password: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Password: ")
+        }
+    }
+
+    @Test
+    fun `should handle successful registration and navigate to home screen`() {
+        // Given
+        val testUser = mockk<User>(relaxed = true)
+        every { reader.readInput() } returnsMany listOf("John Doe", "user@example.com", "password123")
+        every { registerUseCase.add("John Doe", "user@example.com", "password123") } returns Result.success(testUser)
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printInfoLine("Register successfully!") }
+        verify(exactly = 1) { homeScreen.setUser(testUser) }
+        verify(exactly = 1) { homeScreen.show() }
+    }
+
+    @Test
+    fun `should handle failed registration and retry`() {
+        // Given
+        every { reader.readInput() } returnsMany listOf(
+            "John Doe", "user@example.com", "weakpassword",
+            "John Doe", "user@example.com", "strongpassword"
+        )
+        every {
+            registerUseCase.add("John Doe", "user@example.com", "weakpassword")
+        } returns Result.failure(Exception("Registration failed"))
+        every {
+            registerUseCase.add("John Doe", "user@example.com", "strongpassword")
+        } returns Result.success(mockk(relaxed = true))
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verifyOrder {
+            viewer.printInfoLine("Name: ")
+            viewer.printInfoLine("Email: ")
+            viewer.printInfoLine("Password: ")
+            viewer.printError("Register failed!")
+            viewer.printInfoLine("Name: ")
+            viewer.printInfoLine("Email: ")
+            viewer.printInfoLine("Password: ")
+            viewer.printInfoLine("Register successfully!")
+        }
+    }
+
+    @Test
+    fun `should not proceed to home screen if registration fails`() {
+        // Given
+        every { reader.readInput() } returnsMany listOf("John Doe", "user@example.com", "wrongpassword", "John Doe", "user@example.com", "goodpassword")
+        every {
+            registerUseCase.add("John Doe", "user@example.com", "wrongpassword")
+        } returns Result.failure(Exception("Registration failed"))
+        every {
+            registerUseCase.add("John Doe", "user@example.com", "goodpassword")
+        } returns Result.success(createUserHelper())
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { homeScreen.setUser(any()) }
+        verify { viewer.printError("Register failed!") }
+    }
+
+    @Test
+    fun `should handle retry logic for all invalid inputs`() {
+        // Given
+        every { reader.readInput() } returnsMany listOf(
+            null,
+            "John Doe",
+            null,
+            "user@example.com",
+            null,
+            "password123"
+        )
+        every { registerUseCase.add("John Doe", "user@example.com", "password123") } returns Result.success(mockk(relaxed = true))
+
+        // When
+        registerScreen.show()
+
+        // Then
+        verifyOrder {
+            viewer.printInfoLine("Name: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Name: ")
+            viewer.printInfoLine("Email: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Email: ")
+            viewer.printInfoLine("Password: ")
+            viewer.printError("Invalid input")
+            viewer.printInfoLine("Password: ")
+            viewer.printInfoLine("Register successfully!")
+        }
     }
 }

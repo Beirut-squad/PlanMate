@@ -10,7 +10,7 @@ class RegisterUserOrAdminUseCase(
     private val registerMateUseCase: RegisterMateUseCase
 ) {
 
-    fun addAdmin(
+    fun add(
         name: String,
         password: String,
         email: String,
