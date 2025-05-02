@@ -5,10 +5,9 @@ import org.example.models.TaskLog
 import java.util.UUID
 
 class GetTaskLogsByTaskIdUseCase(
-private val logRepository: LogRepository
+    private val logRepository: LogRepository
 ) {
     fun getTaskLogsByTaskId(taskId: UUID): Result<List<TaskLog>> {
-        TODO()
+        return logRepository.getTaskLogs(taskId)
     }
 }
-
