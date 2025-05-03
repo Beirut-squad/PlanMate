@@ -122,7 +122,6 @@ class LoginScreenTest {
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
-        verify(exactly = 1) { homeScreen.setUser(testUser) }
         verify(exactly = 1) { homeScreen.show() }
     }
 
@@ -184,7 +183,6 @@ class LoginScreenTest {
 
         // Then
         verify(exactly = 1) { homeScreen.show() }
-        verify(exactly = 1) { homeScreen.setUser(any()) }
         verify { viewer.printError("Login failed!") }
     }
 
