@@ -46,7 +46,6 @@ class LoginScreen(
     }
 
     private fun goToHomeScreen(user: User) {
-        homeScreen.setUser(user)
         homeScreen.show()
     }
 }

@@ -1,4 +1,4 @@
-package org.example.ui.home_screen
+package org.example.ui.home_screens
 
 import org.example.logic.use_case.authentication.GetCurrentLoggedInUserUseCase
 import org.example.ui.Reader
