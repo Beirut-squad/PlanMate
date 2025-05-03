@@ -1,7 +1,7 @@
 package creator_helper
 
 import org.example.models.Project
-import org.example.models.State
+import org.example.models.TaskState
 import java.time.LocalDateTime
 import java.util.*
 
@@ -12,7 +12,7 @@ fun createProjectHelper(
     creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
-    state: List<State> = listOf(createStateHelper()),
+    taskState: List<TaskState> = listOf(createStateHelper()),
 ): Project {
     return Project(
         id = id,
@@ -21,6 +21,6 @@ fun createProjectHelper(
         creatorUserID = creatorUserID,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        state = state
+        taskState = taskState
     )
 }

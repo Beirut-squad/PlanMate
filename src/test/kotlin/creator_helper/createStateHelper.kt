@@ -1,13 +1,13 @@
 package creator_helper
 
-import org.example.models.State
+import org.example.models.TaskState
 import java.util.*
 
 fun createStateHelper(
     id: UUID = UUID.randomUUID(),
     name: String = "To Do"
-): State {
-    return State(
+): TaskState {
+    return TaskState(
         id = id,
         name = name
     )

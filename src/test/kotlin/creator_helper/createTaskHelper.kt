@@ -1,6 +1,6 @@
 package creator_helper
 
-import org.example.models.State
+import org.example.models.TaskState
 import org.example.models.Task
 import java.time.LocalDateTime
 import java.util.*
@@ -10,7 +10,7 @@ fun createTaskHelper(
     projectId: UUID = UUID.randomUUID(),
     title: String = "Test Task Title",
     description: String = "Test Task Description",
-    state: State = createStateHelper(),
+    taskState: TaskState = createStateHelper(),
     creatorUserID: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now()
@@ -20,7 +20,7 @@ fun createTaskHelper(
         projectId = projectId,
         title = title,
         description = description,
-        state = state,
+        taskState = taskState,
         creatorUserID = creatorUserID,
         createdAt = createdAt,
         updatedAt = updatedAt

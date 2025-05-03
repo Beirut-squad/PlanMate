@@ -42,7 +42,7 @@ class editTaskUseCaseTest {
         // Then
         assertEquals("Test Task Title", task.title)
         assertEquals("Test Task Description", task.description)
-        assertEquals("To Do", task.state.name)
+        assertEquals("To Do", task.taskState.name)
 
         val updatedTaskSlot = slot<Task>()
         verify { taskRepository.editTask(capture(updatedTaskSlot)) }
@@ -50,7 +50,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(newTitle, capturedTask.title)
         assertEquals(newDescription, capturedTask.description)
-        assertEquals(newState, capturedTask.state.name)
+        assertEquals(newState, capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
     }
 
@@ -74,7 +74,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(newTitle, capturedTask.title)
         assertEquals("Test Task Description", capturedTask.description)
-        assertEquals("To Do", capturedTask.state.name)
+        assertEquals("To Do", capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
     }
 
@@ -98,7 +98,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(task.title, capturedTask.title)
         assertEquals(newDescription, capturedTask.description)
-        assertEquals(newState, capturedTask.state.name)
+        assertEquals(newState, capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
         verify { createTaskLogUseCase.createTaskLog(task.creatorUserID, task, capturedTask) }
 
@@ -143,7 +143,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(task.title, capturedTask.title)
         assertEquals(task.description, capturedTask.description)
-        assertEquals(newState, capturedTask.state.name)
+        assertEquals(newState, capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
     }
 
@@ -167,7 +167,7 @@ class editTaskUseCaseTest {
 
         assertEquals(task.title, capturedTask.title)
         assertEquals(newDescription, capturedTask.description)
-        assertEquals(newState, capturedTask.state.name)
+        assertEquals(newState, capturedTask.taskState.name)
         assertNotNull(task.updatedAt)
     }
 
@@ -224,7 +224,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(newTitle, capturedTask.title)
         assertEquals(task.description, capturedTask.description)
-        assertEquals(newState, capturedTask.state.name)
+        assertEquals(newState, capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
     }
 
@@ -249,7 +249,7 @@ class editTaskUseCaseTest {
         val capturedTask = updatedTaskSlot.captured
         assertEquals(newTitle, capturedTask.title)
         assertEquals(newDescription, capturedTask.description)
-        assertEquals(task.state.name, capturedTask.state.name)
+        assertEquals(task.taskState.name, capturedTask.taskState.name)
         assertNotNull(capturedTask.updatedAt)
     }
 }

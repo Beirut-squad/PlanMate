@@ -8,7 +8,7 @@ data class Task(
     val projectId: UUID,
     var title: String,
     var description: String,
-    var state: State,
+    var taskState: TaskState,
     val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now()

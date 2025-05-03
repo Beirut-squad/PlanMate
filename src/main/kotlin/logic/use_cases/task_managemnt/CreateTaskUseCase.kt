@@ -5,7 +5,7 @@ import logic.use_cases.log.CreateTaskLogUseCase
 import org.example.logic.exceptions.task_managment_exception.BlankFieldsException
 import org.example.logic.exceptions.task_managment_exception.TaskCreationException
 import org.example.logic.repositories.task_repository.TaskRepository
-import org.example.models.State
+import org.example.models.TaskState
 import org.example.models.Task
 import java.time.LocalDateTime
 import java.util.UUID
@@ -34,7 +34,7 @@ class CreateTaskUseCase(
             projectId = UUID.randomUUID(),
             title = title,
             description = description,
-            state = State(id = UUID.randomUUID(), name = stateName),
+            taskState = TaskState(id = UUID.randomUUID(), name = stateName),
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()

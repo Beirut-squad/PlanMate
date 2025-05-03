@@ -39,7 +39,7 @@ class EditTaskUseCase(
         return task.copy(
             title = if (!isTitleEmpty) newTitle else task.title,
             description = if (!isDescriptionEmpty) newDescription else task.description,
-            state = if (!isStateEmpty) task.state.copy(name = newState) else task.state,
+            taskState = if (!isStateEmpty) task.taskState.copy(name = newState) else task.taskState,
             updatedAt = LocalDateTime.now()
         )
     }
