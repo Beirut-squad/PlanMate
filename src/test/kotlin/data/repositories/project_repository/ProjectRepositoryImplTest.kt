@@ -284,16 +284,15 @@ class ProjectRepositoryImplTest {
         // Given
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
-        val newState = oldState
-        newState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, newState) } returns Result.success(Unit)
+        oldState.name = "Done"
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
 
         // When
-        val result = projectRepositoryImpl.editStateToProject(project.id, newState)
+        val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
 
         // Then
         verify(exactly = 1) {
-            projectDataSource.editStateToProject(project.id, newState)
+            projectDataSource.editStateToProject(project.id, oldState)
         }
     }
 
@@ -302,12 +301,11 @@ class ProjectRepositoryImplTest {
         // Given
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
-        val newState = oldState
-        newState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, newState) } returns Result.success(Unit)
+        oldState.name = "Done"
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
 
         // When
-        val result = projectRepositoryImpl.editStateToProject(project.id, newState)
+        val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
 
         // Then
         assertTrue(result.isSuccess)
@@ -319,13 +317,14 @@ class ProjectRepositoryImplTest {
         // Given
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
-        val newState = oldState
-        newState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, newState) } returns Result.failure(NoProjectFoundException())
+        oldState.name = "Done"
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.failure(
+            NoProjectFoundException()
+        )
 
 
         // When
-        val result = projectRepositoryImpl.editStateToProject(project.id, newState)
+        val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
 
         // Then
         assertTrue(result.isFailure)
@@ -339,12 +338,13 @@ class ProjectRepositoryImplTest {
         // Given
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
-        val newState = oldState
-        newState.name = "To Do"
-        every { projectDataSource.editStateToProject(project.id, newState) } returns Result.failure(DuplicateStateException())
+        oldState.name = "To Do"
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.failure(
+            DuplicateStateException()
+        )
 
         // When
-        val result = projectRepositoryImpl.editStateToProject(project.id, newState)
+        val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
 
         // Then
         assertTrue(result.isFailure)
