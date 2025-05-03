@@ -2,12 +2,10 @@ package data.csv.log_for_task_csv
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createTaskLogHelper
-import creator_helper.createTaskLogHelper
 import io.mockk.every
 import io.mockk.mockk
 import org.example.data.csv.log_for_task_csv.LogCsvParserForTask
-import org.example.data.csv.task_csv_parser.TaskCsvParser
-import org.junit.jupiter.api.Assertions.*
+import data.csv.task_csv.TaskCsvParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

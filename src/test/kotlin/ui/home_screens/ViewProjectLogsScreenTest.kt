@@ -6,10 +6,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import logic.use_cases.log.GetUserProjectLogsUseCase
-import org.example.logic.use_case.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.models.User
 import org.example.ui.UiScreen
-import org.example.ui.home_screen.ViewProjectLogsScreen
+import org.example.ui.home_screens.ViewProjectLogsScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.Viewer

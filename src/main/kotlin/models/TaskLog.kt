@@ -9,5 +9,5 @@ data class TaskLog(
     val entityId: UUID,
     val previousEntity: Task?,
     val currentEntity: Task?,
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

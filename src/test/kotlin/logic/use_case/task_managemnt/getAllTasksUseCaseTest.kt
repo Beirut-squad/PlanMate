@@ -1,8 +1,8 @@
-package logic.use_cases.task_managemnt
+package logic.use_case.task_managemnt
 
 import creator_helper.createTaskHelper
 import io.mockk.*
-import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
+import logic.exceptions.task_management_exception.GetAllTasksException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.log.GetUserTaskLogsUseCase
 import org.example.logic.use_cases.task_managemnt.GetAllTasksUseCase

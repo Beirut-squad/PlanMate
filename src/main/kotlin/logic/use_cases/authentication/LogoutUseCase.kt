@@ -1,4 +1,4 @@
-package org.example.logic.use_case.authentication
+package org.example.logic.use_cases.authentication
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 

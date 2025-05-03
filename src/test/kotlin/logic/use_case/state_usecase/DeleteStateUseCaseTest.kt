@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertTrue
 import org.example.logic.repositories.state_repository.StateRepository
-import org.example.logic.use_case.state_usecase.DeleteStateUseCase
+import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test

@@ -3,11 +3,11 @@ package org.example.di
 import data.csv.log_for_project_csv.LogCsvParserForProject
 import data.csv.log_for_project_csv.LogCsvWriterForProject
 import data.csv.project_csv.ProjectCsvParser
+import data.csv.task_csv.TaskCsvParser
 import org.example.data.csv.CsvReader
 import org.example.data.csv.log_for_task_csv.LogCsvParserForTask
 import org.example.data.csv.log_for_task_csv.LogCsvWriterForTask
 import org.example.data.csv.state_csv.StateCsvParser
-import org.example.data.csv.task_csv_parser.TaskCsvParser
 import org.example.data.csv.user_csv.UserCsvParser
 import org.example.data.csv.user_csv.UserCsvWriter
 import org.example.data.datasource.authentication_data_source.AuthenticationDataSource

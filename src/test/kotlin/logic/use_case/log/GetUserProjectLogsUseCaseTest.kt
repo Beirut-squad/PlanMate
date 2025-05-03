@@ -1,4 +1,4 @@
-package logic.use_cases.log
+package logic.use_case.log
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.projectLogsForAllUsers
@@ -6,6 +6,7 @@ import creator_helper.projectLogsForTestUser
 import creator_helper.testUserId
 import io.mockk.every
 import io.mockk.mockk
+import logic.use_cases.log.GetUserProjectLogsUseCase
 import org.example.logic.repositories.log_repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

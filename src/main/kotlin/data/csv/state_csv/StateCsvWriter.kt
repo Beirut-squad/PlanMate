@@ -3,11 +3,9 @@ package org.example.data.csv.state_csv
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
 import org.example.models.State
-import org.example.models.TaskLog
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import java.io.IOException
 import java.util.UUID
 
 class StateCsvWriter : CsvWriter<State> {

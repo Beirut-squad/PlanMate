@@ -8,7 +8,7 @@ data class User(
     val password: String,
     val email: String,
     val role: Role,
-    val isDeleted: Boolean = false,
+    val isDeleted: Boolean = false
 )
 
 enum class Role {

@@ -1,4 +1,4 @@
-package logic.use_cases.log
+package logic.use_case.log
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.taskLogsForAllUsers

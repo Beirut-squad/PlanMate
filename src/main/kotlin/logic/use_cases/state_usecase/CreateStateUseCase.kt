@@ -1,4 +1,4 @@
-package org.example.logic.use_case.state_usecase
+package org.example.logic.use_cases.state_usecase
 
 import org.example.logic.repositories.state_repository.StateRepository
 import org.example.models.State
