@@ -55,12 +55,11 @@ class HomeScreenTest {
     }
 
     @Test
-    fun `should display an error message and ask for input again when an invalid option is chosen`() {
+    fun `should display a goodbye message and exits when option 4 is chosen`() {
         every { reader.readInt() } returnsMany listOf(4, 1)
 
         homeScreen.show()
 
-        verify(exactly = 1) { viewer.printError("Invalid option") }
-        verify { viewProjectsScreen.show() }
+        verify(exactly = 1) { viewer.printGoodbyeMessage("Goodbye") }
     }
 }
