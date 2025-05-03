@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.models.User
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

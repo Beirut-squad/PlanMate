@@ -1,4 +1,4 @@
-package org.example.logic.exceptions.task_managment_exception
+package logic.exceptions.task_management_exception
 
 class TaskCreationException(massage: String) : Exception(massage)
 

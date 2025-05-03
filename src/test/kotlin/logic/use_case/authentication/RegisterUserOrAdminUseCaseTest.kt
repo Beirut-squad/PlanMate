@@ -6,9 +6,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.RegisterMateUseCase
-import org.example.logic.use_case.authentication.RegisterUserOrAdminUseCase
-import org.example.logic.use_case.authentication.encryption.EncryptPassword
+import org.example.logic.use_cases.authentication.RegisterMateUseCase
+import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
+import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.models.User
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,7 +36,7 @@ class RegisterUserOrAdminUseCaseTest {
         every { registerMateUseCase.addUser(any(), any(), any()) } returns Result.success(user)
 
         // When
-        registerUserOrAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        registerUserOrAdminUseCase.add(name = user.name, password = user.password, email = user.email)
 
         // Then
         verify { registerMateUseCase.addUser(name = user.name, password = user.password, email = user.email) }
@@ -53,7 +53,7 @@ class RegisterUserOrAdminUseCaseTest {
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
 
         // When
-        val result = registerUserOrAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerUserOrAdminUseCase.add(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(repositoryResult)
@@ -70,7 +70,7 @@ class RegisterUserOrAdminUseCaseTest {
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns repositoryResult
 
         // When
-        val result = registerUserOrAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerUserOrAdminUseCase.add(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(repositoryResult)
@@ -86,7 +86,7 @@ class RegisterUserOrAdminUseCaseTest {
         every { authenticationRepository.registerAdmin(any(), any(), any()) } returns Result.success(user)
 
         // When
-        registerUserOrAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        registerUserOrAdminUseCase.add(name = user.name, password = user.password, email = user.email)
 
         // Then
         verify {
@@ -107,7 +107,7 @@ class RegisterUserOrAdminUseCaseTest {
         every { encryptPassword.encryptPassword(user.password) } returns encryptionResult
 
         // When
-        val result = registerUserOrAdminUseCase.addAdmin(name = user.name, password = user.password, email = user.email)
+        val result = registerUserOrAdminUseCase.add(name = user.name, password = user.password, email = user.email)
 
         // Then
         assertThat(result).isEqualTo(encryptionResult)

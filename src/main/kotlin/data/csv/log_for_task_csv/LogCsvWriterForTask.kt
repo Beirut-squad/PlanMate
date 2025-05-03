@@ -2,9 +2,7 @@ package org.example.data.csv.log_for_task_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
-import org.example.models.ProjectLog
 import org.example.models.TaskLog
-import org.example.models.Task
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter

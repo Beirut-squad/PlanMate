@@ -2,8 +2,8 @@ package org.example.logic.use_cases.task_managemnt
 
 
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.task_managment_exception.BlankFieldsException
-import org.example.logic.exceptions.task_managment_exception.TaskCreationException
+import logic.exceptions.task_management_exception.BlankFieldsException
+import logic.exceptions.task_management_exception.TaskCreationException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.State
 import org.example.models.Task

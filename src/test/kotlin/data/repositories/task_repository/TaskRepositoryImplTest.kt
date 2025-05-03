@@ -4,11 +4,11 @@ import creator_helper.createTaskHelper
 import io.mockk.*
 import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.data.repositories.task_repository.TaskRepositoryImpl
-import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
-import org.example.logic.exceptions.task_managment_exception.GetTaskException
-import org.example.logic.exceptions.task_managment_exception.TaskCreationException
-import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
-import org.example.logic.exceptions.task_managment_exception.TaskEditException
+import logic.exceptions.task_management_exception.GetAllTasksException
+import logic.exceptions.task_management_exception.GetTaskException
+import logic.exceptions.task_management_exception.TaskCreationException
+import logic.exceptions.task_management_exception.TaskDeletionException
+import logic.exceptions.task_management_exception.TaskEditException
 import org.example.logic.repositories.task_repository.TaskRepository
 
 import org.junit.jupiter.api.BeforeEach
