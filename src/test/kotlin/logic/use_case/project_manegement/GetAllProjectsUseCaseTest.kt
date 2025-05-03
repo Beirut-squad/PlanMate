@@ -5,9 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAllProjectsException
-import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
