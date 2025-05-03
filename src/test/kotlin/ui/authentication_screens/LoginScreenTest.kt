@@ -6,6 +6,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.LoginUseCase
+import org.example.models.Role
 import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.LoginScreen
@@ -113,9 +114,9 @@ class LoginScreenTest {
     }
 
     @Test
-    fun `should handle successful login and navigate to home screen`() {
+    fun `should handle successful login and navigate to admin home screen if user is admin`() {
         // Given
-        val testUser = mockk<User>(relaxed = true)
+        val testUser = createUserHelper(role = Role.ADMIN)
         every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
         every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
 
@@ -125,6 +126,21 @@ class LoginScreenTest {
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
         verify(exactly = 1) { adminHomeScreen.show() }
+    }
+
+    @Test
+    fun `should handle successful login and navigate to mate home screen if user is mate`() {
+        // Given
+        val testUser = createUserHelper(role = Role.MATE)
+        every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
+        every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
+
+        // When
+        loginScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
+        verify(exactly = 1) { mateHomeScreen.show() }
     }
 
     @Test
@@ -184,8 +200,12 @@ class LoginScreenTest {
         loginScreen.show()
 
         // Then
-        verify(exactly = 1) { adminHomeScreen.show() }
+        verify { viewer.printInfoLine("Email: ") }
+        verify { viewer.printInfoLine("Password: ") }
         verify { viewer.printError("Login failed!") }
+        verify { viewer.printInfoLine("Email: ") }
+        verify { viewer.printInfoLine("Password: ") }
+        verify { viewer.printInfoLine("Login successful!") }
     }
 
     @Test
