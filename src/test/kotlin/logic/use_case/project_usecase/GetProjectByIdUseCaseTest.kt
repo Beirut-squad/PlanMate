@@ -8,7 +8,7 @@ import io.mockk.verify
 import org.example.constants.StringConstants
 import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_usecase.GetProjectByIdUseCase
+import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Assertions.*
