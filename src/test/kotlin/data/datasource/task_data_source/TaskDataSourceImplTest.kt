@@ -5,18 +5,17 @@ import io.mockk.*
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.data.datasource.task_data_source.TaskDataSourceImpl
-import org.example.logic.exceptions.task_managment_exception.GetAllTasksException
-import org.example.logic.exceptions.task_managment_exception.GetTaskException
-import org.example.logic.exceptions.task_managment_exception.TaskCreationException
-import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
-import org.example.logic.exceptions.task_managment_exception.TaskEditException
+import logic.exceptions.task_management_exception.GetAllTasksException
+import logic.exceptions.task_management_exception.GetTaskException
+import logic.exceptions.task_management_exception.TaskCreationException
+import logic.exceptions.task_management_exception.TaskDeletionException
+import logic.exceptions.task_management_exception.TaskEditException
 import org.example.models.Task
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
-import kotlin.test.assertFailsWith
 
 class TaskDataSourceImplTest {
     private var csvReader: CsvReader<Task> = mockk(relaxed = true)

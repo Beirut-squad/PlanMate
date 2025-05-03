@@ -1,10 +1,8 @@
-package org.example.data.csv.project_csv_parser
+package data.csv.project_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
-import org.example.data.csv.state_csv.StateCsvWriter
 import org.example.models.Project
-import org.example.models.TaskLog
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -22,10 +20,7 @@ class ProjectCsvWriter: CsvWriter<Project> {
             if (items.isNotEmpty())
                 writeProject(items,writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
     private fun writeProject(items: List<Project>, writer: BufferedWriter) {
         items.forEach { project ->

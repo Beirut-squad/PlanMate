@@ -1,5 +1,7 @@
 package org.example.data.datasource.authentication_data_source
 
+import data.csv.FileName.CURRENT_USER_FILE
+import data.csv.FileName.REGISTERED_USERS_FILE
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.logic.exceptions.authentication_exceptions.*
@@ -55,7 +57,6 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newUser)
-        writeUsersToCsv(users + newUser)
         return saveCurrentUser(newUser)
             .fold(
                 onSuccess = {
@@ -83,7 +84,6 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newAdmin)
-        writeUsersToCsv(users + newAdmin)
         return saveCurrentUser(newAdmin)
             .fold(
                 onSuccess = {
@@ -139,16 +139,11 @@ class AuthenticationDataSourceImpl(
     }
 
     private fun addUserToCsv(user: User) {
-        val users = readUsersFromCsv()
-        writeUsersToCsv(users + user)
+        val users = readUsersFromCsv() + user
+        writeUsersToCsv(users)
     }
 
     private fun writeUsersToCsv(users: List<User>) {
         csvWriter.writeToFile(users, REGISTERED_USERS_FILE)
-    }
-
-    companion object {
-        private const val REGISTERED_USERS_FILE = "registered_users.csv"
-        private const val CURRENT_USER_FILE = "current_user.csv"
     }
 }

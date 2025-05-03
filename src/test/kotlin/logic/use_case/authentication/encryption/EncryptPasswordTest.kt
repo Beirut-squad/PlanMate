@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.example.logic.use_case.authentication.encryption.EncryptPassword
-import org.example.logic.use_case.authentication.encryption.Encryptor
+import org.example.logic.use_cases.authentication.encryption.EncryptPassword
+import org.example.logic.use_cases.authentication.encryption.Encryptor
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

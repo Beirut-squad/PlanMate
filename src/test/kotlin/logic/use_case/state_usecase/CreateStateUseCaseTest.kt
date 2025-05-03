@@ -6,7 +6,7 @@ import io.mockk.slot
 import io.mockk.verify
 import junit.framework.TestCase.assertTrue
 import org.example.logic.repositories.state_repository.StateRepository
-import org.example.logic.use_case.state_usecase.CreateStateUseCase
+import org.example.logic.use_cases.state_usecase.CreateStateUseCase
 import org.example.models.State
 import org.example.models.Task
 import org.junit.jupiter.api.Assertions

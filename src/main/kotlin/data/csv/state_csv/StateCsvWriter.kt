@@ -3,11 +3,9 @@ package org.example.data.csv.state_csv
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
 import org.example.models.State
-import org.example.models.TaskLog
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import java.io.IOException
 import java.util.UUID
 
 class StateCsvWriter : CsvWriter<State> {
@@ -22,10 +20,7 @@ class StateCsvWriter : CsvWriter<State> {
             if (items.isNotEmpty())
                 writeState(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
 
     private fun writeState(items: List<State>, writer: BufferedWriter) {

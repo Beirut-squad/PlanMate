@@ -7,8 +7,8 @@ import io.mockk.verify
 import org.example.models.User
 import creator_helper.createUserHelper
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.LoginUseCase
-import org.example.logic.use_case.authentication.encryption.EncryptPassword
+import org.example.logic.use_cases.authentication.LoginUseCase
+import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

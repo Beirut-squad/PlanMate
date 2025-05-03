@@ -2,9 +2,7 @@ package org.example.data.csv.log_for_task_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
-import org.example.models.ProjectLog
 import org.example.models.TaskLog
-import org.example.models.Task
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -22,10 +20,7 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
             if (items.isNotEmpty())
                 writeTaskLog(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
 
     private fun writeTaskLog(items: List<TaskLog>, writer: BufferedWriter) {

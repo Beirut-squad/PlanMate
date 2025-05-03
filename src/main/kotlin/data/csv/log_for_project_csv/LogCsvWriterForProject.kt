@@ -1,4 +1,4 @@
-package org.example.data.csv.log_csv_parser
+package data.csv.log_for_project_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
@@ -20,10 +20,7 @@ class LogCsvWriterForProject : CsvWriter<ProjectLog> {
             if (items.isNotEmpty())
                 writeProjectLog(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        }
     }
 
     private fun writeProjectLog(items: List<ProjectLog>, writer: BufferedWriter) {

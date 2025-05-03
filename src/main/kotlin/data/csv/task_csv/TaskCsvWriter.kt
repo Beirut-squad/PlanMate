@@ -1,8 +1,7 @@
-package org.example.data.csv.task_csv_parser
+package data.csv.task_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
-import org.example.models.Project
 import org.example.models.Task
 import java.io.BufferedWriter
 import java.io.File
@@ -20,10 +19,7 @@ class TaskCsvWriter : CsvWriter<Task> {
                 writer.write("[id,projectId,title,description,state,creatorUserID,createdAt,updatedAt]\n")
             writeTask(items, writer)
             writer.close()
-        }.fold(
-            onSuccess = { Result.success(Unit) },
-            onFailure = { Result.failure(it) }
-        )
+        }
     }
 
     private fun writeTask(items: List<Task>, writer: BufferedWriter) {

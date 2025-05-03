@@ -9,5 +9,5 @@ data class ProjectLog(
     val entityId: UUID,
     val previousEntity: Project?,
     val currentEntity: Project?,
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

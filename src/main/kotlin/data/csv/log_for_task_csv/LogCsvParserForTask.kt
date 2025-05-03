@@ -2,11 +2,8 @@ package org.example.data.csv.log_for_task_csv
 
 import CsvParser
 import data.csv.log_for_project_csv.LogsColumnIndexForProject
-import data.csv.project_csv.ProjectCsvParser
 import org.example.data.csv.smartCsvSplit
-import org.example.data.csv.task_csv_parser.TaskCsvParser
-import org.example.models.ProjectLog
-import org.example.models.Task
+import data.csv.task_csv.TaskCsvParser
 import org.example.models.TaskLog
 import java.time.LocalDateTime
 import java.util.*
