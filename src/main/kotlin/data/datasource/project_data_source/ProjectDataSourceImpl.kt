@@ -96,7 +96,18 @@ class ProjectDataSourceImpl(
     }
 
     override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
-        TODO("Not yet implemented")
+        return modifyProjectState(projectId) { states ->
+            val updatedStates = mutableListOf<State>()
+            var notFoundState = true
+            states.forEach { oldState ->
+                if (oldState.id == state.id) {
+                    notFoundState = false
+                } else
+                    updatedStates += oldState
+            }
+            if (notFoundState) throw NoStateException()
+            updatedStates
+        }
     }
 
 
