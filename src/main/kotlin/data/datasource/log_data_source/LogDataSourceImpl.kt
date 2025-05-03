@@ -4,8 +4,8 @@ import data.csv.FileName.PROJECT_LOG
 import data.csv.FileName.TASK_LOG
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
-import org.example.logic.exceptions.NoProjectLogsFoundException
-import org.example.logic.exceptions.NoTaskLogsFoundException
+import org.example.logic.exceptions.log_exceptions.NoProjectLogsFoundException
+import org.example.logic.exceptions.log_exceptions.NoTaskLogsFoundException
 import org.example.models.ProjectLog
 import org.example.models.TaskLog
 import java.util.UUID
