@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import creator_helper.generateMD5Hash
 import io.mockk.every
 import io.mockk.mockkStatic
-import org.example.logic.use_case.authentication.encryption.Encryptor
-import org.example.logic.use_case.authentication.encryption.EncryptorMD5Impl
+import org.example.logic.use_cases.authentication.encryption.Encryptor
+import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.security.MessageDigest

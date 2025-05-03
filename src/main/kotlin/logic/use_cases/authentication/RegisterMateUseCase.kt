@@ -1,7 +1,7 @@
-package org.example.logic.use_case.authentication
+package org.example.logic.use_cases.authentication
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.use_case.authentication.encryption.EncryptPassword
+import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.models.User
 
 class RegisterMateUseCase(

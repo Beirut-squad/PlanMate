@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertTrue
 import org.example.logic.repositories.state_repository.StateRepository
-import org.example.logic.use_case.state_usecase.EditStateUseCase
+import org.example.logic.use_cases.state_usecase.EditStateUseCase
 import org.example.models.State
 import org.junit.jupiter.api.BeforeEach
 import java.util.UUID
