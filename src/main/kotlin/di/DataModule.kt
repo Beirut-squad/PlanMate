@@ -1,12 +1,9 @@
 package org.example.di
 
-import CsvParser
 import data.csv.log_for_project_csv.LogCsvParserForProject
 import data.csv.log_for_project_csv.LogCsvWriterForProject
 import data.csv.project_csv.ProjectCsvParser
-import data.csv.project_csv.ProjectCsvWriter
 import org.example.data.csv.CsvReader
-import org.example.data.csv.CsvWriter
 import org.example.data.csv.log_for_task_csv.LogCsvParserForTask
 import org.example.data.csv.log_for_task_csv.LogCsvWriterForTask
 import org.example.data.csv.state_csv.StateCsvParser
@@ -21,7 +18,6 @@ import org.example.data.repositories.authentication_repository.AuthenticationRep
 import org.example.data.repositories.log_repository.LogRepositoryImpl
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 import org.example.logic.repositories.log_repository.LogRepository
-import org.example.models.ProjectLog
 import org.koin.dsl.module
 
 val dataModule = module {
