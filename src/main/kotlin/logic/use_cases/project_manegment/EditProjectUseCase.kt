@@ -1,4 +1,4 @@
-package org.example.logic.use_case.project_manegment
+package org.example.logic.use_cases.project_manegment
 
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.exceptions.project_magement_exceptions.BlankFieldsException
