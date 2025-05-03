@@ -15,13 +15,12 @@ import io.mockk.mockk
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.data.datasource.log_data_source.LogDataSourceImpl
-import org.example.logic.exceptions.NoProjectLogsFoundException
-import org.example.logic.exceptions.NoTaskLogsFoundException
+import org.example.logic.exceptions.log_exceptions.NoProjectLogsFoundException
+import org.example.logic.exceptions.log_exceptions.NoTaskLogsFoundException
 import org.example.models.ProjectLog
 import org.example.models.TaskLog
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class LogDataSourceImplTest {
