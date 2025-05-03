@@ -5,7 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
-import org.example.logic.use_case.authentication.RegisterUserOrAdminUseCase
+import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
 import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.RegisterScreen

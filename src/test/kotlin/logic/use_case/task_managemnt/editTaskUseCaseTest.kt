@@ -1,4 +1,4 @@
-package logic.use_cases.task_managemnt
+package logic.use_case.task_managemnt
 
 import creator_helper.createTaskHelper
 import io.mockk.*

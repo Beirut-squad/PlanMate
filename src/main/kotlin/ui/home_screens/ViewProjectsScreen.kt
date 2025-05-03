@@ -1,6 +1,6 @@
 package org.example.ui.home_screens
 
-import org.example.logic.use_case.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.ui.Reader
 import org.example.ui.UiScreen
 import ui.Viewer

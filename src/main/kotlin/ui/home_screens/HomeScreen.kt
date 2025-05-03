@@ -3,7 +3,6 @@ package org.example.ui.home_screens
 import org.example.ui.Reader
 import org.example.ui.UiScreen
 import org.example.ui.home_screen.CreateNewProjectScreen
-import org.example.ui.home_screen.ViewProjectLogsScreen
 import ui.Viewer
 
 class HomeScreen(

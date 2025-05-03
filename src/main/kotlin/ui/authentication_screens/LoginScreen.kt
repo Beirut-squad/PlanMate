@@ -1,6 +1,6 @@
 package org.example.ui.authentication_screens
 
-import org.example.logic.use_case.authentication.LoginUseCase
+import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.UiScreen

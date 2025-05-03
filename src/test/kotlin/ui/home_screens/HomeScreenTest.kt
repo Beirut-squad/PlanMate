@@ -7,7 +7,7 @@ import org.example.ui.Reader
 import org.example.ui.home_screens.HomeScreen
 import org.example.ui.home_screens.ViewProjectsScreen
 import org.example.ui.home_screen.CreateNewProjectScreen
-import org.example.ui.home_screen.ViewProjectLogsScreen
+import org.example.ui.home_screens.ViewProjectLogsScreen
 import org.junit.jupiter.api.Test
 import ui.Viewer
 

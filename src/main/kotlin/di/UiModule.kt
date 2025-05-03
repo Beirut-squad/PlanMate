@@ -5,7 +5,7 @@ import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
 import org.example.ui.home_screen.CreateNewProjectScreen
-import org.example.ui.home_screen.ViewProjectLogsScreen
+import org.example.ui.home_screens.ViewProjectLogsScreen
 import org.example.ui.home_screens.ViewProjectsScreen
 import org.example.ui.home_screens.HomeScreen
 import org.koin.core.module.dsl.singleOf
