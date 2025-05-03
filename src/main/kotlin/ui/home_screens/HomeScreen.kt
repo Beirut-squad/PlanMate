@@ -38,8 +38,9 @@ class HomeScreen(
                     running = false
                 }
 
-                else -> {
-                    viewer.printError("Invalid option")
+                4 -> {
+                    viewer.printGoodbyeMessage("Goodbye")
+                    break
                 }
             }
         }
