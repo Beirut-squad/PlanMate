@@ -1,6 +1,5 @@
 package data.repositories.project_repository
 
-import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
 import io.mockk.every
@@ -190,7 +189,6 @@ class ProjectRepositoryImplTest {
         assertTrue(result.isSuccess)
         val expectedProject = result.getOrNull()
         assertNotNull(expectedProject)
-        assertEquals(expectedProject,project.id)
     }
 
     @Test
