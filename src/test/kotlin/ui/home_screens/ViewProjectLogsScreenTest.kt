@@ -1,0 +1,149 @@
+package ui.home_screens
+
+import creator_helper.projectLogsForAllUsers
+import creator_helper.testUserId
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import logic.use_cases.log.GetUserProjectLogsUseCase
+import org.example.logic.use_case.authentication.GetCurrentLoggedInUserUseCase
+import org.example.models.User
+import org.example.ui.UiScreen
+import org.example.ui.home_screen.ViewProjectLogsScreen
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import ui.Viewer
+
+class ViewProjectLogsScreenTest {
+
+    private val viewer: Viewer = mockk(relaxed = true)
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
+    private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase = mockk(relaxed = true)
+    private lateinit var viewProjectLogsScreen: ViewProjectLogsScreen
+
+    @BeforeEach
+    fun setUp() {
+        viewProjectLogsScreen = ViewProjectLogsScreen(viewer, getCurrentLoggedInUserUseCase, getUserProjectLogsUseCase)
+    }
+
+    @Test
+    fun `should show error when no user is logged in`() {
+        // Given
+        every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.failure(Exception("No user found"))
+
+        // When
+        viewProjectLogsScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printError("No user logged in") }
+    }
+
+
+    @Test
+    fun `should show error when user logs retrieval fails`() {
+        // Given
+        every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.success(mockk(relaxed = true))
+        every { getUserProjectLogsUseCase.getUserProjectLogs(any()) } returns Result.failure(Exception("Unable to fetch logs"))
+
+        // When
+        viewProjectLogsScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printError("Failed to retrieve project logs: Unable to fetch logs") }
+    }
+
+    @Test
+    fun `should display user logs when logs are retrieved successfully and not empty`() {
+        // Given
+        val mockUser = mockk<User> {
+            every { id } returns testUserId
+            every { name } returns "Test User"
+        }
+
+        every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.success(mockUser)
+        every { getUserProjectLogsUseCase.getUserProjectLogs(testUserId) } returns Result.success(projectLogsForAllUsers)
+
+        // When
+        viewProjectLogsScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printTitle("Project Logs for User: Test User") }
+
+        projectLogsForAllUsers.forEachIndexed { index, log ->
+            verify(exactly = 1) {
+                viewer.printInfoLine(
+                    """
+            ${index + 1}.
+            - Change made by: ${log.userId}
+            - Previous: ${log.previousEntity}
+            - Current: ${log.currentEntity}
+            - Timestamp: ${log.createdAt}
+            """.trimIndent(),
+                    true
+                )
+            }
+        }
+    }
+
+
+
+    @Test
+    fun `should notify when user logs are successfully retrieved but empty`() {
+        // Given
+        val mockUser = mockk<User> {
+            every { id } returns testUserId
+            every { name } returns "Test User"
+        }
+        every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.success(mockUser)
+        every { getUserProjectLogsUseCase.getUserProjectLogs(testUserId) } returns Result.success(emptyList())
+
+        // When
+        viewProjectLogsScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printInfoLine("No project logs found for the current user.") }
+    }
+
+}
+
+class ViewProjectLogsScreen(
+    private val viewer: Viewer,
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
+    private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase
+) : UiScreen {
+    override fun show() {
+        val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
+
+        val user = currentUserResult.getOrNull()
+        if (user == null) {
+            viewer.printError("No user logged in")
+            return
+        }
+
+        val userLogsResult = getUserProjectLogsUseCase.getUserProjectLogs(user.id)
+
+        userLogsResult.fold(
+            onSuccess = { logs ->
+                if (logs.isNotEmpty()) {
+                    viewer.printTitle("Project Logs for User: ${user.name}")
+                    logs.forEachIndexed { index, log ->
+                        viewer.printInfoLine(
+                            """
+                        ${index + 1}.
+                        - Change made by: ${log.userId}
+                        - Previous: ${log.previousEntity}
+                        - Current: ${log.currentEntity}
+                        - Timestamp: ${log.createdAt}
+                    """.trimIndent()
+                        )
+                    }
+                } else {
+                    viewer.printInfoLine("No project logs found for the current user.")
+                }
+            },
+            onFailure = {
+                viewer.printError("Failed to retrieve project logs: ${it.message}")
+            }
+        )
+    }
+}

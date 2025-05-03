@@ -77,5 +77,24 @@ val projectLogsByProjectId = listOf(
     )
 )
 
+val testProjectLogs = listOf(
+    createProjectLogHelper(
+        userId = testUserId,
+        previousEntity = createProjectHelper(name = "Project 1"),
+        currentEntity = createProjectHelper(name = "Project 2")
+    ),
+    createProjectLogHelper(
+        userId = testUserId,
+        previousEntity = createProjectHelper(name = "Project 2"),
+        currentEntity = createProjectHelper(name = "Project 3")
+    ),
+    createProjectLogHelper(
+        userId = testUserId,
+        previousEntity = createProjectHelper(name = "Project 3"),
+        currentEntity = createProjectHelper(name = "Project 4")
+    )
+)
+
+
 
 

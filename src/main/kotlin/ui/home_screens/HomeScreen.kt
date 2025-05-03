@@ -1,14 +1,58 @@
-package org.example.ui.home_screens
+package org.example.ui.home_screen
 
-import org.example.models.User
+import org.example.ui.Reader
 import org.example.ui.UiScreen
+import ui.Viewer
 
-class HomeScreen: UiScreen {
+class HomeScreen(
+    private val viewer: Viewer,
+    private val reader: Reader,
+    private val viewProjectsScreen: ViewProjectsScreen,
+    private val createNewProjectScreen: CreateNewProjectScreen,
+    private val viewProjectLogsScreen: ViewProjectLogsScreen,
+) : UiScreen {
     override fun show() {
-        // TODO
+        viewer.printTitle("Welcome to Plan Mate")
+
+        var running = true
+        while (running) {
+
+            viewer.printInfoLine("Choose an option:")
+            viewer.printOptions("View Your Project", "Create a New Project", "View Project Logs", "Exit")
+
+            val option = reader.readInt()
+            when (option) {
+                1 -> {
+                    goToViewProjectScreen()
+                    running = false
+                }
+
+                2 -> {
+                    goToCreateNewProjectScreen()
+                    running = false
+                }
+
+                3 -> {
+                    goToViewProjectLogsScreen()
+                    running = false
+                }
+
+                else -> {
+                    viewer.printError("Invalid option")
+                }
+            }
+        }
     }
 
-    fun setUser(user: User) {
-        // TODO
+    private fun goToViewProjectScreen() {
+        viewProjectsScreen.show()
+    }
+
+    private fun goToCreateNewProjectScreen() {
+        createNewProjectScreen.show()
+    }
+
+    private fun goToViewProjectLogsScreen() {
+        viewProjectLogsScreen.show()
     }
 }
