@@ -81,11 +81,16 @@ class ProjectDataSourceImpl(
     override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
+            var notFoundState = true
             states.forEach { oldState ->
-                if (!haveSameStateId(oldState, state)) throw NoStateException()
                 if (haveSameStateName(oldState, state)) throw DuplicateStateException()
-                updatedStates += if (oldState.id == state.id) state else oldState
+                updatedStates += if (oldState.id == state.id) {
+                    notFoundState = false
+                    state
+                } else
+                    oldState
             }
+            if (notFoundState) throw NoStateException()
             updatedStates
         }
     }
@@ -128,9 +133,6 @@ class ProjectDataSourceImpl(
         return oldState.name.equals(newState.name, ignoreCase = true)
     }
 
-    private fun haveSameStateId(oldState: State, newState: State): Boolean {
-        return oldState.id == newState.id
-    }
 companion object {
     const val PROJECTS_FILE = "Project.csv"
 }
