@@ -1,8 +1,7 @@
-package org.example.data.csv.task_csv_parser
+package data.csv.task_csv
 
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
-import org.example.models.Project
 import org.example.models.Task
 import java.io.BufferedWriter
 import java.io.File

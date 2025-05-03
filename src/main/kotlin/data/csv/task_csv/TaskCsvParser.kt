@@ -1,9 +1,7 @@
-package org.example.data.csv.task_csv_parser
+package data.csv.task_csv
 
 import CsvParser
-import data.csv.task_csv.TaskColumnIndex
 import org.example.data.csv.smartCsvSplit
-import org.example.data.datasource.task_data_source.TaskDataSource
 import org.example.models.State
 import org.example.models.Task
 import java.time.LocalDateTime

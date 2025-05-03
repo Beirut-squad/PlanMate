@@ -2,12 +2,9 @@ package data.csv.project_csv
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
-import creator_helper.createTaskHelper
 import io.mockk.every
 import io.mockk.mockk
 import org.example.data.csv.state_csv.StateCsvParser
-import org.example.data.csv.task_csv_parser.TaskCsvParser
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

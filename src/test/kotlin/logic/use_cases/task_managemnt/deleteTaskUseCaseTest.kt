@@ -3,7 +3,7 @@ package logic.use_cases.task_managemnt
 import creator_helper.createTaskHelper
 import io.mockk.*
 import logic.use_cases.log.CreateTaskLogUseCase
-import org.example.logic.exceptions.task_managment_exception.TaskDeletionException
+import logic.exceptions.task_management_exception.TaskDeletionException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
