@@ -50,9 +50,12 @@ class CsvReaderTest{
 
     @Test
     fun `should throw exception if the file is not found in the required path`() {
+        //Given
+        val nonExistentPath = "non_existent_file.csv"
+
         // When && Then
         assertThrows<Exception>{
-            csvReader.read("tasks.csv")
+            csvReader.read(nonExistentPath)
         }
     }
 
