@@ -91,7 +91,11 @@ class ProjectDataSourceImpl(
     }
 
     override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
-        TODO("Not yet implemented")
+        return modifyProjectState(projectId) { states ->
+            states.find { it.id == state.id }
+                ?: throw NoStateException()
+            states.filterNot { it.id == state.id }
+        }
     }
 
 
