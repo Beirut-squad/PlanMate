@@ -142,7 +142,8 @@ class ProjectDataSourceImplTest {
         // Assert
         assertTrue(result.isFailure)
         assertEquals(
-            "Failed to get projects: $expectedError", result.exceptionOrNull()?.message
+            "Failed to get projects: $expectedError",
+            result.exceptionOrNull()?.message
         )
     }
 
@@ -159,7 +160,8 @@ class ProjectDataSourceImplTest {
         // Assert
         assertTrue(result.isFailure)
         assertEquals(
-            "Failed to get projects: $expectedError", result.exceptionOrNull()?.message
+            "Failed to get projects: $expectedError",
+            result.exceptionOrNull()?.message
         )
     }
 
@@ -176,7 +178,8 @@ class ProjectDataSourceImplTest {
         // Assert
         assertTrue(result.isFailure)
         assertEquals(
-            "Failed to get projects: $expectedError", result.exceptionOrNull()?.message
+            "Failed to get projects: $expectedError",
+            result.exceptionOrNull()?.message
         )
     }
 
@@ -197,10 +200,12 @@ class ProjectDataSourceImplTest {
         verify {
             csvWriter.writeToFile(
                 match { projects ->
-                    projects.size == 1 && projects[0].id == updatedProject.id && projects[0].name == "Updated Name" && projects[0].updatedAt.isAfter(
-                        existingProject.updatedAt
-                    )
-                }, any()
+                    projects.size == 1 &&
+                            projects[0].id == updatedProject.id &&
+                            projects[0].name == "Updated Name" &&
+                            projects[0].updatedAt.isAfter(existingProject.updatedAt)
+                },
+                any()
             )
         }
     }
@@ -294,7 +299,8 @@ class ProjectDataSourceImplTest {
     fun `getAllProjects should return projects from CSV`() {
         // Given
         val expectedProjects = listOf(
-            createProjectHelper(name = "Project 1"), createProjectHelper(name = "Project 2")
+            createProjectHelper(name = "Project 1"),
+            createProjectHelper(name = "Project 2")
         )
         every { csvReader.read(any()) } returns expectedProjects
 
@@ -332,88 +338,91 @@ class ProjectDataSourceImplTest {
         assertTrue(result.isSuccess)
         assertEquals(emptyList<Project>(), result.getOrNull())
     }
+        @Test
+        fun `buildSuccessCreate should return success when project is unique`() {
+            // Given
+            val testProject = createProjectHelper()
+            every { csvReader.read(any()) } returns emptyList()
+            every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
 
-    @Test
-    fun `buildSuccessCreate should return success when project is unique`() {
-        // Given
-        val testProject = createProjectHelper()
-        every { csvReader.read(any()) } returns emptyList()
-        every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
+            // When
+            val result = dataSource.createProject(testProject)
 
-        // When
-        val result = dataSource.createProject(testProject)
+            // Then
+            assertTrue(result.isSuccess)
+            verify {
+                csvWriter.writeToFile(
+                    match { it.size == 1 && it[0].name == testProject.name },
+                    any()
+                )
+            }
+        }
 
-        // Then
-        assertTrue(result.isSuccess)
-        verify {
-            csvWriter.writeToFile(
-                match { it.size == 1 && it[0].name == testProject.name }, any()
+        @Test
+        fun `buildSuccessCreate should fail when project exists with same name and creator`() {
+            // Given
+            val creatorId = UUID.randomUUID()
+            val projectName = "Existing Project"
+            val existingProject = createProjectHelper(name = projectName, creatorUserID = creatorId)
+            val newProject = createProjectHelper(name = projectName, creatorUserID = creatorId)
+
+            every { csvReader.read(any()) } returns listOf(existingProject)
+
+            // When
+            val result = dataSource.createProject(newProject)
+
+            // Then
+            assertTrue(result.isFailure)
+            assertIs<ProjectNotCreatedException>(result.exceptionOrNull())
+            assertEquals(
+                "Project '$projectName' already exists for user $creatorId",
+                result.exceptionOrNull()?.message
             )
         }
-    }
 
-    @Test
-    fun `buildSuccessCreate should fail when project exists with same name and creator`() {
-        // Given
-        val creatorId = UUID.randomUUID()
-        val projectName = "Existing Project"
-        val existingProject = createProjectHelper(name = projectName, creatorUserID = creatorId)
-        val newProject = createProjectHelper(name = projectName, creatorUserID = creatorId)
+        @Test
+        fun `buildSuccessEditor should update project successfully`() {
+            // Given
+            val existingProject = createProjectHelper()
+            val updatedProject = existingProject.copy(name = "Updated Name")
 
-        every { csvReader.read(any()) } returns listOf(existingProject)
+            every { csvReader.read(any()) } returns listOf(existingProject)
+            every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
 
-        // When
-        val result = dataSource.createProject(newProject)
+            // When
+            val result = dataSource.editProject(updatedProject)
 
-        // Then
-        assertTrue(result.isFailure)
-        assertIs<ProjectNotCreatedException>(result.exceptionOrNull())
-        assertEquals(
-            "Project '$projectName' already exists for user $creatorId", result.exceptionOrNull()?.message
-        )
-    }
-
-    @Test
-    fun `buildSuccessEditor should update project successfully`() {
-        // Given
-        val existingProject = createProjectHelper()
-        val updatedProject = existingProject.copy(name = "Updated Name")
-
-        every { csvReader.read(any()) } returns listOf(existingProject)
-        every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
-
-        // When
-        val result = dataSource.editProject(updatedProject)
-
-        // Then
-        assertTrue(result.isSuccess)
-        verify {
-            csvWriter.writeToFile(
-                match { projects ->
-                    projects.size == 1 && projects[0].id == updatedProject.id && projects[0].name == "Updated Name"
-                }, any()
-            )
+            // Then
+            assertTrue(result.isSuccess)
+            verify {
+                csvWriter.writeToFile(
+                    match { projects ->
+                        projects.size == 1 &&
+                                projects[0].id == updatedProject.id &&
+                                projects[0].name == "Updated Name"
+                    },
+                    any()
+                )
+            }
         }
-    }
 
-    @Test
-    fun `buildSuccessDelete should remove project successfully`() {
-        // Given
-        val projectId = UUID.randomUUID()
-        val projectToDelete = createProjectHelper(id = projectId)
-        val projectToKeep = createProjectHelper()
+        @Test
+        fun `buildSuccessDelete should remove project successfully`() {
+            // Given
+            val projectId = UUID.randomUUID()
+            val projectToDelete = createProjectHelper(id = projectId)
+            val projectToKeep = createProjectHelper()
 
-        every { csvReader.read(any()) } returns listOf(projectToDelete, projectToKeep)
-        every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
+            every { csvReader.read(any()) } returns listOf(projectToDelete, projectToKeep)
+            every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
 
-        // When
-        val result = dataSource.deleteProject(projectId)
+            // When
+            val result = dataSource.deleteProject(projectId)
 
-        // Then
-        assertTrue(result.isSuccess)
-        verify { csvWriter.writeToFile(listOf(projectToKeep), any()) }
-    }
-
+            // Then
+            assertTrue(result.isSuccess)
+            verify { csvWriter.writeToFile(listOf(projectToKeep), any()) }
+        }
     //region Test cases for getProject()
     @Test
     fun `getProject should call read from CsvReader exactly once`() {
@@ -549,6 +558,27 @@ class ProjectDataSourceImplTest {
     }
 
     @Test
+    fun `addStateToProject should fail when CSV write fails`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val existingProject1 = createProjectHelper(id = id)
+        val existingProject2 = createProjectHelper()
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        val newState = createStateHelper(name = "New State")
+        val updatedProject = existingProject1.copy(
+            state = existingProject1.state + newState, updatedAt = LocalDateTime.now()
+        )
+        every { csvWriter.writeToFile(any(), fileName) } throws IOException("Write failed")
+
+        // When
+        val result = dataSource.addStateToProject(id, newState)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IOException)
+    }
+
+    @Test
     fun `addStateToProject should return failure with NoProjectFoundException when project does not exist`() {
         // Given
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
@@ -599,6 +629,7 @@ class ProjectDataSourceImplTest {
         assertEquals(StringConstants.Project.DUPLICATE_STATE, exception?.message)
     }
     //endregion
+
 
     //region Test cases for editStateToProject()
     @Test
@@ -693,6 +724,24 @@ class ProjectDataSourceImplTest {
         // Then
         assertTrue(result.isFailure)
         assertThat(result.exceptionOrNull() is IOException)
+    }
+
+    @Test
+    fun `editStateToProject should fail when CSV write fails`() {
+        // Given
+        val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val oldState = createStateHelper(name = "To Do")
+        val project = createProjectHelper(id = id, state = listOf(oldState))
+        every { csvReader.read(fileName) } returns listOf(project)
+        val newState = oldState.copy(name = "New State")
+        every { csvWriter.writeToFile(any(), fileName) } throws IOException("Write failed")
+
+        // When
+        val result = dataSource.editStateToProject(id, newState)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IOException)
     }
 
     @Test
@@ -804,6 +853,23 @@ class ProjectDataSourceImplTest {
         val exception = result.exceptionOrNull()
         assertTrue(exception is NoProjectFoundException)
         assertEquals(StringConstants.Project.NO_PROJECT_FOUND, exception?.message)
+    }
+
+    @Test
+    fun `removeStateFromProject should fail when CSV write fails`() {
+        // Given
+        val projectId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val state = createStateHelper()
+        val project = createProjectHelper(id = projectId, state = listOf(state))
+        every { csvReader.read(fileName) } returns listOf(project)
+        every { csvWriter.writeToFile(any(), fileName) } throws IOException("Write failed")
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, state)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IOException)
     }
     //endregion
 
