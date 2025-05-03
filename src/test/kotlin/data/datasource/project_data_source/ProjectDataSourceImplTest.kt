@@ -1,17 +1,15 @@
 package data.datasource.project_data_source
 
-import FileName
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
-import io.mockk.*
 import creator_helper.createStateHelper
+import data.csv.FileName
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
-import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.data.datasource.project_data_source.ProjectDataSourceImpl
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotCreatedException
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotDeletedException
@@ -23,13 +21,10 @@ import org.example.logic.exceptions.NoStateException
 import org.example.models.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.time.LocalDateTime
 import java.util.UUID
-import org.junit.jupiter.api.*
 import java.io.FileNotFoundException
-import java.util.*
 import kotlin.test.*
 import kotlin.test.Test
 
@@ -37,7 +32,7 @@ class ProjectDataSourceImplTest {
     private lateinit var csvReader: CsvReader<Project>
     private lateinit var csvWriter: CsvWriter<Project>
     private lateinit var dataSource: ProjectDataSourceImpl
-    private val fileName = FileName.PROJECTS_FILE
+    private val fileName = FileName.PROJECTS
 
     @BeforeEach
     fun setUp() {
@@ -433,14 +428,14 @@ class ProjectDataSourceImplTest {
     fun `getProject should call read from CsvReader exactly once`() {
         // Given
         val project = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(project, createProjectHelper())
+        every { csvReader.read(fileName) } returns listOf(project, createProjectHelper())
 
         // When
         val result = dataSource.getProject(project.id)
 
         // Then
         verify(exactly = 1) {
-            reader.read(fileName)
+            csvReader.read(fileName)
         }
     }
 
@@ -448,7 +443,7 @@ class ProjectDataSourceImplTest {
     fun `getProject should return success with project when project exists`() {
         // Given
         val project = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(project, createProjectHelper())
+        every { csvReader.read(fileName) } returns listOf(project, createProjectHelper())
 
         // When
         val result = dataSource.getProject(project.id)
@@ -469,7 +464,7 @@ class ProjectDataSourceImplTest {
     fun `getProject should return failure when repository empty`() {
         // Given
         val project = createProjectHelper()
-        every { reader.read(fileName) } returns emptyList()
+        every { csvReader.read(fileName) } returns emptyList()
 
         // When
         val result = dataSource.getProject(project.id)
@@ -484,7 +479,7 @@ class ProjectDataSourceImplTest {
         // Given
         val project = createProjectHelper()
         val project2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(project, project2)
+        every { csvReader.read(fileName) } returns listOf(project, project2)
 
         // When
         val result = dataSource.getProject(project.id)
@@ -500,7 +495,7 @@ class ProjectDataSourceImplTest {
     fun `getProject() should return failure with NoProjectFoundException when project not found`() {
         // Given
         val project = createProjectHelper()
-        every { reader.read(fileName) } throws NoProjectFoundException()
+        every { csvReader.read(fileName) } throws NoProjectFoundException()
 
         // When
         val result = dataSource.getProject(project.id)
@@ -520,21 +515,21 @@ class ProjectDataSourceImplTest {
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
         val existingProject1 = createProjectHelper(id = id)
         val existingProject2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
         val newState = createStateHelper(name = "New State")
         val updatedProject = existingProject1.copy(
             state = existingProject1.state + newState, updatedAt = LocalDateTime.now()
         )
         val expectedProjects = listOf(updatedProject, createProjectHelper())
-        every { writer.writeToFile(expectedProjects, fileName) } returns Unit
+        every { csvWriter.writeToFile(expectedProjects, fileName) } returns Result.success(Unit)
 
         // When
         val result = dataSource.addStateToProject(id, newState)
 
         // Then
         verify(exactly = 1) {
-            reader.read(fileName)
-            writer.writeToFile(any(), fileName)
+            csvReader.read(fileName)
+            csvWriter.writeToFile(any(), fileName)
         }
     }
 
@@ -544,13 +539,13 @@ class ProjectDataSourceImplTest {
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
         val existingProject1 = createProjectHelper(id = id)
         val existingProject2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
         val newState = createStateHelper(name = "New State")
         val updatedProject = existingProject1.copy(
             state = existingProject1.state + newState, updatedAt = LocalDateTime.now()
         )
         val expectedProjects = listOf(updatedProject, createProjectHelper())
-        every { writer.writeToFile(expectedProjects, fileName) } returns Unit
+        every { csvWriter.writeToFile(expectedProjects, fileName) } returns Result.success(Unit)
 
         // When
         val result = dataSource.addStateToProject(id, newState)
@@ -566,7 +561,7 @@ class ProjectDataSourceImplTest {
     fun `addStateToProject should return failure with NoProjectFoundException when project does not exist`() {
         // Given
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
-        every { reader.read(fileName) } returns listOf(createProjectHelper(), createProjectHelper())
+        every { csvReader.read(fileName) } returns listOf(createProjectHelper(), createProjectHelper())
         val newState = createStateHelper(name = "New State")
 
         // When
@@ -583,7 +578,7 @@ class ProjectDataSourceImplTest {
     fun `addStateToProject should propagate IOException when file read fails`() {
         // Given
         val id = UUID.randomUUID()
-        every { reader.read(fileName) } throws IOException("Read failed")
+        every { csvReader.read(fileName) } throws IOException("Read failed")
         val state = createStateHelper()
 
         // When
@@ -591,7 +586,7 @@ class ProjectDataSourceImplTest {
 
         // Then
         assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is IOException)
+        assertThat(result.exceptionOrNull() is IOException)
     }
 
     @Test
@@ -600,7 +595,7 @@ class ProjectDataSourceImplTest {
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
         val existingProject1 = createProjectHelper(id = id, state = listOf(createStateHelper(name = "To Do")))
         val existingProject2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
         val newState = createStateHelper(name = "to do")
 
         // When
@@ -622,18 +617,18 @@ class ProjectDataSourceImplTest {
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(id = id, state = listOf(oldState))
-        every { reader.read(fileName) } returns listOf(project)
+        every { csvReader.read(fileName) } returns listOf(project)
         val newState = oldState.copy(name = "New State")
         val updatedProject = createProjectHelper(id = id, state = listOf(newState))
-        every { writer.writeToFile(listOf(updatedProject), fileName) } returns Unit
+        every { csvWriter.writeToFile(listOf(updatedProject), fileName) } returns Result.success(Unit)
 
         // When
         val result = dataSource.editStateToProject(project.id, newState)
 
         // Then
         verify(exactly = 1) {
-            reader.read(fileName)
-            writer.writeToFile(any(), fileName)
+            csvReader.read(fileName)
+            csvWriter.writeToFile(any(), fileName)
         }
     }
 
@@ -643,10 +638,10 @@ class ProjectDataSourceImplTest {
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(id = id, state = listOf(oldState))
-        every { reader.read(fileName) } returns listOf(project)
+        every { csvReader.read(fileName) } returns listOf(project)
         val newState = oldState.copy(name = "New State")
         val updatedProject = createProjectHelper(id = id, state = listOf(newState))
-        every { writer.writeToFile(listOf(updatedProject), fileName) } returns Unit
+        every { csvWriter.writeToFile(listOf(updatedProject), fileName) } returns Result.success(Unit)
 
         // When
         val result = dataSource.editStateToProject(project.id, newState)
@@ -662,7 +657,7 @@ class ProjectDataSourceImplTest {
     fun `editStateToProject should return failure with NoProjectFoundException when project does not exist`() {
         // Given
         val id = UUID.fromString("11111111-1111-1111-1111-111111111111")
-        every { reader.read(fileName) } returns listOf(createProjectHelper(), createProjectHelper())
+        every { csvReader.read(fileName) } returns listOf(createProjectHelper(), createProjectHelper())
         val newState = createStateHelper(name = "New State")
 
         // When
@@ -682,7 +677,7 @@ class ProjectDataSourceImplTest {
         val oldState = createStateHelper(name = "To Do")
         val existingProject1 = createProjectHelper(id = id, state = listOf(oldState))
         val existingProject2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
         val newState = createStateHelper(name = "New State")
 
         // When
@@ -699,7 +694,7 @@ class ProjectDataSourceImplTest {
     fun `editStateToProject should propagate IOException when file read fails`() {
         // Given
         val id = UUID.randomUUID()
-        every { reader.read(fileName) } throws IOException("Read failed")
+        every { csvReader.read(fileName) } throws IOException("Read failed")
         val state = createStateHelper()
 
         // When
@@ -707,7 +702,7 @@ class ProjectDataSourceImplTest {
 
         // Then
         assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is IOException)
+        assertThat(result.exceptionOrNull() is IOException)
     }
 
     @Test
@@ -717,7 +712,7 @@ class ProjectDataSourceImplTest {
         val oldState = createStateHelper(name = "To Do")
         val existingProject1 = createProjectHelper(id = id, state = listOf(oldState))
         val existingProject2 = createProjectHelper()
-        every { reader.read(fileName) } returns listOf(existingProject1, existingProject2)
+        every { csvReader.read(fileName) } returns listOf(existingProject1, existingProject2)
         val newState = oldState.copy(name = "to do")
 
         // When
@@ -729,8 +724,4 @@ class ProjectDataSourceImplTest {
         assertTrue(exception is DuplicateStateException)
         assertEquals(StringConstants.Project.DUPLICATE_STATE, exception?.message)
     }
-    //endregion
-
-
-
 }

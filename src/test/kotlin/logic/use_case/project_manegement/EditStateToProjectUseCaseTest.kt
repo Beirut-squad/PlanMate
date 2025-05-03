@@ -1,4 +1,4 @@
-package logic.use_case.project_usecase
+package logic.use_case.project_manegement
 
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
@@ -9,7 +9,7 @@ import org.example.constants.StringConstants
 import org.example.logic.exceptions.DuplicateStateException
 import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_usecase.EditStateToProjectUseCase
+import org.example.logic.use_case.project_manegment.EditStateToProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Assertions.*

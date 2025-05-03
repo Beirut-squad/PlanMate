@@ -35,24 +35,6 @@ class ProjectRepositoryImpl(
     }
 
     override fun getProject(id: UUID): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
-        TODO("Not yet implemented")
-    override fun getAllProjects(): Result<List<Project>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getProject(id: UUID): Result<Project> {
         return projectDataSource.getProject(id)
     }
 

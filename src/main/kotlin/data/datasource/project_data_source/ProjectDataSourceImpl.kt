@@ -1,6 +1,7 @@
 package org.example.data.datasource.project_data_source
 
-import FileName
+
+import data.csv.FileName
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotCreatedException
@@ -12,13 +13,14 @@ import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.exceptions.NoStateException
 import org.example.models.Project
 import org.example.models.State
+import java.io.FileNotFoundException
 import java.time.LocalDateTime
 import java.util.*
 
 class ProjectDataSourceImpl(
     private val csvReader: CsvReader<Project>,
     private val csvWriter: CsvWriter<Project>,
-    private val fileName = FileName.PROJECTS_FILE
+    private val fileName: String = FileName.PROJECTS
 
 ) : ProjectDataSource {
     override fun createProject(project: Project): Result<Unit> {
@@ -50,7 +52,7 @@ class ProjectDataSourceImpl(
 
     override fun getAllProjects(): Result<List<Project>> {
         return try {
-            val projects = csvReader.read(PROJECTS_FILE)
+            val projects = csvReader.read(fileName)
             Result.success(projects)
         } catch (e: FileNotFoundException) {
             Result.success(emptyList())
@@ -61,23 +63,10 @@ class ProjectDataSourceImpl(
         }
     }
 
-    override fun getProject(id: UUID): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-        TODO("Not yet implemented")
-    }
-
-        TODO("Not yet implemented")
-    }
 
     override fun getProject(id: UUID): Result<Project> {
         return runCatching {
-            reader.read(fileName).find { it.id == id }
+            csvReader.read(fileName).find { it.id == id }
                 ?: throw NoProjectFoundException()
         }
     }
@@ -105,7 +94,8 @@ class ProjectDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
+
+    private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
         return getAllProjects().mapCatching { projects ->
             val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
                 project.copy(
@@ -113,7 +103,7 @@ class ProjectDataSourceImpl(
                     updatedAt = LocalDateTime.now()
                 )
             }
-            writer.writeToFile(updatedProjects, fileName)
+            csvWriter.writeToFile(updatedProjects, fileName)
         }
     }
 

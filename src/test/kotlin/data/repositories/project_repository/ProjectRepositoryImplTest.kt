@@ -7,23 +7,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
-import org.example.data.datasource.project_data_source.ProjectDataSource
-import org.example.data.repositories.log_repository.LogRepositoryImpl
-import org.example.data.repositories.project_repository.ProjectRepositoryImpl
 import org.example.logic.exceptions.DuplicateStateException
 import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.exceptions.NoStateException
 import org.example.logic.exceptions.StateHasAssociatedTasksException
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import creator_helper.createProjectHelper
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.data.repositories.project_repository.ProjectRepositoryImpl
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotCreatedException
@@ -37,14 +26,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class ProjectRepositoryImplTest {
-    private var projectDataSource: ProjectDataSource = mockk(relaxed = true)
+    private val projectDataSource: ProjectDataSource = mockk(relaxed = true)
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
     private var project: Project = mockk()
 
     @BeforeEach
     fun setup() {
         projectRepositoryImpl = ProjectRepositoryImpl(
-            projectDataSource,project
+            projectDataSource= projectDataSource
+            ,project
         )
     }
 
@@ -107,7 +97,6 @@ class ProjectRepositoryImplTest {
         assertThrows<ProjectNotEditedException> { result.getOrThrow() }
         verify(exactly = 1) { projectDataSource.editProject(project) }
     }
-
 
     //delete project
     @Test
@@ -172,17 +161,6 @@ class ProjectRepositoryImplTest {
         verify(exactly = 1) { projectDataSource.getAllProjects() }
     }
 
-    private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
-    private lateinit var projectDataSource: ProjectDataSource
-    private lateinit var logRepositoryImpl: LogRepositoryImpl
-
-    @BeforeEach
-    fun setup() {
-        logRepositoryImpl = mockk(relaxed = true)
-        projectDataSource = mockk(relaxed = true)
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, logRepositoryImpl)
-    }
-
     //region Test cases for getProject()
     @Test
     fun `getProject should call getProject from ProjectDataSource exactly once`() {
@@ -212,7 +190,7 @@ class ProjectRepositoryImplTest {
         assertTrue(result.isSuccess)
         val expectedProject = result.getOrNull()
         assertNotNull(expectedProject)
-        assertThat(expectedProject.id).isEqualTo(project.id)
+        assertEquals(expectedProject,project.id)
     }
 
     @Test
@@ -230,7 +208,6 @@ class ProjectRepositoryImplTest {
         assertTrue(exception is NoProjectFoundException)
         assertEquals(StringConstants.Project.NO_PROJECT_FOUND, exception.message)
     }
-    //endregion
 
     //region Test cases for addStateToProject()
     @Test
@@ -302,7 +279,6 @@ class ProjectRepositoryImplTest {
         assertTrue(exception is DuplicateStateException)
         assertEquals(StringConstants.Project.DUPLICATE_STATE, exception.message)
     }
-    //endregion
 
     //region Test cases for editStateToProject()
     @Test
@@ -378,7 +354,6 @@ class ProjectRepositoryImplTest {
         assertTrue(exception is DuplicateStateException)
         assertEquals(StringConstants.Project.DUPLICATE_STATE, exception.message)
     }
-    //endregion
 
     //region Test cases for removeStateFromProject()
     @Test
