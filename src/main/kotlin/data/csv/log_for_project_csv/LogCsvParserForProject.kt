@@ -16,12 +16,14 @@ class LogCsvParserForProject(private val projectCsvParser: ProjectCsvParser):Csv
     }
 
     override fun parseLine(line: String): ProjectLog? {
+        println("helloooooo")
         var cleanedLine = line.replace(" ", "")
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
 
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
+//        println(parts)
 
         if (projectCsvParser.parseLine(parts[LogsColumnIndexForProject.PREVIOUS_ENTITY]) == null || projectCsvParser.parseLine(parts[LogsColumnIndexForProject.CURRENT_ENTITY]) == null)
             throw Exception("entity is missing")
