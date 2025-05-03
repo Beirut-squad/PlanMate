@@ -4,14 +4,13 @@ import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
 import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.UiScreen
-import org.example.ui.home_screens.HomeScreen
 import ui.Viewer
 
 class RegisterScreen(
     private val reader: Reader,
     private val viewer: Viewer,
     private val registerUseCase: RegisterUserOrAdminUseCase,
-    private val homeScreen: HomeScreen
+    private val loginScreen: LoginScreen,
 
 ) : UiScreen {
     override fun show() {
@@ -30,7 +29,7 @@ class RegisterScreen(
         registerUseCase.add(name = name, email = email, password = password)
             .onSuccess { user ->
                 viewer.printInfoLine("Register successfully!")
-                goToHomeScreen(user)
+                goToLoginScreen()
             }
             .onFailure {
                 viewer.printError("Register failed!")
@@ -48,7 +47,7 @@ class RegisterScreen(
         }
     }
 
-    private fun goToHomeScreen(user: User) {
-        homeScreen.show()
+    private fun goToLoginScreen() {
+        loginScreen.show()
     }
 }

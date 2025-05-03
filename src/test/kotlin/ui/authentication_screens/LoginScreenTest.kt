@@ -9,7 +9,8 @@ import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.home_screens.HomeScreen
+import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
+import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.Viewer
@@ -18,12 +19,13 @@ class LoginScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewer: Viewer = mockk(relaxed = true)
     private val loginUseCase: LoginUseCase = mockk()
-    private val homeScreen: HomeScreen = mockk(relaxed = true)
+    private val adminHomeScreen: AdminHomeScreen = mockk(relaxed = true)
+    private val mateHomeScreen: MateHomeScreen = mockk(relaxed = true)
     private lateinit var loginScreen: LoginScreen
 
     @BeforeEach
     fun setUp() {
-        loginScreen = LoginScreen(reader, viewer, loginUseCase, homeScreen)
+        loginScreen = LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeScreen)
     }
 
     @Test
@@ -122,7 +124,7 @@ class LoginScreenTest {
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
-        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { adminHomeScreen.show() }
     }
 
     @Test
@@ -182,7 +184,7 @@ class LoginScreenTest {
         loginScreen.show()
 
         // Then
-        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { adminHomeScreen.show() }
         verify { viewer.printError("Login failed!") }
     }
 

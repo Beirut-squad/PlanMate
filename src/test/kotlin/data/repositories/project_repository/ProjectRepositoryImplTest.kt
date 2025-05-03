@@ -27,13 +27,12 @@ import org.junit.jupiter.api.assertThrows
 class ProjectRepositoryImplTest {
     private val projectDataSource: ProjectDataSource = mockk(relaxed = true)
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
-    private var project: Project = mockk()
+    private var project: Project = createProjectHelper()
 
     @BeforeEach
     fun setup() {
         projectRepositoryImpl = ProjectRepositoryImpl(
             projectDataSource= projectDataSource
-            ,project
         )
     }
 

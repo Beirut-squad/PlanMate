@@ -8,22 +8,25 @@ import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
 import org.example.models.User
 import org.example.ui.Reader
+import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
-import org.example.ui.home_screens.HomeScreen
+import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
+import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.Viewer
+import kotlin.math.log
 
 class RegisterScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewer: Viewer = mockk(relaxed = true)
     private val registerUseCase: RegisterUserOrAdminUseCase = mockk()
-    private val homeScreen: HomeScreen = mockk(relaxed = true)
+    private val loginScreen: LoginScreen = mockk(relaxed = true)
     private lateinit var registerScreen: RegisterScreen
 
     @BeforeEach
     fun setUp() {
-        registerScreen = RegisterScreen(reader, viewer, registerUseCase, homeScreen)
+        registerScreen = RegisterScreen(reader, viewer, registerUseCase, loginScreen)
     }
 
     @Test
@@ -151,7 +154,7 @@ class RegisterScreenTest {
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Register successfully!") }
-        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { loginScreen.show() }
     }
 
     @Test
@@ -184,26 +187,33 @@ class RegisterScreenTest {
             viewer.printInfoLine("Password: ")
             viewer.printInfoLine("Register successfully!")
         }
-        verify { homeScreen.show() }
+        verify { loginScreen.show() }
     }
 
     @Test
     fun `should not proceed to home screen if registration fails`() {
         // Given
 
-        every { reader.readInput() } returnsMany listOf("John Doe", "user1@example.com", "wrongpassword", "John Doe", "user2@example.com", "goodpassword")
+        every { reader.readInput() } returnsMany listOf(
+            "John Doe",
+            "user1@example.com",
+            "wrongpassword",
+            "John Doe",
+            "user2@example.com",
+            "goodpassword"
+        )
         every {
-            registerUseCase.add(name = "John Doe", email = "user1@example.com", password =  "wrongpassword")
+            registerUseCase.add(name = "John Doe", email = "user1@example.com", password = "wrongpassword")
         } returns Result.failure(Exception("Registration failed"))
         every {
-            registerUseCase.add(name = "John Doe", email =  "user2@example.com", password = "goodpassword")
+            registerUseCase.add(name = "John Doe", email = "user2@example.com", password = "goodpassword")
         } returns Result.success(createUserHelper())
 
         // When
         registerScreen.show()
 
         // Then
-        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { loginScreen.show() }
         verify { viewer.printError("Register failed!") }
     }
 
@@ -218,7 +228,13 @@ class RegisterScreenTest {
             null,
             "password123"
         )
-        every { registerUseCase.add(name = "John Doe", email =  "user@example.com", password = "password123") } returns Result.success(mockk(relaxed = true))
+        every {
+            registerUseCase.add(
+                name = "John Doe",
+                email = "user@example.com",
+                password = "password123"
+            )
+        } returns Result.success(mockk(relaxed = true))
 
         // When
         registerScreen.show()
