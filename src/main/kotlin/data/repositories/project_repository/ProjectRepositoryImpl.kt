@@ -1,44 +1,45 @@
 package org.example.data.repositories.project_repository
 
-import org.example.data.datasource.log_data_source.LogDataSourceForProject
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
+import org.example.models.State
 import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val logDataSource: LogDataSourceForProject
+    private val project: Project
 ) : ProjectRepository {
-    override fun createProject() {
+
+    override fun createProject(project: Project): Result<Unit> {
+        return projectDataSource.createProject(project)
+    }
+
+    override fun editProject(project: Project): Result<Unit> {
+        return projectDataSource.editProject(project)
+    }
+
+    override fun deleteProject(id: UUID): Result<Unit> {
+        return projectDataSource.deleteProject(project.id)
+    }
+
+    override fun getAllProjects(): Result<List<Project>> {
+        return projectDataSource.getAllProjects()
+    }
+
+    override fun getProject(id: UUID): Result<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun editProject(project: Project) {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun deleteProject(project: Project) {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllProjects(): List<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getProject(id: UUID): Project {
-        TODO("Not yet implemented")
-    }
-
-    override fun addStateToProject(projectId: String, state: String): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun editStateToProject(projectId: String, state: String): Result<Project> {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeStateFromProject(projectId: String, state: String): Result<Project> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         TODO("Not yet implemented")
     }
 
