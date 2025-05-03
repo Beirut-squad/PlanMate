@@ -139,8 +139,9 @@ class AuthenticationDataSourceImpl(
     }
 
     private fun addUserToCsv(user: User) {
-        val users = readUsersFromCsv()
-        writeUsersToCsv(users + listOf(user))
+        val users = readUsersFromCsv() + user
+        println(users)
+        writeUsersToCsv(users)
     }
 
     private fun writeUsersToCsv(users: List<User>) {

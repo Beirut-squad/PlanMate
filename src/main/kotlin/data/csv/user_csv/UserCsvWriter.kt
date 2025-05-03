@@ -3,21 +3,16 @@ package org.example.data.csv.user_csv
 import org.example.data.csv.CsvWriter
 import org.example.data.csv.isValidFileName
 import org.example.models.User
-import java.io.BufferedWriter
 import java.io.File
 import java.util.*
 
 class UserCsvWriter : CsvWriter<User> {
     override fun writeToFile(items: List<User>, filePath: String): Result<Unit> {
-        kotlin.runCatching {
+        runCatching {
             val file = File("src/main/kotlin/$filePath")
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Error: Invalid file name")
-            //val writer = BufferedWriter(FileWriter(file))
-//            if (file.length() == 0L)
-//                writer.write("[id,name,password,email,role,isDeleted]\n")
-            if (items.isNotEmpty())
-                writeUser(items, file)
+            writeUser(items, file)
         }.fold(
             onSuccess = { return Result.success(Unit) },
             onFailure = { return Result.failure(it) }
@@ -25,9 +20,9 @@ class UserCsvWriter : CsvWriter<User> {
     }
 
     private fun writeUser(items: List<User>, file: File) {
+        file.writeText("")
         items.forEach { user ->
-            if (isValidUser(user))
-                file.writeText("[${user.id},${user.name},${user.password},${user.email},${user.role},${user.isDeleted}]\n")
+            file.appendText("[${user.id},${user.name},${user.password},${user.email},${user.role},${user.isDeleted}]\n")
         }
     }
 

@@ -13,6 +13,6 @@ class CsvReader<T>(private val parser: CsvParser<T>){
         if (!file.exists())
             file.createNewFile()
         val csvLines = file.readLines()
-        return  parser.parseFile(csvLines)
+        return parser.parseFile(csvLines)
     }
 }
