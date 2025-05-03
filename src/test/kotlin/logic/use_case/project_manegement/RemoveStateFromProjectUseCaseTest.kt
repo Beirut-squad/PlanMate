@@ -10,7 +10,7 @@ import org.example.logic.exceptions.NoProjectFoundException
 import org.example.logic.exceptions.NoStateException
 import org.example.logic.exceptions.StateHasAssociatedTasksException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_manegment.RemoveStateFromProjectUseCase
+import org.example.logic.use_cases.project_manegment.RemoveStateFromProjectUseCase
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

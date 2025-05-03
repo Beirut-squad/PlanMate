@@ -1,4 +1,4 @@
-package org.example.logic.use_case.project_manegment
+package org.example.logic.use_cases.project_manegment
 
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.State
