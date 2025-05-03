@@ -6,8 +6,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
-import org.example.logic.exceptions.DuplicateStateException
-import org.example.logic.exceptions.NoProjectFoundException
+import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.logic.use_cases.project_manegment.EditStateToProjectUseCase
 import org.junit.jupiter.api.BeforeEach

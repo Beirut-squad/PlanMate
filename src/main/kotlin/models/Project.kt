@@ -10,5 +10,4 @@ data class Project(
     val creatorUserID: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-    val state: List<State>
-)
+    val state: List<State>)

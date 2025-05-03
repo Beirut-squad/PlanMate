@@ -1,6 +1,9 @@
 package org.example.logic.exceptions
 
-import org.example.constants.StringConstants.Project.NO_PROJECT_FOUND
+import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
+import org.example.logic.exceptions.project_magement_exceptions.NoStateException
+import org.example.logic.exceptions.project_magement_exceptions.StateHasAssociatedTasksException
 
 class ErrorHandler {
     fun handle(error: Throwable) {

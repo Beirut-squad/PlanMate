@@ -8,9 +8,9 @@ import org.example.logic.exceptions.project_magement_exceptions.ProjectNotCreate
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotDeletedException
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotEditedException
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAllProjectsException
-import org.example.logic.exceptions.DuplicateStateException
-import org.example.logic.exceptions.NoProjectFoundException
-import org.example.logic.exceptions.NoStateException
+import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
+import org.example.logic.exceptions.project_magement_exceptions.NoStateException
 import org.example.models.Project
 import org.example.models.State
 import java.io.FileNotFoundException

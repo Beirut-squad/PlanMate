@@ -6,10 +6,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
-import org.example.logic.exceptions.DuplicateStateException
-import org.example.logic.exceptions.NoProjectFoundException
-import org.example.logic.exceptions.NoStateException
-import org.example.logic.exceptions.StateHasAssociatedTasksException
+import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
+import org.example.logic.exceptions.project_magement_exceptions.NoStateException
+import org.example.logic.exceptions.project_magement_exceptions.StateHasAssociatedTasksException
 import java.util.*
 import kotlin.test.assertTrue
 import org.example.data.datasource.project_data_source.ProjectDataSource
@@ -390,7 +390,9 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(NoProjectFoundException())
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(
+            NoProjectFoundException()
+        )
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)
@@ -407,7 +409,9 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper(id = UUID.randomUUID(), name = "Undo")
         val project = createProjectHelper()
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(NoStateException())
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(
+            NoStateException()
+        )
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)
@@ -424,7 +428,9 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(StateHasAssociatedTasksException())
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.failure(
+            StateHasAssociatedTasksException()
+        )
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)

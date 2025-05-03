@@ -1,4 +1,4 @@
-package logic.use_case.project_usecase
+package logic.use_case.project_manegement
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.constants.StringConstants
-import org.example.logic.exceptions.NoProjectFoundException
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.junit.jupiter.api.BeforeEach
