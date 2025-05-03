@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_manegment.DeleteProjectUseCase
+import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
