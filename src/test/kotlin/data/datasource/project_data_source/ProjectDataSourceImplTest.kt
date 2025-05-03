@@ -724,4 +724,137 @@ class ProjectDataSourceImplTest {
         assertTrue(exception is DuplicateStateException)
         assertEquals(StringConstants.Project.DUPLICATE_STATE, exception?.message)
     }
+
+    //remove state
+    //region Test cases for removeStateFromProject()
+    @Test
+    fun `removeStateFromProject should call writeToFile from csv writer and read from csv reader exactly once`() {
+        // Given
+        val projectId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val stateToRemove = createStateHelper(name = "To Remove")
+        val project = createProjectHelper(id = projectId, state = listOf(stateToRemove))
+        every { csvReader.read(fileName) } returns listOf(project)
+        every { csvWriter.writeToFile(any(), fileName) } returns Result.success(Unit)
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, stateToRemove)
+
+        // Then
+        verify(exactly = 1) {
+            csvReader.read(fileName)
+            csvWriter.writeToFile(any(), fileName)
+        }
+    }
+
+    @Test
+    fun `removeStateFromProject should return success with Unit when project exists and state is removed`() {
+        // Given
+        val projectId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val stateToRemove = createStateHelper(name = "To Remove")
+        val stateToKeep = createStateHelper(name = "To Keep")
+        val project = createProjectHelper(id = projectId, state = listOf(stateToRemove, stateToKeep))
+        every { csvReader.read(fileName) } returns listOf(project)
+        every { csvWriter.writeToFile(any(), fileName) } returns Result.success(Unit)
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, stateToRemove)
+
+        // Then
+        assertTrue(result.isSuccess)
+        verify {
+            csvWriter.writeToFile(
+                match { projects ->
+                    projects.size == 1 &&
+                            projects[0].state.size == 1 &&
+                            projects[0].state[0].name == "To Keep"
+                },
+                fileName
+            )
+        }
+    }
+
+    @Test
+    fun `removeStateFromProject should return failure with NoProjectFoundException when project does not exist`() {
+        // Given
+        val nonExistentId = UUID.randomUUID()
+        val state = createStateHelper()
+        every { csvReader.read(fileName) } returns emptyList()
+
+        // When
+        val result = dataSource.removeStateFromProject(nonExistentId, state)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is NoProjectFoundException)
+        assertEquals(StringConstants.Project.NO_PROJECT_FOUND, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun `removeStateFromProject should return failure with NoStateException when state does not exist`() {
+        // Given
+        val projectId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val existingState = createStateHelper(name = "Existing")
+        val nonExistentState = createStateHelper(name = "Non-existent")
+        val project = createProjectHelper(id = projectId, state = listOf(existingState))
+        every { csvReader.read(fileName) } returns listOf(project)
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, nonExistentState)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is NoStateException)
+        assertEquals(StringConstants.Project.NO_STATE_FOUND, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun `removeStateFromProject should propagate IOException when file read fails`() {
+        // Given
+        val projectId = UUID.randomUUID()
+        val state = createStateHelper()
+        every { csvReader.read(fileName) } throws IOException("Read failed")
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, state)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertThat(result.exceptionOrNull() is IOException)
+    }
+
+    @Test
+    fun `removeStateFromProject should fail when CSV write fails`() {
+        // Given
+        val projectId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+        val state = createStateHelper()
+        val project = createProjectHelper(id = projectId, state = listOf(state))
+        every { csvReader.read(fileName) } returns listOf(project)
+        every { csvWriter.writeToFile(any(), fileName) } throws IOException("Write failed")
+
+        // When
+        val result = dataSource.removeStateFromProject(projectId, state)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IOException)
+    }
+
+    @Test
+    fun `editStateToProject should fail when state not found`() {
+        // Arrange
+        val projectId = UUID.randomUUID()
+        val existingState = createStateHelper(name = "To Do")
+        val project = createProjectHelper(id = projectId, state = listOf(existingState))
+        val nonExistingState = createStateHelper(name = "In Progress")
+
+        every { csvReader.read(fileName) } returns listOf(project)
+
+        // Act
+        val result = dataSource.editStateToProject(projectId, nonExistingState)
+
+        // Assert
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is NoStateException)
+    }
+
 }
