@@ -41,7 +41,7 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
      fun parseMultiStates(line: String): List<State>? {
         val statesLines = smartCsvSplit(line)
 
-//         val parsedStates =  stateCsvParser.parseFile(statesLines)
+         val parsedStates =  stateCsvParser.parseFile(statesLines)
 //         if (parsedStates.isEmpty())
 //             return null
         return stateCsvParser.parseFile(statesLines)
