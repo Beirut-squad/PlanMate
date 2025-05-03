@@ -73,7 +73,7 @@ class ProjectDataSourceImpl(
 
     override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
         return modifyProjectState(projectId) { states ->
-            if(states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
+            if (states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
             states + state
         }
     }
@@ -81,11 +81,16 @@ class ProjectDataSourceImpl(
     override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
+            var notFoundState = true
             states.forEach { oldState ->
-                if (!haveSameStateId(oldState, state)) throw NoStateException()
                 if (haveSameStateName(oldState, state)) throw DuplicateStateException()
-                updatedStates += if (oldState.id == state.id) state else oldState
+                updatedStates += if (oldState.id == state.id) {
+                    notFoundState = false
+                    state
+                } else
+                    oldState
             }
+            if (notFoundState) throw NoStateException()
             updatedStates
         }
     }
@@ -111,7 +116,11 @@ class ProjectDataSourceImpl(
         }
     }
 
-    private fun findAndUpdateProject(projects: List<Project>, projectId: UUID, projectModifier: (Project) -> Project): List<Project> {
+    private fun findAndUpdateProject(
+        projects: List<Project>,
+        projectId: UUID,
+        projectModifier: (Project) -> Project
+    ): List<Project> {
         val updated = mutableListOf<Project>()
         var projectFound = false
 
@@ -132,49 +141,43 @@ class ProjectDataSourceImpl(
         return oldState.name.equals(newState.name, ignoreCase = true)
     }
 
-    private fun haveSameStateId(oldState: State, newState: State): Boolean {
-        return oldState.id == newState.id
-    }
-companion object {
-    const val PROJECTS_FILE = "Project.csv"
-}
-private fun buildSuccessCreate(project: Project): Result<Unit>{
-    val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-    if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
-        return Result.failure(
-            ProjectNotCreatedException(
-                "Project '${project.name}' already exists for user ${project.creatorUserID}"
+    private fun buildSuccessCreate(project: Project): Result<Unit> {
+        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+        if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
+            return Result.failure(
+                ProjectNotCreatedException(
+                    "Project '${project.name}' already exists for user ${project.creatorUserID}"
+                )
             )
-        )
+        }
+        csvWriter.writeToFile(existingProjects + project, fileName)
+        return Result.success(Unit)
     }
-    csvWriter.writeToFile(existingProjects + project, PROJECTS_FILE)
-    return Result.success(Unit)
-}
 
-private fun buildSuccessEditor(project: Project):Result<Unit>{
-    val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-    val index = existingProjects.indexOfFirst { it.id == project.id }
-    if (index == -1) {
-        return Result.failure(
-            ProjectNotEditedException("Project with ID ${project.id} not found")
-        )
+    private fun buildSuccessEditor(project: Project): Result<Unit> {
+        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+        val index = existingProjects.indexOfFirst { it.id == project.id }
+        if (index == -1) {
+            return Result.failure(
+                ProjectNotEditedException("Project with ID ${project.id} not found")
+            )
+        }
+        val updatedProjects = existingProjects.toMutableList().apply {
+            this[index] = project.copy(updatedAt = LocalDateTime.now())
+        }
+        csvWriter.writeToFile(updatedProjects, fileName)
+        return Result.success(Unit)
     }
-    val updatedProjects = existingProjects.toMutableList().apply {
-        this[index] = project.copy(updatedAt = LocalDateTime.now())
-    }
-    csvWriter.writeToFile(updatedProjects, PROJECTS_FILE)
-    return Result.success(Unit)
-}
 
-private fun buildSuccessDelete(id: UUID):Result<Unit>{
-    val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-    if (existingProjects.none { it.id == id }) {
-        return Result.failure(
-            ProjectNotDeletedException("Project with ID $id not found")
-        )
+    private fun buildSuccessDelete(id: UUID): Result<Unit> {
+        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+        if (existingProjects.none { it.id == id }) {
+            return Result.failure(
+                ProjectNotDeletedException("Project with ID $id not found")
+            )
+        }
+        val updatedProjects = existingProjects.filterNot { it.id == id }
+        csvWriter.writeToFile(updatedProjects, fileName)
+        return Result.success(Unit)
     }
-    val updatedProjects = existingProjects.filterNot { it.id == id }
-    csvWriter.writeToFile(updatedProjects, PROJECTS_FILE)
-    return Result.success(Unit)
-}
 }
