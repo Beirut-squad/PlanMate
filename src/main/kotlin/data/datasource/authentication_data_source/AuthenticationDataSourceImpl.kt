@@ -57,7 +57,6 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newUser)
-        writeUsersToCsv(users + newUser)
         return saveCurrentUser(newUser)
             .fold(
                 onSuccess = {
@@ -85,7 +84,6 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newAdmin)
-        writeUsersToCsv(users + newAdmin)
         return saveCurrentUser(newAdmin)
             .fold(
                 onSuccess = {
@@ -142,7 +140,7 @@ class AuthenticationDataSourceImpl(
 
     private fun addUserToCsv(user: User) {
         val users = readUsersFromCsv()
-        writeUsersToCsv(users + user)
+        writeUsersToCsv(users + listOf(user))
     }
 
     private fun writeUsersToCsv(users: List<User>) {

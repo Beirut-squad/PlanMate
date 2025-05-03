@@ -27,7 +27,7 @@ class RegisterScreen(
         val email = takeUserInput("Email")
         val password = takeUserInput("Password")
 
-        registerUseCase.add(name, email, password)
+        registerUseCase.add(name = name, email = email, password = password)
             .onSuccess { user ->
                 viewer.printInfoLine("Register successfully!")
                 goToHomeScreen(user)

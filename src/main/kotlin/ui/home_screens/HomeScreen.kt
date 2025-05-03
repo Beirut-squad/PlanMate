@@ -5,10 +5,10 @@ import org.example.ui.UiScreen
 
 class HomeScreen: UiScreen {
     override fun show() {
-        TODO("Not yet implemented")
+        // TODO
     }
 
     fun setUser(user: User) {
-        TODO()
+        // TODO
     }
 }

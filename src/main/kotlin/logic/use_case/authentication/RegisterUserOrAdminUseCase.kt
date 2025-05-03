@@ -18,10 +18,10 @@ class RegisterUserOrAdminUseCase(
         return authenticationRepository.checkIfFirstRegister()
             .fold(
                 onSuccess = {
-                    saveUserWithEncryptedPassword(password, name, email)
+                    saveUserWithEncryptedPassword(password = password, name = name, email = email)
                 },
                 onFailure = {
-                    registerMateUseCase.addUser(name, password, email)
+                    registerMateUseCase.addUser(name = name, password = password, email = email)
                 }
             )
     }
