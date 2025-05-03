@@ -140,7 +140,6 @@ class AuthenticationDataSourceImpl(
 
     private fun addUserToCsv(user: User) {
         val users = readUsersFromCsv() + user
-        println(users)
         writeUsersToCsv(users)
     }
 
