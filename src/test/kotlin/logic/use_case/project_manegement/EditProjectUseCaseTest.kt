@@ -7,7 +7,7 @@ import io.mockk.verify
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.exceptions.project_magement_exceptions.BlankFieldsException
 import org.example.logic.repositories.project_repository.ProjectRepository
-import org.example.logic.use_case.project_manegment.EditProjectUseCase
+import org.example.logic.use_cases.project_manegment.EditProjectUseCase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
