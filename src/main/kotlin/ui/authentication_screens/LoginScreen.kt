@@ -1,5 +1,7 @@
 package org.example.ui.authentication_screens
 
+import org.example.constants.StringConstants
+import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
 import org.example.models.User
@@ -7,6 +9,7 @@ import org.example.ui.Reader
 import org.example.ui.UiScreen
 import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
 import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
+import org.example.ui.utils.InputUtils
 import ui.Viewer
 
 class LoginScreen(
@@ -17,34 +20,20 @@ class LoginScreen(
     private val mateHomeScreen: MateHomeScreen,
 ) : UiScreen {
     override fun show() {
-        viewer.printTitle("Login for Plan Mate")
-
-        viewer.printInfoLine("Please enter your information to login:")
-
+        viewer.printTitle(StringConstants.LoginScreen.WELCOME_LOGIN)
+        viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_DETAILS)
         takeUserLoginInput()
     }
 
     private fun takeUserLoginInput() {
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
-        loginUseCase.login(email, password)
-            .onSuccess { user ->
-                viewer.printInfoLine("Login successful!")
-                checkAdminOrMate(user)
-            }
-            .onFailure {
-                viewer.printError("Login failed!")
-                takeUserLoginInput()
-            }
-    }
-
-    private fun takeUserInput(prompt: String): String {
-        viewer.printInfoLine("$prompt: ")
-        try {
-            return reader.readInput() ?: throw Exception()
-        } catch (e: Exception) {
-            viewer.printError("Invalid input")
-            return takeUserInput(prompt)
+        val email = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+        val password = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+        loginUseCase.login(email, password).onSuccess { user ->
+            viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS)
+            checkAdminOrMate(user)
+        }.onFailure {
+            ErrorHandler().handle(it)
+            takeUserLoginInput()
         }
     }
 

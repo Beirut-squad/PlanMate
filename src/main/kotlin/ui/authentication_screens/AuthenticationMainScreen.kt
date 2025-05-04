@@ -1,7 +1,9 @@
 package org.example.ui.authentication_screens
 
+import org.example.constants.StringConstants
 import org.example.ui.Reader
 import org.example.ui.UiScreen
+import org.example.ui.utils.InputUtils
 import ui.Viewer
 
 class AuthenticationMainScreen(
@@ -11,16 +13,17 @@ class AuthenticationMainScreen(
     private val loginScreen: LoginScreen
 ) : UiScreen {
     override fun show() {
-        viewer.printTitle("Welcome to Plan Mate, what would you like to do?")
+        viewer.printTitle(StringConstants.AuthScreen.WELCOME)
 
         var running = true
         while (running) {
             viewer.printOptions(
-                "Register",
-                "Login"
+                StringConstants.AuthScreen.REGISTER,
+                StringConstants.AuthScreen.LOGIN,
             )
+            viewer.printOption("0. ${StringConstants.AuthScreen.EXIT}")
 
-            val input = reader.readInt()
+            val input = InputUtils.takeInputInt(viewer,reader)
             when (input) {
                 1 -> {
                     goToRegisterScreen()
@@ -32,8 +35,13 @@ class AuthenticationMainScreen(
                     running = false
                 }
 
+                0 -> {
+                    viewer.printGoodbyeMessage("Goodbye :)")
+                    break
+                }
+
                 else -> {
-                    viewer.printError("Invalid option")
+                    viewer.printError(StringConstants.General.INVALID_INPUT)
                 }
             }
         }

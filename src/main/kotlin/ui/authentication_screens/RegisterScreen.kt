@@ -1,9 +1,11 @@
 package org.example.ui.authentication_screens
 
+import org.example.constants.StringConstants
+import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
-import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.UiScreen
+import org.example.ui.utils.InputUtils
 import ui.Viewer
 
 class RegisterScreen(
@@ -11,40 +13,27 @@ class RegisterScreen(
     private val viewer: Viewer,
     private val registerUseCase: RegisterUserOrAdminUseCase,
     private val loginScreen: LoginScreen,
-
-) : UiScreen {
+    ) : UiScreen {
     override fun show() {
-        viewer.printTitle("Register for Plan Mate")
-
-        viewer.printInfoLine("Please enter your details to register:")
-
+        viewer.printTitle(StringConstants.RegisterScreen.WELCOME_REGISTER)
+        viewer.printInfoLine(StringConstants.RegisterScreen.REGISTRATION_DETAILS)
         takeUserRegisterInput()
     }
 
     private fun takeUserRegisterInput() {
-        val name = takeUserInput("Name")
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
+        val name = InputUtils.takeInput(viewer, reader, StringConstants.RegisterScreen.NAME)
+        val email = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+        val password = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
 
         registerUseCase.add(name = name, email = email, password = password)
-            .onSuccess { user ->
-                viewer.printInfoLine("Register successfully!")
+            .onSuccess {
+                viewer.printInfoLine(StringConstants.RegisterScreen.REGISTER_SUCCESS)
                 goToLoginScreen()
             }
             .onFailure {
-                viewer.printError("Register failed!")
+                ErrorHandler().handle(it)
                 takeUserRegisterInput()
             }
-    }
-
-    private fun takeUserInput(prompt: String): String {
-        viewer.printInfoLine("$prompt: ")
-        try {
-            return reader.readInput() ?: throw Exception()
-        } catch (e: Exception) {
-            viewer.printError("Invalid input")
-            return takeUserInput(prompt)
-        }
     }
 
     private fun goToLoginScreen() {
