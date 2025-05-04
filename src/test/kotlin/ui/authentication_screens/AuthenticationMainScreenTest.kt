@@ -3,6 +3,7 @@ package ui.authentication_screens
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.example.constants.StringConstants
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
@@ -32,7 +33,7 @@ class AuthenticationMainScreenTest {
         authenticationMainScreen.show()
 
         // Then
-        verify(exactly = 1) { viewer.printTitle("Welcome to Plan Mate, what would you like to do?") }
+        verify(exactly = 1) { viewer.printTitle(StringConstants.AuthScreen.WELCOME) }
     }
 
     @Test
@@ -46,9 +47,10 @@ class AuthenticationMainScreenTest {
         // Then
         verify {
             viewer.printOptions(
-                "Register",
-                "Login"
+                StringConstants.AuthScreen.REGISTER,
+                StringConstants.AuthScreen.LOGIN,
             )
+            viewer.printOption("0. ${StringConstants.AuthScreen.EXIT}")
         }
     }
 
@@ -87,7 +89,7 @@ class AuthenticationMainScreenTest {
         authenticationMainScreen.show()
 
         // Then
-        verify { viewer.printError("Invalid option") }
+        verify { viewer.printError(StringConstants.General.INVALID_INPUT) }
     }
 
     @Test
@@ -99,11 +101,11 @@ class AuthenticationMainScreenTest {
         authenticationMainScreen.show()
 
         // Then
-        verify { viewer.printError("Invalid option") }
+        verify { viewer.printError(StringConstants.General.INVALID_INPUT) }
         verify(exactly = 2) {
             viewer.printOptions(
-                "Register",
-                "Login"
+                StringConstants.AuthScreen.REGISTER,
+                StringConstants.AuthScreen.LOGIN,
             )
         }
     }
@@ -120,8 +122,8 @@ class AuthenticationMainScreenTest {
         verify { registerScreen.show() }
         verify(exactly = 1) {
             viewer.printOptions(
-                "Register",
-                "Login"
+                StringConstants.AuthScreen.REGISTER,
+                StringConstants.AuthScreen.LOGIN,
             )
         }
     }
@@ -138,9 +140,23 @@ class AuthenticationMainScreenTest {
         verify { loginScreen.show() }
         verify(exactly = 1) {
             viewer.printOptions(
-                "Register",
-                "Login"
+                StringConstants.AuthScreen.REGISTER,
+                StringConstants.AuthScreen.LOGIN,
             )
+        }
+    }
+
+    @Test
+    fun `should exit system when a valid option 0 is selected`() {
+        // Given
+        every { reader.readInt() } returns 0
+
+        // When
+        authenticationMainScreen.show()
+
+        // Then
+        verify(exactly = 1) {
+            viewer.printGoodbyeMessage(StringConstants.AuthScreen.BYE)
         }
     }
 }

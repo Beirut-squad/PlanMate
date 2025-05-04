@@ -1,236 +1,162 @@
 package ui.authentication_screens
 
 import creator_helper.createUserHelper
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifyOrder
+import io.mockk.*
+import org.example.constants.StringConstants
+import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
-import org.example.models.User
 import org.example.ui.Reader
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
 import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
+import org.example.ui.utils.InputHandler
+import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.Viewer
 
 class LoginScreenTest {
+    private val inputHandler: InputHandler = mockk(relaxed = true)
+    private val errorHandler: ErrorHandler = mockk(relaxed = true)
     private val reader: Reader = mockk(relaxed = true)
     private val viewer: Viewer = mockk(relaxed = true)
-    private val loginUseCase: LoginUseCase = mockk()
+    private val loginUseCase: LoginUseCase = mockk(relaxed = true)
     private val adminHomeScreen: AdminHomeScreen = mockk(relaxed = true)
     private val mateHomeScreen: MateHomeScreen = mockk(relaxed = true)
     private lateinit var loginScreen: LoginScreen
+    private val testEmail = "user@example.com"
+    private val testPassword = "password123"
+    private val adminUser = createUserHelper(role = Role.ADMIN)
+    private val mateUser = createUserHelper(role = Role.MATE)
 
     @BeforeEach
     fun setUp() {
-        loginScreen = LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeScreen)
+        loginScreen =
+            LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeScreen, inputHandler, errorHandler)
     }
 
-    @Test
-    fun `should show title`() {
-        // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-
-        // When
-        loginScreen.show()
-
-        // Then
-        verify(exactly = 1) { viewer.printTitle("Login for Plan Mate") }
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
-    @Test
-    fun `should prompt user for email`() {
-        // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-        every { reader.readInput() } returns "user@example.com"
 
-        // When
-        loginScreen.show()
-
-        // Then
-        verify { viewer.printInfoLine("Email: ") }
-    }
 
     @Test
-    fun `should prompt user for password`() {
+    fun `show should display title and prompt for login details`() {
         // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-        every { reader.readInput() } returns "password123"
-
-        // When
-        loginScreen.show()
-
-        // Then
-        verify { viewer.printInfoLine("Password: ") }
-    }
-
-    @Test
-    fun `should print error on invalid email input`() {
-        // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-        every { reader.readInput() } returnsMany listOf(null, "user@example.com")
-
-        // When
-        loginScreen.show()
-
-        // Then
-        verify { viewer.printError("Invalid input") }
-    }
-
-    @Test
-    fun `should print error on invalid password input`() {
-        // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-        every { reader.readInput() } returnsMany listOf("user@example.com", null, "password123")
-
-        // When
-        loginScreen.show()
-
-        // Then
-        verify { viewer.printError("Invalid input") }
-    }
-
-    @Test
-    fun `should loop until valid email and password are entered`() {
-        // Given
-        every { loginUseCase.login(any(), any()) } returns Result.success(createUserHelper())
-        every { reader.readInput() } returnsMany listOf(null, "user@example.com", null, "password123")
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL) } returns testEmail
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD) } returns testPassword
+        every { loginUseCase.login(testEmail, testPassword) } returns Result.success(adminUser)
 
         // When
         loginScreen.show()
 
         // Then
         verifyOrder {
-            viewer.printInfoLine("Email: ")
-            viewer.printError("Invalid input")
-            viewer.printInfoLine("Email: ")
-            viewer.printInfoLine("Password: ")
-            viewer.printError("Invalid input")
-            viewer.printInfoLine("Password: ")
+            viewer.printTitle(StringConstants.LoginScreen.WELCOME_LOGIN)
+            viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_DETAILS)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+            loginUseCase.login(testEmail, testPassword)
+            viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS)
+            adminHomeScreen.show()
         }
     }
 
     @Test
-    fun `should handle successful login and navigate to admin home screen if user is admin`() {
-        // Given
-        val testUser = createUserHelper(role = Role.ADMIN)
-        every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
-        every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
+    fun `successful login as admin should navigate to admin home screen`() {
+        // Arrange
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL) } returns testEmail
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD) } returns testPassword
+        every { loginUseCase.login(testEmail, testPassword) } returns Result.success(adminUser)
 
-        // When
+        // Act
         loginScreen.show()
 
-        // Then
-        verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
+        // Assert
         verify(exactly = 1) { adminHomeScreen.show() }
+        verify(exactly = 0) { mateHomeScreen.show() }
     }
 
     @Test
-    fun `should handle successful login and navigate to mate home screen if user is mate`() {
-        // Given
-        val testUser = createUserHelper(role = Role.MATE)
-        every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
-        every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
+    fun `successful login as mate should navigate to mate home screen`() {
+        // Arrange
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL) } returns testEmail
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD) } returns testPassword
+        every { loginUseCase.login(testEmail, testPassword) } returns Result.success(mateUser)
 
-        // When
+        // Act
         loginScreen.show()
 
-        // Then
-        verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
+        // Assert
+        verify(exactly = 0) { adminHomeScreen.show() }
         verify(exactly = 1) { mateHomeScreen.show() }
     }
 
     @Test
-    fun `should handle failed login and retry login`() {
-        // Given
-        every { reader.readInput() } returnsMany listOf(
-            "user@example.com",
-            "wrongpassword",
-            "user@example.com",
-            "correctpassword"
-        )
-        every {
-            loginUseCase.login(
-                "user@example.com",
-                "wrongpassword"
-            )
-        } returns Result.failure(Exception("Invalid credentials"))
-        every {
-            loginUseCase.login(
-                "user@example.com",
-                "correctpassword"
-            )
-        } returns Result.success(mockk(relaxed = true))
+    fun `failed login should handle error and retry login`() {
+        // Arrange
+        val testException = Exception("Invalid credentials")
+        val captor = slot<() -> Unit>()
 
-        // When
+        // Define behavior for first attempt (failure)
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL) } returnsMany listOf(testEmail, "retry@example.com")
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD) } returnsMany listOf(testPassword, "retry123")
+        every { loginUseCase.login(testEmail, testPassword) } returns Result.failure(testException)
+        every { errorHandler.handle(testException) } just runs
+
+        // Define behavior for second attempt (success)
+        every { loginUseCase.login("retry@example.com", "retry123") } returns Result.success(adminUser)
+        every { viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS) } just runs
+        every { adminHomeScreen.show() } just runs
+
+        // Act
         loginScreen.show()
 
-        // Then
-        verifyOrder {
-            viewer.printInfoLine("Email: ")
-            viewer.printInfoLine("Password: ")
-            viewer.printError("Login failed!")
-            viewer.printInfoLine("Email: ")
-            viewer.printInfoLine("Password: ")
-            viewer.printInfoLine("Login successful!")
+        // Assert
+        verifySequence {
+            viewer.printTitle(StringConstants.LoginScreen.WELCOME_LOGIN)
+            viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_DETAILS)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+            loginUseCase.login(testEmail, testPassword)
+            errorHandler.handle(testException)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+            inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+            loginUseCase.login("retry@example.com", "retry123")
+            viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS)
+            adminHomeScreen.show()
         }
     }
 
-    @Test
-    fun `should not proceed to home screen if login fails`() {
-        // Given
-        every { reader.readInput() } returnsMany listOf("user@example.com", "wrongpassword", "user@example.com", "correctpassword")
-        every {
-            loginUseCase.login(
-                "user@example.com",
-                "wrongpassword"
-            )
-        } returns Result.failure(Exception())
-        every {
-            loginUseCase.login(
-                "user@example.com",
-                "correctpassword"
-            )
-        } returns Result.success(createUserHelper())
 
-        // When
+    fun `recursive login attempts should work until successful`() {
+        // Arrange
+        val testException = Exception("Invalid credentials")
+
+        // First attempt - failure
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL) } returnsMany
+                listOf(testEmail, "second@example.com", "third@example.com")
+        every { inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD) } returnsMany
+                listOf(testPassword, "password2", "password3")
+        every { loginUseCase.login(testEmail, testPassword) } returns Result.failure(testException)
+        every { errorHandler.handle(testException) } just runs
+
+        // Second attempt - failure
+        every { loginUseCase.login("second@example.com", "password2") } returns Result.failure(testException)
+
+        // Third attempt - success
+        every { loginUseCase.login("third@example.com", "password3") } returns Result.success(mateUser)
+        every { viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS) } just runs
+        every { mateHomeScreen.show() } just runs
+
+        // Act
         loginScreen.show()
 
-        // Then
-        verify { viewer.printInfoLine("Email: ") }
-        verify { viewer.printInfoLine("Password: ") }
-        verify { viewer.printError("Login failed!") }
-        verify { viewer.printInfoLine("Email: ") }
-        verify { viewer.printInfoLine("Password: ") }
-        verify { viewer.printInfoLine("Login successful!") }
-    }
-
-    @Test
-    fun `should handle retry logic for all invalid inputs`() {
-        // Given
-        every { reader.readInput() } returnsMany listOf(
-            null,
-            "user@example.com",
-            null,
-            "password123"
-        )
-        every { loginUseCase.login("user@example.com", "password123") } returns Result.success(mockk(relaxed = true))
-
-        // When
-        loginScreen.show()
-
-        // Then
-        verifyOrder {
-            viewer.printInfoLine("Email: ")
-            viewer.printError("Invalid input")
-            viewer.printInfoLine("Email: ")
-            viewer.printInfoLine("Password: ")
-            viewer.printError("Invalid input")
-            viewer.printInfoLine("Password: ")
-            viewer.printInfoLine("Login successful!")
-        }
+        // Assert
+        verify(exactly = 2) { errorHandler.handle(testException) }
+        verify(exactly = 1) { mateHomeScreen.show() }
     }
 }

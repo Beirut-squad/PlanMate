@@ -3,7 +3,7 @@ package org.example.ui.authentication_screens
 import org.example.constants.StringConstants
 import org.example.ui.Reader
 import org.example.ui.UiScreen
-import org.example.ui.utils.InputUtils
+import org.example.ui.utils.ConsoleInputHandler
 import ui.Viewer
 
 class AuthenticationMainScreen(
@@ -23,7 +23,7 @@ class AuthenticationMainScreen(
             )
             viewer.printOption("0. ${StringConstants.AuthScreen.EXIT}")
 
-            val input = InputUtils.takeInputInt(viewer,reader)
+            val input = ConsoleInputHandler.takeInputInt(viewer,reader)
             when (input) {
                 1 -> {
                     goToRegisterScreen()
@@ -36,7 +36,7 @@ class AuthenticationMainScreen(
                 }
 
                 0 -> {
-                    viewer.printGoodbyeMessage("Goodbye :)")
+                    viewer.printGoodbyeMessage(StringConstants.AuthScreen.BYE)
                     break
                 }
 

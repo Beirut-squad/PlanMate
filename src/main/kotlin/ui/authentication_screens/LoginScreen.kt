@@ -9,7 +9,8 @@ import org.example.ui.Reader
 import org.example.ui.UiScreen
 import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
 import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
-import org.example.ui.utils.InputUtils
+import org.example.ui.utils.ConsoleInputHandler
+import org.example.ui.utils.InputHandler
 import ui.Viewer
 
 class LoginScreen(
@@ -18,6 +19,8 @@ class LoginScreen(
     private val loginUseCase: LoginUseCase,
     private val adminHomeScreen: AdminHomeScreen,
     private val mateHomeScreen: MateHomeScreen,
+    private val inputHandler: InputHandler,
+    private val errorHandler: ErrorHandler,
 ) : UiScreen {
     override fun show() {
         viewer.printTitle(StringConstants.LoginScreen.WELCOME_LOGIN)
@@ -26,13 +29,13 @@ class LoginScreen(
     }
 
     private fun takeUserLoginInput() {
-        val email = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
-        val password = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+        val email = inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+        val password = inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
         loginUseCase.login(email, password).onSuccess { user ->
             viewer.printInfoLine(StringConstants.LoginScreen.LOGIN_SUCCESS)
             checkAdminOrMate(user)
         }.onFailure {
-            ErrorHandler().handle(it)
+            errorHandler.handle(it)
             takeUserLoginInput()
         }
     }

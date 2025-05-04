@@ -5,7 +5,8 @@ import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
 import org.example.ui.Reader
 import org.example.ui.UiScreen
-import org.example.ui.utils.InputUtils
+import org.example.ui.utils.ConsoleInputHandler
+import org.example.ui.utils.InputHandler
 import ui.Viewer
 
 class RegisterScreen(
@@ -13,6 +14,8 @@ class RegisterScreen(
     private val viewer: Viewer,
     private val registerUseCase: RegisterUserOrAdminUseCase,
     private val loginScreen: LoginScreen,
+    private val inputHandler: InputHandler,
+    private val errorHandler: ErrorHandler,
     ) : UiScreen {
     override fun show() {
         viewer.printTitle(StringConstants.RegisterScreen.WELCOME_REGISTER)
@@ -21,9 +24,9 @@ class RegisterScreen(
     }
 
     private fun takeUserRegisterInput() {
-        val name = InputUtils.takeInput(viewer, reader, StringConstants.RegisterScreen.NAME)
-        val email = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
-        val password = InputUtils.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
+        val name = inputHandler.takeInput(viewer, reader, StringConstants.RegisterScreen.NAME)
+        val email = inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.EMAIL)
+        val password = inputHandler.takeInput(viewer, reader, StringConstants.AuthScreen.PASSWORD)
 
         registerUseCase.add(name = name, email = email, password = password)
             .onSuccess {
@@ -31,7 +34,7 @@ class RegisterScreen(
                 goToLoginScreen()
             }
             .onFailure {
-                ErrorHandler().handle(it)
+                errorHandler.handle(it)
                 takeUserRegisterInput()
             }
     }

@@ -9,6 +9,7 @@ import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.example.logic.exceptions.ErrorHandler
 
 val logicModule = module {
     singleOf(::GetCurrentLoggedInUserUseCase)
@@ -24,4 +25,7 @@ val logicModule = module {
     singleOf(::GetUserProjectLogsUseCase)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::GetAllProjectLogsUseCase)
+
+    singleOf(::ErrorHandler)
+
 }

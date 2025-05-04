@@ -27,6 +27,7 @@ object StringConstants {
         const val EMAIL = "Email"
         const val PASSWORD = "Password"
         const val EXIT = "Exit"
+        const val BYE = "Goodbye :)"
     }
     // endregion
 
