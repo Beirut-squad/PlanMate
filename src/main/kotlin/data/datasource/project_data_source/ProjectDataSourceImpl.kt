@@ -110,6 +110,17 @@ class ProjectDataSourceImpl(
         }
     }
 
+    override fun getProjectsForUserById(userId: UUID): Result<List<Project>> {
+        return runCatching {
+            val projects = csvReader.read(fileName).filter { it.creatorUserID == userId }
+               if(projects.isNotEmpty())
+                        projects
+                   else
+                       emptyList()
+                       //throw NoProjectFoundException()
+        }
+    }
+
 
     private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
         return getAllProjects().mapCatching { projects ->

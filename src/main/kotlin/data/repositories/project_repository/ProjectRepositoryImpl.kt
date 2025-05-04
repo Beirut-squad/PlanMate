@@ -42,4 +42,8 @@ class ProjectRepositoryImpl(
         return projectDataSource.removeStateFromProject(projectId, state)
     }
 
+    override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
+        return projectDataSource.getProjectsForUserById(userid)
+    }
+
 }

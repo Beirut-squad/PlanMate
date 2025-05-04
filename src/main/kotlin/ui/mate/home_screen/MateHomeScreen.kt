@@ -4,11 +4,12 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.screens.ViewProjectLogsScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.common.screens.ViewProjectForUserScreen
 
 class MateHomeScreen(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val viewProjectLogsScreen: ViewProjectLogsScreen,
+    private val viewProjectsForUserScreen : ViewProjectForUserScreen,
 ) : UiScreen {
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
@@ -17,12 +18,13 @@ class MateHomeScreen(
         while (running) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Project Logs", "Exit")
+            viewer.printOptions("View Projects", "Exit")
 
             val option = reader.readInt()
             when (option) {
                 1 -> {
-                    goToViewProjectLogsScreen()
+
+                    goToViewProjectsScreen()
                     running = false
                 }
 
@@ -34,7 +36,7 @@ class MateHomeScreen(
         }
     }
 
-    private fun goToViewProjectLogsScreen() {
-        viewProjectLogsScreen.show()
+    private fun goToViewProjectsScreen() {
+        viewProjectsForUserScreen.show()
     }
 }

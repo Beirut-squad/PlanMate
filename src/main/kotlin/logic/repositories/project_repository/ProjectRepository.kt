@@ -13,4 +13,5 @@ interface ProjectRepository {
     fun addStateToProject(projectId: UUID, state: State): Result<Unit>
     fun editStateToProject(projectId: UUID, state: State): Result<Unit>
     fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
+    fun getProjectsForUserById(userid : UUID):Result<List<Project>>
 }
