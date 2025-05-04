@@ -10,9 +10,13 @@ class CsvReader<T>(private val parser: CsvParser<T>){
             throw Exception("File $fileName cannot be found in file names")
         val filePath = "src/main/kotlin/$fileName"
         val file = File(filePath)
-        if (!file.exists())
-            file.createNewFile()
-        val csvLines = file.readLines()
-        return parser.parseFile(csvLines)
+        if (file.exists()){
+            val csvLines = file.readLines()
+            return parser.parseFile(csvLines)
+        }else
+            return emptyList()
+
+           // file.createNewFile()
+
     }
 }

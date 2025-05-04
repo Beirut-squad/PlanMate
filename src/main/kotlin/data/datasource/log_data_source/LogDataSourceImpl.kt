@@ -49,9 +49,12 @@ class LogDataSourceImpl(
 
     override fun getAllProjectLogs(): Result<List<ProjectLog>> =
         runCatching {
-            csvProjectLogReader.read(PROJECT_LOG)
-                .takeIf { it.isNotEmpty() }
-                ?: throw NoProjectLogsFoundException()
+            val logs = csvProjectLogReader.read(PROJECT_LOG)
+            if (logs.isEmpty()){
+               emptyList()
+            }else{
+                logs
+            }
         }
 
     override fun getAllTaskLogs(): Result<List<TaskLog>> =
