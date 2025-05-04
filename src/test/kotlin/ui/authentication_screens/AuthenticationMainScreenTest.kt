@@ -3,13 +3,13 @@ package ui.authentication_screens
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.example.ui.Reader
+import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.Viewer
+import org.example.ui.common.components.Viewer
 
 class AuthenticationMainScreenTest {
     private val reader: Reader = mockk(relaxed = true)

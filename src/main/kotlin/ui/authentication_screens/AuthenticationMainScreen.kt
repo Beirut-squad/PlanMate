@@ -1,8 +1,8 @@
 package org.example.ui.authentication_screens
 
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import ui.Viewer
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
+import org.example.ui.common.components.Viewer
 
 class AuthenticationMainScreen(
     private val reader: Reader,

@@ -1,10 +1,8 @@
-package org.example.ui.home_screens
+package org.example.ui.common.screens
 
-import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import ui.Viewer
+import org.example.ui.common.components.UiScreen
+import org.example.ui.common.components.Viewer
 
 class ViewProjectsScreen(
     private val viewer: Viewer,

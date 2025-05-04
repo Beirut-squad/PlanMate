@@ -1,15 +1,15 @@
-package org.example.ui.home_screens
+package org.example.ui.common.screens
 
-import logic.use_cases.log.GetUserProjectLogsUseCase
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
-import org.example.ui.UiScreen
-import ui.Viewer
+import org.example.logic.use_cases.log.GetUserTaskLogsUseCase
+import org.example.ui.common.components.UiScreen
+import org.example.ui.common.components.Viewer
 
-class ViewProjectLogsScreen(
+class ViewTaskLogsScreen(
     private val viewer: Viewer,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase
-) : UiScreen {
+    private val getUserTaskLogsUseCase: GetUserTaskLogsUseCase
+): UiScreen {
     override fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
@@ -19,12 +19,12 @@ class ViewProjectLogsScreen(
             return
         }
 
-        val userLogsResult = getUserProjectLogsUseCase.getUserProjectLogs(user.id)
+        val userLogsResult = getUserTaskLogsUseCase.getUserTaskLogs(user.id)
 
         userLogsResult.fold(
             onSuccess = { logs ->
                 if (logs.isNotEmpty()) {
-                    viewer.printTitle("Project Logs for User: ${user.name}")
+                    viewer.printTitle("Task Logs for User: ${user.name}")
                     logs.forEachIndexed { index, log ->
                         viewer.printInfoLine(
                             """
@@ -37,11 +37,11 @@ class ViewProjectLogsScreen(
                         )
                     }
                 } else {
-                    viewer.printInfoLine("No project logs found for the current user.")
+                    viewer.printInfoLine("No task logs found for the current user.")
                 }
             },
             onFailure = {
-                viewer.printError("Failed to retrieve project logs: ${it.message}")
+                viewer.printError("Failed to retrieve task logs: ${it.message}")
             }
         )
     }

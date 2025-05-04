@@ -7,14 +7,13 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
-import org.example.models.User
-import org.example.ui.Reader
+import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
-import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
+import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.mate.home_screen.MateHomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.Viewer
+import org.example.ui.common.components.Viewer
 
 class LoginScreenTest {
     private val reader: Reader = mockk(relaxed = true)

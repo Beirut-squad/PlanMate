@@ -3,11 +3,11 @@ package org.example.ui.authentication_screens
 import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
 import org.example.models.User
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
-import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
-import ui.Viewer
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
+import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.mate.home_screen.MateHomeScreen
+import org.example.ui.common.components.Viewer
 
 class LoginScreen(
     private val reader: Reader,

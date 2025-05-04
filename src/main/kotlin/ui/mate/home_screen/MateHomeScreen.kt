@@ -1,11 +1,9 @@
-package org.example.ui.home_screens.mate.ui.home_screens.mate
+package org.example.ui.mate.home_screen
 
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import org.example.ui.home_screen.CreateNewProjectScreen
-import org.example.ui.home_screens.ViewProjectLogsScreen
-import org.example.ui.home_screens.ViewProjectsScreen
-import ui.Viewer
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
+import org.example.ui.common.screens.ViewProjectLogsScreen
+import org.example.ui.common.components.Viewer
 
 class MateHomeScreen(
     private val viewer: Viewer,

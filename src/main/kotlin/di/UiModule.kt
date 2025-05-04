@@ -1,20 +1,19 @@
 package org.example.di
 
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
-import org.example.ui.Reader
+import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
-import org.example.ui.home_screen.CreateNewProjectScreen
-import org.example.ui.home_screens.ViewProjectLogsScreen
-import org.example.ui.home_screens.ViewProjectsScreen
-import org.example.ui.home_screens.admin.ui.home_screens.admin.AdminHomeScreen
-import org.example.ui.home_screens.mate.ui.home_screens.mate.MateHomeScreen
+import org.example.ui.admin.project.CreateNewProjectScreen
+import org.example.ui.common.screens.ViewProjectLogsScreen
+import org.example.ui.common.screens.ViewProjectsScreen
+import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.mate.home_screen.MateHomeScreen
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ui.Colors
-import ui.Viewer
-import kotlin.math.sin
+import org.example.ui.common.components.Colors
+import org.example.ui.common.components.Viewer
 
 val uiModule = module {
     singleOf(::AuthenticationMainScreen)
