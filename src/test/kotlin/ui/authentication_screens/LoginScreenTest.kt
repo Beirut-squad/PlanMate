@@ -9,7 +9,7 @@ import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.example.ui.mate.home_screen.MateHomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
