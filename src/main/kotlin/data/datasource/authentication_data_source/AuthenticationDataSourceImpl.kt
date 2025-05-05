@@ -134,6 +134,12 @@ class AuthenticationDataSourceImpl(
         }
     }
 
+    override fun getUsers(): Result<List<User>> {
+        return runCatching {
+            readUsersFromCsv()
+        }
+    }
+
     private fun readUsersFromCsv(): List<User> {
         return csvReader.read(CURRENT_USER_FILE)
     }
