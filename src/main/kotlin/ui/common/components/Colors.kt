@@ -1,4 +1,4 @@
-package ui
+package org.example.ui.common.components
 
 class Colors {
 

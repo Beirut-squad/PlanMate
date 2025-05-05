@@ -10,7 +10,7 @@ class GetAllProjectsUseCases(
     private val projectRepository: ProjectRepository,
    private val getAllProjectLogsUseCase: GetAllProjectLogsUseCase
 ) {
-    fun getAllProjects(creatorUserId:UUID): Result<List<Project>> {
+    fun getAllProjects(): Result<List<Project>> {
         getAllProjectLogsUseCase.getAllProjectLogs()
         return projectRepository.getAllProjects()
     }

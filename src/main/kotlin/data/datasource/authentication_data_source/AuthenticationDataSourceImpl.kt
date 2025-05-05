@@ -135,7 +135,7 @@ class AuthenticationDataSourceImpl(
     }
 
     private fun readUsersFromCsv(): List<User> {
-        return csvReader.read(REGISTERED_USERS_FILE)
+        return csvReader.read(CURRENT_USER_FILE)
     }
 
     private fun addUserToCsv(user: User) {

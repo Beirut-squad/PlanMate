@@ -1,4 +1,4 @@
-package org.example.ui
+package org.example.ui.common.components
 
 class Reader {
     fun readInput(): String? {

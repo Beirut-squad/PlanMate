@@ -1,18 +1,21 @@
 package org.example.ui.authentication_screens
 
 import org.example.logic.use_cases.authentication.LoginUseCase
+import org.example.models.Role
 import org.example.models.User
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import org.example.ui.home_screens.HomeScreen
-import ui.Viewer
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
+import org.example.ui.admin.home_screen.AdminHomeScreen
+import org.example.ui.mate.home_screen.MateHomeScreen
+import org.example.ui.common.components.Viewer
 
 class LoginScreen(
     private val reader: Reader,
     private val viewer: Viewer,
     private val loginUseCase: LoginUseCase,
-    private val homeScreen: HomeScreen
-): UiScreen {
+    private val adminHomeScreen: AdminHomeScreen,
+    private val mateHomeScreen: MateHomeScreen,
+) : UiScreen {
     override fun show() {
         viewer.printTitle("Login for Plan Mate")
 
@@ -27,7 +30,7 @@ class LoginScreen(
         loginUseCase.login(email, password)
             .onSuccess { user ->
                 viewer.printInfoLine("Login successful!")
-                goToHomeScreen(user)
+                checkAdminOrMate(user)
             }
             .onFailure {
                 viewer.printError("Login failed!")
@@ -45,7 +48,19 @@ class LoginScreen(
         }
     }
 
-    private fun goToHomeScreen(user: User) {
-        homeScreen.show()
+    private fun checkAdminOrMate(user: User) {
+        if (user.role == Role.ADMIN) {
+            goToAminHomeScreen()
+        } else {
+            goToMateHomeScreen()
+        }
+    }
+
+    private fun goToAminHomeScreen() {
+        adminHomeScreen.show()
+    }
+
+    private fun goToMateHomeScreen() {
+        mateHomeScreen.show()
     }
 }

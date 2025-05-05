@@ -8,7 +8,6 @@ import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val project: Project
 ) : ProjectRepository {
 
     override fun createProject(project: Project): Result<Unit> {
@@ -20,7 +19,7 @@ class ProjectRepositoryImpl(
     }
 
     override fun deleteProject(id: UUID): Result<Unit> {
-        return projectDataSource.deleteProject(project.id)
+        return projectDataSource.deleteProject(id)
     }
 
     override fun getAllProjects(): Result<List<Project>> {

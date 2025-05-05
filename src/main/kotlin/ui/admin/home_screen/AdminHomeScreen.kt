@@ -1,25 +1,24 @@
-package org.example.ui.home_screens
+package org.example.ui.admin.home_screen
 
-import org.example.ui.Reader
-import org.example.ui.UiScreen
-import org.example.ui.home_screen.CreateNewProjectScreen
-import ui.Viewer
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
+import org.example.ui.admin.project.CreateNewProjectScreen
+import org.example.ui.common.screens.ViewProjectsScreen
+import org.example.ui.common.components.Viewer
 
-class HomeScreen(
+class AdminHomeScreen(
     private val viewer: Viewer,
     private val reader: Reader,
     private val viewProjectsScreen: ViewProjectsScreen,
     private val createNewProjectScreen: CreateNewProjectScreen,
-    private val viewProjectLogsScreen: ViewProjectLogsScreen,
 ) : UiScreen {
     override fun show() {
-        viewer.printTitle("Welcome to Plan Mate")
 
         var running = true
         while (running) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Your Project", "Create a New Project", "View Project Logs", "Exit")
+            viewer.printOptions("View Current Projects", "Create a New Project", "Exit")
 
             val option = reader.readInt()
             when (option) {
@@ -34,14 +33,10 @@ class HomeScreen(
                 }
 
                 3 -> {
-                    goToViewProjectLogsScreen()
-                    running = false
-                }
-
-                4 -> {
                     viewer.printGoodbyeMessage("Goodbye")
                     break
                 }
+
             }
         }
     }
@@ -52,9 +47,5 @@ class HomeScreen(
 
     private fun goToCreateNewProjectScreen() {
         createNewProjectScreen.show()
-    }
-
-    private fun goToViewProjectLogsScreen() {
-        viewProjectLogsScreen.show()
     }
 }

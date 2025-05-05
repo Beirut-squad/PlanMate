@@ -11,15 +11,19 @@ import java.util.UUID
 class LogCsvWriterForProject : CsvWriter<ProjectLog> {
     override fun writeToFile(items: List<ProjectLog>, filePath: String): Result<Unit> {
         return runCatching {
-            val file = File(filePath)
-            if (!isValidFileName(file.name))
+            if (items.isNotEmpty()){
+                val file = File("src/main/kotlin/$filePath")
+                if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
-            val writer = BufferedWriter(FileWriter(file))
-            if (file.length() == 0L)
-                writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
-            if (items.isNotEmpty())
+
+//            if (file.length() == 0L)
+//                writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
+
+                val writer = BufferedWriter(FileWriter(file))
                 writeProjectLog(items, writer)
-            writer.close()
+                writer.close()
+            }
+
         }
     }
 

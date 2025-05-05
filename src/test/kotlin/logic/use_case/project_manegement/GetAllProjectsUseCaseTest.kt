@@ -33,7 +33,7 @@ class GetAllProjectsUseCaseTest {
     fun `should return all projects when call getAllProjects fun`() {
         //Given
         val projects = listOf(createProjectHelper(), createProjectHelper())
-        getAllProjectsUseCase.getAllProjects(createdUserId)
+        getAllProjectsUseCase.getAllProjects()
         every { projectRepository.getAllProjects() } returns Result.success(projects)
         every { getAllProjectLogsUseCase.getAllProjectLogs() } returns Result.success(emptyList())
 

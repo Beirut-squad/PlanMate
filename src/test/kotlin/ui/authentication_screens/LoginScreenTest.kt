@@ -6,24 +6,26 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.LoginUseCase
-import org.example.models.User
-import org.example.ui.Reader
+import org.example.models.Role
+import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.home_screens.HomeScreen
+import org.example.ui.admin.home_screen.AdminHomeScreen
+import org.example.ui.mate.home_screen.MateHomeScreen
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.Viewer
+import org.example.ui.common.components.Viewer
 
 class LoginScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewer: Viewer = mockk(relaxed = true)
     private val loginUseCase: LoginUseCase = mockk()
-    private val homeScreen: HomeScreen = mockk(relaxed = true)
+    private val adminHomeScreen: AdminHomeScreen = mockk(relaxed = true)
+    private val mateHomeScreen: MateHomeScreen = mockk(relaxed = true)
     private lateinit var loginScreen: LoginScreen
 
     @BeforeEach
     fun setUp() {
-        loginScreen = LoginScreen(reader, viewer, loginUseCase, homeScreen)
+        loginScreen = LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeScreen)
     }
 
     @Test
@@ -111,9 +113,9 @@ class LoginScreenTest {
     }
 
     @Test
-    fun `should handle successful login and navigate to home screen`() {
+    fun `should handle successful login and navigate to admin home screen if user is admin`() {
         // Given
-        val testUser = mockk<User>(relaxed = true)
+        val testUser = createUserHelper(role = Role.ADMIN)
         every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
         every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
 
@@ -122,7 +124,22 @@ class LoginScreenTest {
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
-        verify(exactly = 1) { homeScreen.show() }
+        verify(exactly = 1) { adminHomeScreen.show() }
+    }
+
+    @Test
+    fun `should handle successful login and navigate to mate home screen if user is mate`() {
+        // Given
+        val testUser = createUserHelper(role = Role.MATE)
+        every { reader.readInput() } returnsMany listOf("user@example.com", "password123")
+        every { loginUseCase.login("user@example.com", "password123") } returns Result.success(testUser)
+
+        // When
+        loginScreen.show()
+
+        // Then
+        verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
+        verify(exactly = 1) { mateHomeScreen.show() }
     }
 
     @Test
@@ -182,8 +199,12 @@ class LoginScreenTest {
         loginScreen.show()
 
         // Then
-        verify(exactly = 1) { homeScreen.show() }
+        verify { viewer.printInfoLine("Email: ") }
+        verify { viewer.printInfoLine("Password: ") }
         verify { viewer.printError("Login failed!") }
+        verify { viewer.printInfoLine("Email: ") }
+        verify { viewer.printInfoLine("Password: ") }
+        verify { viewer.printInfoLine("Login successful!") }
     }
 
     @Test
