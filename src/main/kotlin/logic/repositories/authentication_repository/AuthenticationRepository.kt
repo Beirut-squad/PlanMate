@@ -1,6 +1,7 @@
 package org.example.logic.repositories.authentication_repository
 
 import org.example.models.User
+import java.util.*
 
 interface AuthenticationRepository {
     fun login(email: String, password: String): Result<User>
@@ -10,4 +11,5 @@ interface AuthenticationRepository {
     fun logout(): Result<Unit>
     fun checkIfFirstRegister(): Result<Unit>
     fun getCurrentLoggedInUser(): Result<User?>
+    fun getUsers(): Result<List<User>>
 }

@@ -72,7 +72,7 @@ class CreateProjectUseCaseTest {
         }
 
         // Then
-        assertEquals("must not be blank", exception.message)
+        assertEquals("You should write a valid input as a string.", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
         verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }
@@ -95,7 +95,7 @@ class CreateProjectUseCaseTest {
         }
 
         // Then
-        assertEquals("must not be blank", exception.message)
+        assertEquals("You should write a valid input as a string.", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
         verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }
@@ -118,7 +118,7 @@ class CreateProjectUseCaseTest {
         }
 
         // Then
-        assertEquals("must not be blank", exception.message)
+        assertEquals("You should write a valid input as a string.", exception.message)
         verify(exactly = 0) {projectRepository.createProject(any())  }
         verify(exactly = 0) { logUseCase.createProjectLog(creatorUserID,null,any()) }
     }

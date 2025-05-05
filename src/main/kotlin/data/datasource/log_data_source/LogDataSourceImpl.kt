@@ -50,10 +50,8 @@ class LogDataSourceImpl(
     override fun getAllProjectLogs(): Result<List<ProjectLog>> =
         runCatching {
             val logs = csvProjectLogReader.read(PROJECT_LOG)
-            if (logs.isEmpty()){
-               emptyList()
-            }else{
-                logs
+            logs.ifEmpty {
+                emptyList()
             }
         }
 

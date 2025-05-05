@@ -1,6 +1,7 @@
 package org.example.data.datasource.authentication_data_source
 
 import org.example.models.User
+import java.util.UUID
 
 
 interface AuthenticationDataSource {
@@ -11,4 +12,5 @@ interface AuthenticationDataSource {
     fun logout(): Result<Unit>
     fun checkIfFirstRegister(): Result<Unit>
     fun getCurrentLoggedInUser(): Result<User?>
+    fun getUsers(): Result<List<User>>
 }

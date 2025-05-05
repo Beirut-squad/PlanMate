@@ -39,5 +39,5 @@ val uiModule = module {
     singleOf(::ViewStateSelectedForProjectUI)
     singleOf(::GetProjectByIdUseCase)
     singleOf(::CreateNewTaskUI)
-
+    singleOf(::AllProjectsLogsView)
 }
