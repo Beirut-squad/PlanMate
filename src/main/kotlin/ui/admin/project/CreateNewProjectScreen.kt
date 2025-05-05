@@ -1,6 +1,7 @@
 package org.example.ui.admin.project
 
 import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
+import org.example.models.State
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
@@ -22,7 +23,7 @@ class CreateNewProjectScreen(
             creatorUserID = UUID.randomUUID(),
             name = name.toString(),
             description = description.toString(),
-            stateNames = emptyList()
+            stateNames =  emptyList()
         )
     }
 }
