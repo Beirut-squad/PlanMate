@@ -40,8 +40,8 @@ class ViewProjectForUserUI(
                     1 -> {
                         ViewStateSelectedForProjectUI(
                             viewer,
-                            project.state,
                             project.id,
+                            getProjectByIdUseCase,
                             getTaskByStateIdAndProjectId
                         ).show()
                     }
