@@ -1,5 +1,7 @@
 package org.example.di
 
+import logic.use_cases.log.CreateProjectLogUseCase
+import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import logic.use_cases.log.GetUserProjectLogsUseCase
 import org.example.logic.use_cases.authentication.*
 import org.example.logic.use_cases.authentication.encryption.EncryptPassword
@@ -16,6 +18,7 @@ val logicModule = module {
     singleOf(::LogoutUseCase)
     singleOf(::RegisterMateUseCase)
     singleOf(::RegisterUserOrAdminUseCase)
+    singleOf(::GetUserByIdUseCase)
     singleOf(::EncryptPassword)
     single<Encryptor> {
         EncryptorMD5Impl()
@@ -24,4 +27,8 @@ val logicModule = module {
     singleOf(::GetUserProjectLogsUseCase)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::GetAllProjectLogsUseCase)
+    singleOf(::CreateProjectUseCase)
+    singleOf(::GetAllProjectsUseCases)
+    singleOf(::CreateProjectLogUseCase)
+
 }
