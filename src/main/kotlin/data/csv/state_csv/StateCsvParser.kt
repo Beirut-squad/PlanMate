@@ -20,7 +20,8 @@ class StateCsvParser : CsvParser<State> {
 
         return State(
             id = UUID.fromString(parts[StateColumnIndex.ID]),
-            name = parts[StateColumnIndex.NAME]
+            name = parts[StateColumnIndex.NAME],
+            projectId = UUID.fromString(parts[StateColumnIndex.PROJECT_ID])
         )
     }
 
