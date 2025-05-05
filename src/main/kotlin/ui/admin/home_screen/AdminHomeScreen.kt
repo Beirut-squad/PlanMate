@@ -1,5 +1,6 @@
 package org.example.ui.admin.home_screen
 
+import org.example.ui.admin.log.AllProjectsLogsView
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
@@ -11,6 +12,7 @@ class AdminHomeScreen(
     private val reader: Reader,
     private val viewProjectsScreen: ViewProjectsScreen,
     private val createNewProjectScreen: CreateNewProjectScreen,
+    private val allProjectsLogsView: AllProjectsLogsView
 ) : UiScreen {
     override fun show() {
 
@@ -18,7 +20,12 @@ class AdminHomeScreen(
         while (running) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Current Projects", "Create a New Project", "Exit")
+            viewer.printOptions(
+                "View Current Projects",
+                "Create a New Project",
+                "Show all project logs",
+                "Exit"
+            )
 
             val option = reader.readInt()
             when (option) {
@@ -33,6 +40,11 @@ class AdminHomeScreen(
                 }
 
                 3 -> {
+                    goToViewAllLogsScreen()
+                    running = false
+                }
+
+                4 -> {
                     viewer.printGoodbyeMessage("Goodbye")
                     break
                 }
@@ -47,5 +59,9 @@ class AdminHomeScreen(
 
     private fun goToCreateNewProjectScreen() {
         createNewProjectScreen.show()
+    }
+
+    private fun goToViewAllLogsScreen() {
+        allProjectsLogsView.show()
     }
 }

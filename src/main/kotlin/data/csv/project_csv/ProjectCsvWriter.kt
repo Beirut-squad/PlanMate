@@ -9,18 +9,14 @@ import java.util.UUID
 class ProjectCsvWriter: CsvWriter<Project> {
     override fun writeToFile(items: List<Project>, filePath: String): Result<Unit> {
         return runCatching {
-            val file = File(filePath)
+            val file = File("src/main/kotlin/$filePath")
             if(!isValidFileName(file.name)){
                 throw IllegalArgumentException("Error : Invalid file name")
             }
-            val writer = BufferedWriter(FileWriter(file,true))
-            if (file.length() == 0L){
-                writer.write("[id,name,description,creatorUserID,createdAt,updatedAt,state]\n")
-            }
             if (items.isNotEmpty())
                 for (project in items){
-                    if (isValidProject(project)){
-                        writer.write(
+                    //if (isValidProject(project)){
+                        file.writeText(
                             "[${project.id}," +
                                 "${project.name}," +
                                 "${project.description}," +
@@ -29,11 +25,10 @@ class ProjectCsvWriter: CsvWriter<Project> {
                                 "${project.updatedAt}," +
                                 "${project.state}]\n")
                     }
-                }
-            writer.close()
+               // }
         }
     }
     private fun isValidProject(project : Project): Boolean{
-        return project.id != UUID(0,0) && project.name.isNotBlank() && project.description.isNotBlank() && project.creatorUserID!= UUID(0,0) && project.state.isNotEmpty()
+        return project.id != UUID(0,0) && project.name.isNotBlank() && project.description.isNotBlank() && project.creatorUserID!= UUID(0,0)
     }
 }
