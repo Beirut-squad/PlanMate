@@ -23,7 +23,6 @@ val logicModule = module {
     single<Encryptor> {
         EncryptorMD5Impl()
     }
-
     singleOf(::GetUserProjectLogsUseCase)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::GetAllProjectLogsUseCase)
