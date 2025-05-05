@@ -6,7 +6,7 @@ import io.mockk.verify
 import org.example.ui.common.components.Reader
 import org.example.ui.common.screens.ViewProjectsScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
-import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.junit.jupiter.api.Test
 import org.example.ui.common.components.Viewer
 

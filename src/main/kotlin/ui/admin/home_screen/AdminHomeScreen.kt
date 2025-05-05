@@ -1,4 +1,4 @@
-package org.example.ui.admin.home_screens
+package org.example.ui.admin.home_screen
 
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
