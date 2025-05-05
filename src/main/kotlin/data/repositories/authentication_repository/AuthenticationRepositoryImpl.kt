@@ -3,6 +3,7 @@ package org.example.data.repositories.authentication_repository
 import org.example.data.datasource.authentication_data_source.AuthenticationDataSource
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
 import org.example.models.User
+import java.util.*
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource
@@ -33,5 +34,9 @@ class AuthenticationRepositoryImpl(
 
     override fun getCurrentLoggedInUser(): Result<User?> {
         return authenticationDataSource.getCurrentLoggedInUser()
+    }
+
+    override fun getUsers(): Result<List<User>> {
+        return authenticationDataSource.getUsers()
     }
 }
