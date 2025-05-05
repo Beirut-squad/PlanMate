@@ -46,14 +46,18 @@ class ViewProjectForUserUI(
                         ).show()
                     }
                     2 -> {
-                        CreateNewTaskUI(
-                            viewer,
-                            reader,
-                            getCurrentLoggedInUserUseCase,
-                            ProjectId,
-                            createTaskUseCase,
-                            getProjectByIdUseCase
-                        ).show()
+                        if (project.state.isEmpty()) {
+                            viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
+                        } else {
+                            CreateNewTaskUI(
+                                viewer,
+                                reader,
+                                getCurrentLoggedInUserUseCase,
+                                ProjectId,
+                                createTaskUseCase,
+                                getProjectByIdUseCase
+                            ).show()
+                        }
                     }
                     3 -> {
                         viewer.printGoodbyeMessage("Goodbye")
