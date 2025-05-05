@@ -2,12 +2,11 @@ package org.example.ui.common.screens
 
 import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.models.State
-import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.util.*
 
-class ViewStateSelectedForProject(
+class ViewStateSelectedForProjectUI(
     private val viewer: Viewer,
     private val states: List<State>,
     private val projectId: UUID,

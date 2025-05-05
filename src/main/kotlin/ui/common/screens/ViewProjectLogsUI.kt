@@ -5,7 +5,7 @@ import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class ViewProjectLogsScreen(
+class ViewProjectLogsUI(
     private val viewer: Viewer,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase

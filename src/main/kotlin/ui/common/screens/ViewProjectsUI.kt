@@ -4,7 +4,7 @@ import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class ViewProjectsScreen(
+class ViewProjectsUI(
     private val viewer: Viewer,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
 ) : UiScreen {

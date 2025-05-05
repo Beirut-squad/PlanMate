@@ -9,7 +9,7 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.util.UUID
 
-class ViewProjectForUserScreen(
+class ViewProjectForUserUI(
     private val ProjectId : UUID,
     private val viewer: Viewer,
     private val reader: Reader,
@@ -38,7 +38,7 @@ class ViewProjectForUserScreen(
                 val option = reader.readInt()
                 when (option) {
                     1 -> {
-                        ViewStateSelectedForProject(
+                        ViewStateSelectedForProjectUI(
                             viewer,
                             project.state,
                             project.id,

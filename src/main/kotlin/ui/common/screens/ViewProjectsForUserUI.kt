@@ -9,7 +9,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class ViewProjectsForUserScreen(
+class ViewProjectsForUserUI(
     private val viewer: Viewer,
     private val reader: Reader,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
@@ -44,7 +44,7 @@ class ViewProjectsForUserScreen(
                         val selectedIndex = viewer.readIntInput("Enter project number:")?.minus(1)
                         val selectedProjectId = projects[selectedIndex!!].id
 
-                        ViewProjectForUserScreen(
+                        ViewProjectForUserUI(
                             selectedProjectId,
                             viewer,
                             reader,

@@ -5,7 +5,7 @@ import org.example.logic.use_cases.log.GetUserTaskLogsUseCase
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class ViewTaskLogsScreen(
+class ViewTaskLogsScreenUI(
     private val viewer: Viewer,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val getUserTaskLogsUseCase: GetUserTaskLogsUseCase
