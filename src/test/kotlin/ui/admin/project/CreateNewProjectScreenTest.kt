@@ -26,12 +26,10 @@ class CreateNewProjectScreenTest {
         // Given
         val name = "Test Project"
         val description = "Test Description"
-        val stateName = "todo"
 
-        every { reader.readInput() } returnsMany listOf(name, description, stateName)
+        every { reader.readInput() } returnsMany listOf(name, description)
         every { viewer.printTitle(any()) } just Runs
-        every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOption(any()) } just Runs
 
         // When
         createNewProjectScreen.show()
@@ -39,11 +37,9 @@ class CreateNewProjectScreenTest {
         // Then
         verifySequence {
             viewer.printTitle("Let's create a project")
-            viewer.printInfoLine("Write your project name")
+            viewer.printOption("Write your project name")
             reader.readInput()
-            viewer.printOptions("Tell me more about description of your project")
-            reader.readInput()
-            viewer.printOptions("What about project state")
+            viewer.printOption("Tell me more about description of your project")
             reader.readInput()
         }
 
@@ -63,7 +59,7 @@ class CreateNewProjectScreenTest {
 
         assertEquals(name, nameSlot.captured)
         assertEquals(description, descSlot.captured)
-        assertEquals(listOf(stateName), statesSlot.captured)
+        assertEquals(emptyList<String>(), statesSlot.captured)
         assertNotNull(uuidSlot.captured)
     }
 
@@ -72,8 +68,7 @@ class CreateNewProjectScreenTest {
         // Given
         every { reader.readInput() } returns "test"
         every { viewer.printTitle(any()) } just Runs
-        every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOption(any()) } just Runs
 
         // When
         createNewProjectScreen.show()
@@ -81,11 +76,9 @@ class CreateNewProjectScreenTest {
         // Then
         verifyOrder {
             viewer.printTitle("Let's create a project")
-            viewer.printInfoLine("Write your project name")
+            viewer.printOption("Write your project name")
             reader.readInput()
-            viewer.printOptions("Tell me more about description of your project")
-            reader.readInput()
-            viewer.printOptions("What about project state")
+            viewer.printOption("Tell me more about description of your project")
             reader.readInput()
         }
     }
@@ -95,8 +88,7 @@ class CreateNewProjectScreenTest {
         // Given
         every { reader.readInput() } returns "test"
         every { viewer.printTitle(any()) } just Runs
-        every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOption(any()) } just Runs
 
         // When
         createNewProjectScreen.show()
