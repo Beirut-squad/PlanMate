@@ -65,9 +65,11 @@ class AuthenticationDataSourceFakeImpl : AuthenticationDataSource {
     }
 
     override fun checkIfFirstRegister(): Result<Unit> {
-        return users.ifEmpty {
+        return if (users.isEmpty()) {
             Result.success(Unit)
-        }.let { Result.failure(Exception()) }
+        } else {
+            Result.failure(Exception("Users already exist"))
+        }
     }
 
     override fun getCurrentLoggedInUser(): Result<User?> {
