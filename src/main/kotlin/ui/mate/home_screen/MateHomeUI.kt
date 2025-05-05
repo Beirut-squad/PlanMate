@@ -2,15 +2,15 @@ package org.example.ui.mate.home_screen
 
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.screens.ViewProjectLogsScreen
+import org.example.ui.common.screens.ViewProjectLogsUI
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectsForUserScreen
+import org.example.ui.common.screens.ViewProjectsForUserUI
 
-class MateHomeScreen(
+class MateHomeUI(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val viewProjectsForUserScreen : ViewProjectsForUserScreen,
-    private val viewProjectLogsScreen: ViewProjectLogsScreen
+    private val viewProjectsForUserUI : ViewProjectsForUserUI,
+    private val viewProjectLogsUI: ViewProjectLogsUI
 ) : UiScreen {
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
@@ -42,9 +42,9 @@ class MateHomeScreen(
     }
 
     private fun goToViewProjectsScreen() {
-        viewProjectsForUserScreen.show()
+        viewProjectsForUserUI.show()
     }
     private fun goToViewProjectLogsScreen() {
-        viewProjectLogsScreen.show()
+        viewProjectLogsUI.show()
     }
 }

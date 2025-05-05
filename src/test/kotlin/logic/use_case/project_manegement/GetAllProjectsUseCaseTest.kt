@@ -25,7 +25,6 @@ class GetAllProjectsUseCaseTest {
     fun setup() {
         getAllProjectsUseCase = GetAllProjectsUseCases(
             projectRepository = projectRepository,
-            getAllProjectLogsUseCase = getAllProjectLogsUseCase
         )
     }
 

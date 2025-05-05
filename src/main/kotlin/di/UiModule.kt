@@ -2,6 +2,7 @@ package org.example.di
 
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
+import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
@@ -9,7 +10,7 @@ import org.example.ui.authentication_screens.RegisterScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.common.screens.ViewProjectLogsUI
 import org.example.ui.common.screens.ViewProjectsUI
-import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.admin.log.AllProjectsLogsView
 import org.example.ui.mate.home_screen.MateHomeUI
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -29,7 +30,6 @@ val uiModule = module {
     singleOf(::Reader)
     singleOf(::AdminHomeScreen)
     singleOf(::MateHomeUI)
-
     singleOf(::ViewProjectsUI)
     singleOf(::ViewProjectLogsUI)
     singleOf(::CreateNewProjectScreen)
@@ -39,5 +39,6 @@ val uiModule = module {
     singleOf(::ViewStateSelectedForProjectUI)
     singleOf(::GetProjectByIdUseCase)
     singleOf(::CreateNewTaskUI)
+    singleOf(::AuthenticationMainScreen)
     singleOf(::AllProjectsLogsView)
 }

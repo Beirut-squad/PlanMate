@@ -8,7 +8,7 @@ import io.mockk.verify
 import logic.use_cases.log.GetUserProjectLogsUseCase
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.models.User
-import org.example.ui.common.screens.ViewProjectLogsScreen
+import org.example.ui.common.screens.ViewProjectLogsUI
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.example.ui.common.components.Viewer
@@ -18,11 +18,11 @@ class ViewProjectLogsScreenTest {
     private val viewer: Viewer = mockk(relaxed = true)
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
     private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase = mockk(relaxed = true)
-    private lateinit var viewProjectLogsScreen: ViewProjectLogsScreen
+    private lateinit var viewProjectLogsUI: ViewProjectLogsUI
 
     @BeforeEach
     fun setUp() {
-        viewProjectLogsScreen = ViewProjectLogsScreen(viewer, getCurrentLoggedInUserUseCase, getUserProjectLogsUseCase)
+        viewProjectLogsUI = ViewProjectLogsUI(viewer, getCurrentLoggedInUserUseCase, getUserProjectLogsUseCase)
     }
 
     @Test
@@ -31,7 +31,7 @@ class ViewProjectLogsScreenTest {
         every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.failure(Exception("No user found"))
 
         // When
-        viewProjectLogsScreen.show()
+        viewProjectLogsUI.show()
 
         // Then
         verify(exactly = 1) { viewer.printError("No user logged in") }
@@ -45,7 +45,7 @@ class ViewProjectLogsScreenTest {
         every { getUserProjectLogsUseCase.getUserProjectLogs(any()) } returns Result.failure(Exception("Unable to fetch logs"))
 
         // When
-        viewProjectLogsScreen.show()
+        viewProjectLogsUI.show()
 
         // Then
         verify(exactly = 1) { viewer.printError("Failed to retrieve project logs: Unable to fetch logs") }
@@ -63,7 +63,7 @@ class ViewProjectLogsScreenTest {
         every { getUserProjectLogsUseCase.getUserProjectLogs(testUserId) } returns Result.success(projectLogsForAllUsers)
 
         // When
-        viewProjectLogsScreen.show()
+        viewProjectLogsUI.show()
 
         // Then
         verify(exactly = 1) { viewer.printTitle("Project Logs for User: Test User") }
@@ -97,7 +97,7 @@ class ViewProjectLogsScreenTest {
         every { getUserProjectLogsUseCase.getUserProjectLogs(testUserId) } returns Result.success(emptyList())
 
         // When
-        viewProjectLogsScreen.show()
+        viewProjectLogsUI.show()
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("No project logs found for the current user.") }
