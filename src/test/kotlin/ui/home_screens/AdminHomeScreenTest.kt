@@ -7,6 +7,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.screens.ViewProjectsScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen
+import org.example.ui.admin.log.AllProjectsLogsView
 import org.junit.jupiter.api.Test
 import org.example.ui.common.components.Viewer
 
@@ -16,12 +17,14 @@ class AdminHomeScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewProjectsScreen = mockk<ViewProjectsScreen>(relaxed = true)
     private val createNewProjectScreen = mockk<CreateNewProjectScreen>(relaxed = true)
+    private val allProjectsLogsView: AllProjectsLogsView = mockk(relaxed = true)
 
     private val adminHomeScreen = AdminHomeScreen(
         viewer,
         reader,
         viewProjectsScreen,
         createNewProjectScreen,
+        allProjectsLogsView
     )
 
     @Test
@@ -43,8 +46,17 @@ class AdminHomeScreenTest {
     }
 
     @Test
-    fun `should show goodbye message and exit when option 3 is chosen`() {
+    fun `should navigate to AllProjectsLogsView when option 3 is chosen`() {
         every { reader.readInt() } returns 3
+
+        adminHomeScreen.show()
+
+        verify { allProjectsLogsView.show() }
+    }
+
+    @Test
+    fun `should show goodbye message and exit when option 3 is chosen`() {
+        every { reader.readInt() } returns 4
 
         adminHomeScreen.show()
 
