@@ -29,12 +29,13 @@ class CreateTaskUseCase(
     }
 
     private fun buildTask(title: String, description: String, stateName: String): Task {
+        val taskId: UUID = UUID.randomUUID()
         return Task(
-            id = UUID.randomUUID(),
+            id = taskId,
             projectId = UUID.randomUUID(),
             title = title,
             description = description,
-            state = State(id = UUID.randomUUID(), name = stateName),
+            state = State(id = UUID.randomUUID(), name = stateName, projectId = taskId),
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
