@@ -7,4 +7,5 @@ interface StateRepository {
     fun createState(state: State): Result<State>
     fun editState(state: State): Result<State>
     fun deleteState(id: UUID): Result<Unit>
+    fun getState(projectId: UUID): Result<State>
 }

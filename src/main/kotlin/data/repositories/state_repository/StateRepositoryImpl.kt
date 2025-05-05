@@ -20,4 +20,8 @@ class StateRepositoryImpl(
     override fun deleteState(id: UUID): Result<Unit> {
         return stateDataSource.deleteState(id)
     }
+
+    override fun getState(projectId: UUID): Result<State> {
+        return stateDataSource.getState(projectId)
+    }
 }

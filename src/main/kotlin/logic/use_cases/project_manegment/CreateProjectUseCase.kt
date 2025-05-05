@@ -24,11 +24,12 @@ class CreateProjectUseCase(
 
     private fun buildProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>)
     : Project {
+        val projectId: UUID = UUID.randomUUID()
         return Project(
-            id = UUID.randomUUID(),
+            id = projectId,
             name = name,
             description = description,
-            state = stateNames.map { State(id = UUID.randomUUID(), name = it) },
+            state = stateNames.map { State(id = UUID.randomUUID(), name = it, projectId = projectId) },
             creatorUserID = creatorUserID,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()

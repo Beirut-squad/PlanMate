@@ -3,7 +3,9 @@ package org.example.data.datasource.state_data_source
 import data.datasource.state_data_source.StateDataSource
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
+import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAllProjectsException
 import org.example.models.State
+import java.io.FileNotFoundException
 import java.util.UUID
 
 class StateDataSourceImpl(
@@ -11,7 +13,7 @@ class StateDataSourceImpl(
     private val reader: CsvReader<State>,
     private val filePath: String,
 ) : StateDataSource {
-    override fun createState(state: State): Result<State> = runCatching {
+    override fun createState(state: State) = runCatching {
 
         val states = reader.read(filePath)
         val newList = states + state
@@ -19,7 +21,7 @@ class StateDataSourceImpl(
         state
     }
 
-    override fun editState(state: State): Result<State> = runCatching {
+    override fun editState(state: State) = runCatching {
 
         val states = reader.read(filePath)
         val updatedStates = states.map {
@@ -44,5 +46,13 @@ class StateDataSourceImpl(
         val updatedStates = states.filterNot { it.id == id }
         writer.writeToFile(updatedStates, filePath)
     }
+
+    override fun getState(projectId: UUID): Result<State> = runCatching {
+        val states = reader.read(filePath)
+        val state = states.find { it.projectId == projectId }
+            ?: throw IllegalStateException("State not found for project ID: $projectId")
+        state
+    }
+
 }
 
