@@ -1,6 +1,7 @@
 package org.example.di
 
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
@@ -14,7 +15,10 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.example.ui.common.components.Colors
 import org.example.ui.common.components.Viewer
+import org.example.ui.common.screens.CreateNewTaskUI
+import org.example.ui.common.screens.ViewProjectForUserScreen
 import org.example.ui.common.screens.ViewProjectsForUserScreen
+import org.example.ui.common.screens.ViewStateSelectedForProject
 
 val uiModule = module {
     singleOf(::AuthenticationMainScreen)
@@ -31,6 +35,9 @@ val uiModule = module {
     singleOf(::CreateNewProjectScreen)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::ViewProjectsForUserScreen)
-    singleOf(::ViewProjectLogsScreen)
+    singleOf(::ViewProjectForUserScreen)
+    singleOf(::ViewStateSelectedForProject)
+    singleOf(::GetProjectByIdUseCase)
+    singleOf(::CreateNewTaskUI)
 
 }
