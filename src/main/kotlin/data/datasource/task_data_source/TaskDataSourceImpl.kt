@@ -88,6 +88,19 @@ class TaskDataSourceImpl(
         }
     }
 
+    override fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): Result<List<Task>> {
+            val allTasksResult = getAllTasks()
+       // if (allTasksResult.isSuccess) {
+            val tasks = allTasksResult.getOrNull() ?: emptyList()
+
+            val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
+        return if (filteredTasks.isNotEmpty()) {
+            Result.success(filteredTasks)
+        } else {
+            Result.failure(Exception("No tasks found for the given project and state."))  // إذا لم تجد مهام
+        }
+    }
+
     private fun validateTasksExist(tasks: List<Task>, errorMessage: String) {
         if (tasks.isEmpty()) {
             throw TaskEditException(errorMessage)

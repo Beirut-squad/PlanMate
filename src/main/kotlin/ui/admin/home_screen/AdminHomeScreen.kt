@@ -3,13 +3,13 @@ package org.example.ui.admin.home_screens
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
-import org.example.ui.common.screens.ViewProjectsScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.common.screens.ViewProjectsForUserScreen
 
 class AdminHomeScreen(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val viewProjectsScreen: ViewProjectsScreen,
+    private val viewProjectsForUserScreen : ViewProjectsForUserScreen,
     private val createNewProjectScreen: CreateNewProjectScreen,
 ) : UiScreen {
     override fun show() {
@@ -42,7 +42,7 @@ class AdminHomeScreen(
     }
 
     private fun goToViewProjectScreen() {
-        viewProjectsScreen.show()
+        viewProjectsForUserScreen.show()
     }
 
     private fun goToCreateNewProjectScreen() {

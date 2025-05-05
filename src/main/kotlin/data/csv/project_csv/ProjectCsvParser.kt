@@ -25,9 +25,9 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-        if (stateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null){
-            throw Exception("no states in the project")
-        }
+//        if (stateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null){
+//            throw Exception("no states in the project")
+//        }
         return Project(
             id = UUID.fromString(parts[ProjectColumnIndex.PROJECT_ID]),
             name = parts[ProjectColumnIndex.NAME],
@@ -39,6 +39,7 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
             )
     }
      fun parseMultiStates(line: String): List<State> {
+         println(line)
         val statesLines = smartCsvSplit(line)
         return stateCsvParser.parseFile(statesLines)
     }

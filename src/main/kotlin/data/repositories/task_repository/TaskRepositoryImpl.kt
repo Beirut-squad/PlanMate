@@ -27,4 +27,8 @@ class TaskRepositoryImpl(
     override fun getTask(id: UUID): Result<Task> {
         return taskDataSource.getTask(id)
     }
+
+    override fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): Result<List<Task>> {
+        return taskDataSource.getTaskByStateIdAndProjectId(projectId, stateId)
+    }
 }

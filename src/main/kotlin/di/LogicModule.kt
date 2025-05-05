@@ -1,31 +1,34 @@
-package org.example.di
+    package org.example.di
 
-import logic.use_cases.log.GetUserProjectLogsUseCase
-import org.example.logic.use_cases.authentication.*
-import org.example.logic.use_cases.authentication.encryption.EncryptPassword
-import org.example.logic.use_cases.authentication.encryption.Encryptor
-import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
-import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
-import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
-import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
+    import logic.use_cases.log.GetUserProjectLogsUseCase
+    import org.example.logic.use_cases.authentication.*
+    import org.example.logic.use_cases.authentication.encryption.EncryptPassword
+    import org.example.logic.use_cases.authentication.encryption.Encryptor
+    import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
+    import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
+    import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+    import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
+    import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
+    import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
+    import org.koin.core.module.dsl.singleOf
+    import org.koin.dsl.module
 
-val logicModule = module {
-    singleOf(::GetCurrentLoggedInUserUseCase)
-    singleOf(::LoginUseCase)
-    singleOf(::LogoutUseCase)
-    singleOf(::RegisterMateUseCase)
-    singleOf(::RegisterUserOrAdminUseCase)
-    singleOf(::EncryptPassword)
-    single<Encryptor> {
-        EncryptorMD5Impl()
+    val logicModule = module {
+        singleOf(::GetCurrentLoggedInUserUseCase)
+        singleOf(::LoginUseCase)
+        singleOf(::LogoutUseCase)
+        singleOf(::RegisterMateUseCase)
+        singleOf(::RegisterUserOrAdminUseCase)
+        singleOf(::EncryptPassword)
+        single<Encryptor> {
+            EncryptorMD5Impl()
+        }
+
+        singleOf(::GetUserProjectLogsUseCase)
+        singleOf(::GetAllProjectsUseCases)
+        singleOf(::GetAllProjectLogsUseCase)
+        singleOf(::GetProjectsForUserByIdUseCase)
+        singleOf(::GetTaskByStateIdAndProjectId)
+        singleOf(::GetProjectByIdUseCase)
     }
-
-    singleOf(::GetUserProjectLogsUseCase)
-    singleOf(::GetAllProjectsUseCases)
-    singleOf(::GetAllProjectLogsUseCase)
-    singleOf(::GetProjectsForUserByIdUseCase)
-
-}

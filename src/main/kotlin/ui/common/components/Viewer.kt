@@ -129,4 +129,10 @@ class Viewer(
         }
     }
 
+    fun readIntInput(prompt: String): Int? {
+        printPlainText(prompt, withNewLine = false)
+        val input = readLine()
+        return input?.toIntOrNull()
+    }
+
 }

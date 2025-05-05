@@ -14,7 +14,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.example.ui.common.components.Colors
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectForUserScreen
+import org.example.ui.common.screens.ViewProjectsForUserScreen
 
 val uiModule = module {
     singleOf(::AuthenticationMainScreen)
@@ -30,6 +30,7 @@ val uiModule = module {
     singleOf(::ViewProjectLogsScreen)
     singleOf(::CreateNewProjectScreen)
     singleOf(::GetAllProjectsUseCases)
-    singleOf(::ViewProjectForUserScreen)
+    singleOf(::ViewProjectsForUserScreen)
+    singleOf(::ViewProjectLogsScreen)
 
 }
