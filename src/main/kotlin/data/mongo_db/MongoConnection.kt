@@ -19,4 +19,15 @@ object MongoConnection{
     val logsForProject: MongoCollection<Document> = database.getCollection("logsForProject")
     val logsForTask: MongoCollection<Document> = database.getCollection("logsForTask")
     val states: MongoCollection<Document> = database.getCollection("states")
+
+    init {
+        try {
+            client.listDatabaseNames()
+            println("MongoDB connection successfully ")
+        } catch (e: Exception) {
+            println("MongoDB connection failed: ${e.message}")
+            throw RuntimeException("MongoDB connection failed", e)
+        }
+    }
+
 }

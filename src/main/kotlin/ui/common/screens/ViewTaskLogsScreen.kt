@@ -10,7 +10,7 @@ class ViewTaskLogsScreen(
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val getUserTaskLogsUseCase: GetUserTaskLogsUseCase
 ): UiScreen {
-    override fun show() {
+    override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
         val user = currentUserResult.getOrNull()

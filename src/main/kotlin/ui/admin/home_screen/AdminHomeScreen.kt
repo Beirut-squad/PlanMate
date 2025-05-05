@@ -12,7 +12,7 @@ class AdminHomeScreen(
     private val viewProjectsScreen: ViewProjectsScreen,
     private val createNewProjectScreen: CreateNewProjectScreen,
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
 
         var running = true
         while (running) {
@@ -41,11 +41,11 @@ class AdminHomeScreen(
         }
     }
 
-    private fun goToViewProjectScreen() {
+    private suspend fun goToViewProjectScreen() {
         viewProjectsScreen.show()
     }
 
-    private fun goToCreateNewProjectScreen() {
+    private suspend fun goToCreateNewProjectScreen() {
         createNewProjectScreen.show()
     }
 }

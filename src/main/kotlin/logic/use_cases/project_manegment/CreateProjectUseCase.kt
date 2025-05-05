@@ -12,7 +12,7 @@ class CreateProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun createProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>) {
+    suspend fun createProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>) {
         if (name.isBlank() || description.isBlank()) {
             throw BlankFieldsException("You should write a valid input as a string.")
         } else {

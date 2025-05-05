@@ -7,7 +7,7 @@ import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 
-fun main() {
+suspend fun main() {
     startKoin {
         modules(
             uiModule,

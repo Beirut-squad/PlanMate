@@ -8,7 +8,7 @@ class ViewProjectsScreen(
     private val viewer: Viewer,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
 
         val allProjects = getAllProjectsUseCases.getAllProjects()
 

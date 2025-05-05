@@ -5,7 +5,7 @@ import org.example.models.State
 import java.util.*
 
 interface ProjectDataSource {
-    fun createProject(project: Project) :Result<Unit>
+    suspend fun createProject(project: Project)
     fun editProject(project: Project) :Result<Unit>
     fun deleteProject(id: UUID) :Result<Unit>
     fun getAllProjects() : Result<List<Project>>

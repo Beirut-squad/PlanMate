@@ -10,7 +10,7 @@ class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
 ) : ProjectRepository {
 
-    override fun createProject(project: Project): Result<Unit> {
+    override suspend fun createProject(project: Project){
         return projectDataSource.createProject(project)
     }
 

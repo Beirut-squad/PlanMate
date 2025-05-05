@@ -10,7 +10,7 @@ class MateHomeScreen(
     private val reader: Reader,
     private val viewProjectLogsScreen: ViewProjectLogsScreen,
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
         var running = true
@@ -34,7 +34,7 @@ class MateHomeScreen(
         }
     }
 
-    private fun goToViewProjectLogsScreen() {
+    private suspend fun goToViewProjectLogsScreen() {
         viewProjectLogsScreen.show()
     }
 }

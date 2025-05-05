@@ -10,7 +10,7 @@ class ViewProjectLogsScreen(
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val getUserProjectLogsUseCase: GetUserProjectLogsUseCase
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
         val user = currentUserResult.getOrNull()
