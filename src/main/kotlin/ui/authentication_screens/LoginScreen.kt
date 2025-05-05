@@ -5,7 +5,7 @@ import org.example.models.Role
 import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.admin.home_screens.AdminHomeScreen
+import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.example.ui.mate.home_screen.MateHomeScreen
 import org.example.ui.common.components.Viewer
 

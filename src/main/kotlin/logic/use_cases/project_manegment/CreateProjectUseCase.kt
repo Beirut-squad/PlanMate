@@ -14,7 +14,7 @@ class CreateProjectUseCase(
 ) {
     fun createProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>) {
         if (name.isBlank() || description.isBlank()) {
-            throw BlankFieldsException("must not be blank")
+            throw BlankFieldsException("You should write a valid input as a string.")
         } else {
             val project = buildProject(creatorUserID,name, description, stateNames)
             logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
@@ -22,7 +22,8 @@ class CreateProjectUseCase(
         }
     }
 
-    private fun buildProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>): Project {
+    private fun buildProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>)
+    : Project {
         return Project(
             id = UUID.randomUUID(),
             name = name,
