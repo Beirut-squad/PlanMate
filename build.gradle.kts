@@ -21,6 +21,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     //MD5 Hashing
 
+    // MongoDB Kotlin driver dependency
+    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+    // Kotlin coroutine dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
 }
 
 tasks.test {
