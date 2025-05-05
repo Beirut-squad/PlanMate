@@ -46,8 +46,17 @@ class AdminHomeScreenTest {
     }
 
     @Test
-    fun `should show goodbye message and exit when option 3 is chosen`() {
+    fun `should navigate to AllProjectsLogsView when option 3 is chosen`() {
         every { reader.readInt() } returns 3
+
+        adminHomeScreen.show()
+
+        verify { allProjectsLogsView.show() }
+    }
+
+    @Test
+    fun `should show goodbye message and exit when option 3 is chosen`() {
+        every { reader.readInt() } returns 4
 
         adminHomeScreen.show()
 
