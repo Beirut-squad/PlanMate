@@ -14,7 +14,7 @@ import kotlin.getValue
 
 class CreateNewTaskUI(
     private val projectId: UUID,
-    ) : UiScreen, KoinComponent {
+) : UiScreen, KoinComponent {
 
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
@@ -33,9 +33,9 @@ class CreateNewTaskUI(
 
                     val selectedStateIndex = getValidStateInput(selectedProject)
 
-                        val selectedState = selectedProject.state[selectedStateIndex]
-                        createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-
+                    val selectedState = selectedProject.state[selectedStateIndex]
+                    createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
+                    ViewProjectsForUserUI().show()
                 } ?: viewer.printError("No user found")
             },
             onFailure = { viewer.printError("Failed to retrieve project: ${it.message}") }
