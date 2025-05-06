@@ -1,8 +1,6 @@
 package org.example.ui.common.screens
 
-import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -12,16 +10,14 @@ import org.koin.core.component.inject
 import java.util.UUID
 
 class ViewProjectForUserUI(
-    private val ProjectId : UUID,
+    private val projectId : UUID,
     ):UiScreen, KoinComponent {
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
-    private val createTaskUseCase: CreateTaskUseCase by inject()
     private val getProjectByIdUseCase :GetProjectByIdUseCase by inject()
     override fun show() {
-        val projectResult = getProjectByIdUseCase.getProjectById(ProjectId)
+        val projectResult = getProjectByIdUseCase.getProjectById(projectId)
 
         projectResult.fold(
             onSuccess = { project ->
@@ -59,7 +55,7 @@ class ViewProjectForUserUI(
                         if (project.state.isEmpty()) {
                             viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
                         } else {
-                            CreateNewTaskUI(ProjectId).show()
+                            CreateNewTaskUI(projectId).show()
                         }
                     }
                     4 -> {
