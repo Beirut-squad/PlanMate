@@ -30,15 +30,15 @@ class ProjectRepositoryImpl(
         return projectDataSource.getProject(id)
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.addStateToProject(projectId, state)
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.editStateToProject(projectId, state)
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.removeStateFromProject(projectId, state)
     }
 
