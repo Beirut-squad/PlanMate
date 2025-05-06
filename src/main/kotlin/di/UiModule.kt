@@ -17,6 +17,8 @@ import org.koin.dsl.module
 import org.example.ui.common.components.Colors
 import org.example.ui.common.components.Viewer
 import org.example.ui.common.screens.CreateNewTaskUI
+import org.example.ui.common.screens.EditTaskUI
+import org.example.ui.common.screens.ViewAllTaskForProjectUI
 import org.example.ui.common.screens.ViewProjectForUserUI
 import org.example.ui.common.screens.ViewProjectsForUserUI
 import org.example.ui.common.screens.ViewStateSelectedForProjectUI
@@ -41,4 +43,6 @@ val uiModule = module {
     singleOf(::CreateNewTaskUI)
     singleOf(::AuthenticationMainScreen)
     singleOf(::AllProjectsLogsView)
+    singleOf(::EditTaskUI)
+    singleOf(::ViewAllTaskForProjectUI)
 }

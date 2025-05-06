@@ -10,5 +10,6 @@ interface TaskDataSource {
     fun getAllTasks() : Result<List<Task>>
     fun getTask(id: UUID) : Result<Task>
     fun getTaskByStateIdAndProjectId(projectId: UUID, stateId:UUID) : Result<List<Task>>
+    fun getAllTasksForProject(projectId: UUID): Result<List<Task>>
 }
 
