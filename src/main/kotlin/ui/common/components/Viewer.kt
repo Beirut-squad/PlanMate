@@ -129,4 +129,9 @@ class Viewer(
         }
     }
 
+    fun printOptions(options: List<String>) {
+        for (i in options.indices) {
+            printOption("${i + 1}. ${options[i]}")
+        }
+    }
 }
