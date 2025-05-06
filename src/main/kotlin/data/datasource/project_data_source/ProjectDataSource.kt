@@ -6,10 +6,10 @@ import java.util.*
 
 interface ProjectDataSource {
     suspend fun createProject(project: Project)
-    fun editProject(project: Project) :Result<Unit>
+    fun editProject(project: Project): Result<Unit>
     suspend fun deleteProject(id: UUID)
-    suspend fun getAllProjects() : List<Project>
-    fun getProject(id:UUID) : Result<Project>
+    suspend fun getAllProjects(): List<Project>
+    suspend fun getProject(id: UUID): Project
     fun addStateToProject(projectId: UUID, state: State): Result<Unit>
     fun editStateToProject(projectId: UUID, state: State): Result<Unit>
     fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>

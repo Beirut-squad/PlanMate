@@ -1,6 +1,7 @@
 package org.example.data.datasource.project_data_source
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.eq
 import data.mongo_db.MongoConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -57,35 +58,12 @@ class ProjectMongoDataSourceImpl(
         }
     }
 
-
     override suspend fun getAllProjects(): List<Project> {
         return withContext(Dispatchers.IO) {
             try {
                 val projectsDoc = mongoConnection.projects.find().toList()
-                if (projectsDoc.isEmpty()) {
-                    emptyList()
-                } else {
-                    projectsDoc.map { projects ->
-                        val states =(projects.get(STATE_FIELD) as? List<*>)?.mapNotNull {
-                                stateDoc ->
-                            (stateDoc as? Document)?.let {
-                                State(
-                                    id = UUID.fromString(it.getString("id")),
-                                    name = it.getString("name")
-                                )
-                            }
-                        }
-                            ?: emptyList()
-                        Project(
-                            id = UUID.fromString(projects.getString(ID_FIELD)),
-                            name = projects.getString(NAME_FIELD),
-                            description = projects.getString(DESCRIPTION_FIELD),
-                            creatorUserID = UUID.fromString(projects.getString(CREATOR_USER_ID_FIELD)),
-                            createdAt = LocalDateTime.parse(projects.getString(CREATED_AT_FIELD)),
-                            updatedAt = LocalDateTime.parse(projects.getString(UPDATED_AT_FIELD)),
-                            state = states
-                        )
-                    }
+                projectsDoc.map {
+                    it?.toProject() ?: throw Exception("No any projects ")
                 }
             } catch (e: Exception) {
                 println("Error fetching projects: ${e.message}")
@@ -94,8 +72,16 @@ class ProjectMongoDataSourceImpl(
         }
 
     }
-    override fun getProject(id: UUID): Result<Project> {
-        TODO("Not yet implemented")
+
+   override suspend fun getProject(id: UUID): Project = withContext(Dispatchers.IO) {
+        try {
+            val doc = mongoConnection.projects.find(eq("_id", id.toString())).firstOrNull()
+                ?: throw NoSuchElementException("No project found with ID: $id")
+            doc.toProject()
+        } catch (e: Exception) {
+            println("Error fetching project: ${e.message}")
+            throw e
+        }
     }
 
     override fun addStateToProject(
@@ -117,6 +103,32 @@ class ProjectMongoDataSourceImpl(
         state: State
     ): Result<Unit> {
         TODO("Not yet implemented")
+    }
+
+
+    private fun Document.toStateList(): List<State> {
+        return (this.get("state") as? List<*>)?.mapNotNull { stateDoc ->
+            (stateDoc as? Document)?.let {
+                State(
+                    id = UUID.fromString(it.getString("id")),
+                    name = it.getString("name")
+                )
+            }
+        } ?: emptyList()
+    }
+
+    private fun Document.toProject(): Project {
+        val states = this.toStateList()
+
+        return Project(
+            id = UUID.fromString(this.getString("_id")),
+            name = this.getString("name"),
+            description = this.getString("description") ,
+            creatorUserID = UUID.fromString(this.getString("creatorUserID")),
+            createdAt = LocalDateTime.parse(this.getString("createdAt")),
+            updatedAt = LocalDateTime.parse(this.getString("updatedAt")),
+            state = states
+        )
     }
 
     companion object {
