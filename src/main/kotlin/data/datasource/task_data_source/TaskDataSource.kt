@@ -4,9 +4,11 @@ import org.example.models.Task
 import java.util.*
 
 interface TaskDataSource {
-    fun createTask(task: Task) : Result<Unit>
-    fun editTask(task: Task) : Result<Unit>
-    fun deleteTask(id:UUID) : Result<Unit>
-    fun getAllTasks() : Result<List<Task>>
-    fun getTask(id: UUID) : Result<Task>
+  //  abstract val documents: Any
+
+    suspend fun createTask(task: Task)
+    suspend fun editTask(task: Task)
+    suspend fun deleteTask(id:UUID)
+    suspend fun getAllTasks() : List<Task>
+    suspend fun getTask(id: UUID) : Task
 }
