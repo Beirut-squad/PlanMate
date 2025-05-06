@@ -6,9 +6,8 @@ import java.util.*
 
 class CreateStateUseCase(
     private val stateRepository: StateRepository
-) {
-    fun createState(name: String): Result<State> {
-        if (name.isBlank()) return Result.failure(IllegalArgumentException("Create failed : name is Blank !!"))
+) { fun createState(name: String): State {
+        if (name.isBlank()) throw (IllegalArgumentException("Create failed : name is Blank !!"))
         val newState = State(id = UUID.randomUUID(), name = name)
         return stateRepository.createState(newState)
     }
