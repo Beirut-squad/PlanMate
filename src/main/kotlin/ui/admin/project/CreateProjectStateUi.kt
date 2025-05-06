@@ -10,17 +10,21 @@ import org.koin.core.component.inject
 import java.util.*
 
 class CreateProjectStateUi(
-    private val ProjectId: UUID
+    private val projectId: UUID
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val addStateToProjectUseCase: AddStateToProjectUseCase by inject()
     private val createStateUseCase: CreateStateUseCase by inject()
     override fun show() {
-        viewer.printTitle("Create Task State")
-        viewer.printTitle("Please, Write your state name")
-        val stateName = reader.readInput().toString()
-        val stateCreation = createStateUseCase.createState(stateName)
-        addStateToProjectUseCase.addStateToProject(projectId = ProjectId, state = stateCreation)
+        try {
+            viewer.printTitle("Create State")
+            viewer.printTitle("Please, Write your state name")
+            val stateName = reader.readInput().toString()
+            val stateCreation = createStateUseCase.createState(stateName, projectId)
+            addStateToProjectUseCase.addStateToProject(projectId = projectId, state = stateCreation.getOrThrow())
+        } catch (e: Exception) {
+            viewer.printError("Error while creating state")
+        }
     }
 }
