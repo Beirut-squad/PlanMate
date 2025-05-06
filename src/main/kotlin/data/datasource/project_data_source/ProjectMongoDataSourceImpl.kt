@@ -10,8 +10,6 @@ import org.example.models.Project
 import org.example.models.State
 import java.time.LocalDateTime
 import java.util.UUID
-import kotlin.compareTo
-import kotlin.toString
 
 class ProjectMongoDataSourceImpl(
     private val mongoConnection: MongoConnection
@@ -19,23 +17,9 @@ class ProjectMongoDataSourceImpl(
     override suspend fun createProject(project: Project) {
         withContext(Dispatchers.IO) {
             try {
-                val stateDocs = project.state.map { state ->
-                    Document()
-                        .append(ID_FIELD, state.id.toString())
-                        .append(NAME_FIELD, state.name)
-                }
-                val projectDoc = Document(ID_FIELD, project.id.toString())
-                    .append(NAME_FIELD, project.name)
-                    .append(DESCRIPTION_FIELD, project.description)
-                    .append(CREATOR_USER_ID_FIELD, project.creatorUserID.toString())
-                    .append(CREATED_AT_FIELD, project.createdAt.toString())
-                    .append(UPDATED_AT_FIELD, project.updatedAt.toString())
-                    .append(STATE_FIELD, stateDocs)
-
-                mongoConnection.projects.insertOne(projectDoc)
-                println("Project ${project.name} created successfully")
+                mongoConnection.projects.insertOne(project.toDocument())
             } catch (e: Exception) {
-                println("Error creating project: ${e.message}")
+                throw e
             }
         }
     }
@@ -44,7 +28,7 @@ class ProjectMongoDataSourceImpl(
         withContext(Dispatchers.IO) {
             try {
                 val updateResult = mongoConnection.projects.replaceOne(
-                    eq("_id", project.id.toString()),
+                    eq(PROJECT_ID_FIELD, project.id.toString()),
                     project.toDocument()
                 )
                 if (updateResult.matchedCount == 0L) {
@@ -59,14 +43,9 @@ class ProjectMongoDataSourceImpl(
     override suspend fun deleteProject(id: UUID) {
         withContext(Dispatchers.IO) {
             try {
-                val result = mongoConnection.projects.deleteOne(Filters.eq("_id", id.toString()))
-                if (result.deletedCount > 0) {
-                    println("Project with ID $id deleted successfully")
-                } else {
-                    println("No project found with ID $id")
-                }
+                mongoConnection.projects.deleteOne(Filters.eq(PROJECT_ID_FIELD, id.toString()))
             } catch (e: Exception) {
-                println("Error deleting project: ${e.message}")
+                throw e
             }
         }
     }
@@ -79,8 +58,7 @@ class ProjectMongoDataSourceImpl(
                     it?.toProject() ?: throw Exception("No any projects ")
                 }
             } catch (e: Exception) {
-                println("Error fetching projects: ${e.message}")
-                emptyList()
+                throw e
             }
         }
 
@@ -88,11 +66,10 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun getProject(id: UUID): Project = withContext(Dispatchers.IO) {
         try {
-            val doc = mongoConnection.projects.find(eq("_id", id.toString())).firstOrNull()
+            val doc = mongoConnection.projects.find(eq(PROJECT_ID_FIELD, id.toString())).firstOrNull()
                 ?: throw NoSuchElementException("No project found with ID: $id")
             doc.toProject()
         } catch (e: Exception) {
-            println("Error fetching project: ${e.message}")
             throw e
         }
     }
@@ -120,11 +97,11 @@ class ProjectMongoDataSourceImpl(
 
 
     private fun Document.toStateList(): List<State> {
-        return (this.get("state") as? List<*>)?.mapNotNull { stateDoc ->
+        return (this.get(STATE_FIELD) as? List<*>)?.mapNotNull { stateDoc ->
             (stateDoc as? Document)?.let {
                 State(
-                    id = UUID.fromString(it.getString("id")),
-                    name = it.getString("name")
+                    id = UUID.fromString(it.getString(STATE_ID_FIELD)),
+                    name = it.getString(NAME_FIELD)
                 )
             }
         } ?: emptyList()
@@ -134,30 +111,31 @@ class ProjectMongoDataSourceImpl(
         val states = this.toStateList()
 
         return Project(
-            id = UUID.fromString(this.getString("_id")),
-            name = this.getString("name"),
-            description = this.getString("description"),
-            creatorUserID = UUID.fromString(this.getString("creatorUserID")),
-            createdAt = LocalDateTime.parse(this.getString("createdAt")),
-            updatedAt = LocalDateTime.parse(this.getString("updatedAt")),
+            id = UUID.fromString(this.getString(PROJECT_ID_FIELD)),
+            name = this.getString(NAME_FIELD),
+            description = this.getString(DESCRIPTION_FIELD),
+            creatorUserID = UUID.fromString(this.getString(CREATOR_USER_ID_FIELD)),
+            createdAt = LocalDateTime.parse(this.getString(CREATED_AT_FIELD)),
+            updatedAt = LocalDateTime.parse(this.getString(UPDATED_AT_FIELD)),
             state = states
         )
     }
 
     private fun Project.toDocument(): Document {
-        return Document("_id", id.toString())
-            .append("name", name)
-            .append("description", description)
-            .append("creatorUserID", creatorUserID.toString())
-            .append("createdAt", createdAt.toString())
-            .append("updatedAt", updatedAt.toString())
-            .append("state", state.map {
-                Document("id", it.id.toString()).append("name", it.name)
+        return Document(PROJECT_ID_FIELD, id.toString())
+            .append(NAME_FIELD, name)
+            .append(DESCRIPTION_FIELD, description)
+            .append(CREATOR_USER_ID_FIELD, creatorUserID.toString())
+            .append(CREATED_AT_FIELD, createdAt.toString())
+            .append(UPDATED_AT_FIELD, updatedAt.toString())
+            .append(STATE_FIELD, state.map {
+                Document(STATE_ID_FIELD, it.id.toString()).append(NAME_FIELD, it.name)
             })
     }
 
     companion object {
-        private const val ID_FIELD = "_id"
+        private const val PROJECT_ID_FIELD = "_id"
+        private const val STATE_ID_FIELD = "id"
         private const val NAME_FIELD = "name"
         private const val DESCRIPTION_FIELD = "description"
         private const val CREATOR_USER_ID_FIELD = "creatorUserID"
