@@ -6,7 +6,7 @@ import java.util.*
 
 interface ProjectDataSource {
     suspend fun createProject(project: Project)
-    fun editProject(project: Project): Result<Unit>
+    suspend fun editProject(project: Project)
     suspend fun deleteProject(id: UUID)
     suspend fun getAllProjects(): List<Project>
     suspend fun getProject(id: UUID): Project

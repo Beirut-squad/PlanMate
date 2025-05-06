@@ -198,11 +198,11 @@ class ProjectDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun editProject(project: Project): Result<Unit> {
+    override suspend fun editProject(project: Project){
         TODO("Not yet implemented")
     }
 
-    override fun deleteProject(id: UUID): Result<Unit> {
+    override suspend fun deleteProject(id: UUID){
         TODO("Not yet implemented")
     }
 
@@ -212,7 +212,7 @@ class ProjectDataSourceImpl(
 
 
 
-    override fun getProject(id: UUID): Result<Project> {
+    override suspend fun getProject(id: UUID): Project {
         TODO("Not yet implemented")
     }
 

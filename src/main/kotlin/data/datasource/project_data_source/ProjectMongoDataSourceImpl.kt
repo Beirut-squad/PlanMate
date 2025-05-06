@@ -11,6 +11,7 @@ import org.example.models.State
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.compareTo
+import kotlin.toString
 
 class ProjectMongoDataSourceImpl(
     private val mongoConnection: MongoConnection
@@ -39,8 +40,20 @@ class ProjectMongoDataSourceImpl(
         }
     }
 
-    override fun editProject(project: Project): Result<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun editProject(project: Project) {
+        withContext(Dispatchers.IO) {
+            try {
+                val updateResult = mongoConnection.projects.replaceOne(
+                    eq("_id", project.id.toString()),
+                    project.toDocument()
+                )
+                if (updateResult.matchedCount == 0L) {
+                    throw NoSuchElementException("No project found with ID: ${project.id}")
+                }
+            } catch (e: NoSuchElementException) {
+                throw e
+            }
+        }
     }
 
     override suspend fun deleteProject(id: UUID) {
@@ -73,7 +86,7 @@ class ProjectMongoDataSourceImpl(
 
     }
 
-   override suspend fun getProject(id: UUID): Project = withContext(Dispatchers.IO) {
+    override suspend fun getProject(id: UUID): Project = withContext(Dispatchers.IO) {
         try {
             val doc = mongoConnection.projects.find(eq("_id", id.toString())).firstOrNull()
                 ?: throw NoSuchElementException("No project found with ID: $id")
@@ -123,12 +136,24 @@ class ProjectMongoDataSourceImpl(
         return Project(
             id = UUID.fromString(this.getString("_id")),
             name = this.getString("name"),
-            description = this.getString("description") ,
+            description = this.getString("description"),
             creatorUserID = UUID.fromString(this.getString("creatorUserID")),
             createdAt = LocalDateTime.parse(this.getString("createdAt")),
             updatedAt = LocalDateTime.parse(this.getString("updatedAt")),
             state = states
         )
+    }
+
+    private fun Project.toDocument(): Document {
+        return Document("_id", id.toString())
+            .append("name", name)
+            .append("description", description)
+            .append("creatorUserID", creatorUserID.toString())
+            .append("createdAt", createdAt.toString())
+            .append("updatedAt", updatedAt.toString())
+            .append("state", state.map {
+                Document("id", it.id.toString()).append("name", it.name)
+            })
     }
 
     companion object {
