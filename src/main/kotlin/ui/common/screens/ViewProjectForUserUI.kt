@@ -30,7 +30,8 @@ class ViewProjectForUserUI(
                 )
 
                 viewer.printInfoLine("Choose an option:")
-                viewer.printOptions("View state for project", "View all task for project","Create new task", "Exit")
+                viewer.printOptions("View state for project", "View all task for project","Create new task", "" +
+                        "Enter Any Thing To Go Back")
 
                 val option = reader.readInt()
                 when (option) {
@@ -58,10 +59,10 @@ class ViewProjectForUserUI(
                             CreateNewTaskUI(projectId).show()
                         }
                     }
-                    4 -> {
+                    else -> {
                         viewer.printGoodbyeMessage("Goodbye")
+                        ViewProjectsForUserUI().show()
                     }
-                    else -> viewer.printError("Invalid option.")
                 }
             },
             onFailure = {
