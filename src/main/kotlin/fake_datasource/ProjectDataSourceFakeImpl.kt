@@ -96,6 +96,12 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         } ?: Result.failure(Exception())
     }
 
+    override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
+        return runCatching {
+            projects.filter { it.creatorUserID == userid }
+        }
+    }
+
     private fun deleteProjectState(projectId: UUID, state: State) {
         projects.replaceAll { project ->
             if (project.id == projectId) {
