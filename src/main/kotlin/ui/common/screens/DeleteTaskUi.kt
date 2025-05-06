@@ -66,6 +66,7 @@ class DeleteTaskUI(
             try {
                 deleteTaskUseCase.deleteTask(task,task.id)
                 viewer.printInfoLine("Task deleted successfully.")
+                ViewProjectsForUserUI().show()
             } catch (e: Exception) {
                 viewer.printError("Failed to delete task: ${e.message}")
             }
