@@ -36,7 +36,7 @@ class ViewProjectsScreen(
                                 "Project '${project.name}" +
                                         "' has no state. Redirecting to state creation..."
                             )
-                            CreateProjectStateUi(project.id).show()
+                            CreateProjectStateUi(project).show()
                             return
                         }
                     }

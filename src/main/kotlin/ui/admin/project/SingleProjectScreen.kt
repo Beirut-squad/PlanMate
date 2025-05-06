@@ -56,7 +56,7 @@ class SingleProjectScreen(
                 // TODO
             }
             4 -> {
-                CreateProjectStateUi(project.id).show()
+                CreateProjectStateUi(project).show()
             }
             5 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
