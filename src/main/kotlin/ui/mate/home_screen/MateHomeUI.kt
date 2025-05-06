@@ -1,5 +1,6 @@
 package org.example.ui.mate.home_screen
 
+import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.screens.ViewProjectLogsUI
@@ -12,6 +13,7 @@ class MateHomeUI() : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val viewProjectsForUserUI: ViewProjectsForUserUI by inject()
+    private val authenticationMainScreen : AuthenticationMainScreen by inject()
     private val viewProjectLogsUI: ViewProjectLogsUI by inject()
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
@@ -36,7 +38,7 @@ class MateHomeUI() : UiScreen, KoinComponent {
 
                 3 -> {
                     viewer.printGoodbyeMessage("Goodbye")
-                    break
+                    goToAuthenticationMainScreen()
                 }
             }
         }
@@ -44,6 +46,9 @@ class MateHomeUI() : UiScreen, KoinComponent {
 
     private fun goToViewProjectsScreen() {
         viewProjectsForUserUI.show()
+    }
+    private fun goToAuthenticationMainScreen() {
+        authenticationMainScreen.show()
     }
 
     private fun goToViewProjectLogsScreen() {
