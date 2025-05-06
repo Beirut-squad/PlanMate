@@ -11,12 +11,17 @@ import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
 import org.example.ui.common.screens.CreateNewTaskUI
+import org.example.ui.common.screens.ViewProjectsForUserUI
 import org.junit.jupiter.api.BeforeEach
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.dsl.module
 import java.util.UUID
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class CreateNewTaskUITest {
+class CreateNewTaskUITest  {
     private var viewer: Viewer = mockk(relaxed = true)
     private var reader: Reader = mockk(relaxed = true)
     private var getCurrentUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
@@ -28,11 +33,35 @@ class CreateNewTaskUITest {
     private val user = createUserHelper("mostafa", "testUser", "test@example.com", userId)
     val state = createStateHelper(UUID.randomUUID(), "To Do")
     val project = createProjectHelper(id = ProjectId, state = listOf(state))
+
     private lateinit var createNewTaskUI: CreateNewTaskUI
 
     @BeforeEach
     fun setup() {
-        createNewTaskUI = CreateNewTaskUI(viewer, reader, getCurrentUserUseCase, ProjectId, createTaskUseCase, getProjectByIdUseCase)
+        stopKoin()
+
+        mockkConstructor(ViewProjectsForUserUI::class)
+        every { anyConstructed<ViewProjectsForUserUI>().show() } just Runs
+
+
+        startKoin {
+            modules(module {
+                single { viewer }
+                single { reader }
+                single { getCurrentUserUseCase }
+                single { createTaskUseCase }
+                single { getProjectByIdUseCase }
+
+            })
+
+        }
+
+        createNewTaskUI = CreateNewTaskUI(ProjectId)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        stopKoin()
     }
 
     @Test
