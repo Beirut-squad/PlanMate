@@ -6,12 +6,11 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectsForUserUI
 
 class AdminHomeScreen(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val viewProjectsForUserUI : ViewProjectsForUserUI,
+    private val ViewProjectsScreen : ViewProjectsScreen,
     private val createNewProjectScreen: CreateNewProjectScreen,
     private val allProjectsLogsView: AllProjectsLogsView
 ) : UiScreen {
@@ -50,7 +49,7 @@ class AdminHomeScreen(
     }
 
     private fun goToViewProjectScreen() {
-        viewProjectsForUserUI.show()
+        ViewProjectsScreen.show()
     }
 
     private fun goToCreateNewProjectScreen() {

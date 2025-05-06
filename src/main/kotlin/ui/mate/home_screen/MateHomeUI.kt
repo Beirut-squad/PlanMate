@@ -5,7 +5,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.screens.ViewProjectLogsUI
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectsForUserUI
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -18,8 +18,7 @@ class MateHomeUI() : UiScreen, KoinComponent {
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
-        var running = true
-        while (running) {
+        while (true) {
 
             viewer.printInfoLine("Choose an option:")
             viewer.printOptions("View Projects", "View Project Logs", "Exit")
@@ -28,12 +27,12 @@ class MateHomeUI() : UiScreen, KoinComponent {
             when (option) {
                 1 -> {
                     goToViewProjectsScreen()
-                    running = false
+
                 }
 
                 2 -> {
                     goToViewProjectLogsScreen()
-                    running = false
+
                 }
 
                 3 -> {
