@@ -5,14 +5,18 @@ import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCa
 import org.example.models.Project
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.mate.home_screen.MateHomeUI
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.UUID
+import kotlin.getValue
 
 class ViewProjectsForUserUI(
-    private val viewer: Viewer,
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val getProjectsForUserById: GetProjectsForUserByIdUseCase,
-    ) : UiScreen {
 
+    ) : UiScreen , KoinComponent{
+    private val viewer: Viewer by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase  by inject()
+    private val getProjectsForUserById: GetProjectsForUserByIdUseCase  by inject()
     override fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
         val user = currentUserResult.getOrNull()
@@ -49,7 +53,7 @@ class ViewProjectsForUserUI(
     private fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
         while (isRunning) {
-            val input = viewer.readIntInput("Enter project number (or 0 to exit):")
+            val input = viewer.readIntInput("Enter project number (or any Thing to exit):")
             handleUserInput(input, projects).also { isRunning = it }
         }
     }
@@ -60,16 +64,14 @@ class ViewProjectsForUserUI(
                 viewer.printError("Please enter a valid number.")
                 true
             }
-            input == 0 -> {
-                viewer.printGoodbyeMessage("Exiting.")
-                false
-            }
+
             input in 1..projects.size -> {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
             else -> {
-                viewer.printError("Invalid selection. Please choose between 1 and ${projects.size}, or 0 to exit.")
+                viewer.printGoodbyeMessage("Goodbye")
+                MateHomeUI().show()
                 true
             }
         }
