@@ -8,7 +8,7 @@ interface ProjectRepository {
     suspend fun createProject(project: Project)
     fun editProject(project: Project) :Result<Unit>
     fun deleteProject(id: UUID) :Result<Unit>
-    fun getAllProjects() : Result<List<Project>>
+    suspend fun getAllProjects() : List<Project>
     fun getProject(id:UUID) : Result<Project>
     fun addStateToProject(projectId: UUID, state: State): Result<Unit>
     fun editStateToProject(projectId: UUID, state: State): Result<Unit>
