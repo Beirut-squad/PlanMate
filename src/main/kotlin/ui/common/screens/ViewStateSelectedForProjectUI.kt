@@ -18,7 +18,7 @@ class ViewStateSelectedForProjectUI(
         val states = getProjectStates() ?: return
         if (states.isEmpty()) {
             viewer.printInfoLine("No states available for this project.")
-            return
+            ViewProjectsForUserUI().show()
         }
         displayStateOptions(states)
         handleUserSelection(states)
@@ -46,16 +46,17 @@ class ViewStateSelectedForProjectUI(
     }
 
     private fun handleUserSelection(states: List<State>) {
-        val choice = viewer.readIntInput("Enter the number of the state to view (0 to cancel): ")
-
+        val choice = viewer.readIntInput("Enter the number of the state to view (Enter Any Thing To Go Back): ")
         when {
-            choice == null -> viewer.printError("Invalid input.")
-            choice == 0 -> viewer.printInfoLine("Cancelled.")
-            choice in 1..states.size -> {
+            choice != null && choice in 1..states.size -> {
                 val selectedState = states[choice - 1]
                 printStateDetails(selectedState)
+                ViewProjectsForUserUI().show()
             }
-            else -> viewer.printError("Invalid choice. Please enter a number between 1 and ${states.size}.")
+            else -> {
+                viewer.printGoodbyeMessage("Goodbye")
+                ViewProjectsForUserUI().show()
+            }
         }
     }
 
@@ -63,6 +64,21 @@ class ViewStateSelectedForProjectUI(
         val result = getTaskByStateIdAndProjectId.getTaskByStateIdAndProjectId(projectId, selectedState.id)
         viewer.printTitle("State Details")
         viewer.printInfoLine("Name: ${selectedState.name}")
-        viewer.printInfoLine("Tasks: $result")
+
+        if (result.isSuccess) {
+            val tasks = result.getOrNull() ?: emptyList()
+
+            if (tasks.isNotEmpty()) {
+                viewer.printInfoLine("Tasks:")
+                tasks.forEach { task ->
+                    viewer.printInfoLine(" - Name: ${task.title}, Description: ${task.description}")
+                }
+            } else {
+                viewer.printInfoLine("No tasks available for this state.")
+                ViewProjectsForUserUI().show()
+            }
+        } else {
+            viewer.printError("Failed to retrieve tasks: ${result.exceptionOrNull()?.message}")
+        }
     }
 }

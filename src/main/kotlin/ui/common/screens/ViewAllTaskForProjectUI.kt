@@ -11,7 +11,7 @@ import kotlin.getValue
 
 class ViewAllTaskForProjectUI(
     private val projectId: UUID,
-    ) : UiScreen, KoinComponent {
+) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
@@ -21,6 +21,7 @@ class ViewAllTaskForProjectUI(
             onSuccess = { tasks ->
                 if (tasks.isEmpty()) {
                     viewer.printInfoLine("No tasks found for this project.")
+                    ViewProjectsForUserUI().show()
                 } else {
                     viewer.printTitle("Tasks for Project:")
                     tasks.forEachIndexed { index, task ->
@@ -34,16 +35,18 @@ class ViewAllTaskForProjectUI(
                         )
                     }
                     viewer.printInfoLine("\nPlease choose an option:")
-                    viewer.printOptions("Edit a task", "Delete a task","Enter Any Thing To Go Back")
+                    viewer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
                     val choice = reader.readInput()?.toIntOrNull()
                     when (choice) {
                         1 -> {
 
-                                EditTaskUI(projectId).show()
+                            EditTaskUI(projectId).show()
                         }
+
                         2 -> {
                             DeleteTaskUI(projectId).show()
                         }
+
                         else -> {
                             viewer.printGoodbyeMessage("Goodbye")
                             ViewProjectsForUserUI().show()

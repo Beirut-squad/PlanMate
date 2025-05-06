@@ -44,17 +44,14 @@ class ViewProjectForUserUI(
                         ).show()
                     }
                     2 -> {
-                        if (project.state.isEmpty()) {
-                            viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
-                        } else {
                             ViewAllTaskForProjectUI(
-                                project.id,
-                            ).show()
-                        }
+                                project.id
+                                ).show()
                     }
                     3 -> {
                         if (project.state.isEmpty()) {
-                            viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
+                            viewer.printError("Cannot create a task because this project has no states.")
+                            ViewProjectsForUserUI().show()
                         } else {
                             CreateNewTaskUI(projectId).show()
                         }
