@@ -16,9 +16,7 @@ class AdminHomeScreen(
 ) : UiScreen {
     override fun show() {
 
-        var running = true
-        while (running) {
-
+        while (true) {
             viewer.printInfoLine("Choose an option:")
             viewer.printOptions(
                 "View Current Projects",
@@ -31,17 +29,14 @@ class AdminHomeScreen(
             when (option) {
                 1 -> {
                     goToViewProjectScreen()
-                    running = false
                 }
 
                 2 -> {
                     goToCreateNewProjectScreen()
-                    running = false
                 }
 
                 3 -> {
                     goToViewAllLogsScreen()
-                    running = false
                 }
 
                 4 -> {

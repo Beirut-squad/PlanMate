@@ -1,53 +1,90 @@
-package org.example.ui.common.screens
+package org.example.ui.admin.project
 
+import org.example.logic.use_cases.authentication.GetUserByIdUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
-import org.example.ui.admin.project.CreateProjectStateUi
+import org.example.models.Project
+import org.example.models.User
+import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-
-import java.util.*
+import java.util.UUID
 
 class ViewProjectsScreen(
     private val viewer: Viewer,
+    private val reader: Reader,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
+    private val singleProjectScreen: SingleProjectScreen,
+    private val getUserByIdUseCase: GetUserByIdUseCase
 ) : UiScreen {
+    private var running = true
     override fun show() {
+        running = true
         val allProjects = getAllProjectsUseCases.getAllProjects()
 
-        allProjects.fold(
-            onSuccess = { projects ->
-                if (projects.isNotEmpty()) {
-                    viewer.printTitle("Projects: ")
-                    projects.forEachIndexed { index, project ->
-                        viewer.printInfoLine(
-                            """
+        while (running) {
+            allProjects.fold(
+                onSuccess = { projects ->
+                    if (projects.isNotEmpty()) {
+                        viewer.printTitle("Project: ")
+                        projects.forEachIndexed { index, project ->
+                            viewer.printInfoLine(
+                                """
                         ${index + 1}.
-                        - Made by: ${project.creatorUserID}
+                        - Made by: ${getUserById(project.creatorUserID).name}
                         - Name: ${project.name}
                         - Description: ${project.description}
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
-                        - State of Project: ${project.state}
                     """.trimIndent()
-                        )
-
-                        if (project.state.isEmpty()) {
-                            viewer.printError(
-                                "Project '${project.name}" +
-                                        "' has no state. Redirecting to state creation..."
                             )
-                            CreateProjectStateUi(project.id).show()
-                            return
                         }
+
+                        chooseProject(projects)
+                    } else {
+                        viewer.printInfoLine("No projects found.")
+                        running = false
                     }
+                },
+                onFailure = {
+                    viewer.printError("Failed to retrieve projects: ${it.message}")
                 }
-                else {
-                    viewer.printInfoLine("No projects found.")
+            )
+        }
+    }
+
+    private fun chooseProject(projects: List<Project>) {
+        viewer.printInfoLine("Choose project: ")
+        viewer.printOptions(projects.map { it.name } + "Exit")
+
+        enterProject(projects)
+    }
+
+    private fun enterProject(projects: List<Project>) {
+        when (val input = reader.readInt()) {
+            in 1..projects.size -> {
+                if (input != null) {
+                    goToSingleProjectScreen(projects[input - 1])
+                } else {
+                    viewer.printError("Invalid project number")
+                    enterProject(projects)
                 }
-            },
-            onFailure = {
-                viewer.printError("Failed to retrieve projects: ${it.message}")
             }
-        )
+            projects.size + 1 -> {
+                running = false
+            }
+            else -> {
+                viewer.printError("Invalid project number")
+                enterProject(projects)
+            }
+        }
+    }
+
+    private fun goToSingleProjectScreen(project: Project) {
+        singleProjectScreen.project = project
+        singleProjectScreen.show()
+    }
+
+    private fun getUserById(id: UUID): User {
+        return getUserByIdUseCase.getUser(id).getOrThrow() ?: throw IllegalStateException("User not found")
     }
 }
