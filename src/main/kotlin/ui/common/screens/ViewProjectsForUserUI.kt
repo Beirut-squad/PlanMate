@@ -1,25 +1,17 @@
 package org.example.ui.common.screens
 
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
-import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
-import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
-import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.models.Project
-import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.util.UUID
 
 class ViewProjectsForUserUI(
     private val viewer: Viewer,
-    private val reader: Reader,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val getProjectsForUserById: GetProjectsForUserByIdUseCase,
-    private val getProjectByIdUserCase: GetProjectByIdUseCase,
-    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId,
-    private val createTaskUseCase: CreateTaskUseCase
-) : UiScreen {
+    ) : UiScreen {
 
     override fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
@@ -86,12 +78,6 @@ class ViewProjectsForUserUI(
     private fun handleProjectSelectionById(projectId: UUID) {
         ViewProjectForUserUI(
             projectId,
-            viewer,
-            reader,
-            getTaskByStateIdAndProjectId,
-            getCurrentLoggedInUserUseCase,
-            createTaskUseCase,
-            getProjectByIdUserCase
         ).show()
     }
 

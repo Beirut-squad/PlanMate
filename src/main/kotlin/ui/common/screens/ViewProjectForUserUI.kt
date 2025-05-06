@@ -7,18 +7,19 @@ import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.UUID
 
 class ViewProjectForUserUI(
     private val ProjectId : UUID,
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId,
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val createTaskUseCase: CreateTaskUseCase,
-    private val getProjectByIdUseCase :GetProjectByIdUseCase
-    ):UiScreen {
-
+    ):UiScreen, KoinComponent {
+    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
+    private val createTaskUseCase: CreateTaskUseCase by inject()
+    private val getProjectByIdUseCase :GetProjectByIdUseCase by inject()
     override fun show() {
         val projectResult = getProjectByIdUseCase.getProjectById(ProjectId)
 
@@ -33,7 +34,7 @@ class ViewProjectForUserUI(
                 )
 
                 viewer.printInfoLine("Choose an option:")
-                viewer.printOptions("View state for project", "Create new task", "Exit")
+                viewer.printOptions("View state for project", "View all task for project","Create new task", "Exit")
 
                 val option = reader.readInt()
                 when (option) {
@@ -49,17 +50,19 @@ class ViewProjectForUserUI(
                         if (project.state.isEmpty()) {
                             viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
                         } else {
-                            CreateNewTaskUI(
-                                viewer,
-                                reader,
-                                getCurrentLoggedInUserUseCase,
-                                ProjectId,
-                                createTaskUseCase,
-                                getProjectByIdUseCase
+                            ViewAllTaskForProjectUI(
+                                project.id,
                             ).show()
                         }
                     }
                     3 -> {
+                        if (project.state.isEmpty()) {
+                            viewer.printError("Cannot create a task because this project has no states. Please add a state first.")
+                        } else {
+                            CreateNewTaskUI(ProjectId).show()
+                        }
+                    }
+                    4 -> {
                         viewer.printGoodbyeMessage("Goodbye")
                     }
                     else -> viewer.printError("Invalid option.")
