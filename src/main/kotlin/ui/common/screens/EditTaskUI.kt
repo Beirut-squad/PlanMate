@@ -80,6 +80,7 @@ class EditTaskUI(
                 try {
                     editTaskUseCase.editTask(task, newTitle, newDescription, selectedState)
                     viewer.printInfoLine("Task updated successfully!")
+                    ViewProjectsForUserUI().show()
                 } catch (e: Exception) {
                     viewer.printError("Failed to update task: ${e.message}")
                 }
