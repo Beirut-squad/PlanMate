@@ -11,11 +11,12 @@ import org.example.ui.common.components.Viewer
 class EditProjectScreen(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val project: Project,
     private val editProjectNameUseCase: EditProjectNameUseCase,
     private val editProjectDescriptionUseCase: EditProjectDescriptionUseCase,
     private val currentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
 ) : UiScreen {
+
+    lateinit var project: Project
 
     override fun show() {
         var isContinueProcess = true
@@ -25,7 +26,7 @@ class EditProjectScreen(
             when (option) {
                 1 -> editProjectName()
                 2 -> editProjectDescription()
-                0 -> isContinueProcess = false
+                3 -> isContinueProcess = false
             }
         }
     }
@@ -33,7 +34,7 @@ class EditProjectScreen(
     private fun displayMenu() {
         viewer.printOptions("1- Edit project name")
         viewer.printOptions("2- Edit project description")
-        viewer.printOptions("0- Return")
+        viewer.printOptions("3- Return")
         viewer.printTitle("Choose what you want to change in project.")
     }
 

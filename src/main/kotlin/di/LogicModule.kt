@@ -3,6 +3,8 @@ package org.example.di
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import logic.use_cases.log.GetUserProjectLogsUseCase
+import logic.use_cases.project_manegment.EditProjectDescriptionUseCase
+import logic.use_cases.project_manegment.EditProjectNameUseCase
 import org.example.logic.use_cases.authentication.*
 import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.logic.use_cases.authentication.encryption.Encryptor
@@ -31,4 +33,6 @@ val logicModule = module {
     singleOf(::GetAllProjectsUseCases)
     singleOf(::CreateProjectLogUseCase)
     singleOf(::DeleteProjectUseCase)
+    singleOf(::EditProjectNameUseCase)
+    singleOf(::EditProjectDescriptionUseCase)
 }

@@ -13,9 +13,10 @@ class SingleProjectScreen(
     private val viewer: Viewer,
     private val reader: Reader,
     private val deleteProjectUseCase: DeleteProjectUseCase,
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
+    private val editProjectScreen: EditProjectScreen
 ): UiScreen {
-    var project: Project? = null
+    lateinit var project: Project
     val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
     private var running = true
 
@@ -40,11 +41,12 @@ class SingleProjectScreen(
         val input = reader.readInt()
         when (input) {
             1 -> {
-                // TODO
+                editProjectScreen.project = project
+                editProjectScreen.show()
             }
             2 -> {
                 deleteProjectUseCase.deleteProject(
-                    project = project!!,
+                    project = project,
                     creatorUserID = user?.id ?: UUID.randomUUID()
                 )
                 running = false

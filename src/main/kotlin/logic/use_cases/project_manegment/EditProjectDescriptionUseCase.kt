@@ -4,6 +4,7 @@ import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.exceptions.project_magement_exceptions.EmptyProjectDescriptionException
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
+import java.time.LocalDateTime
 import java.util.*
 
 class EditProjectDescriptionUseCase(
@@ -14,7 +15,8 @@ class EditProjectDescriptionUseCase(
         if (newDescription.isNullOrBlank()) { throw EmptyProjectDescriptionException() }
         if (project.description == newDescription) { return }
         val editedProject = project.copy(
-            description = newDescription
+            description = newDescription,
+            updatedAt = LocalDateTime.now()
         )
         projectRepository.editProject(editedProject)
         logUseCase.createProjectLog(

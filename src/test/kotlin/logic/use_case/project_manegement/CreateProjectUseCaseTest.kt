@@ -5,6 +5,7 @@ import io.mockk.verify
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.exceptions.project_magement_exceptions.BlankFieldsException
 import org.example.logic.repositories.project_repository.ProjectRepository
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,12 +17,13 @@ class CreateProjectUseCaseTest {
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
     private val logUseCase: CreateProjectLogUseCase = mockk(relaxed = true)
     private var createProjectUseCase: CreateProjectUseCase = mockk()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
     private val creatorUserID = UUID.randomUUID()
 
 
     @BeforeEach
     fun setup() {
-        createProjectUseCase = CreateProjectUseCase(projectRepository,logUseCase)
+        createProjectUseCase = CreateProjectUseCase(projectRepository,logUseCase,getCurrentLoggedInUserUseCase)
     }
 
     @Test
@@ -33,7 +35,6 @@ class CreateProjectUseCaseTest {
 
         // When
         createProjectUseCase.createProject(
-            creatorUserID = creatorUserID,
             name = name,
             description = description,
             stateNames = stateNames,
@@ -64,7 +65,6 @@ class CreateProjectUseCaseTest {
         // When
         val exception = assertThrows<BlankFieldsException> {
             createProjectUseCase.createProject(
-                creatorUserID = creatorUserID,
                 name = name,
                 description = description,
                 stateNames = stateNames,
@@ -87,7 +87,6 @@ class CreateProjectUseCaseTest {
         // When
         val exception = assertThrows<BlankFieldsException> {
             createProjectUseCase.createProject(
-                creatorUserID = creatorUserID,
                 name = name,
                 description = description,
                 stateNames = stateNames,
@@ -110,7 +109,6 @@ class CreateProjectUseCaseTest {
         // When
         val exception = assertThrows<BlankFieldsException> {
             createProjectUseCase.createProject(
-                creatorUserID = creatorUserID,
                 name = name,
                 description = description,
                 stateNames = stateNames,
