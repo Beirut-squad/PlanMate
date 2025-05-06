@@ -18,6 +18,7 @@ import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAll
 import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
 import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
 import org.example.logic.exceptions.project_magement_exceptions.NoStateException
+import org.example.logic.exceptions.project_magement_exceptions.ProjectStateNotFoundException
 import org.example.models.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.*
@@ -872,5 +873,54 @@ class ProjectDataSourceImplTest {
         assertTrue(result.exceptionOrNull() is IOException)
     }
     //endregion
+
+    @Test
+    fun `getProjectsForUserById returns projects when user has projects`() {
+        // Given
+        val userId = UUID.randomUUID()
+        val projects = listOf(
+            Project(UUID.randomUUID(), "Project 1", "Desc", userId, state = listOf()),
+            Project(UUID.randomUUID(), "Project 2", "Desc", userId, state = listOf())
+        )
+        every { csvReader.read(fileName) } returns projects
+
+        // When
+        val result = dataSource.getProjectsForUserById(userId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals(2, result.getOrNull()?.size)
+        assertEquals(userId, result.getOrNull()?.first()?.creatorUserID)
+    }
+    @Test
+    fun `getProjectsForUserById returns empty list when user has no projects`() {
+        // Given
+        val userId = UUID.randomUUID()
+        val otherUserId = UUID.randomUUID()
+        val projects = listOf(
+            Project(UUID.randomUUID(), "Other Project", "Desc", otherUserId, state = listOf())
+        )
+        every { csvReader.read(fileName) } returns projects
+
+        // When
+        val result = dataSource.getProjectsForUserById(userId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrNull()?.isEmpty() == true)
+    }
+    @Test
+    fun `getProjectsForUserById returns failure when exception occurs`() {
+        // Given
+        val userId = UUID.randomUUID()
+        every { csvReader.read(fileName) } throws RuntimeException("File read error")
+
+        // When
+        val result = dataSource.getProjectsForUserById(userId)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertEquals("File read error", result.exceptionOrNull()?.message)
+    }
 
 }
