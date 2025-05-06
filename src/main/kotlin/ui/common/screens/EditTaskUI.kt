@@ -43,14 +43,18 @@ class EditTaskUI(
                         """.trimIndent()
                     )
                 }
-                viewer.printLoader("Enter the task number to edit:")
-                val taskIndex = reader.readInput()?.toIntOrNull()
-                if (taskIndex == null || taskIndex !in 1..tasks.size) {
-                    viewer.printError("Invalid task number.")
-                    return
+                viewer.printLoader("Enter the task number to edit(or any thing to exit):")
+                val input = reader.readInput()?.trim()
+                val number = input?.toIntOrNull()
+
+                if (number == null || number !in 1..tasks.size) {
+                    viewer.printError("Invalid input. Returning to the projects screen.")
+                    return ViewProjectsForUserUI().show()
                 }
-                val selectedTask = tasks[taskIndex - 1]
+
+                val selectedTask = tasks[number - 1]
                 editSelectedTask(selectedTask)
+
             },
             onFailure = {
                 viewer.printError("Failed to retrieve tasks: ${it.message}")
