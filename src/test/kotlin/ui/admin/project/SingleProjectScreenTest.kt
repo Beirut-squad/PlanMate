@@ -1,26 +1,31 @@
 package ui.admin.project
 
 import creator_helper.createProjectHelper
+import creator_helper.createUserHelper
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
-import org.example.ui.admin.project.DeleteProjectScreen
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.ui.admin.project.SingleProjectScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class SingleProjectScreenTest {
     private val viewer: Viewer = mockk(relaxed = true)
     private val reader: Reader = mockk(relaxed = true)
-    private val deleteProjectScreen: DeleteProjectScreen = mockk(relaxed = true)
+    private val deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
     private lateinit var singleProjectScreen: SingleProjectScreen
 
     @BeforeEach
     fun setUp() {
-        singleProjectScreen = SingleProjectScreen(viewer, reader, deleteProjectScreen)
+        every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.success(createUserHelper())
+        singleProjectScreen = SingleProjectScreen(viewer, reader, deleteProjectUseCase, getCurrentLoggedInUserUseCase)
     }
 
     @Test
@@ -90,7 +95,12 @@ class SingleProjectScreenTest {
         singleProjectScreen.show()
 
         // Then
-        verify(exactly = 1) { deleteProjectScreen.show() }
+        verify(exactly = 1) {
+            deleteProjectUseCase.deleteProject(
+                project = singleProjectScreen.project!!,
+                creatorUserID = any<UUID>()
+            )
+        }
     }
 
     @Test
@@ -105,7 +115,10 @@ class SingleProjectScreenTest {
         // Then
         verifyOrder {
             viewer.printError("Invalid option")
-            deleteProjectScreen.show()
+            deleteProjectUseCase.deleteProject(
+                project = singleProjectScreen.project!!,
+                creatorUserID = any<UUID>()
+            )
         }
     }
 }

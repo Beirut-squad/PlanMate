@@ -1,6 +1,9 @@
 package org.example.ui.admin.project
 
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.models.Project
+import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
@@ -8,9 +11,11 @@ import org.example.ui.common.components.Viewer
 class SingleProjectScreen(
     private val viewer: Viewer,
     private val reader: Reader,
-    private val deleteProjectScreen: DeleteProjectScreen
+    private val deleteProjectUseCase: DeleteProjectUseCase,
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ): UiScreen {
     var project: Project? = null
+    val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
 
     override fun show() {
         viewer.printTitle("Project ${project?.name}")
@@ -32,7 +37,10 @@ class SingleProjectScreen(
                 // TODO
             }
             2 -> {
-                deleteProjectScreen.show()
+                deleteProjectUseCase.deleteProject(
+                    project = project!!,
+                    creatorUserID = user?.id!!
+                )
             }
             3 -> {
                 // TODO
