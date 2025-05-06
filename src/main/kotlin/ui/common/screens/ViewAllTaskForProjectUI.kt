@@ -5,6 +5,7 @@ import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID

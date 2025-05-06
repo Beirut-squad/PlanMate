@@ -1,22 +1,21 @@
-package org.example.ui.common.screens
+package org.example.ui.mate.home_screen
 
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
 import org.example.models.Project
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.MateHomeUI
+import org.example.ui.common.screens.ViewProjectForMateUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
-import kotlin.getValue
 
 class ViewProjectsForUserUI(
 
-    ) : UiScreen , KoinComponent{
+    ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase  by inject()
-    private val getProjectsForUserById: GetProjectsForUserByIdUseCase  by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
+    private val getProjectsForUserById: GetProjectsForUserByIdUseCase by inject()
     override fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
         val user = currentUserResult.getOrNull()
@@ -78,7 +77,7 @@ class ViewProjectsForUserUI(
     }
 
     private fun handleProjectSelectionById(projectId: UUID) {
-        ViewProjectForUserUI(
+        ViewProjectForMateUI(
             projectId,
         ).show()
     }

@@ -7,6 +7,7 @@ import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.koin.core.context.startKoin

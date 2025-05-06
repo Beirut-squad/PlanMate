@@ -5,11 +5,12 @@ import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
 
-class ViewProjectForUserUI(
+class ViewProjectForMateUI(
     private val projectId : UUID,
     ):UiScreen, KoinComponent {
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
