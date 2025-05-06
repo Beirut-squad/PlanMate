@@ -10,7 +10,7 @@ interface ProjectDataSource {
     suspend fun deleteProject(id: UUID)
     suspend fun getAllProjects(): List<Project>
     suspend fun getProject(id: UUID): Project
-    fun addStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun editStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
+    suspend fun addStateToProject(projectId: UUID, state: State)
+    suspend fun editStateToProject(projectId: UUID, state: State)
+    suspend fun removeStateFromProject(projectId: UUID, state: State)
 }
