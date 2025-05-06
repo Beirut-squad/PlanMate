@@ -6,7 +6,7 @@ import io.mockk.verify
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.models.Project
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectsScreen
+import org.example.ui.common.screens.ViewProjectsUI
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -15,7 +15,7 @@ class ViewProjectsScreenTest {
 
     private val viewer: Viewer = mockk(relaxed = true) // Mocked viewer, relaxed for convenient stubbing
     private val getAllProjectsUseCases: GetAllProjectsUseCases = mockk() // Mocked use case
-    private val viewProjectsScreen = ViewProjectsScreen(viewer, getAllProjectsUseCases) // System under test
+    private val viewProjectsScreen = ViewProjectsUI(viewer, getAllProjectsUseCases) // System under test
 
     @Test
     fun `should display all projects when getAllProjects returns a list of projects`() {
