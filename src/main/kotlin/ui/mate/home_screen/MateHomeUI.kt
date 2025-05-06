@@ -5,13 +5,14 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.common.screens.ViewProjectLogsUI
 import org.example.ui.common.components.Viewer
 import org.example.ui.common.screens.ViewProjectsForUserUI
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class MateHomeUI(
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val viewProjectsForUserUI : ViewProjectsForUserUI,
-    private val viewProjectLogsUI: ViewProjectLogsUI
-) : UiScreen {
+class MateHomeUI() : UiScreen, KoinComponent {
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val viewProjectsForUserUI: ViewProjectsForUserUI by inject()
+    private val viewProjectLogsUI: ViewProjectLogsUI by inject()
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
@@ -19,7 +20,7 @@ class MateHomeUI(
         while (running) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Projects","View Project Logs", "Exit")
+            viewer.printOptions("View Projects", "View Project Logs", "Exit")
 
             val option = reader.readInt()
             when (option) {
@@ -44,6 +45,7 @@ class MateHomeUI(
     private fun goToViewProjectsScreen() {
         viewProjectsForUserUI.show()
     }
+
     private fun goToViewProjectLogsScreen() {
         viewProjectLogsUI.show()
     }
