@@ -6,9 +6,9 @@ import java.util.*
 interface TaskDataSource {
   //  abstract val documents: Any
 
-    suspend fun createTask(task: Task) : Result<Unit>
-    suspend fun editTask(task: Task) : Result<Unit>
-    suspend fun deleteTask(id:UUID) : Result<Unit>
-    suspend fun getAllTasks() : Result<List<Task>>
-    suspend fun getTask(id: UUID) : Result<Task>
+    suspend fun createTask(task: Task)
+    suspend fun editTask(task: Task)
+    suspend fun deleteTask(id:UUID)
+    suspend fun getAllTasks() : List<Task>
+    suspend fun getTask(id: UUID) : Task
 }

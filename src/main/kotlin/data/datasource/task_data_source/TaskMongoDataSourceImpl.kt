@@ -1,9 +1,9 @@
 package org.example.data.datasource.task_data_source
 
 import data.mongo_db.MongoConnection
-import logic.exceptions.task_management_exception.GetTaskException
-import logic.exceptions.task_management_exception.TaskDeletionException
-import logic.exceptions.task_management_exception.TaskEditException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import logic.exceptions.task_management_exception.*
 import org.bson.Document
 import org.example.models.State
 import org.example.models.Task
@@ -12,32 +12,31 @@ import java.util.*
 
 class TaskMongoDataSourceImpl(
     private val mongoConnection: MongoConnection
-): TaskDataSource {
-    override suspend fun createTask(task: Task): Result<Unit> {
-        val docTask = Document("id", task.id.toString())
-            .append("projectId", task.projectId.toString())
-            .append("title", task.title)
-            .append("description", task.description)
-            .append("state", Document("id", task.state.id.toString()).append("name", task.state.name))
-            .append("creatorUserID", task.creatorUserID.toString())
-            .append("createdAt", task.createdAt)
-            .append("updatedAt", task.updatedAt)
+) : TaskDataSource {
 
-        return try{
-            mongoConnection.tasks.insertOne(docTask)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            print("Error creating task: ${e.message}")
-            throw e
+    override suspend fun createTask(task: Task) {
+        withContext(Dispatchers.IO) {
+            val docTask = Document("id", task.id.toString())
+                .append("projectId", task.projectId.toString())
+                .append("title", task.title)
+                .append("description", task.description)
+                .append("state", Document("id", task.state.id.toString()).append("name", task.state.name))
+                .append("creatorUserID", task.creatorUserID.toString())
+                .append("createdAt", task.createdAt)
+                .append("updatedAt", task.updatedAt)
+
+            try {
+                mongoConnection.tasks.insertOne(docTask)
+            } catch (e: Exception) {
+                throw TaskCreationException("Error creating task: ${e.message}")
+            }
         }
     }
+    override suspend fun editTask(task: Task) = withContext(Dispatchers.IO) {
+        try {
+            val findTasks = mongoConnection.tasks.find(Document("id", task.id.toString())).first()
+                ?: throw TaskEditException("Task not found with id: ${task.id}")
 
-
-    override suspend fun editTask(task: Task): Result<Unit> {
-        return try {
-            var findTasks = mongoConnection.tasks.find(Document("id", task.id.toString())).first()
-            if (findTasks == null)
-                return Result.failure((TaskEditException("Task not found with id: ${task.id}")))
             val updatedTask = Document()
                 .append("projectId", task.projectId.toString())
                 .append("title", task.title)
@@ -51,84 +50,77 @@ class TaskMongoDataSourceImpl(
                 Document("id", task.id.toString()),
                 Document("\$set", updatedTask)
             )
-            if (updateResult.modifiedCount > 0) {
-                return Result.success(Unit)
-            } else
-            Result.failure(TaskEditException("Failed to edit task"))
 
+            if (updateResult.modifiedCount == 0L) {
+                throw TaskEditException("Failed to edit task with id: ${task.id}")
+            }
         } catch (e: Exception) {
-        Result.failure(TaskEditException("Failed to edit task: ${e.message}"))
-    }
-    }
-
-    override suspend fun deleteTask(id: UUID): Result<Unit> {
-        return try {
-            var deletedTask = mongoConnection.tasks.findOneAndDelete(Document("id" , id.toString()))
-            if (deletedTask != null)
-                Result.success(Unit)
-            else
-                Result.failure(TaskDeletionException("No task found with id: $id"))
-        }catch (e: Exception) {
-            Result.failure(TaskDeletionException("Failed to delete task: ${e.message}"))
+            throw TaskEditException("Failed to edit task: ${e.message}")
         }
     }
 
-    override suspend fun getAllTasks(): Result<List<Task>> {
-        return try {
+    override suspend fun deleteTask(id: UUID) = withContext(Dispatchers.IO) {
+        try {
+            val deletedTask = mongoConnection.tasks.findOneAndDelete(Document("id", id.toString()))
+            if (deletedTask == null) {
+                throw TaskDeletionException("No task found with id: $id")
+            }
+        } catch (e: Exception) {
+            throw TaskDeletionException("Failed to delete task: ${e.message}")
+        }
+    }
+
+    override suspend fun getAllTasks()= withContext(Dispatchers.IO) {
+        try {
             val documents = mongoConnection.tasks.find().toList()
 
             if (documents.isEmpty()) {
-                Result.failure(GetTaskException("No tasks found"))
-            } else {
-                val tasks = documents.map { doc ->
-                    Task(
-                        id = UUID.fromString(doc.getString("id")),
-                        projectId = UUID.fromString(doc.getString("projectId")),
-                        title = doc.getString("title"),
-                        description = doc.getString("description"),
-                        state = State(
-                            id = UUID.randomUUID(),
-                            name = doc.getString("state")
-                        ),
-                        creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
-                        createdAt = doc.get("createdAt", LocalDateTime::class.java),
-                        updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
-                    )
-                }
-                Result.success(tasks)
+                throw GetTaskException("No tasks found")
+            }
+
+            documents.map { doc ->
+                val stateDoc = doc.get("state", Document::class.java)
+                Task(
+                    id = UUID.fromString(doc.getString("id")),
+                    projectId = UUID.fromString(doc.getString("projectId")),
+                    title = doc.getString("title"),
+                    description = doc.getString("description"),
+                    state = State(
+                        id = UUID.fromString(stateDoc.getString("id")),
+                        name = stateDoc.getString("name")
+                    ),
+                    creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
+                    createdAt = doc.get("createdAt", LocalDateTime::class.java),
+                    updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
+                )
             }
         } catch (e: Exception) {
-            Result.failure(GetTaskException("Failed to retrieve tasks: ${e.message}"))
+            throw GetTaskException("Failed to retrieve tasks: ${e.message}")
         }
     }
 
-
-
-    override suspend fun getTask(id: UUID): Result<Task> {
-        return try {
+    override suspend fun getTask(id: UUID) = withContext(Dispatchers.IO) {
+        try {
             val doc = mongoConnection.tasks.find(Document("id", id.toString())).first()
+                ?: throw GetTaskException("Task with ID $id not found")
 
-            if (doc != null) {
-                val task = Task(
-                        id = UUID.fromString(doc.getString("id")),
-                        projectId = UUID.fromString(doc.getString("projectId")),
-                        title = doc.getString("title"),
-                        description = doc.getString("description"),
-                        state = State(
-                            id = UUID.randomUUID(),
-                            name = doc.getString("state")
-                        ),
-                        creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
-                        createdAt = doc.get("createdAt", LocalDateTime::class.java),
-                        updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
-                    )
-                Result.success(task)
-                }
-            else
-                Result.failure(GetTaskException("Task with ID $id not found"))
+            val stateDoc = doc.get("state", Document::class.java)
+
+            Task(
+                id = UUID.fromString(doc.getString("id")),
+                projectId = UUID.fromString(doc.getString("projectId")),
+                title = doc.getString("title"),
+                description = doc.getString("description"),
+                state = State(
+                    id = UUID.fromString(stateDoc.getString("id")),
+                    name = stateDoc.getString("name")
+                ),
+                creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
+                createdAt = doc.get("createdAt", LocalDateTime::class.java),
+                updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
+            )
         } catch (e: Exception) {
-            Result.failure(GetTaskException("Failed to retrieve tasks: ${e.message}"))
+            throw GetTaskException("Failed to retrieve task: ${e.message}")
         }
     }
-
 }
