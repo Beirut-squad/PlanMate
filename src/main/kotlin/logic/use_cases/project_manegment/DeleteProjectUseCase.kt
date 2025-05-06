@@ -13,4 +13,4 @@ class DeleteProjectUseCase(
         logUseCase.createProjectLog(creatorUserID, project, project)
         projectRepository.deleteProject(project.id)
     }
-    }
+}
