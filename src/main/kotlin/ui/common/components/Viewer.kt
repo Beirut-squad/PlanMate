@@ -129,6 +129,11 @@ class Viewer(
         }
     }
 
+    fun printOptions(options: List<String>) {
+        for (i in options.indices) {
+            printOption("${i + 1}. ${options[i]}")
+        }
+    }
     fun readIntInput(prompt: String): Int? {
         printPlainText(prompt, withNewLine = false)
         val input = readLine()

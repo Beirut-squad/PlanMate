@@ -31,7 +31,7 @@ class CreateNewProjectScreenTest {
         every { reader.readInput() } returnsMany listOf(name, description, stateName)
         every { viewer.printTitle(any()) } just Runs
         every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOptions(any(), any()) } just Runs
 
         // When
         createNewProjectScreen.show()
@@ -73,7 +73,7 @@ class CreateNewProjectScreenTest {
         every { reader.readInput() } returns "test"
         every { viewer.printTitle(any()) } just Runs
         every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOptions(any(), any()) } just Runs
 
         // When
         createNewProjectScreen.show()
@@ -96,7 +96,7 @@ class CreateNewProjectScreenTest {
         every { reader.readInput() } returns "test"
         every { viewer.printTitle(any()) } just Runs
         every { viewer.printInfoLine(any()) } just Runs
-        every { viewer.printOptions(any()) } just Runs
+        every { viewer.printOptions(any(), any()) } just Runs
 
         // When
         createNewProjectScreen.show()

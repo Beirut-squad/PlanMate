@@ -19,7 +19,6 @@ class CreateNewProjectScreen(
         viewer.printOption("Tell me more about description of your project")
         val description = reader.readInput()
         createProjectUseCase.createProject(
-            creatorUserID = UUID.randomUUID(),
             name = name.toString(),
             description = description.toString(),
             stateNames = emptyList()
