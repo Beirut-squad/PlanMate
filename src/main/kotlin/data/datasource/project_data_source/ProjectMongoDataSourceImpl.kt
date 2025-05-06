@@ -42,8 +42,19 @@ class ProjectMongoDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun deleteProject(id: UUID): Result<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun deleteProject(id: UUID) {
+        withContext(Dispatchers.IO) {
+            try {
+                val result = mongoConnection.projects.deleteOne(Filters.eq("_id", id.toString()))
+                if (result.deletedCount > 0) {
+                    println("Project with ID $id deleted successfully")
+                } else {
+                    println("No project found with ID $id")
+                }
+            } catch (e: Exception) {
+                println("Error deleting project: ${e.message}")
+            }
+        }
     }
 
 
