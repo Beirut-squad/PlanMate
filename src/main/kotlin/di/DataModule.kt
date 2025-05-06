@@ -34,11 +34,9 @@ val dataModule = module {
     single<AuthenticationDataSource> {
         AuthenticationDataSourceImpl(UserCsvWriter(), CsvReader(UserCsvParser()))
     }
-
     single<AuthenticationRepository> {
         AuthenticationRepositoryImpl(get())
     }
-
     single<LogDataSource> {
         LogDataSourceImpl(
             csvProjectLogReader = CsvReader(LogCsvParserForProject(ProjectCsvParser(StateCsvParser()))),
@@ -47,25 +45,21 @@ val dataModule = module {
             csvTaskLogWriter = LogCsvWriterForTask()
         )
     }
-
     single<ProjectDataSource> {
         ProjectDataSourceImpl(
             csvReader = CsvReader(ProjectCsvParser(StateCsvParser())),
             csvWriter = ProjectCsvWriter(),
         )
     }
-
     single<LogRepository> {
         LogRepositoryImpl(get())
     }
-
     single<ProjectRepository> {
         ProjectRepositoryImpl(get())
     }
     single<TaskDataSource> {
         TaskDataSourceImpl(CsvReader(TaskCsvParser(StateCsvParser())), TaskCsvWriter())
     }
-
     single<TaskRepository> {
         TaskRepositoryImpl(get())
     }

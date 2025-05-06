@@ -7,16 +7,20 @@ import org.example.models.Project
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.UUID
+import kotlin.getValue
 
 class CreateNewTaskUI(
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val projectId: UUID,
-    private val createTaskUseCase: CreateTaskUseCase,
-    private val getProjectByIdUseCase: GetProjectByIdUseCase
-) : UiScreen {
+    ) : UiScreen, KoinComponent {
+
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
+    private val createTaskUseCase: CreateTaskUseCase by inject()
+    private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
 
     override fun show() {
         getProjectByIdUseCase.getProjectById(projectId).fold(
@@ -29,10 +33,9 @@ class CreateNewTaskUI(
 
                     val selectedStateIndex = getValidStateInput(selectedProject)
 
-                    if (selectedStateIndex != -1) {
                         val selectedState = selectedProject.state[selectedStateIndex]
                         createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-                    }
+
                 } ?: viewer.printError("No user found")
             },
             onFailure = { viewer.printError("Failed to retrieve project: ${it.message}") }
@@ -53,7 +56,6 @@ class CreateNewTaskUI(
     }
 
     private fun getValidStateInput(selectedProject: Project): Int {
-        var isValidState = false
         var selectedStateIndex: Int? = null
         do {
             viewer.printOptions("Choose a state for the task:")
@@ -72,12 +74,10 @@ class CreateNewTaskUI(
 
             if (selectedStateIndex == null || selectedStateIndex !in selectedProject.state.indices) {
                 viewer.printError("Invalid state selection. Please choose a valid number between 1 and ${selectedProject.state.size}.")
-            } else {
-                isValidState = true
             }
-        } while (!isValidState)
+        } while (selectedStateIndex == null || selectedStateIndex !in selectedProject.state.indices)
 
-        return selectedStateIndex ?: -1
+        return selectedStateIndex
     }
 
 
