@@ -14,7 +14,10 @@ class AuthenticationDataSourceFakeImpl : AuthenticationDataSource {
     override fun login(email: String, password: String): Result<User> {
         return users
             .find { it.email == email && it.password == password }
-            ?.let { Result.success(it) }
+            ?.let {
+                currentUser = it
+                Result.success(it)
+            }
             ?: Result.failure(Exception("User not found"))
     }
 
@@ -80,3 +83,5 @@ class AuthenticationDataSourceFakeImpl : AuthenticationDataSource {
         return Result.success(users)
     }
 }
+
+// https://meet.google.com/ida-kuzh-khe
