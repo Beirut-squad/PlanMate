@@ -34,7 +34,7 @@ class ViewAllTaskForProjectUI(
                         )
                     }
                     viewer.printInfoLine("\nPlease choose an option:")
-                    viewer.printOptions("Edit a task", "Delete a task","Go back")
+                    viewer.printOptions("Edit a task", "Delete a task","Enter Any Thing To Go Back")
                     val choice = reader.readInput()?.toIntOrNull()
                     when (choice) {
                         1 -> {
@@ -44,12 +44,10 @@ class ViewAllTaskForProjectUI(
                         2 -> {
                             DeleteTaskUI(projectId).show()
                         }
-                        3 -> {
-                            viewer.printGoodbyeMessage("Goodbye")
-                            return
-                        }
                         else -> {
-                            viewer.printError("Invalid option. Please try again.")
+                            viewer.printGoodbyeMessage("Goodbye")
+                            ViewProjectsForUserUI().show()
+
                         }
                     }
                 }
