@@ -10,7 +10,7 @@ class GetAllProjectsUseCases(
     private val projectRepository: ProjectRepository,
    private val getAllProjectLogsUseCase: GetAllProjectLogsUseCase
 ) {
-    fun getAllProjects(): Result<List<Project>> {
+    suspend fun getAllProjects(): List<Project> {
         getAllProjectLogsUseCase.getAllProjectLogs()
         return projectRepository.getAllProjects()
     }

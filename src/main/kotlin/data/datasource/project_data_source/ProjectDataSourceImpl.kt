@@ -206,7 +206,7 @@ class ProjectDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getAllProjects(): Result<List<Project>> {
+    override suspend fun getAllProjects(): List<Project> {
         TODO("Not yet implemented")
     }
 

@@ -9,32 +9,29 @@ class ViewProjectsScreen(
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
 ) : UiScreen {
     override suspend fun show() {
+        try {
+            val projects = getAllProjectsUseCases.getAllProjects()
 
-        val allProjects = getAllProjectsUseCases.getAllProjects()
-
-        allProjects.fold(
-            onSuccess = { projects ->
-                if (projects.isNotEmpty()) {
-                    viewer.printTitle("Project: ")
-                    projects.forEachIndexed { index, project ->
-                        viewer.printInfoLine(
-                            """
-                        ${index + 1}.
-                        - Made by: ${project.creatorUserID}
-                        - Name: ${project.name}
-                        - Description: ${project.description}
-                        - Creation Date: ${project.createdAt}
-                        - Update Date: ${project.updatedAt}
+            if (projects.isNotEmpty()) {
+                viewer.printTitle("Project: ")
+                projects.forEachIndexed { index, project ->
+                    viewer.printInfoLine(
+                        """
+                    ${index + 1}.
+                    - Made by: ${project.creatorUserID}
+                    - Name: ${project.name}
+                    - Description: ${project.description}
+                    - Creation Date: ${project.createdAt}
+                    - Update Date: ${project.updatedAt}
                     """.trimIndent()
-                        )
-                    }
-                } else {
-                    viewer.printInfoLine("No projects found.")
+                    )
                 }
-            },
-            onFailure = {
-                viewer.printError("Failed to retrieve projects: ${it.message}")
+            } else {
+                viewer.printInfoLine("No projects found.")
             }
-        )
+        } catch (e: Exception) {
+            viewer.printError("Failed to retrieve projects: ${e.message}")
+        }
     }
+
 }

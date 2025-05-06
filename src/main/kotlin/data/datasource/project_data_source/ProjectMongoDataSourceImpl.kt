@@ -1,12 +1,15 @@
 package org.example.data.datasource.project_data_source
 
+import com.mongodb.client.model.Filters
 import data.mongo_db.MongoConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
 import org.example.models.Project
 import org.example.models.State
+import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.compareTo
 
 class ProjectMongoDataSourceImpl(
     private val mongoConnection: MongoConnection
@@ -43,10 +46,43 @@ class ProjectMongoDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getAllProjects(): Result<List<Project>> {
-        TODO("Not yet implemented")
-    }
 
+    override suspend fun getAllProjects(): List<Project> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val projectsDoc = mongoConnection.projects.find().toList()
+                if (projectsDoc.isEmpty()) {
+                    emptyList()
+                } else {
+                    projectsDoc.map { projects ->
+                        val states =(projects.get(STATE_FIELD) as? List<*>)?.mapNotNull {
+                                stateDoc ->
+                            (stateDoc as? Document)?.let {
+                                State(
+                                    id = UUID.fromString(it.getString("id")),
+                                    name = it.getString("name")
+                                )
+                            }
+                        }
+                            ?: emptyList()
+                        Project(
+                            id = UUID.fromString(projects.getString(ID_FIELD)),
+                            name = projects.getString(NAME_FIELD),
+                            description = projects.getString(DESCRIPTION_FIELD),
+                            creatorUserID = UUID.fromString(projects.getString(CREATOR_USER_ID_FIELD)),
+                            createdAt = LocalDateTime.parse(projects.getString(CREATED_AT_FIELD)),
+                            updatedAt = LocalDateTime.parse(projects.getString(UPDATED_AT_FIELD)),
+                            state = states
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                println("Error fetching projects: ${e.message}")
+                emptyList()
+            }
+        }
+
+    }
     override fun getProject(id: UUID): Result<Project> {
         TODO("Not yet implemented")
     }

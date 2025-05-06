@@ -22,7 +22,7 @@ class ProjectRepositoryImpl(
         return projectDataSource.deleteProject(id)
     }
 
-    override fun getAllProjects(): Result<List<Project>> {
+    override suspend fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
     }
 
