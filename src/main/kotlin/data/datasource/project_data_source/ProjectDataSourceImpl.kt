@@ -23,171 +23,217 @@ class ProjectDataSourceImpl(
     private val fileName: String = FileName.PROJECTS
 
 ) : ProjectDataSource {
+    //    override suspend fun createProject(project: Project) {
+//        TODO("Not yet implemented")
+//    }
+////    override fun createProject(project: Project): Result<Unit> {
+////        return try {
+////            buildSuccessCreate(project)
+////        } catch (e: Exception) {
+////            Result.failure(ProjectNotCreatedException("Failed to create project: ${e.message}"))
+////        }
+////    }
+//
+//    override fun editProject(project: Project): Result<Unit> {
+//        return try {
+//            buildSuccessEditor(project)
+//        } catch (e: Exception) {
+//            Result.failure(ProjectNotEditedException("Failed to edit project: ${e.message}"))
+//        }
+//    }
+//
+//
+//    override fun deleteProject(id: UUID): Result<Unit> {
+//        return try {
+//            buildSuccessDelete(id)
+//        } catch (e: Exception) {
+//            Result.failure(
+//                ProjectNotDeletedException("Failed to delete project: ${e.message}")
+//            )
+//        }
+//    }
+//
+//    override suspend fun getAllProjects(): List<Project> {
+//        TODO("Not yet implemented")
+//    }
+//
+////    override fun getAllProjects(): Result<List<Project>> {
+////        return try {
+////            val projects = csvReader.read(fileName)
+////            Result.success(projects)
+////        } catch (e: FileNotFoundException) {
+////            Result.success(emptyList())
+////        } catch (e: Exception) {
+////            Result.failure(
+////                ProjectNotGetAllProjectsException("Failed to get projects: ${e.message}")
+////            )
+////        }
+////    }
+//
+//
+//    override fun getProject(id: UUID): Result<Project> {
+//        return runCatching {
+//            csvReader.read(fileName).find { it.id == id }
+//                ?: throw NoProjectFoundException()
+//        }
+//    }
+//
+//    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+//        return modifyProjectState(projectId) { states ->
+//            if (states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
+//            states + state
+//        }
+//    }
+//
+//    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+//        return modifyProjectState(projectId) { states ->
+//            val updatedStates = mutableListOf<State>()
+//            var notFoundState = true
+//            states.forEach { oldState ->
+//                if (haveSameStateName(oldState, state)) throw DuplicateStateException()
+//                updatedStates += if (oldState.id == state.id) {
+//                    notFoundState = false
+//                    state
+//                } else
+//                    oldState
+//            }
+//            if (notFoundState) throw NoStateException()
+//            updatedStates
+//        }
+//    }
+//
+//    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+//        return modifyProjectState(projectId) { states ->
+//            val updatedStates = mutableListOf<State>()
+//            var notFoundState = true
+//            states.forEach { oldState ->
+//                if (oldState.id == state.id) {
+//                    notFoundState = false
+//                } else
+//                    updatedStates += oldState
+//            }
+//            if (notFoundState) throw NoStateException()
+//            updatedStates
+//        }
+//    }
+//
+//
+////    private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
+////        return getAllProjects().mapCatching { projects ->
+////            val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
+////                project.copy(
+////                    state = stateModifier(project.state),
+////                    updatedAt = LocalDateTime.now()
+////                )
+////            }
+////            csvWriter.writeToFile(updatedProjects, fileName)
+////        }
+////    }
+//
+//    private fun findAndUpdateProject(
+//        projects: List<Project>,
+//        projectId: UUID,
+//        projectModifier: (Project) -> Project
+//    ): List<Project> {
+//        val updated = mutableListOf<Project>()
+//        var projectFound = false
+//
+//        for (project in projects) {
+//            if (project.id == projectId) {
+//                projectFound = true
+//                updated += projectModifier(project)
+//            } else {
+//                updated += project
+//            }
+//        }
+//
+//        if (!projectFound) throw NoProjectFoundException()
+//        return updated
+//    }
+//
+//    private fun haveSameStateName(oldState: State, newState: State): Boolean {
+//        return oldState.name.equals(newState.name, ignoreCase = true)
+//    }
+//
+//    private fun buildSuccessCreate(project: Project): Result<Unit> {
+//        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+//        if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
+//            return Result.failure(
+//                ProjectNotCreatedException(
+//                    "Project '${project.name}' already exists for user ${project.creatorUserID}"
+//                )
+//            )
+//        }
+//        csvWriter.writeToFile(existingProjects + project, fileName)
+//        return Result.success(Unit)
+//    }
+//
+//    private fun buildSuccessEditor(project: Project): Result<Unit> {
+//        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+//        val index = existingProjects.indexOfFirst { it.id == project.id }
+//        if (index == -1) {
+//            return Result.failure(
+//                ProjectNotEditedException("Project with ID ${project.id} not found")
+//            )
+//        }
+//        val updatedProjects = existingProjects.toMutableList().apply {
+//            this[index] = project.copy(updatedAt = LocalDateTime.now())
+//        }
+//        csvWriter.writeToFile(updatedProjects, fileName)
+//        return Result.success(Unit)
+//    }
+//
+//    private fun buildSuccessDelete(id: UUID): Result<Unit> {
+//        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
+//        if (existingProjects.none { it.id == id }) {
+//            return Result.failure(
+//                ProjectNotDeletedException("Project with ID $id not found")
+//            )
+//        }
+//        val updatedProjects = existingProjects.filterNot { it.id == id }
+//        csvWriter.writeToFile(updatedProjects, fileName)
+//        return Result.success(Unit)
+//    }
     override suspend fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
-//    override fun createProject(project: Project): Result<Unit> {
-//        return try {
-//            buildSuccessCreate(project)
-//        } catch (e: Exception) {
-//            Result.failure(ProjectNotCreatedException("Failed to create project: ${e.message}"))
-//        }
-//    }
 
     override fun editProject(project: Project): Result<Unit> {
-        return try {
-            buildSuccessEditor(project)
-        } catch (e: Exception) {
-            Result.failure(ProjectNotEditedException("Failed to edit project: ${e.message}"))
-        }
+        TODO("Not yet implemented")
     }
 
-
     override fun deleteProject(id: UUID): Result<Unit> {
-        return try {
-            buildSuccessDelete(id)
-        } catch (e: Exception) {
-            Result.failure(
-                ProjectNotDeletedException("Failed to delete project: ${e.message}")
-            )
-        }
+        TODO("Not yet implemented")
     }
 
     override fun getAllProjects(): Result<List<Project>> {
-        return try {
-            val projects = csvReader.read(fileName)
-            Result.success(projects)
-        } catch (e: FileNotFoundException) {
-            Result.success(emptyList())
-        } catch (e: Exception) {
-            Result.failure(
-                ProjectNotGetAllProjectsException("Failed to get projects: ${e.message}")
-            )
-        }
+        TODO("Not yet implemented")
     }
+
 
 
     override fun getProject(id: UUID): Result<Project> {
-        return runCatching {
-            csvReader.read(fileName).find { it.id == id }
-                ?: throw NoProjectFoundException()
-        }
+        TODO("Not yet implemented")
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
-        return modifyProjectState(projectId) { states ->
-            if (states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
-            states + state
-        }
-    }
-
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
-        return modifyProjectState(projectId) { states ->
-            val updatedStates = mutableListOf<State>()
-            var notFoundState = true
-            states.forEach { oldState ->
-                if (haveSameStateName(oldState, state)) throw DuplicateStateException()
-                updatedStates += if (oldState.id == state.id) {
-                    notFoundState = false
-                    state
-                } else
-                    oldState
-            }
-            if (notFoundState) throw NoStateException()
-            updatedStates
-        }
-    }
-
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
-        return modifyProjectState(projectId) { states ->
-            val updatedStates = mutableListOf<State>()
-            var notFoundState = true
-            states.forEach { oldState ->
-                if (oldState.id == state.id) {
-                    notFoundState = false
-                } else
-                    updatedStates += oldState
-            }
-            if (notFoundState) throw NoStateException()
-            updatedStates
-        }
-    }
-
-
-    private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
-        return getAllProjects().mapCatching { projects ->
-            val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
-                project.copy(
-                    state = stateModifier(project.state),
-                    updatedAt = LocalDateTime.now()
-                )
-            }
-            csvWriter.writeToFile(updatedProjects, fileName)
-        }
-    }
-
-    private fun findAndUpdateProject(
-        projects: List<Project>,
+    override fun addStateToProject(
         projectId: UUID,
-        projectModifier: (Project) -> Project
-    ): List<Project> {
-        val updated = mutableListOf<Project>()
-        var projectFound = false
-
-        for (project in projects) {
-            if (project.id == projectId) {
-                projectFound = true
-                updated += projectModifier(project)
-            } else {
-                updated += project
-            }
-        }
-
-        if (!projectFound) throw NoProjectFoundException()
-        return updated
+        state: State
+    ): Result<Unit> {
+        TODO("Not yet implemented")
     }
 
-    private fun haveSameStateName(oldState: State, newState: State): Boolean {
-        return oldState.name.equals(newState.name, ignoreCase = true)
+    override fun editStateToProject(
+        projectId: UUID,
+        state: State
+    ): Result<Unit> {
+        TODO("Not yet implemented")
     }
 
-    private fun buildSuccessCreate(project: Project): Result<Unit> {
-        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-        if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
-            return Result.failure(
-                ProjectNotCreatedException(
-                    "Project '${project.name}' already exists for user ${project.creatorUserID}"
-                )
-            )
-        }
-        csvWriter.writeToFile(existingProjects + project, fileName)
-        return Result.success(Unit)
-    }
-
-    private fun buildSuccessEditor(project: Project): Result<Unit> {
-        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-        val index = existingProjects.indexOfFirst { it.id == project.id }
-        if (index == -1) {
-            return Result.failure(
-                ProjectNotEditedException("Project with ID ${project.id} not found")
-            )
-        }
-        val updatedProjects = existingProjects.toMutableList().apply {
-            this[index] = project.copy(updatedAt = LocalDateTime.now())
-        }
-        csvWriter.writeToFile(updatedProjects, fileName)
-        return Result.success(Unit)
-    }
-
-    private fun buildSuccessDelete(id: UUID): Result<Unit> {
-        val existingProjects = getAllProjects().getOrElse { return Result.failure(it) }
-        if (existingProjects.none { it.id == id }) {
-            return Result.failure(
-                ProjectNotDeletedException("Project with ID $id not found")
-            )
-        }
-        val updatedProjects = existingProjects.filterNot { it.id == id }
-        csvWriter.writeToFile(updatedProjects, fileName)
-        return Result.success(Unit)
+    override fun removeStateFromProject(
+        projectId: UUID,
+        state: State
+    ): Result<Unit> {
+        TODO("Not yet implemented")
     }
 }
