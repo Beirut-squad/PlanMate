@@ -53,7 +53,7 @@ class ViewProjectsForUserUI(
     private fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
         while (isRunning) {
-            val input = viewer.readIntInput("Enter project number (or any Thing to exit):")
+            val input = viewer.readIntInput("Enter project number (or any number to exit):")
             handleUserInput(input, projects).also { isRunning = it }
         }
     }

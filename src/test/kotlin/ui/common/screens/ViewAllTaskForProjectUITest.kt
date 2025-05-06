@@ -41,10 +41,10 @@ class ViewAllTaskForProjectUITest {
         every { anyConstructed<ViewProjectsForUserUI>().show() } just Runs
 
         mockkConstructor(EditTaskUI::class)
-        every { anyConstructed<EditTaskUI>().show() } just runs
+        every { anyConstructed<EditTaskUI>().show() } just Runs
 
         mockkConstructor(DeleteTaskUI::class)
-        every { anyConstructed<DeleteTaskUI>().show() } just runs
+        every { anyConstructed<DeleteTaskUI>().show() } just Runs
 
         startKoin {
             modules(module {
@@ -73,6 +73,7 @@ class ViewAllTaskForProjectUITest {
 
         // Then
         verify { viewer.printInfoLine("No tasks found for this project.") }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
     }
 
     @Test
@@ -99,11 +100,16 @@ class ViewAllTaskForProjectUITest {
         viewAllTaskForProjectUI.show()
 
         // Then
+        verify { viewer.printTitle("Tasks for Project:") }
+        verify { viewer.printInfoLine("To Do".padEnd(30)) }
+        verify { viewer.printInfoLine("-".repeat(30)) }
+        verify { viewer.printInfoLine("Test Task".padEnd(30)) }
         verify { viewer.printGoodbyeMessage("Goodbye") }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
     }
 
     @Test
-    fun `should display multiple tasks correctly`() {
+    fun `should display multiple tasks with the same state correctly`() {
         // Given
         val task2 = createTaskHelper(
             id = UUID.randomUUID(),
@@ -121,8 +127,119 @@ class ViewAllTaskForProjectUITest {
         viewAllTaskForProjectUI.show()
 
         // Then
-        verify { viewer.printInfoLine(match { it.contains("Task #1") && it.contains("Test Task") }) }
-        verify { viewer.printInfoLine(match { it.contains("Task #2") && it.contains("Another Task") }) }
+        verify { viewer.printInfoLine("To Do".padEnd(30)) }
+        verify { viewer.printInfoLine("-".repeat(30)) }
+        verify { viewer.printInfoLine("Test Task".padEnd(30)) }
+        verify { viewer.printInfoLine("Another Task".padEnd(30)) }
+    }
+
+    @Test
+    fun `should display tasks with multiple states correctly`() {
+        // Given
+        val inProgressState = createStateHelper(UUID.randomUUID(), "In Progress")
+        val inProgressTask = createTaskHelper(
+            id = UUID.randomUUID(),
+            title = "In Progress Task",
+            description = "In Progress Description",
+            state = inProgressState,
+            projectId = projectId
+        )
+        val tasks = listOf(task, inProgressTask)
+
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "3"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { viewer.printInfoLine(match { it.contains("To Do") && it.contains("In Progress") }) }
+        verify { viewer.printInfoLine("-".repeat(60)) }
+        verify { viewer.printInfoLine(match { it.contains("Test Task") && it.contains("In Progress Task") }) }
+    }
+
+    @Test
+    fun `should handle different number of tasks in different states`() {
+        // Given
+        val inProgressState = createStateHelper(UUID.randomUUID(), "In Progress")
+        val doneState = createStateHelper(UUID.randomUUID(), "Done")
+
+        val inProgressTask1 = createTaskHelper(
+            id = UUID.randomUUID(),
+            title = "In Progress Task 1",
+            description = "Description 1",
+            state = inProgressState,
+            projectId = projectId
+        )
+
+        val inProgressTask2 = createTaskHelper(
+            id = UUID.randomUUID(),
+            title = "In Progress Task 2",
+            description = "Description 2",
+            state = inProgressState,
+            projectId = projectId
+        )
+
+        val doneTask = createTaskHelper(
+            id = UUID.randomUUID(),
+            title = "Done Task",
+            description = "Done Description",
+            state = doneState,
+            projectId = projectId
+        )
+
+        val tasks = listOf(task, inProgressTask1, inProgressTask2, doneTask)
+
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "3"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { viewer.printInfoLine(match {
+            it.contains("To Do") && it.contains("In Progress") && it.contains("Done")
+        })}
+
+        verify { viewer.printInfoLine("-".repeat(90)) }
+
+        verify { viewer.printInfoLine(match {
+            it.contains("Test Task") && it.contains("In Progress Task 1") && it.contains("Done Task")
+        })}
+
+        verify { viewer.printInfoLine(match { it.contains("In Progress Task 2") }) }
+    }
+
+    @Test
+    fun `should handle state with no tasks`() {
+        // Given
+        val doneState = createStateHelper(UUID.randomUUID(), "Done")
+        val doneTask = createTaskHelper(
+            id = UUID.randomUUID(),
+            title = "Done Task",
+            description = "Done Description",
+            state = doneState,
+            projectId = projectId
+        )
+
+        val tasks = listOf(task, doneTask)
+
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "3"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { viewer.printInfoLine(match {
+            it.contains("To Do") && it.contains("Done") && !it.contains("In Progress")
+        })}
+
+        verify { viewer.printInfoLine("-".repeat(60)) }
+
+        verify { viewer.printInfoLine(match {
+            it.contains("Test Task") && it.contains("Done Task")
+        })}
     }
 
     @Test
@@ -165,22 +282,7 @@ class ViewAllTaskForProjectUITest {
 
         // Then
         verify { viewer.printGoodbyeMessage("Goodbye") }
-    }
-
-    @Test
-    fun `should show error message when invalid option is selected`() {
-        // Given
-        val tasks = listOf(task)
-        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
-        every { reader.readInput() } returns "99"
-
-        // When
-        viewAllTaskForProjectUI.show()
-
-        // Then
-        verify {
-            viewer.printGoodbyeMessage("Goodbye")
-        }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
     }
 
     @Test
@@ -188,15 +290,14 @@ class ViewAllTaskForProjectUITest {
         // Given
         val tasks = listOf(task)
         every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
-        every { reader.readInput() } returns "abc" // Non-numeric input
+        every { reader.readInput() } returns "abc"
 
         // When
         viewAllTaskForProjectUI.show()
 
         // Then
-        verify {
-            viewer.printGoodbyeMessage("Goodbye")
-        }
+        verify { viewer.printGoodbyeMessage("Goodbye") }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
     }
 
     @Test
@@ -204,15 +305,14 @@ class ViewAllTaskForProjectUITest {
         // Given
         val tasks = listOf(task)
         every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
-        every { reader.readInput() } returns null // Null input
+        every { reader.readInput() } returns null
 
         // When
         viewAllTaskForProjectUI.show()
 
         // Then
-        verify {
-            viewer.printGoodbyeMessage("Goodbye")
-        }
+        verify { viewer.printGoodbyeMessage("Goodbye") }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
     }
 
     @Test
@@ -221,7 +321,6 @@ class ViewAllTaskForProjectUITest {
         val tasks = listOf(task)
         every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
         every { reader.readInput() } returns "1"
-
 
         // When
         viewAllTaskForProjectUI.show()
@@ -237,11 +336,64 @@ class ViewAllTaskForProjectUITest {
         every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
         every { reader.readInput() } returns "2"
 
-
         // When
         viewAllTaskForProjectUI.show()
 
         // Then
         verify { DeleteTaskUI(projectId).show() }
     }
+
+    @Test
+    fun `should verify correct constructor arguments when navigating to ViewProjectsForUserUI`() {
+        // Given
+        val tasks = listOf(task)
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "3"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { ViewProjectsForUserUI().show() }
+    }
+
+    @Test
+    fun `should handle task navigation correctly when navigating through menu options`() {
+        // Given
+        val tasks = listOf(task)
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "1"  // Edit task option
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { anyConstructed<EditTaskUI>().show() }
+
+        // Given a new input for delete task option
+        every { reader.readInput() } returns "2"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { anyConstructed<DeleteTaskUI>().show() }
+    }
+
+    @Test
+    fun `should handle project view navigation correctly when selecting exit option`() {
+        // Given
+        val tasks = listOf(task)
+        every { getTasksForProjectUseCase.getTasksForProject(projectId) } returns Result.success(tasks)
+        every { reader.readInput() } returns "3"
+
+        // When
+        viewAllTaskForProjectUI.show()
+
+        // Then
+        verify { viewer.printGoodbyeMessage("Goodbye") }
+        verify { anyConstructed<ViewProjectsForUserUI>().show() }
+    }
+
+
 }
