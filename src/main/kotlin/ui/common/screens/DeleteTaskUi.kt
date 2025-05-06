@@ -1,7 +1,7 @@
 package org.example.ui.common.screens
 
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
-import org.example.logic.use_cases.task_managemnt.GetTasksForProject
+import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -17,11 +17,11 @@ class DeleteTaskUI(
 
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val getTasksForProject: GetTasksForProject by inject()
+    private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val deleteTaskUseCase: DeleteTaskUseCase by inject()
 
     override fun show() {
-        val tasksResult = getTasksForProject.getTasksForProject(projectId)
+        val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
 
         tasksResult.fold(
             onSuccess = { tasks ->

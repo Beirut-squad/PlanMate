@@ -17,7 +17,13 @@ import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.logic.use_cases.authentication.encryption.Encryptor
 import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
+import org.example.logic.use_cases.log.GetTaskLogsByTaskIdUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
+import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
+import org.example.logic.use_cases.task_managemnt.GetAllTasksUseCase
+import org.example.logic.use_cases.task_managemnt.GetTaskUseCase
+import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 
 val logicModule = module {
     singleOf(::GetCurrentLoggedInUserUseCase)
@@ -46,4 +52,10 @@ val logicModule = module {
     singleOf(::EncryptPassword)
     singleOf(::CreateProjectUseCase)
     singleOf(::CreateProjectLogUseCase)
+    singleOf(::GetAllTasksUseCase)
+    singleOf(::GetTasksForProjectUseCase)
+    singleOf(::EditTaskUseCase)
+    singleOf(::GetTaskUseCase)
+    singleOf(::GetTaskLogsByTaskIdUseCase)
+    singleOf(::DeleteTaskUseCase)
 }

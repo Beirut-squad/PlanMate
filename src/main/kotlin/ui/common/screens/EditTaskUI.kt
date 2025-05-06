@@ -2,8 +2,7 @@ package org.example.ui.common.screens
 
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
-import org.example.logic.use_cases.task_managemnt.GetTaskUseCase
-import org.example.logic.use_cases.task_managemnt.GetTasksForProject
+import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.example.models.Project
 import org.example.models.Task
 import org.example.ui.common.components.Reader
@@ -20,12 +19,12 @@ class EditTaskUI(
 
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val getTasksForProject: GetTasksForProject by inject()
+    private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val editTaskUseCase: EditTaskUseCase by inject()
 
     override fun show() {
-        val tasksResult = getTasksForProject.getTasksForProject(projectId)
+        val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
 
         tasksResult.fold(
             onSuccess = { tasks ->
