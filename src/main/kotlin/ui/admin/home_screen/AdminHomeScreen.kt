@@ -4,7 +4,7 @@ import org.example.ui.admin.log.AllProjectsLogsView
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
-import org.example.ui.common.screens.ViewProjectsScreen
+import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.common.components.Viewer
 
 class AdminHomeScreen(
