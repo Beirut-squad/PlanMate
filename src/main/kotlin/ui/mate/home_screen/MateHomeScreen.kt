@@ -13,8 +13,7 @@ class MateHomeScreen(
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
-        var running = true
-        while (running) {
+        while (true) {
 
             viewer.printInfoLine("Choose an option:")
             viewer.printOptions("View Project Logs", "Exit")
@@ -23,7 +22,6 @@ class MateHomeScreen(
             when (option) {
                 1 -> {
                     goToViewProjectLogsScreen()
-                    running = false
                 }
 
                 2 -> {

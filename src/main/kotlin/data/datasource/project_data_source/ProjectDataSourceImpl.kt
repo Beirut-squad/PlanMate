@@ -138,7 +138,7 @@ class ProjectDataSourceImpl(
                     updatedAt = LocalDateTime.now()
                 )
             }
-            csvWriter.writeToFile(updatedProjects, fileName)
+            csvWriter.writeToFile(updatedProjects.first, fileName)
         }
     }
 

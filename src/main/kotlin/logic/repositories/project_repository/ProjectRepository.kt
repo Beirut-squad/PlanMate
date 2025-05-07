@@ -11,9 +11,9 @@ interface ProjectRepository {
     fun deleteProject(id: UUID) :Result<Unit>
     fun getAllProjects() : Result<List<Project>>
     fun getProject(id:UUID) : Result<Project>
-    fun addStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun editStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
+    fun addStateToProject(projectId: UUID, state: State): Result<Project>
+    fun editStateToProject(projectId: UUID, state: State): Result<Project>
+    fun removeStateFromProject(projectId: UUID, state: State): Result<Project>
     fun getProjectForMateByUserId(userId : UUID):Result<List<Project>>
     fun addMateToProject(projectId: UUID, user: User)
 }

@@ -20,8 +20,7 @@ class EditStateUseCase(
         }
 
         editStateToProjectUseCase.editStateToProject(currentUserId, project, updatedState)
-        updatedStates.also { project.state = it }
-
-        project
+        
+        project.copy(state = updatedStates)
     }
 }

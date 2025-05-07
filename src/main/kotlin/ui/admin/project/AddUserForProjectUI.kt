@@ -43,8 +43,7 @@ class AddUserForProjectUI(
         }
 
         val selectedUser = users[selected - 1]
-        println(selectedUser)
         addMateToProjectUseCase.addMateToProject(projectId, selectedUser)
-        viewer.printGoodbyeMessage("Done")
+        viewer.printGoodbyeMessage("User added successfully")
     }
 }

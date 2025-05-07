@@ -18,7 +18,6 @@ class AdminHomeScreen(
     private val viewProjectsScreen: ViewProjectsScreen by inject()
     private val createNewProjectScreen: CreateNewProjectScreen by inject()
     private val allProjectsLogsView: AllProjectsLogsView by inject()
-    private val authenticationMainScreen: AuthenticationMainScreen by inject()
     override fun show() {
 
         while (true) {
@@ -46,7 +45,7 @@ class AdminHomeScreen(
 
                 4 -> {
                     viewer.printGoodbyeMessage("Goodbye")
-                    logOut()
+                    break
                 }
 
             }
@@ -63,8 +62,5 @@ class AdminHomeScreen(
 
     private fun goToViewAllLogsScreen() {
         allProjectsLogsView.show()
-    }
-    private fun logOut() {
-        authenticationMainScreen.show()
     }
 }

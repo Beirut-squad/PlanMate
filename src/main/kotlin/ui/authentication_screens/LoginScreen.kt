@@ -27,6 +27,7 @@ class LoginScreen(
     private fun takeUserLoginInput() {
         val email = takeUserInput("Email")
         val password = takeUserInput("Password")
+
         loginUseCase.login(email, password)
             .onSuccess { user ->
                 viewer.printInfoLine("Login successful!")
