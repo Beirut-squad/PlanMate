@@ -1,5 +1,6 @@
 package org.example.di
 
+import EditStateUseCase
 import logic.use_cases.log.CreateProjectLogUseCase
 import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import logic.use_cases.log.GetUserProjectLogsUseCase
