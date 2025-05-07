@@ -35,7 +35,8 @@ class CreateProjectUseCase(
             state = stateNames.map { State(id = UUID.randomUUID(), name = it) },
             creatorUserID = creatorUserID,
             createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now(),
+            users = emptyList()
         )
     }
 }
