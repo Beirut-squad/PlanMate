@@ -34,4 +34,5 @@ val uiModule = module {
     singleOf(::EditProjectStateUi)
     singleOf(::DeleteProjectStateUi)
     singleOf(::ViewProjectStatesUi)
+    singleOf(::SingleStateUi)
 }

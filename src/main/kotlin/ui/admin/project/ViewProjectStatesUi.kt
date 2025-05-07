@@ -49,6 +49,7 @@ class ViewProjectStatesUi(
                     }
                 }
             }
+            setProject(projectId)
         }
     }
 

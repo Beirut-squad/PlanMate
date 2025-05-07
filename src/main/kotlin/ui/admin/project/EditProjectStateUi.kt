@@ -1,4 +1,5 @@
 import org.example.models.Project
+import org.example.models.State
 import org.example.ui.admin.project.CreateProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -7,47 +8,26 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class EditProjectStateUi(
-    private val project: Project
+    private val project: Project,
+    private val state: State
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val editStateUseCase: EditStateUseCase by inject()
 
     override fun show() {
-        while (true) {
-            viewer.printTitle("Edit Task State")
+            viewer.printTitle("Edit State")
 
-            val states = project.state
-            if (states.isEmpty()) {
-                viewer.printTitle("You have no states to edit, please create one first")
-                CreateProjectStateUi(project).show()
-                return
-            }
+            viewer.printTitle("Current state name: ${state.name}")
+            viewer.printTitle("Enter new state name:")
+            val newName = reader.readInput().toString()
 
-            viewer.printTitle("Available States:")
-            viewer.printOptions(states.map { it.name })
-
-            viewer.printTitle("Select the state number you want to edit:")
-            val selectedIndex = reader.readInput().toString().toIntOrNull()?.minus(1)
-
-            if (selectedIndex == null || selectedIndex !in states.indices) {
-                viewer.printTitle("Invalid selection")
-            } else {
-                val selectedState = states[selectedIndex]
-
-                viewer.printTitle("Current state name: ${selectedState.name}")
-                viewer.printTitle("Enter new state name:")
-                val newName = reader.readInput().toString()
-
-                editStateUseCase.editState(selectedState, newName, project).fold(
-                    onSuccess = {
-                        viewer.printTitle("State updated successfully to: $newName")
-                    }, onFailure = {
-                        viewer.printTitle("Error updating state: ${it.message}")
-                    }
-                )
-                break
-            }
-        }
+            editStateUseCase.editState(state, newName, project).fold(
+                onSuccess = {
+                    viewer.printTitle("State updated successfully to: $newName")
+                }, onFailure = {
+                    viewer.printTitle("Error updating state: ${it.message}")
+                }
+            )
     }
 }
