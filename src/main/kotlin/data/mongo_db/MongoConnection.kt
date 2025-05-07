@@ -16,8 +16,8 @@ object MongoConnection{
     val users: MongoCollection<Document> = database.getCollection("users")
     val projects: MongoCollection<Document> = database.getCollection("projects")
     val tasks: MongoCollection<Document> = database.getCollection("tasks")
-    val logsForProject: MongoCollection<Document> = database.getCollection("logsForProject")
-    val logsForTask: MongoCollection<Document> = database.getCollection("logsForTask")
+    val projectLogs: MongoCollection<Document> = database.getCollection("logsForProject")
+    val taskLogs: MongoCollection<Document> = database.getCollection("logsForTask")
     val states: MongoCollection<Document> = database.getCollection("states")
     val currentUser: MongoCollection<Document> = database.getCollection("currentUser")
     init {

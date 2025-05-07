@@ -5,10 +5,10 @@ import org.example.models.TaskLog
 import java.util.UUID
 
 interface LogDataSource {
-    fun getProjectLogs(id: UUID): Result<List<ProjectLog>>
-    fun getTaskLogs(id: UUID): Result<List<TaskLog>>
-    fun saveProjectLog(projectLog: ProjectLog): Result<Unit>
-    fun saveTaskLog(taskLog: TaskLog): Result<Unit>
-    fun getAllProjectLogs(): Result<List<ProjectLog>>
-    fun getAllTaskLogs(): Result<List<TaskLog>>
+   suspend fun getProjectLogs(id: UUID): List<ProjectLog>
+   suspend fun getTaskLogs(id: UUID): List<TaskLog>
+   suspend fun saveProjectLog(projectLog: ProjectLog)
+   suspend fun saveTaskLog(taskLog: TaskLog)
+   suspend fun getAllProjectLogs(): List<ProjectLog>
+   suspend fun getAllTaskLogs(): List<TaskLog>
 }
