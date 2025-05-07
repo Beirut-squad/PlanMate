@@ -6,15 +6,16 @@ import org.example.models.State
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 class ViewStateSelectedForProjectUI(
-    private val viewer: Viewer,
     private val projectId: UUID,
-    private val getProjectByIdUseCase: GetProjectByIdUseCase,
-    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId
-) : UiScreen {
-
+) : UiScreen,KoinComponent {
+    private val viewer: Viewer by inject()
+    private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
+    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
     override fun show() {
         val states = getProjectStates() ?: return
         if (states.isEmpty()) {

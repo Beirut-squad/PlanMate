@@ -8,15 +8,17 @@ import org.example.ui.admin.project.SingleProjectScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.UUID
 
 class ViewProjectsScreen(
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val getAllProjectsUseCases: GetAllProjectsUseCases,
-    private val singleProjectScreen: SingleProjectScreen,
-    private val getUserByIdUseCase: GetUserByIdUseCase
-) : UiScreen {
+
+) : UiScreen , KoinComponent {
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val getAllProjectsUseCases: GetAllProjectsUseCases by inject()
+    private val getUserByIdUseCase: GetUserByIdUseCase by inject()
     private var running = true
     override fun show() {
         running = true
@@ -81,8 +83,8 @@ class ViewProjectsScreen(
     }
 
     private fun goToSingleProjectScreen(project: Project) {
-        singleProjectScreen.project = project
-        singleProjectScreen.show()
+        ViewProjectForMateUI(project.id).show()
+
     }
 
     private fun getUserById(id: UUID): User {

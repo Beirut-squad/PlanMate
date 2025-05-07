@@ -21,7 +21,7 @@ class MateHomeUI() : UiScreen, KoinComponent {
         while (true) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Projects", "View Project Logs", "Exit")
+            viewer.printOptions("View Projects", "View Project Logs For User", "Exit")
 
             val option = reader.readInt()
             when (option) {

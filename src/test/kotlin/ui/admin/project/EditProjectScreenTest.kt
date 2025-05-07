@@ -48,7 +48,7 @@ class EditProjectScreenTest {
         editProjectScreen = EditProjectScreen(
             viewer = viewer,
             reader = reader,
-            project = project,
+           // project = project,
             editProjectNameUseCase = editProjectNameUseCase,
             editProjectDescriptionUseCase = editProjectDescriptionUseCase,
             currentLoggedInUserUseCase = currentLoggedInUserUseCase

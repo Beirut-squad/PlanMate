@@ -13,7 +13,6 @@ import java.util.UUID
 class ViewProjectForMateUI(
     private val projectId : UUID,
     ):UiScreen, KoinComponent {
-    private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val getProjectByIdUseCase :GetProjectByIdUseCase by inject()
@@ -38,10 +37,7 @@ class ViewProjectForMateUI(
                 when (option) {
                     1 -> {
                         ViewStateSelectedForProjectUI(
-                            viewer,
                             project.id,
-                            getProjectByIdUseCase,
-                            getTaskByStateIdAndProjectId
                         ).show()
                     }
                     2 -> {
