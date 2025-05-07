@@ -22,13 +22,12 @@ class ViewProjectsScreen(
         val allProjects = getAllProjectsUseCases.getAllProjects()
 
         while (running) {
-            allProjects.fold(
-                onSuccess = { projects ->
-                    if (projects.isNotEmpty()) {
-                        viewer.printTitle("Project: ")
-                        projects.forEachIndexed { index, project ->
-                            viewer.printInfoLine(
-                                """
+            try {
+                if (allProjects.isNotEmpty()) {
+                    viewer.printTitle("Project: ")
+                    allProjects.forEachIndexed { index, project ->
+                        viewer.printInfoLine(
+                            """
                         ${index + 1}.
                         - Made by: ${getUserById(project.creatorUserID).name}
                         - Name: ${project.name}
@@ -36,19 +35,18 @@ class ViewProjectsScreen(
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
                     """.trimIndent()
-                            )
-                        }
-
-                        chooseProject(projects)
-                    } else {
-                        viewer.printInfoLine("No projects found.")
-                        running = false
+                        )
                     }
-                },
-                onFailure = {
-                    viewer.printError("Failed to retrieve projects: ${it.message}")
+
+                    chooseProject(allProjects)
+                } else {
+                    viewer.printInfoLine("No projects found.")
+                    running = false
                 }
-            )
+            } catch (e: Exception) {
+                viewer.printError("Failed to retrieve projects: ${e.message}")
+                running = false
+            }
         }
     }
 
@@ -69,9 +67,11 @@ class ViewProjectsScreen(
                     enterProject(projects)
                 }
             }
+
             projects.size + 1 -> {
                 running = false
             }
+
             else -> {
                 viewer.printError("Invalid project number")
                 enterProject(projects)

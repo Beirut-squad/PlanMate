@@ -1,6 +1,5 @@
 package org.example.ui.admin.project
 
-import EditProjectStateUi
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.models.Project
 import org.example.models.State
@@ -68,6 +67,6 @@ class SingleStateUi(
     }
 
     private fun updateProject() {
-        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
+        project = getProjectByIdUseCase.getProjectById(project.id)
     }
 }

@@ -1,6 +1,8 @@
+package org.example.ui.admin.project
+
+import EditStateUseCase
 import org.example.models.Project
 import org.example.models.State
-import org.example.ui.admin.project.CreateProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer

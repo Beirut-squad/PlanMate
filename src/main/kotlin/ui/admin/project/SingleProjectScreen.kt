@@ -83,6 +83,6 @@ class SingleProjectScreen(
     }
 
     private fun updateProject() {
-        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
+        project = getProjectByIdUseCase.getProjectById(project.id)
     }
 }
