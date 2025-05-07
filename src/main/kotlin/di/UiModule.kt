@@ -22,8 +22,8 @@ import org.example.ui.common.components.Viewer
 import org.example.ui.common.screens.CreateNewTaskUI
 import org.example.ui.common.screens.EditTaskUI
 import org.example.ui.common.screens.ViewAllTaskForProjectUI
-import org.example.ui.common.screens.ViewProjectForUserUI
-import org.example.ui.common.screens.ViewProjectsForUserUI
+import org.example.ui.common.screens.ViewProjectForMateUI
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.example.ui.common.screens.ViewStateSelectedForProjectUI
 
 val uiModule = module {
@@ -40,7 +40,7 @@ val uiModule = module {
     singleOf(::CreateNewProjectScreen)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::ViewProjectsForUserUI)
-    singleOf(::ViewProjectForUserUI)
+    singleOf(::ViewProjectForMateUI)
     singleOf(::ViewStateSelectedForProjectUI)
     singleOf(::GetProjectByIdUseCase)
     singleOf(::CreateNewTaskUI)
