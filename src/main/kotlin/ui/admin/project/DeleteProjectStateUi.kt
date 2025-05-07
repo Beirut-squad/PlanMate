@@ -31,8 +31,10 @@ class DeleteProjectStateUi(
     }
 
     private fun deleteState() {
-        deleteStateUseCase.deleteState(project, state).onFailure {
-            errorHandler.handle(it)
+        try {
+            deleteStateUseCase.deleteState(project, state)
+        }catch (e:Exception){
+            viewer.printError("${e.message}")
         }
     }
 }

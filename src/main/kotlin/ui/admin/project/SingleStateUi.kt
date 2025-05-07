@@ -34,15 +34,19 @@ class SingleStateUi(
                 1 -> {
                     EditProjectStateUi(project, state).show()
                 }
+
                 2 -> {
                     DeleteProjectStateUi(project, state).show()
                 }
+
                 3 -> {
                     // TODO
                 }
+
                 4 -> {
                     break
                 }
+
                 else -> {
                     viewer.printError("Invalid option")
                 }
@@ -67,6 +71,10 @@ class SingleStateUi(
     }
 
     private fun updateProject() {
-        project = getProjectByIdUseCase.getProjectById(project.id)
+        try {
+            project = getProjectByIdUseCase.getProjectById(project.id)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
 }
