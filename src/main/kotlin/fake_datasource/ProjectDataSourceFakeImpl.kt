@@ -50,9 +50,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             ?: Result.failure(Exception())
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             updateProjectState(projectId, state)
         } ?: Result.failure(Exception())
@@ -70,9 +70,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         }
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             editProjectState(projectId, state)
         } ?: Result.failure(Exception())
@@ -90,9 +90,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         }
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             deleteProjectState(projectId, state)
         } ?: Result.failure(Exception())

@@ -2,6 +2,7 @@ package org.example.ui.admin.project
 
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
+import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.models.Project
 import org.example.models.User
 import org.example.ui.common.components.Reader
@@ -14,8 +15,10 @@ class SingleProjectScreen(
     private val reader: Reader,
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val editProjectScreen: EditProjectScreen
-): UiScreen {
+    private val editProjectScreen: EditProjectScreen,
+    private val getProjectByIdUseCase: GetProjectByIdUseCase,
+    private val viewProjectStatesUi: ViewProjectStatesUi
+) : UiScreen {
     lateinit var project: Project
     val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
     private var running = true
@@ -23,13 +26,14 @@ class SingleProjectScreen(
     override fun show() {
         running = true
         while (running) {
-            viewer.printTitle("Project ${project?.name}")
+            viewer.printTitle("Project ${project.name}")
             viewer.printInfoLine("What would you like to do?")
 
             viewer.printOptions(
                 "Edit project",
                 "Delete project",
                 "View project states",
+                "Create new state",
                 "Add User to project",
                 "Exit"
             )
@@ -53,19 +57,32 @@ class SingleProjectScreen(
                 running = false
             }
             3 -> {
-                // TODO
+                viewProjectStatesUi.setProject(project.id)
+                viewProjectStatesUi.show()
             }
             4 -> {
+                CreateProjectStateUi(project).show()
+            }
+            5 ->{
+                AddUserForProjectUI(project.id).show()
+            }
+            6 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
-            7 ->{
-               AddUserForProjectUI(project.id).show()
-            }
+
+
             else -> {
                 viewer.printError("Invalid option")
                 takeUserInput()
             }
         }
+
+        updateProject()
+
+    }
+
+    private fun updateProject() {
+        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
     }
 }

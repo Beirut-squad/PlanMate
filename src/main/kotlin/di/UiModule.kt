@@ -4,7 +4,9 @@ import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.authentication_screens.RegisterScreen
+import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.common.screens.ViewProjectLogsScreen
+import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.admin.log.AllProjectsLogsView
 import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.example.ui.admin.project.*
@@ -30,5 +32,9 @@ val uiModule = module {
     singleOf(::AllProjectsLogsView)
     singleOf(::SingleProjectScreen)
     singleOf(::EditProjectScreen)
+    singleOf(::EditProjectStateUi)
+    singleOf(::DeleteProjectStateUi)
+    singleOf(::ViewProjectStatesUi)
+    singleOf(::SingleStateUi)
     singleOf(::AddUserForProjectUI)
 }

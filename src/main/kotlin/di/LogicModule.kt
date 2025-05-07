@@ -13,6 +13,9 @@ import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
 import org.example.logic.use_cases.project_manegment.AddMateToProjectUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.project_manegment.*
+import org.example.logic.use_cases.state_usecase.CreateStateUseCase
+import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -31,11 +34,17 @@ val logicModule = module {
     singleOf(::GetAllProjectsUseCases)
     singleOf(::GetAllProjectLogsUseCase)
     singleOf(::CreateProjectUseCase)
-    singleOf(::GetAllProjectsUseCases)
     singleOf(::CreateProjectLogUseCase)
     singleOf(::DeleteProjectUseCase)
     singleOf(::EditProjectNameUseCase)
     singleOf(::EditProjectDescriptionUseCase)
+    singleOf(::DeleteStateUseCase)
+    singleOf(::RemoveStateFromProjectUseCase)
+    singleOf(::CreateStateUseCase)
+    singleOf(::AddStateToProjectUseCase)
+    singleOf(::EditStateToProjectUseCase)
+    singleOf(::EditStateUseCase)
+    singleOf(::GetProjectByIdUseCase)
     singleOf(::AddMateToProjectUseCase)
     singleOf(::GetAllUsersUseCase)
 }

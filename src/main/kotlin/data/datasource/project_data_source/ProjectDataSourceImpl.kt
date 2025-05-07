@@ -67,19 +67,18 @@ class ProjectDataSourceImpl(
 
     override fun getProject(id: UUID): Result<Project> {
         return runCatching {
-            csvReader.read(fileName).find { it.id == id }
-                ?: throw NoProjectFoundException()
+            csvReader.read(fileName).find { it.id == id } ?: throw NoProjectFoundException()
         }
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         return modifyProjectState(projectId) { states ->
             if (states.any { oldState -> haveSameStateName(oldState, state) }) throw DuplicateStateException()
             states + state
         }
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
@@ -88,23 +87,21 @@ class ProjectDataSourceImpl(
                 updatedStates += if (oldState.id == state.id) {
                     notFoundState = false
                     state
-                } else
-                    oldState
+                } else oldState
             }
             if (notFoundState) throw NoStateException()
             updatedStates
         }
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
             states.forEach { oldState ->
                 if (oldState.id == state.id) {
                     notFoundState = false
-                } else
-                    updatedStates += oldState
+                } else updatedStates += oldState
             }
             if (notFoundState) throw NoStateException()
             updatedStates
@@ -145,37 +142,33 @@ class ProjectDataSourceImpl(
         }
     }
 
-    private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
+    private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Project> {
         return getAllProjects().mapCatching { projects ->
-            val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
-                project.copy(
-                    state = stateModifier(project.state),
-                    updatedAt = LocalDateTime.now()
+            val result = findAndUpdateProject(projects, projectId) { project ->
+                val newProject = project.copy(
+                    state = stateModifier(project.state), updatedAt = LocalDateTime.now()
                 )
+                newProject
             }
-            csvWriter.writeToFile(updatedProjects, fileName)
+            csvWriter.writeToFile(result.first, fileName)
+            result.second ?: throw NoProjectFoundException()
         }
     }
 
     private fun findAndUpdateProject(
-        projects: List<Project>,
-        projectId: UUID,
-        projectModifier: (Project) -> Project
-    ): List<Project> {
+        projects: List<Project>, projectId: UUID, projectModifier: (Project) -> Project
+    ): Pair<List<Project>, Project?> {
         val updated = mutableListOf<Project>()
-        var projectFound = false
-
+        var updatedProject: Project? = null
         for (project in projects) {
             if (project.id == projectId) {
-                projectFound = true
-                updated += projectModifier(project)
+                updatedProject = projectModifier(project)
+                updated += updatedProject
             } else {
                 updated += project
             }
         }
-
-        if (!projectFound) throw NoProjectFoundException()
-        return updated
+        return Pair(updated.toList(), updatedProject)
     }
 
     private fun haveSameStateName(oldState: State, newState: State): Boolean {
