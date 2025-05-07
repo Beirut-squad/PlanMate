@@ -6,8 +6,8 @@ import java.util.UUID
 class DeleteStateUseCase(
     private val stateRepository: StateRepository
 ) {
-    fun deleteState(id: UUID): Result<Unit> {
-        return stateRepository.deleteState(id)
+    fun deleteState(id: UUID): Unit {
+        stateRepository.deleteState(id)
     }
 
 }

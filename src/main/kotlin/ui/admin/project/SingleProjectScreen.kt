@@ -23,13 +23,14 @@ class SingleProjectScreen(
     override fun show() {
         running = true
         while (running) {
-            viewer.printTitle("Project ${project?.name}")
+            viewer.printTitle("Project ${project.name}")
             viewer.printInfoLine("What would you like to do?")
 
             viewer.printOptions(
                 "Edit project",
                 "Delete project",
                 "View project states",
+                "Create new state",
                 "Exit"
             )
 
@@ -55,6 +56,9 @@ class SingleProjectScreen(
                 // TODO
             }
             4 -> {
+                CreateProjectStateUi(project).show()
+            }
+            5 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
