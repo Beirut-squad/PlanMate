@@ -2,13 +2,12 @@ package org.example.ui.admin.project
 
 import org.example.logic.use_cases.authentication.GetAllUsersUseCase
 import org.example.logic.use_cases.project_manegment.AddMateToProjectUseCase
-import org.example.logic.use_cases.project_manegment.GetProjectForMateByUserIdUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.util.UUID
+import java.util.*
 
 class AddUserForProjectUI(
     private val projectId: UUID,
@@ -21,8 +20,6 @@ class AddUserForProjectUI(
         val users = getAllUsersUseCase.getUsers().getOrThrow()
 
         viewer.printTitle("Add User")
-
-
         if (users.isEmpty()) {
             viewer.printInfoLine("No users available to add.")
             return
