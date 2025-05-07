@@ -6,7 +6,7 @@ import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen
-import org.example.ui.mate.home_screen.MateHomeScreen
+import org.example.ui.mate.home_screen.MateHomeUI
 import org.example.ui.common.components.Viewer
 
 class LoginScreen(
@@ -14,7 +14,7 @@ class LoginScreen(
     private val viewer: Viewer,
     private val loginUseCase: LoginUseCase,
     private val adminHomeScreen: AdminHomeScreen,
-    private val mateHomeScreen: MateHomeScreen,
+    private val mateHomeUI: MateHomeUI,
 ) : UiScreen {
     override fun show() {
         viewer.printTitle("Login for Plan Mate")
@@ -62,6 +62,6 @@ class LoginScreen(
     }
 
     private fun goToMateHomeScreen() {
-        mateHomeScreen.show()
+        mateHomeUI.show()
     }
 }

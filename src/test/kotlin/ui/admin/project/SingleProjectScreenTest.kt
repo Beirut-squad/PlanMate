@@ -8,6 +8,7 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
+import org.example.ui.admin.project.EditProjectScreen
 import org.example.ui.admin.project.SingleProjectScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
@@ -21,11 +22,12 @@ class SingleProjectScreenTest {
     private val deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase = mockk(relaxed = true)
     private lateinit var singleProjectScreen: SingleProjectScreen
+    private lateinit var editProjectScreen: EditProjectScreen
 
     @BeforeEach
     fun setUp() {
         every { getCurrentLoggedInUserUseCase.getCurrentUser() } returns Result.success(createUserHelper())
-        singleProjectScreen = SingleProjectScreen(viewer, reader, deleteProjectUseCase, getCurrentLoggedInUserUseCase)
+        singleProjectScreen = SingleProjectScreen(viewer, reader, deleteProjectUseCase, getCurrentLoggedInUserUseCase,editProjectScreen)
     }
 
     @Test

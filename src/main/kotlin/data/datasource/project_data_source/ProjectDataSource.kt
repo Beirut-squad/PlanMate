@@ -16,4 +16,6 @@ interface ProjectDataSource {
     fun removeStateFromProject(projectId: UUID, state: State): Result<Project>
     fun getProjectForMateByUserId(userId : UUID):Result<List<Project>>
     fun addMateToProject(projectId: UUID, user: User)
+    fun getProjectsForUserById(userid : UUID):Result<List<Project>>
+
 }

@@ -51,4 +51,8 @@ class ProjectRepositoryImpl(
         return projectDataSource.addMateToProject(projectId, user)
     }
 
+    override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
+        return projectDataSource.getProjectsForUserById(userid)
+    }
+
 }

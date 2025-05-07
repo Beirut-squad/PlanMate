@@ -3,6 +3,7 @@ package ui.admin.project
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.example.logic.use_cases.authentication.GetUserByIdUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.models.Project
 import org.example.ui.admin.project.SingleProjectScreen
@@ -19,7 +20,8 @@ class ViewProjectsScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val getAllProjectsUseCases: GetAllProjectsUseCases = mockk()
     private val singleProjectScreen: SingleProjectScreen = mockk(relaxed = true)
-    private val viewProjectsScreen = ViewProjectsScreen(viewer, reader, getAllProjectsUseCases, singleProjectScreen)
+    private val getUserByIdUseCase: GetUserByIdUseCase = mockk(relaxed = true)
+    private val viewProjectsScreen = ViewProjectsScreen(viewer, reader, getAllProjectsUseCases, singleProjectScreen,getUserByIdUseCase)
 
     @Test
     fun `should display all projects when getAllProjects returns a list of projects`() {

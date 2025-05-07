@@ -14,28 +14,27 @@ class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase,
 ) {
-    fun createTask(title: String, description: String, stateName: String) {
-        validateFields(title, description, stateName)
-        val task = buildTask(title, description, stateName)
+    fun createTask(title: String, description: String, state: State,projectId : UUID,creatorUserID : UUID) {
+        validateFields(title, description)
+        val task = buildTask(title, description, state,projectId,creatorUserID)
         saveTaskAndLog(task)
     }
 
-    private fun validateFields(title: String, description: String, stateName: String) {
+    private fun validateFields(title: String, description: String) {
         when {
             title.isBlank() -> throw BlankFieldsException("Title must not be blank")
             description.isBlank() -> throw BlankFieldsException("Description must not be blank")
-            stateName.isBlank() -> throw BlankFieldsException("State name must not be blank")
         }
     }
 
-    private fun buildTask(title: String, description: String, stateName: String): Task {
+    private fun buildTask(title: String, description: String, state: State,projectId : UUID,creatorUserID : UUID): Task {
         return Task(
             id = UUID.randomUUID(),
-            projectId = UUID.randomUUID(),
+            projectId = projectId,
             title = title,
             description = description,
-            state = State(id = UUID.randomUUID(), name = stateName),
-            creatorUserID = UUID.randomUUID(),
+            state = state,
+            creatorUserID = creatorUserID,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
 

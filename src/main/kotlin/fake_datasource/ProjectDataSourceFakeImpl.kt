@@ -98,6 +98,14 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         } ?: Result.failure(Exception())
     }
 
+    override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
+        return runCatching {
+            projects.filter { projects ->
+                projects.users.find { it.id == userid } != null
+            }
+        }
+    }
+
     override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
         TODO("Not yet implemented")
     }
@@ -130,6 +138,4 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             }
         }
     }
-
-
 }
