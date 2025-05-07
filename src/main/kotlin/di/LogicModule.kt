@@ -1,28 +1,35 @@
 package org.example.di
 
+import EditStateUseCase
 import logic.use_cases.log.CreateProjectLogUseCase
-import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
+import logic.use_cases.log.CreateTaskLogUseCase
 import logic.use_cases.log.GetUserProjectLogsUseCase
 import logic.use_cases.project_manegment.EditProjectDescriptionUseCase
 import logic.use_cases.project_manegment.EditProjectNameUseCase
 import org.example.logic.use_cases.authentication.*
-
-import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
-import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
-import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
-import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
-
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
-import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.logic.use_cases.authentication.encryption.Encryptor
 import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
 import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
-import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.logic.use_cases.log.GetTaskLogsByTaskIdUseCase
+import org.example.logic.use_cases.project_manegment.AddMateToProjectUseCase
+import org.example.logic.use_cases.project_manegment.AddStateToProjectUseCase
+import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
+import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
+import org.example.logic.use_cases.project_manegment.EditStateToProjectUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
+import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
+import org.example.logic.use_cases.project_manegment.RemoveStateFromProjectUseCase
+import org.example.logic.use_cases.state_usecase.CreateStateUseCase
+import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
+import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
+import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
+import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
+import org.example.logic.use_cases.task_managemnt.GetAllTasksUseCase
+import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
+import org.example.logic.use_cases.task_managemnt.GetTaskUseCase
+import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

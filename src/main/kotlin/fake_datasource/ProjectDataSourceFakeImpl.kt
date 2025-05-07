@@ -100,7 +100,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
 
     override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
         return runCatching {
-            projects.filter { it.creatorUserID == userid }
+            projects.filter { projects ->
+                projects.users.find { it.id == userid } != null
+            }
         }
     }
 
