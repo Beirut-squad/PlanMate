@@ -1,5 +1,6 @@
 package org.example.di
 
+import EditProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.authentication_screens.LoginScreen
@@ -33,4 +34,5 @@ val uiModule = module {
     singleOf(::AllProjectsLogsView)
     singleOf(::SingleProjectScreen)
     singleOf(::EditProjectScreen)
+    singleOf(::EditProjectStateUi)
 }
