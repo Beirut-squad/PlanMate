@@ -42,4 +42,5 @@ val logicModule = module {
     singleOf(::AddStateToProjectUseCase)
     singleOf(::EditStateToProjectUseCase)
     singleOf(::EditStateUseCase)
+    singleOf(::GetProjectByIdUseCase)
 }

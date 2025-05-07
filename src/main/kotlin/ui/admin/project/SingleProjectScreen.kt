@@ -3,6 +3,7 @@ package org.example.ui.admin.project
 import EditProjectStateUi
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
+import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.models.Project
 import org.example.models.User
 import org.example.ui.common.components.Reader
@@ -16,6 +17,7 @@ class SingleProjectScreen(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
     private val editProjectScreen: EditProjectScreen,
+    private val getProjectByIdUseCase: GetProjectByIdUseCase,
     private val viewProjectStatesUi: ViewProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
@@ -83,5 +85,12 @@ class SingleProjectScreen(
                 takeUserInput()
             }
         }
+
+        updateProject()
+
+    }
+
+    private fun updateProject() {
+        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
     }
 }
