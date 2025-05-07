@@ -5,15 +5,20 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.admin.project.ViewProjectsScreen
+import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.common.components.Viewer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class AdminHomeScreen(
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val viewProjectsScreen: ViewProjectsScreen,
-    private val createNewProjectScreen: CreateNewProjectScreen,
-    private val allProjectsLogsView: AllProjectsLogsView
-) : UiScreen {
+
+) : UiScreen, KoinComponent {
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val viewProjectsScreen: ViewProjectsScreen by inject()
+    private val createNewProjectScreen: CreateNewProjectScreen by inject()
+    private val allProjectsLogsView: AllProjectsLogsView by inject()
+    private val authenticationMainScreen: AuthenticationMainScreen by inject()
     override fun show() {
 
         while (true) {
@@ -41,7 +46,7 @@ class AdminHomeScreen(
 
                 4 -> {
                     viewer.printGoodbyeMessage("Goodbye")
-                    break
+                    logOut()
                 }
 
             }
@@ -58,5 +63,8 @@ class AdminHomeScreen(
 
     private fun goToViewAllLogsScreen() {
         allProjectsLogsView.show()
+    }
+    private fun logOut() {
+        authenticationMainScreen.show()
     }
 }

@@ -2,6 +2,7 @@ package org.example.data.datasource.project_data_source
 
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.util.*
 
 interface ProjectDataSource {
@@ -13,4 +14,6 @@ interface ProjectDataSource {
     fun addStateToProject(projectId: UUID, state: State): Result<Unit>
     fun editStateToProject(projectId: UUID, state: State): Result<Unit>
     fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
+    fun getProjectForMateByUserId(userId : UUID):Result<List<Project>>
+    fun addMateToProject(projectId: UUID, user: User)
 }

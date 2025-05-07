@@ -3,6 +3,8 @@ package org.example.fake_datasource
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
+import java.time.LocalDateTime
 import java.util.*
 
 class ProjectDataSourceFakeImpl : ProjectDataSource {
@@ -96,6 +98,27 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         } ?: Result.failure(Exception())
     }
 
+    override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addMateToProject(projectId: UUID, user: User) {
+         projects.map { project ->
+            if (project.id == projectId) {
+                project.copy(
+
+                    users = if (project.users.contains(user)){
+                        project.users
+                    }else{
+                        project.users + user
+                    }
+                )
+            } else {
+                project
+            }
+        }
+    }
+
     private fun deleteProjectState(projectId: UUID, state: State) {
         projects.replaceAll { project ->
             if (project.id == projectId) {
@@ -107,4 +130,6 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             }
         }
     }
+
+
 }

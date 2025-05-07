@@ -24,12 +24,14 @@ class SingleProjectScreen(
         running = true
         while (running) {
             viewer.printTitle("Project ${project?.name}")
+            viewer.printTitle("Project ${project?.users}")
             viewer.printInfoLine("What would you like to do?")
 
             viewer.printOptions(
                 "Edit project",
                 "Delete project",
                 "View project states",
+                "Add User to project",
                 "Exit"
             )
 
@@ -57,6 +59,9 @@ class SingleProjectScreen(
             4 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
+            }
+            7 ->{
+               AddUserForProjectUI(project.id).show()
             }
             else -> {
                 viewer.printError("Invalid option")

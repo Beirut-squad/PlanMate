@@ -13,6 +13,7 @@ import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundEx
 import org.example.logic.exceptions.project_magement_exceptions.NoStateException
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.io.FileNotFoundException
 import java.time.LocalDateTime
 import java.util.*
@@ -110,6 +111,39 @@ class ProjectDataSourceImpl(
         }
     }
 
+    override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addMateToProject(projectId: UUID, user: User) {
+         modifyProjectUser(projectId) { users ->
+            val updatedUser = mutableListOf<User>()
+            var notFoundUser = true
+            users.forEach { oldUsers ->
+                if (haveSameUserID(oldUsers, user)) throw DuplicateStateException() //Make Exception For User Duplicate
+                updatedUser += if (oldUsers.id == user.id) {
+                    notFoundUser = false
+                    user
+                } else
+                    oldUsers
+            }
+            if (notFoundUser) throw NoStateException() //Make Exception No User
+            updatedUser
+        }
+    }
+
+
+    private fun modifyProjectUser(projectId: UUID, userModifier: (List<User>) -> List<User>): Result<Unit> {
+        return getAllProjects().mapCatching { projects ->
+            val updatedProjects = findAndUpdateProject(projects, projectId) { project ->
+                project.copy(
+                    users = userModifier(project.users),
+                    updatedAt = LocalDateTime.now()
+                )
+            }
+            csvWriter.writeToFile(updatedProjects, fileName)
+        }
+    }
 
     private fun modifyProjectState(projectId: UUID, stateModifier: (List<State>) -> List<State>): Result<Unit> {
         return getAllProjects().mapCatching { projects ->
@@ -146,6 +180,10 @@ class ProjectDataSourceImpl(
 
     private fun haveSameStateName(oldState: State, newState: State): Boolean {
         return oldState.name.equals(newState.name, ignoreCase = true)
+    }
+
+    private fun haveSameUserID(oldUser: User, newUser: User): Boolean {
+        return oldUser.id.equals(newUser.id)
     }
 
     private fun buildSuccessCreate(project: Project): Result<Unit> {
