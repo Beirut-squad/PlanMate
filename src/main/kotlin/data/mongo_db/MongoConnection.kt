@@ -19,7 +19,7 @@ object MongoConnection{
     val logsForProject: MongoCollection<Document> = database.getCollection("logsForProject")
     val logsForTask: MongoCollection<Document> = database.getCollection("logsForTask")
     val states: MongoCollection<Document> = database.getCollection("states")
-
+    val currentUser: MongoCollection<Document> = database.getCollection("currentUser")
     init {
         try {
             client.listDatabaseNames()

@@ -14,3 +14,4 @@ class BlankFieldsException(message: String) : IllegalArgumentException(message)
 
 class NoFieldsToUpdateException(message: String) : IllegalArgumentException(message)
 class StateException(massage: String) : Exception(massage)
+class AuthenticationInvalidException(massage: String) : Exception(massage)

@@ -4,11 +4,11 @@ import org.example.models.User
 
 
 interface AuthenticationDataSource {
-    fun login(email: String, password: String): Result<User>
-    fun checkEmail(email: String): Result<Unit>
-    fun register(name: String, password: String, email: String): Result<User>
-    fun registerAdmin(name: String, password: String, email: String): Result<User>
-    fun logout(): Result<Unit>
-    fun checkIfFirstRegister(): Result<Unit>
-    fun getCurrentLoggedInUser(): Result<User?>
+    suspend fun login(email: String, password: String)
+    suspend fun checkEmail(email: String): Result<Unit>
+    suspend fun register(name: String, password: String, email: String): Result<User>
+    suspend fun registerAdmin(name: String, password: String, email: String): Result<User>
+    suspend fun logout(): Result<Unit>
+    suspend fun checkIfFirstRegister(): Result<Unit>
+    suspend fun getCurrentLoggedInUser(): Result<User?>
 }
