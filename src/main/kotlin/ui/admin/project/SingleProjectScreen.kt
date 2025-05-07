@@ -24,7 +24,6 @@ class SingleProjectScreen(
         running = true
         while (running) {
             viewer.printTitle("Project ${project?.name}")
-            viewer.printTitle("Project ${project?.users}")
             viewer.printInfoLine("What would you like to do?")
 
             viewer.printOptions(

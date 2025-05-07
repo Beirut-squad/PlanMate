@@ -103,13 +103,12 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
     }
 
     override fun addMateToProject(projectId: UUID, user: User) {
-         projects.map { project ->
+        projects.replaceAll { project ->
             if (project.id == projectId) {
                 project.copy(
-
-                    users = if (project.users.contains(user)){
+                    users = if (project.users.contains(user)) {
                         project.users
-                    }else{
+                    } else {
                         project.users + user
                     }
                 )
@@ -118,6 +117,7 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             }
         }
     }
+
 
     private fun deleteProjectState(projectId: UUID, state: State) {
         projects.replaceAll { project ->
