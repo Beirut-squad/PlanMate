@@ -22,7 +22,7 @@ class EditProjectNameUseCase(
         logUseCase.createProjectLog(
             previousProject = project,
             currentProject = editedProject,
-            userId = editorUserId,
+            userId = editorUserId
         )
 
     }

@@ -6,15 +6,15 @@ import org.example.models.User
 import java.util.UUID
 
 interface ProjectRepository {
-    fun createProject(project: Project) :Result<Unit>
-    fun editProject(project: Project) :Result<Unit>
-    fun deleteProject(id: UUID) :Result<Unit>
-    fun getAllProjects() : Result<List<Project>>
-    fun getProject(id:UUID) : Result<Project>
-    fun addStateToProject(projectId: UUID, state: State): Result<Project>
-    fun editStateToProject(projectId: UUID, state: State): Result<Project>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<Project>
-    fun getProjectForMateByUserId(userId : UUID):Result<List<Project>>
+    fun createProject(project: Project)
+    fun editProject(project: Project)
+    fun deleteProject(id: UUID)
+    fun getAllProjects() : List<Project>
+    fun getProject(id:UUID) : Project
+    fun addStateToProject(projectId: UUID, state: State): Project
+    fun editStateToProject(projectId: UUID, state: State): Project
+    fun removeStateFromProject(projectId: UUID, state: State): Project
+    fun getProjectForMateByUserId(userId : UUID): List<Project>
     fun addMateToProject(projectId: UUID, user: User)
-    fun getProjectsForUserById(userid : UUID):Result<List<Project>>
+    fun getProjectsForUserById(userid : UUID): List<Project>
 }
