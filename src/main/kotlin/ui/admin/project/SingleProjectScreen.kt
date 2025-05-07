@@ -15,8 +15,9 @@ class SingleProjectScreen(
     private val reader: Reader,
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val editProjectScreen: EditProjectScreen
-): UiScreen {
+    private val editProjectScreen: EditProjectScreen,
+    private val viewProjectStatesUi: ViewProjectStatesUi
+) : UiScreen {
     lateinit var project: Project
     val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
     private var running = true
@@ -32,7 +33,8 @@ class SingleProjectScreen(
                 "Delete project",
                 "View project states",
                 "Create new state",
-                "Edit state ",
+                "Edit state",
+                "Delete state",
                 "Exit"
             )
             takeUserInput()
@@ -46,6 +48,7 @@ class SingleProjectScreen(
                 editProjectScreen.project = project
                 editProjectScreen.show()
             }
+
             2 -> {
                 deleteProjectUseCase.deleteProject(
                     project = project,
@@ -53,19 +56,28 @@ class SingleProjectScreen(
                 )
                 running = false
             }
+
             3 -> {
                 // TODO
             }
+
             4 -> {
                 CreateProjectStateUi(project).show()
             }
+
             5 -> {
                 EditProjectStateUi(project).show()
             }
+
             6 -> {
+                DeleteProjectStateUi(project).show()
+            }
+
+            7 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
+
             else -> {
                 viewer.printError("Invalid option")
                 takeUserInput()

@@ -12,6 +12,7 @@ import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
 import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
 import org.example.logic.use_cases.project_manegment.*
 import org.example.logic.use_cases.state_usecase.CreateStateUseCase
+import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

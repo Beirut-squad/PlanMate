@@ -6,7 +6,7 @@ import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.exceptions.NullInputException
 import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import org.example.models.State
-import org.example.ui.admin.project.DeleteProjectState
+import org.example.ui.admin.project.DeleteProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
 import org.junit.jupiter.api.AfterEach
@@ -14,18 +14,18 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.UUID
 import kotlin.test.Test
 
-class DeleteProjectStateTest {
+class DeleteProjectStateUiTest {
     private val mockErrorHandler: ErrorHandler = mockk(relaxed = true)
     private val mockViewer: Viewer = mockk(relaxed = true)
     private val mockReader: Reader = mockk()
     private val mockDeleteStateUseCase: DeleteStateUseCase = mockk()
     private val projectId = UUID.randomUUID()
     private val state = State(id = UUID.randomUUID(), name = "Test State")
-    private lateinit var deleteProjectState: DeleteProjectState
+    private lateinit var deleteProjectStateUi: DeleteProjectStateUi
 
     @BeforeEach
     fun setUp() {
-        deleteProjectState = DeleteProjectState(
+        deleteProjectStateUi = DeleteProjectStateUi(
             errorHandler = mockErrorHandler,
             viewer = mockViewer,
             reader = mockReader,
@@ -46,7 +46,7 @@ class DeleteProjectStateTest {
         every { mockReader.readInput() } returns "N"
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 1) { mockViewer.printTitle("Confirm deletion of state 'Test State': Y/N") }
@@ -59,7 +59,7 @@ class DeleteProjectStateTest {
         every { mockDeleteStateUseCase.deleteState(projectId, state) } returns Result.success(Unit)
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 1) { mockDeleteStateUseCase.deleteState(projectId, state) }
@@ -72,7 +72,7 @@ class DeleteProjectStateTest {
         every { mockDeleteStateUseCase.deleteState(projectId, state) } returns Result.success(Unit)
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 1) { mockDeleteStateUseCase.deleteState(projectId, state) }
@@ -84,7 +84,7 @@ class DeleteProjectStateTest {
         every { mockReader.readInput() } returns "N"
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 0) { mockDeleteStateUseCase.deleteState(any(), any()) }
@@ -96,7 +96,7 @@ class DeleteProjectStateTest {
         every { mockReader.readInput() } returns "MAYBE"
 
         // When/Then
-        assertThat(runCatching { deleteProjectState.show() }.exceptionOrNull())
+        assertThat(runCatching { deleteProjectStateUi.show() }.exceptionOrNull())
             .isInstanceOf(NullInputException::class.java)
         verify(exactly = 0) { mockDeleteStateUseCase.deleteState(any(), any()) }
     }
@@ -107,7 +107,7 @@ class DeleteProjectStateTest {
         every { mockReader.readInput() } returns null
 
         // When/Then
-        assertThat(runCatching { deleteProjectState.show() }.exceptionOrNull())
+        assertThat(runCatching { deleteProjectStateUi.show() }.exceptionOrNull())
             .isInstanceOf(NullInputException::class.java)
         verify(exactly = 0) { mockDeleteStateUseCase.deleteState(any(), any()) }
     }
@@ -120,7 +120,7 @@ class DeleteProjectStateTest {
         every { mockDeleteStateUseCase.deleteState(projectId, state) } returns Result.failure(exception)
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 1) { mockErrorHandler.handle(exception) }
@@ -133,7 +133,7 @@ class DeleteProjectStateTest {
         every { mockDeleteStateUseCase.deleteState(projectId, state) } returns Result.success(Unit)
 
         // When
-        deleteProjectState.show()
+        deleteProjectStateUi.show()
 
         // Then
         verify(exactly = 0) { mockErrorHandler.handle(any()) }

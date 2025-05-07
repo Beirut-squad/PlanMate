@@ -3,20 +3,23 @@ package org.example.ui.admin.project
 import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.exceptions.NullInputException
 import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
+import org.example.models.Project
 import org.example.models.State
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import java.util.UUID
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DeleteProjectState(
-    private val errorHandler: ErrorHandler,
-    private val viewer: Viewer,
-    private val reader: Reader,
-    private val state: State,
-    private val projectId: UUID,
-    private val deleteStateUseCase: DeleteStateUseCase,
-) : UiScreen {
+class DeleteProjectStateUi(
+    private val project: Project,
+) : UiScreen, KoinComponent {
+    private val errorHandler: ErrorHandler by inject()
+    private val viewer: Viewer by inject()
+    private val reader: Reader by inject()
+    private val state: State by inject()
+    private val deleteStateUseCase: DeleteStateUseCase by inject()
+
     override fun show() {
         viewer.printTitle("Confirm deletion of state '${state.name}': Y/N")
         when (reader.readInput()?.uppercase()) {
@@ -28,7 +31,7 @@ class DeleteProjectState(
     }
 
     private fun deleteState() {
-        deleteStateUseCase.deleteState(projectId, state).onFailure {
+        deleteStateUseCase.deleteState(project, state).onFailure {
             errorHandler.handle(it)
         }
     }
