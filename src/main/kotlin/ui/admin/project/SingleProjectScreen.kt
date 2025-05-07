@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import EditProjectStateUi
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.models.Project
@@ -31,9 +32,9 @@ class SingleProjectScreen(
                 "Delete project",
                 "View project states",
                 "Create new state",
+                "Edit state ",
                 "Exit"
             )
-
             takeUserInput()
         }
     }
@@ -59,6 +60,9 @@ class SingleProjectScreen(
                 CreateProjectStateUi(project).show()
             }
             5 -> {
+                EditProjectStateUi(project).show()
+            }
+            6 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
