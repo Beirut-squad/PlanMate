@@ -13,11 +13,11 @@ import org.koin.core.component.inject
 
 class DeleteProjectStateUi(
     private val project: Project,
+    private val state: State
 ) : UiScreen, KoinComponent {
     private val errorHandler: ErrorHandler by inject()
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val state: State by inject()
     private val deleteStateUseCase: DeleteStateUseCase by inject()
 
     override fun show() {

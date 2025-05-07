@@ -35,8 +35,6 @@ class SingleProjectScreen(
                 "Delete project",
                 "View project states",
                 "Create new state",
-                "Edit state",
-                "Delete state",
                 "Exit"
             )
             takeUserInput()
@@ -60,7 +58,8 @@ class SingleProjectScreen(
             }
 
             3 -> {
-                // TODO
+                viewProjectStatesUi.setProject(project.id)
+                viewProjectStatesUi.show()
             }
 
             4 -> {
@@ -68,14 +67,6 @@ class SingleProjectScreen(
             }
 
             5 -> {
-                EditProjectStateUi(project).show()
-            }
-
-            6 -> {
-                DeleteProjectStateUi(project).show()
-            }
-
-            7 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
