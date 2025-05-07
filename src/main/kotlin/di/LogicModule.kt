@@ -35,6 +35,8 @@ val logicModule = module {
     singleOf(::DeleteProjectUseCase)
     singleOf(::EditProjectNameUseCase)
     singleOf(::EditProjectDescriptionUseCase)
+    singleOf(::DeleteStateUseCase)
+    singleOf(::RemoveStateFromProjectUseCase)
     singleOf(::CreateStateUseCase)
     singleOf(::AddStateToProjectUseCase)
     singleOf(::EditStateToProjectUseCase)
