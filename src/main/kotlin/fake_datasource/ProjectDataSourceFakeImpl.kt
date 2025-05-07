@@ -3,6 +3,8 @@ package org.example.fake_datasource
 import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
+import java.time.LocalDateTime
 import java.util.*
 
 class ProjectDataSourceFakeImpl : ProjectDataSource {
@@ -48,9 +50,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             ?: Result.failure(Exception())
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             updateProjectState(projectId, state)
         } ?: Result.failure(Exception())
@@ -68,9 +70,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         }
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             editProjectState(projectId, state)
         } ?: Result.failure(Exception())
@@ -88,9 +90,9 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         }
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         return projects.find { it.id == projectId }?.let {
-            Result.success(Unit)
+            Result.success(it)
         }.also {
             deleteProjectState(projectId, state)
         } ?: Result.failure(Exception())
@@ -101,6 +103,27 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
             projects.filter { it.creatorUserID == userid }
         }
     }
+
+    override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addMateToProject(projectId: UUID, user: User) {
+        projects.replaceAll { project ->
+            if (project.id == projectId) {
+                project.copy(
+                    users = if (project.users.contains(user)) {
+                        project.users
+                    } else {
+                        project.users + user
+                    }
+                )
+            } else {
+                project
+            }
+        }
+    }
+
 
     private fun deleteProjectState(projectId: UUID, state: State) {
         projects.replaceAll { project ->

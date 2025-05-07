@@ -4,6 +4,7 @@ import org.example.data.datasource.project_data_source.ProjectDataSource
 import org.example.logic.repositories.project_repository.ProjectRepository
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.util.*
 
 class ProjectRepositoryImpl(
@@ -30,16 +31,24 @@ class ProjectRepositoryImpl(
         return projectDataSource.getProject(id)
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.addStateToProject(projectId, state)
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
+    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.editStateToProject(projectId, state)
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Unit> {
+    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
         return projectDataSource.removeStateFromProject(projectId, state)
+    }
+
+    override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addMateToProject(projectId: UUID, user: User){
+        return projectDataSource.addMateToProject(projectId, user)
     }
 
     override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {

@@ -4,7 +4,6 @@ import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import java.util.*
 
 class CreateNewProjectScreen(
     private val viewer: Viewer,
@@ -21,7 +20,7 @@ class CreateNewProjectScreen(
         createProjectUseCase.createProject(
             name = name.toString(),
             description = description.toString(),
-            stateNames = emptyList()
+            stateNames = emptyList(),
         )
     }
 }

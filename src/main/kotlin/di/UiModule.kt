@@ -13,6 +13,8 @@ import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.admin.log.AllProjectsLogsView
 import org.example.ui.mate.home_screen.MateHomeUI
 import org.example.ui.admin.home_screen.AdminHomeScreen
+import org.example.ui.admin.project.*
+import org.example.ui.mate.home_screen.MateHomeScreen
 import org.example.ui.admin.project.EditProjectScreen
 import org.example.ui.admin.project.SingleProjectScreen
 import org.koin.core.module.dsl.singleOf
@@ -50,4 +52,9 @@ val uiModule = module {
     singleOf(::EditTaskUI)
     singleOf(::ViewAllTaskForProjectUI)
     singleOf(::ViewProjectsScreen)
+    singleOf(::EditProjectStateUi)
+    singleOf(::DeleteProjectStateUi)
+    singleOf(::ViewProjectStatesUi)
+    singleOf(::SingleStateUi)
+    singleOf(::AddUserForProjectUI)
 }

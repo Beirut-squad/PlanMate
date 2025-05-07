@@ -213,7 +213,7 @@ class ProjectRepositoryImplTest {
         // Given
         val project = createProjectHelper()
         val newState = createStateHelper(name = "Start")
-        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(Unit)
+        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.addStateToProject(project.id, newState)
@@ -229,7 +229,7 @@ class ProjectRepositoryImplTest {
         // Given
         val project = createProjectHelper()
         val newState = createStateHelper()
-        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(Unit)
+        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.addStateToProject(project.id, newState)
@@ -285,7 +285,7 @@ class ProjectRepositoryImplTest {
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
         oldState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
@@ -302,7 +302,7 @@ class ProjectRepositoryImplTest {
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
         oldState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
@@ -359,7 +359,7 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(Unit)
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)
@@ -375,7 +375,7 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(Unit)
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)

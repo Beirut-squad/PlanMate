@@ -21,6 +21,7 @@ fun createProjectHelper(
         creatorUserID = creatorUserID,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        users = emptyList(),
         state = state
     )
 }

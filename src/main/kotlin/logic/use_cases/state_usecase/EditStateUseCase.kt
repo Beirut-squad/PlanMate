@@ -1,14 +1,26 @@
-package org.example.logic.use_cases.state_usecase
-
-import org.example.logic.repositories.state_repository.StateRepository
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.project_manegment.EditStateToProjectUseCase
+import org.example.models.Project
 import org.example.models.State
 
 class EditStateUseCase(
-    private val stateRepository: StateRepository
+    private val editStateToProjectUseCase: EditStateToProjectUseCase,
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun editState(state : State , newName: String): Result<State>{
-        if (newName.isBlank()) return Result.failure(IllegalArgumentException("Edit failed : name is Blank !!"))
-        val updateState = State(state.id, newName)
-        return stateRepository.editState(updateState)
+    fun editState(stateToEdit: State, newName: String, project: Project): Result<Project> = runCatching {
+        if (newName.isEmpty()) throw IllegalArgumentException("Edit failed: name cannot be blank!")
+
+        val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id
+            ?: throw Exception("User not logged in")
+
+        val updatedState = stateToEdit.copy(name = newName)
+
+        val updatedStates = project.state.map { state ->
+            if (state.id == stateToEdit.id) updatedState else state
+        }
+
+        editStateToProjectUseCase.editStateToProject(currentUserId, project, updatedState)
+        
+        project.copy(state = updatedStates)
     }
 }
