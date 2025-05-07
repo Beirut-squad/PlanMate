@@ -12,6 +12,8 @@ import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
 import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
 import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import org.example.logic.use_cases.project_manegment.RemoveStateFromProjectUseCase
+import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -35,4 +37,6 @@ val logicModule = module {
     singleOf(::DeleteProjectUseCase)
     singleOf(::EditProjectNameUseCase)
     singleOf(::EditProjectDescriptionUseCase)
+    singleOf(::DeleteStateUseCase)
+    singleOf(::RemoveStateFromProjectUseCase)
 }
