@@ -1,13 +1,22 @@
 package org.example.logic.use_cases.project_manegment
 
+import logic.use_cases.log.CreateProjectLogUseCase
+import org.example.logic.exceptions.project_magement_exceptions.BlankFieldsException
 import org.example.logic.repositories.project_repository.ProjectRepository
+import org.example.models.Project
 import org.example.models.State
 import java.util.*
 
 class EditStateToProjectUseCase(
-    private val repository: ProjectRepository
+    private val repository: ProjectRepository,
+    private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun editStateToProject(projectId: UUID, state: State): Result<Unit> {
-        return repository.editStateToProject(projectId, state)
+    fun editStateToProject(currentUserID: UUID, project: Project, state: State): Result<Project> {
+        if (state.name.isBlank()) {
+            return Result.failure(BlankFieldsException("State name is required."))
+        }
+        return repository.editStateToProject(project.id, state).onSuccess { updatedProject ->
+            logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)
+        }
     }
 }
