@@ -9,8 +9,8 @@ class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase
 ){
-    suspend fun deleteTask(task: Task, id : UUID,UserID : UUID){
-        taskRepository.deleteTask(id)
-        createTaskLogUseCase.createTaskLog(UserID,task,null)
+    suspend fun deleteTask(task: Task, taskId : UUID,userID : UUID){
+        taskRepository.deleteTask(taskId)
+        createTaskLogUseCase.createTaskLog(userID,task,null)
     }
 }
