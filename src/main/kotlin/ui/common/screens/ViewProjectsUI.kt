@@ -29,7 +29,7 @@ class ViewProjectsUI(
                         )
                     }
                 } else {
-                    viewer.printInfoLine("No projects found.")
+                    viewer.printError("No projects found.")
                 }
             },
             onFailure = {

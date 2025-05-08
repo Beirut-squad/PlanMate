@@ -39,7 +39,7 @@ class ViewProjectsForUserUI(
                         viewer.printTitle("Select a project to view details:")
                         handleProjectSelection(projects)
                     } else {
-                        viewer.printInfoLine("No project found for the current user.")
+                        viewer.printError("No project found for the current user.")
                     }
                 },
                 onFailure = {
