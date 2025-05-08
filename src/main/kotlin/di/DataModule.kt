@@ -27,9 +27,6 @@ val dataModule = module {
     single<AuthenticationDataSource> {
         AuthenticationMongoDataSourceImpl(MongoConnection)
     }
-    single<AuthenticationRepository> {
-        AuthenticationRepositoryImpl(get())
-    }
 
     single<LogDataSource> {
         LogDataSourceFakeImpl()
@@ -53,9 +50,6 @@ val dataModule = module {
 
     single<ProjectRepository> {
         ProjectRepositoryImpl(get())
-    }
-    single<TaskRepository> {
-        TaskRepositoryImpl(get())
     }
 
     single<TaskRepository> {
