@@ -7,16 +7,9 @@ import java.util.UUID
 class GetUserTaskLogsUseCase(
     private val logRepository: LogRepository
 ) {
-    fun getUserTaskLogs(userId: UUID): Result<List<TaskLog>> {
-        return logRepository.getAllTaskLogs().fold(
-            onSuccess = { taskLogs ->
-                Result.success(
-                    taskLogs.filter { log ->
-                        log.userId == userId
-                    }
-                )
-            },
-            onFailure = { Result.failure(it) }
-        )
+    fun getUserTaskLogs(userId: UUID): List<TaskLog> {
+        return logRepository.getAllTaskLogs().filter { log ->
+            log.userId == userId
+        }
     }
 }

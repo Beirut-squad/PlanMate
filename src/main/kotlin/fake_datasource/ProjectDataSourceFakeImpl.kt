@@ -1,9 +1,11 @@
 package org.example.fake_datasource
 
 import org.example.data.datasource.project_data_source.ProjectDataSource
+import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
 import org.example.models.Project
 import org.example.models.State
 import org.example.models.User
+import java.time.LocalDateTime
 import java.util.*
 
 class ProjectDataSourceFakeImpl : ProjectDataSource {
@@ -40,22 +42,16 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
     }
 
     override suspend fun addStateToProject(projectId: UUID, state: State): Project {
-        val project = projects.find { it.id == projectId } ?: throw Exception()
-        updateProjectState(projectId, state)
-        return project
+        return updateProjectState(projectId, state)
     }
 
 
     override suspend fun editStateToProject(projectId: UUID, state: State): Project {
-        val project = projects.find { it.id == projectId } ?: throw Exception()
-        editProjectState(projectId, state)
-        return project
+        return editProjectState(projectId, state)
     }
 
     override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
-        val project = projects.find { it.id == projectId } ?: throw Exception()
-        deleteProjectState(projectId, state)
-        return project
+        return deleteProjectState(projectId, state)
     }
 
     override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
@@ -69,52 +65,76 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User) {
+    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
+        var updatedProject: Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val updatedUsers = if (user in project.users) project.users else project.users + user
-                project.copy(users = updatedUsers)
+                val projectUpdated = project.copy(
+                    users = updatedUsers,
+                    updatedAt = LocalDateTime.now()
+                )
+                updatedProject = projectUpdated
+                projectUpdated
             } else {
                 project
             }
         }
+        return updatedProject ?: throw NoProjectFoundException()
     }
 
 
-    private fun updateProjectState(projectId: UUID, state: State) {
+    private fun updateProjectState(projectId: UUID, state: State): Project {
+        var updatedProject: Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
-                project.copy(
-                    state = project.state + listOf(state)
+                val projectUpdated = project.copy(
+                    state = project.state + listOf(state),
+                    updatedAt = LocalDateTime.now()
                 )
+                updatedProject = projectUpdated
+                projectUpdated
             } else {
                 project
             }
         }
+        return updatedProject ?: throw NoProjectFoundException()
     }
 
-    private fun editProjectState(projectId: UUID, updatedState: State) {
+    private fun editProjectState(projectId: UUID, updatedState: State): Project {
+        var updatedProject: Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val updatedStates = project.state.map { existingState ->
                     if (existingState.id == updatedState.id) updatedState else existingState
                 }
-                project.copy(state = updatedStates)
+                val projectUpdated = project.copy(
+                    state = updatedStates,
+                    updatedAt = LocalDateTime.now()
+                )
+                updatedProject = projectUpdated
+                projectUpdated
             } else {
                 project
             }
         }
+        return updatedProject ?: throw NoProjectFoundException()
     }
 
-    private fun deleteProjectState(projectId: UUID, state: State) {
+    private fun deleteProjectState(projectId: UUID, state: State): Project {
+        var updatedProject: Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
-                project.copy(
-                    state = project.state.filterNot { it.id == state.id }
+                val projectUpdated = project.copy(
+                    state = project.state.filterNot { it.id == state.id },
+                    updatedAt = LocalDateTime.now()
                 )
+                updatedProject = projectUpdated
+                projectUpdated
             } else {
                 project
             }
         }
+        return updatedProject ?: throw NoProjectFoundException()
     }
 }

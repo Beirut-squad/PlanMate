@@ -21,8 +21,8 @@ class CreateProjectUseCase(
             throw BlankFieldsException("You should write a valid input as a string.")
         } else {
             val project = buildProject(creatorUserID, name, description, stateNames)
-            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
             projectRepository.createProject(project)
+            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
         }
     }
 

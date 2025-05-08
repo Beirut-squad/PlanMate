@@ -56,7 +56,7 @@ class SingleProjectScreen(
                 try {
                     deleteProjectUseCase.deleteProject(
                         project = project,
-                        creatorUserID = user.id ?: UUID.randomUUID()
+                        creatorUserID = user.id
                     )
                     running = false
                 } catch (e: Exception) {
@@ -79,7 +79,6 @@ class SingleProjectScreen(
             }
 
             6 -> {
-                viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
 

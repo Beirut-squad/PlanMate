@@ -47,7 +47,7 @@ class ProjectRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User) {
+    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
         return projectDataSource.addMateToProject(projectId, user)
     }
 

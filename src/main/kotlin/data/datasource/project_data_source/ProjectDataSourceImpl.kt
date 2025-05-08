@@ -103,8 +103,8 @@ class ProjectDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User) {
-        modifyProjectUser(projectId) { users ->
+    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
+        return modifyProjectUser(projectId) { users ->
             val updatedUser = mutableListOf<User>()
             var notFoundUser = true
             users.forEach { oldUsers ->
@@ -126,10 +126,10 @@ class ProjectDataSourceImpl(
     }
 
 
-    private suspend fun modifyProjectUser(projectId: UUID, userModifier: (List<User>) -> List<User>) {
+    private suspend fun modifyProjectUser(projectId: UUID, userModifier: (List<User>) -> List<User>): Project {
         val projects = getAllProjects()
 
-        val (updatedProjects) = findAndUpdateProject(projects, projectId) { project ->
+        val (updatedProjects, updatedProject) = findAndUpdateProject(projects, projectId) { project ->
             project.copy(
                 users = userModifier(project.users),
                 updatedAt = LocalDateTime.now()
@@ -137,6 +137,7 @@ class ProjectDataSourceImpl(
         }
 
         csvWriter.writeToFile(updatedProjects, fileName)
+        return updatedProject ?: throw NoProjectFoundException()
     }
 
 
@@ -160,8 +161,9 @@ class ProjectDataSourceImpl(
         var updatedProject: Project? = null
         val updated = projects.map { project ->
             if (project.id == projectId) {
-                updatedProject = projectModifier(project)
-                updatedProject!!
+                val projectUpdated = projectModifier(project)
+                updatedProject = projectUpdated
+                projectUpdated
             } else {
                 project
             }
@@ -177,7 +179,7 @@ class ProjectDataSourceImpl(
         return oldUser.id == newUser.id
     }
 
-    private suspend fun buildSuccessCreate(project: Project){
+    private suspend fun buildSuccessCreate(project: Project) {
         val existingProjects = getAllProjects()
         if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
             throw ProjectNotCreatedException(
