@@ -8,7 +8,6 @@ import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ui.admin.log.task.AllTaskLogsView
 
 class AdminHomeScreen(
 
@@ -18,8 +17,9 @@ class AdminHomeScreen(
     private val viewProjectsScreen: ViewProjectsScreen by inject()
     private val createNewProjectScreen: CreateNewProjectScreen by inject()
     private val allProjectLogsView: AllProjectLogsView by inject()
-    private val allTaskLogsView: AllTaskLogsView by inject()
-    override fun show() {
+    private val allTaskLogsView: AllProjectLogsView by inject()
+
+    override suspend fun show() {
 
         while (true) {
             viewer.printInfoLine("Choose an option:")
@@ -58,19 +58,19 @@ class AdminHomeScreen(
         }
     }
 
-    private fun goToViewProjectScreen() {
+    private suspend fun goToViewProjectScreen() {
         viewProjectsScreen.show()
     }
 
-    private fun goToCreateNewProjectScreen() {
+    private suspend fun goToCreateNewProjectScreen() {
         createNewProjectScreen.show()
     }
 
-    private fun goToViewAllProjectLogsScreen() {
+    private suspend fun goToViewAllProjectLogsScreen() {
         allProjectLogsView.show()
     }
 
-    private fun goToViewAllTaskLogsScreen() {
+    private suspend fun goToViewAllTaskLogsScreen() {
         allTaskLogsView.show()
     }
 }

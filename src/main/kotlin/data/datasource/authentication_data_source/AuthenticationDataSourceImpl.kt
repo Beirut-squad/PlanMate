@@ -14,37 +14,25 @@ class AuthenticationDataSourceImpl(
     private val csvReader: CsvReader<User>
 ) : AuthenticationDataSource {
 
-    override fun login(email: String, password: String): Result<User> {
+    override suspend fun login(email: String, password: String): User {
         val users = readUsersFromCsv()
-        val user = users.find { it.email == email && it.password == password }
-        return if (user != null) {
-            saveCurrentUser(user)
-                .fold(
-                    onSuccess = {
-                        Result.success(user)
-                    },
-                    onFailure = {
-                        Result.failure(it)
-                    }
-                )
-        } else {
-            Result.failure(InvalidEmailOrPasswordException())
-        }
+        val user = users.find { it.email == email && it.password == password } ?: throw InvalidEmailOrPasswordException()
+             saveCurrentUser(user)
+               return user
+
     }
 
-    override fun checkEmail(email: String): Result<Unit> {
+    override suspend fun checkEmail(email: String) {
         val users = readUsersFromCsv()
-        return if (users.any { it.email == email }) {
-            Result.success(Unit)
-        } else {
-            Result.failure(EmailNotFoundException())
-        }
+         if (users.none { it.email == email }) {
+         throw EmailNotFoundException()
+         }
     }
 
-    override fun register(name: String, password: String, email: String): Result<User> {
+    override suspend fun register(name: String, password: String, email: String): User {
         val users = readUsersFromCsv()
         if (users.any { it.email == email }) {
-            return Result.failure(EmailAlreadyExistsException())
+            throw EmailAlreadyExistsException()
         }
 
         val newUser = User(
@@ -57,21 +45,16 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newUser)
-        return saveCurrentUser(newUser)
-            .fold(
-                onSuccess = {
-                    Result.success(newUser)
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
+
+        saveCurrentUser(newUser)
+        return newUser
+
     }
 
-    override fun registerAdmin(name: String, password: String, email: String): Result<User> {
+    override suspend fun registerAdmin(name: String, password: String, email: String): User {
         val users = readUsersFromCsv()
         if (users.any { it.email == email }) {
-            return Result.failure(EmailAlreadyExistsException())
+            throw EmailAlreadyExistsException()
         }
 
         val newAdmin = User(
@@ -84,60 +67,44 @@ class AuthenticationDataSourceImpl(
         )
 
         addUserToCsv(newAdmin)
-        return saveCurrentUser(newAdmin)
-            .fold(
-                onSuccess = {
-                    Result.success(newAdmin)
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
+
+        saveCurrentUser(newAdmin)
+        return newAdmin
+
     }
 
-    override fun logout(): Result<Unit> {
-        return if (!getCurrentLoggedInUser().isFailure) {
-            saveCurrentUser(null)
-            Result.success(Unit)
-        } else {
-            Result.failure(NoLoggedInUserException())
+    override suspend fun logout() {
+        if (getCurrentLoggedInUser() == null) {
+            throw NoLoggedInUserException()
         }
+        saveCurrentUser(null)
     }
 
-    override fun checkIfFirstRegister(): Result<Unit> {
+    override suspend fun checkIfFirstRegister() {
         val users = readUsersFromCsv()
-        return if (users.isEmpty()) {
-            Result.success(Unit)
-        } else {
-            Result.failure(UsersAlreadyExistException())
+         if (users.isNotEmpty()) {
+            throw UsersAlreadyExistException()
         }
     }
 
-    private fun saveCurrentUser(user: User?): Result<Unit> {
-        return try {
+    private fun saveCurrentUser(user: User?) {
+         try {
             if (user != null) {
                 csvWriter.writeToFile(listOf(user), CURRENT_USER_FILE)
             } else {
                 csvWriter.writeToFile(emptyList(), CURRENT_USER_FILE)
             }
-            Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            throw e
         }
     }
 
-    override fun getCurrentLoggedInUser(): Result<User?> {
-        return try {
-            Result.success(readUsersFromCsv().single())
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getCurrentLoggedInUser():User? {
+            return readUsersFromCsv().singleOrNull()
     }
 
-    override fun getUsers(): Result<List<User>> {
-        return runCatching {
-            readUsersFromCsv()
-        }
+    override suspend fun getUsers(): List<User> {
+        return readUsersFromCsv()
     }
 
     private fun readUsersFromCsv(): List<User> {

@@ -4,6 +4,7 @@ import extensions.formatDateTime
 import org.example.logic.use_cases.authentication.GetUserByIdUseCase
 import org.example.models.Project
 import org.example.models.ProjectLog
+import org.example.models.State
 import org.example.ui.common.components.Viewer
 import java.util.*
 
@@ -11,11 +12,11 @@ open class DisplayProjectLog(
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val viewer: Viewer,
 ) {
-    private fun getUserName(userId: UUID): String? {
-        return getUserByIdUseCase.getUser(userId).getOrThrow()?.name
+    private suspend fun getUserName(userId: UUID): String? {
+        return getUserByIdUseCase.getUser(userId)?.name
     }
 
-    protected fun displayProjectLog(index: Int, projectLog: ProjectLog) {
+    protected suspend fun displayProjectLog(index: Int, projectLog: ProjectLog) {
         when {
             projectLog.isCreation() -> handleProjectCreation(index, projectLog)
             projectLog.isDeletion() -> handleProjectDeletion(index, projectLog)
@@ -31,7 +32,7 @@ open class DisplayProjectLog(
         return previousEntity != null && currentEntity == null
     }
 
-    private fun handleProjectCreation(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectCreation(index: Int, projectLog: ProjectLog) {
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)
         viewer.printCorrectOutput(
@@ -39,7 +40,7 @@ open class DisplayProjectLog(
         )
     }
 
-    private fun handleProjectDeletion(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectDeletion(index: Int, projectLog: ProjectLog) {
         val previousProject = projectLog.previousEntity
         val userName = getUserName(projectLog.userId)
         viewer.printCorrectOutput(
@@ -47,7 +48,7 @@ open class DisplayProjectLog(
         )
     }
 
-    private fun handleProjectChanges(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectChanges(index: Int, projectLog: ProjectLog) {
         val previousProject = projectLog.previousEntity
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)
@@ -87,11 +88,11 @@ open class DisplayProjectLog(
         val currentStates = currentProject?.state.orEmpty()
         when {
             previousStates.size < currentStates.size -> handleStateAddition(index, userName, currentProject)
+            previousStates.size == currentStates.size -> handleStateEdition(
+                index, userName, previousProject, currentProject,
+            )
             previousStates.size > currentStates.size -> handleStateRemoval(
-                index,
-                userName,
-                previousProject,
-                currentProject,
+                index, userName, previousProject, currentProject,
             )
         }
     }
@@ -103,6 +104,28 @@ open class DisplayProjectLog(
         viewer.printCorrectOutput(
             "${index + 1}. User $userName added new state ${currentProject?.state?.last()?.name} to project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
         )
+    }
+
+    private fun handleStateEdition(
+        index: Int, userName: String?, previousProject: Project?, currentProject: Project?
+    ) {
+        val projectName = currentProject?.name
+        val previousState = previousProject?.state.orEmpty()
+        val currentState = currentProject?.state.orEmpty()
+        findFirstStateChange(oldStates = previousState, updatedStates = currentState)?.let { (oldState, newState) ->
+            viewer.printCorrectOutput(
+                "${index + 1}. User $userName edited state form ${oldState.name} to ${newState.name} project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
+            )
+        }
+    }
+
+    private fun findFirstStateChange(oldStates: List<State>, updatedStates: List<State>): Pair<State, State>? {
+        updatedStates.forEach { updatedState ->
+            oldStates.find { it.id == updatedState.id }?.let { oldState ->
+                if (oldState.name != updatedState.name) return oldState to updatedState
+            }
+        }
+        return null
     }
 
     private fun handleStateRemoval(
@@ -124,12 +147,7 @@ open class DisplayProjectLog(
         val currentStates = currentProject?.users.orEmpty()
         when {
             previousStates.size < currentStates.size -> handleAssignedUserAddition(index, userName, currentProject)
-            previousStates.size > currentStates.size -> handleAssignedUserRemoval(
-                index,
-                userName,
-                previousProject,
-                currentProject,
-            )
+//            previousStates.size > currentStates.size -> handleAssignedUserRemoval(index, userName, previousProject, currentProject,)
         }
     }
 
@@ -144,15 +162,15 @@ open class DisplayProjectLog(
         )
     }
 
-    private fun handleAssignedUserRemoval(
-        index: Int, userName: String?, previousProject: Project?, currentProject: Project?
-    ) {
-        val projectName = currentProject?.name
-        val deletedUser = (previousProject?.users.orEmpty() - currentProject?.users.orEmpty().toSet()).first()
-        viewer.printCorrectOutput(
-            "${index + 1}. User $userName unassigned user ${deletedUser} from project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
-        )
-    }
+//    private fun handleAssignedUserRemoval(
+//        index: Int, userName: String?, previousProject: Project?, currentProject: Project?
+//    ) {
+//        val projectName = currentProject?.name
+//        val deletedUser = (previousProject?.users.orEmpty() - currentProject?.users.orEmpty().toSet()).first()
+//        viewer.printCorrectOutput(
+//            "${index + 1}. User $userName unassigned user ${deletedUser} from project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
+//        )
+//    }
     //endregion
 
 }

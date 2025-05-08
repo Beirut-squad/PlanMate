@@ -8,50 +8,50 @@ import org.example.models.User
 import java.util.*
 
 class ProjectRepositoryImpl(
-    private val projectDataSource: ProjectDataSource,
+    private val projectDataSource: ProjectDataSource
 ) : ProjectRepository {
 
-    override fun createProject(project: Project): Result<Unit> {
+    override suspend fun createProject(project: Project) {
         return projectDataSource.createProject(project)
     }
 
-    override fun editProject(project: Project): Result<Unit> {
-        return projectDataSource.editProject(project)
+    override suspend fun editProject(project: Project) {
+        projectDataSource.editProject(project)
     }
 
-    override fun deleteProject(id: UUID): Result<Unit> {
-        return projectDataSource.deleteProject(id)
+    override suspend fun deleteProject(id: UUID) {
+        projectDataSource.deleteProject(id)
     }
 
-    override fun getAllProjects(): Result<List<Project>> {
+    override suspend fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
     }
 
-    override fun getProject(id: UUID): Result<Project> {
+    override suspend fun getProject(id: UUID): Project {
         return projectDataSource.getProject(id)
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Result<Project> {
+    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
         return projectDataSource.addStateToProject(projectId, state)
     }
 
-    override fun editStateToProject(projectId: UUID, state: State): Result<Project> {
+    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
         return projectDataSource.editStateToProject(projectId, state)
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Result<Project> {
+    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
         return projectDataSource.removeStateFromProject(projectId, state)
     }
 
-    override fun getProjectForMateByUserId(userId: UUID): Result<List<Project>> {
+    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun addMateToProject(projectId: UUID, user: User){
+    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
         return projectDataSource.addMateToProject(projectId, user)
     }
 
-    override fun getProjectsForUserById(userid: UUID): Result<List<Project>> {
+    override suspend fun getProjectsForUserById(userid: UUID): List<Project> {
         return projectDataSource.getProjectsForUserById(userid)
     }
 

@@ -11,7 +11,7 @@ class AllTaskLogsView(
     private val viewer: Viewer,
 ) : UiScreen, DisplayTaskLog(getUserByIdUseCase, viewer) {
 
-    override fun show() {
+    override suspend fun show() {
         getAllTaskLogsUseCase.getAllTaskLogs()
             .forEachIndexed { index, taskLog ->
                 displayTaskLog(index, taskLog)

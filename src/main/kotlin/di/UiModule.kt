@@ -1,6 +1,6 @@
 package org.example.di
 
-import EditProjectStateUi
+import org.example.ui.admin.project.EditProjectStateUi
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.ui.admin.home_screen.AdminHomeScreen

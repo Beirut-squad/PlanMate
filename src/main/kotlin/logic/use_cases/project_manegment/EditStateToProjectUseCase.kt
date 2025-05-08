@@ -11,11 +11,11 @@ class EditStateToProjectUseCase(
     private val repository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun editStateToProject(currentUserID: UUID, project: Project, state: State): Result<Project> {
+    suspend fun editStateToProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
-            return Result.failure(BlankFieldsException("State name is required."))
+            throw BlankFieldsException("State name is required.")
         }
-        return repository.editStateToProject(project.id, state).onSuccess { updatedProject ->
+        return repository.editStateToProject(project.id, state).also { updatedProject ->
             logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)
         }
     }

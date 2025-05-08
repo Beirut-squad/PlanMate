@@ -23,24 +23,29 @@ class CreateNewTaskUI(
     private val createTaskUseCase: CreateTaskUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
 
-    override fun show() {
-        getProjectByIdUseCase.getProjectById(projectId).fold(
-            onSuccess = { selectedProject ->
-                getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()?.let { user ->
-                    viewer.printTitle("Let's create a task")
+    override suspend fun show() {
+        try {
+            val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
+            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
 
-                    val name = getValidInput("Write your task name:")
-                    val description = getValidInput("Tell me more about description of your task:")
+            if (user == null) {
+                viewer.printError("No user found")
+                return
+            }
 
-                    val selectedStateIndex = getValidStateInput(selectedProject)
+            viewer.printTitle("Let's create a task")
 
-                    val selectedState = selectedProject.state[selectedStateIndex]
-                    createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-                    ViewProjectsForUserUI().show()
-                } ?: viewer.printError("No user found")
-            },
-            onFailure = { viewer.printError("Failed to retrieve project: ${it.message}") }
-        )
+            val name = getValidInput("Write your task name:")
+            val description = getValidInput("Tell me more about description of your task:")
+
+            val selectedStateIndex = getValidStateInput(selectedProject)
+            val selectedState = selectedProject.state[selectedStateIndex]
+
+            createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
+            ViewProjectsForUserUI().show()
+        } catch (e: Exception) {
+            viewer.printError("Failed to retrieve project: ${e.message}")
+        }
     }
 
 
@@ -80,6 +85,4 @@ class CreateNewTaskUI(
 
         return selectedStateIndex
     }
-
-
 }

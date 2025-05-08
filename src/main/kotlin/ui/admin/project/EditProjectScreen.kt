@@ -18,7 +18,7 @@ class EditProjectScreen(
 
     lateinit var project: Project
 
-    override fun show() {
+    override suspend fun show() {
         var isContinueProcess = true
         while (isContinueProcess) {
             displayMenu()
@@ -38,18 +38,26 @@ class EditProjectScreen(
         viewer.printTitle("Choose what you want to change in project.")
     }
 
-    private fun editProjectName() {
+    private suspend fun editProjectName() {
         viewer.printPlainText("Edit Project Name: ", withNewLine = false)
         val newProjectName = reader.readInput()
-        val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
-        editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
+        try {
+            val editorUserId = currentLoggedInUserUseCase.getCurrentUser()?.id ?: return
+            editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
+
     }
 
-    private fun editProjectDescription() {
+    private suspend fun editProjectDescription() {
         viewer.printPlainText("Edit Project Description: ", withNewLine = false)
         val newProjectDescription = reader.readInput()
-        val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
-        editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
+        try {
+            val editorUserId = currentLoggedInUserUseCase.getCurrentUser()?.id ?: return
+            editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
-
 }

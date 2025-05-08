@@ -7,9 +7,7 @@ import java.util.UUID
 class GetUserByIdUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    fun getUser(id: UUID): Result<User?> {
-        return runCatching {
-            authenticationRepository.getUsers().getOrThrow().find { user -> id == user.id }
-        }
+    suspend fun getUser(id: UUID): User? {
+        return authenticationRepository.getUsers().find { user -> id == user.id }
     }
 }

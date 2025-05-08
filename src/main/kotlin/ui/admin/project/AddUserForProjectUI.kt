@@ -2,13 +2,12 @@ package org.example.ui.admin.project
 
 import org.example.logic.use_cases.authentication.GetAllUsersUseCase
 import org.example.logic.use_cases.project_manegment.AddMateToProjectUseCase
-import org.example.logic.use_cases.project_manegment.GetProjectForMateByUserIdUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.util.UUID
+import java.util.*
 
 class AddUserForProjectUI(
     private val projectId: UUID,
@@ -17,12 +16,10 @@ class AddUserForProjectUI(
     private val reader : Reader by inject()
     private val  addMateToProjectUseCase:AddMateToProjectUseCase by inject()
     private val getAllUsersUseCase: GetAllUsersUseCase by inject()
-    override fun show() {
-        val users = getAllUsersUseCase.getUsers().getOrThrow()
+    override suspend fun show() {
+        val users = getAllUsersUseCase.getUsers()
 
         viewer.printTitle("Add User")
-
-
         if (users.isEmpty()) {
             viewer.printInfoLine("No users available to add.")
             return
@@ -43,7 +40,11 @@ class AddUserForProjectUI(
         }
 
         val selectedUser = users[selected - 1]
-        addMateToProjectUseCase.addMateToProject(projectId, selectedUser)
-        viewer.printGoodbyeMessage("User added successfully")
+        try {
+            addMateToProjectUseCase.addMateToProject(projectId, selectedUser)
+            viewer.printGoodbyeMessage("User added successfully")
+        }catch (e:Exception){
+            viewer.printError("${e.message}")
+        }
     }
 }

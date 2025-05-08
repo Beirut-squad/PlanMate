@@ -12,11 +12,11 @@ import java.util.*
 
 class ViewStateSelectedForProjectUI(
     private val projectId: UUID,
-) : UiScreen,KoinComponent {
+) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
-    override fun show() {
+    override suspend fun show() {
         val states = getProjectStates() ?: return
         if (states.isEmpty()) {
             viewer.printInfoLine("No states available for this project.")
@@ -26,19 +26,16 @@ class ViewStateSelectedForProjectUI(
         handleUserSelection(states)
     }
 
-    private fun getProjectStates(): List<State>? {
+    private suspend fun getProjectStates(): List<State>? {
         viewer.printTitle("State Details")
-        var resultStates: List<State>? = null
 
-        getProjectByIdUseCase.getProjectById(projectId).fold(
-            onSuccess = { project ->
-                resultStates = project.state
-            },
-            onFailure = {
-                viewer.printError("Failed to retrieve project: ${it.message}")
-            }
-        )
-        return resultStates
+        return try {
+            val project = getProjectByIdUseCase.getProjectById(projectId)
+            project.state
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+            null
+        }
     }
 
     private fun displayStateOptions(states: List<State>) {
@@ -47,14 +44,16 @@ class ViewStateSelectedForProjectUI(
         }
     }
 
-    private fun handleUserSelection(states: List<State>) {
-        val choice = viewer.readIntInput("Enter the number of the state to view (Enter Any Thing To Go Back): ")
+    private suspend fun handleUserSelection(states: List<State>) {
+        val choice = viewer.readIntInput(
+            "Enter the number of the state to view (Enter Any Thing To Go Back): ")
         when {
             choice != null && choice in 1..states.size -> {
                 val selectedState = states[choice - 1]
                 printStateDetails(selectedState)
                 ViewProjectsForUserUI().show()
             }
+
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
                 ViewProjectsForUserUI().show()
@@ -62,25 +61,26 @@ class ViewStateSelectedForProjectUI(
         }
     }
 
-    private fun printStateDetails(selectedState: State) {
-        val result = getTaskByStateIdAndProjectId.getTaskByStateIdAndProjectId(projectId, selectedState.id)
+    private suspend fun printStateDetails(selectedState: State) {
         viewer.printTitle("State Details")
         viewer.printInfoLine("Name: ${selectedState.name}")
 
-        if (result.isSuccess) {
-            val tasks = result.getOrNull() ?: emptyList()
+        try {
+            val tasks = getTaskByStateIdAndProjectId
+                                .getTaskByStateIdAndProjectId(projectId, selectedState.id)
 
             if (tasks.isNotEmpty()) {
                 viewer.printInfoLine("Tasks:")
                 tasks.forEach { task ->
-                    viewer.printInfoLine(" - Name: ${task.title}, Description: ${task.description}")
+                    viewer.printInfoLine(
+                        " - Name: ${task.title}, Description: ${task.description}")
                 }
             } else {
                 viewer.printInfoLine("No tasks available for this state.")
                 ViewProjectsForUserUI().show()
             }
-        } else {
-            viewer.printError("Failed to retrieve tasks: ${result.exceptionOrNull()?.message}")
+        } catch (e:Exception){
+            viewer.printError("${e.message}")
         }
     }
 }

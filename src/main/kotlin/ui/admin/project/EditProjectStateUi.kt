@@ -1,6 +1,8 @@
+package org.example.ui.admin.project
+
+import logic.use_cases.state_usecase.EditStateUseCase
 import org.example.models.Project
 import org.example.models.State
-import org.example.ui.admin.project.CreateProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
@@ -15,19 +17,19 @@ class EditProjectStateUi(
     private val reader: Reader by inject()
     private val editStateUseCase: EditStateUseCase by inject()
 
-    override fun show() {
-            viewer.printTitle("Edit State")
+    override suspend fun show() {
+        viewer.printTitle("Edit State")
 
-            viewer.printTitle("Current state name: ${state.name}")
-            viewer.printTitle("Enter new state name:")
-            val newName = reader.readInput().toString()
+        viewer.printTitle("Current state name: ${state.name}")
+        viewer.printTitle("Enter new state name:")
+        val newName = reader.readInput().toString()
 
-            editStateUseCase.editState(state, newName, project).fold(
-                onSuccess = {
-                    viewer.printTitle("State updated successfully to: $newName")
-                }, onFailure = {
-                    viewer.printTitle("Error updating state: ${it.message}")
-                }
-            )
+        try {
+            editStateUseCase.editState(state, newName, project)
+            viewer.printTitle("State updated successfully to: $newName")
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
+
 }

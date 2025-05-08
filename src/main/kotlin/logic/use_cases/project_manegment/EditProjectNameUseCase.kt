@@ -11,7 +11,7 @@ class EditProjectNameUseCase(
     private val projectRepository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun editProject(project: Project, newName: String?, editorUserId: UUID) {
+    suspend fun editProject(project: Project, newName: String?, editorUserId: UUID) {
         if (newName.isNullOrBlank()) { throw EmptyProjectNameException() }
         if (project.name == newName) { return }
         val editedProject = project.copy(
@@ -22,7 +22,7 @@ class EditProjectNameUseCase(
         logUseCase.createProjectLog(
             previousProject = project,
             currentProject = editedProject,
-            userId = editorUserId,
+            userId = editorUserId
         )
 
     }

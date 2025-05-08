@@ -8,61 +8,49 @@ import java.util.*
 class TaskDataSourceFakeImpl : TaskDataSource {
     private val tasks = mutableListOf<Task>()
 
-    override fun createTask(task: Task): Result<Unit> {
-        return Result.success(Unit).also {
-            tasks.add(task)
-        }
+    override suspend fun createTask(task: Task) {
+        tasks.add(task)
     }
 
-    override fun editTask(task: Task): Result<Unit> {
-        return tasks.find { it.id == task.id }?.let {
+    override suspend fun editTask(task: Task) {
+        tasks.find { it.id == task.id }?.let {
             tasks.removeIf { it.id == task.id }.let {
                 tasks.add(task)
-                Result.success(Unit)
             }
-        } ?: Result.failure(NoSuchElementException("Task with id ${task.id} not found"))
+        } ?: throw NoSuchElementException("Task with id ${task.id} not found")
 
     }
 
-    override fun deleteTask(id: UUID): Result<Unit> {
+    override suspend fun deleteTask(id: UUID) {
         return tasks.find { it.id == id }?.let {
             tasks.removeIf { it.id == id }.let {
-                Result.success(Unit)
             }
-        } ?: Result.failure(NoSuchElementException("Task with id $id not found"))
+        } ?: throw NoSuchElementException("Task with id $id not found")
     }
 
-    override fun getAllTasks(): Result<List<Task>> {
-        return Result.success(tasks)
+    override suspend fun getAllTasks(): List<Task> {
+        return tasks
     }
 
-    override fun getTask(id: UUID): Result<Task> {
-        return tasks.find { it.id == id }?.let {
-            Result.success(it)
-        } ?: Result.failure(NoSuchElementException("Task with id $id not found"))
+    override suspend fun getTask(id: UUID): Task {
+        return tasks.find { it.id == id }
+            ?: throw NoSuchElementException("Task with id $id not found")
     }
 
-    override fun getTaskByStateIdAndProjectId(
+    override suspend fun getTaskByStateIdAndProjectId(
         projectId: UUID,
         stateId: UUID
-    ): Result<List<Task>> {
-        val allTasksResult = getAllTasks()
-        val tasks = allTasksResult.getOrNull() ?: emptyList()
+    ): List<Task> {
+        val tasks = getAllTasks()
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
-        return if (filteredTasks.isNotEmpty()) {
-            Result.success(filteredTasks)
-        } else {
-            Result.failure(Exception("No tasks found for the given project and state."))
-        }
+        return filteredTasks.ifEmpty { throw Exception("No tasks found for the given project and state.") }
+
     }
 
-    override fun getAllTasksForProject(projectId: UUID): Result<List<Task>> {
-        return try {
-            val tasksForProject = tasks.filter { it.projectId == projectId }
-            Result.success(tasksForProject)
-        } catch (e: Exception) {
-            Result.failure(GetTaskException("Failed to retrieve task: ${e.message}"))
-        }
+    override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
+        val tasksForProject = tasks.filter { it.projectId == projectId }
+        Result.success(tasksForProject)
+        throw GetTaskException("Failed to retrieve task")
     }
 }

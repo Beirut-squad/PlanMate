@@ -17,18 +17,17 @@ class ViewProjectsScreen(
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : UiScreen {
     private var running = true
-    override fun show() {
+    override suspend fun show() {
         running = true
         val allProjects = getAllProjectsUseCases.getAllProjects()
 
         while (running) {
-            allProjects.fold(
-                onSuccess = { projects ->
-                    if (projects.isNotEmpty()) {
-                        viewer.printTitle("Project: ")
-                        projects.forEachIndexed { index, project ->
-                            viewer.printInfoLine(
-                                """
+            try {
+                if (allProjects.isNotEmpty()) {
+                    viewer.printTitle("Project: ")
+                    allProjects.forEachIndexed { index, project ->
+                        viewer.printInfoLine(
+                            """
                         ${index + 1}.
                         - Made by: ${getUserById(project.creatorUserID).name}
                         - Name: ${project.name}
@@ -36,30 +35,29 @@ class ViewProjectsScreen(
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
                     """.trimIndent()
-                            )
-                        }
-
-                        chooseProject(projects)
-                    } else {
-                        viewer.printInfoLine("No projects found.")
-                        running = false
+                        )
                     }
-                },
-                onFailure = {
-                    viewer.printError("Failed to retrieve projects: ${it.message}")
+
+                    chooseProject(allProjects)
+                } else {
+                    viewer.printInfoLine("No projects found.")
+                    running = false
                 }
-            )
+            } catch (e: Exception) {
+                viewer.printError("Failed to retrieve projects: ${e.message}")
+                running = false
+            }
         }
     }
 
-    private fun chooseProject(projects: List<Project>) {
+    private suspend fun chooseProject(projects: List<Project>) {
         viewer.printInfoLine("Choose project: ")
         viewer.printOptions(projects.map { it.name } + "Exit")
 
         enterProject(projects)
     }
 
-    private fun enterProject(projects: List<Project>) {
+    private suspend fun enterProject(projects: List<Project>) {
         when (val input = reader.readInt()) {
             in 1..projects.size -> {
                 if (input != null) {
@@ -69,9 +67,11 @@ class ViewProjectsScreen(
                     enterProject(projects)
                 }
             }
+
             projects.size + 1 -> {
                 running = false
             }
+
             else -> {
                 viewer.printError("Invalid project number")
                 enterProject(projects)
@@ -79,12 +79,12 @@ class ViewProjectsScreen(
         }
     }
 
-    private fun goToSingleProjectScreen(project: Project) {
+    private suspend fun goToSingleProjectScreen(project: Project) {
         singleProjectScreen.project = project
         singleProjectScreen.show()
     }
 
-    private fun getUserById(id: UUID): User {
-        return getUserByIdUseCase.getUser(id).getOrThrow() ?: throw IllegalStateException("User not found")
+    private suspend fun getUserById(id: UUID): User {
+        return getUserByIdUseCase.getUser(id)?: throw IllegalStateException("User not found")
     }
 }

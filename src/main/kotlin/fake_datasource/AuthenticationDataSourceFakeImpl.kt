@@ -2,7 +2,9 @@ package org.example.fake_datasource
 
 import org.example.data.datasource.authentication_data_source.AuthenticationDataSource
 import org.example.logic.exceptions.authentication_exceptions.EmailAlreadyExistsException
+import org.example.logic.exceptions.authentication_exceptions.InvalidEmailOrPasswordException
 import org.example.logic.exceptions.authentication_exceptions.NoLoggedInUserException
+import org.example.logic.exceptions.authentication_exceptions.UsersAlreadyExistException
 import org.example.models.Role
 import org.example.models.User
 import java.util.*
@@ -11,42 +13,41 @@ class AuthenticationDataSourceFakeImpl : AuthenticationDataSource {
     private val users = mutableListOf<User>()
     private var currentUser: User? = null
 
-    override fun login(email: String, password: String): Result<User> {
-        return users
-            .find { it.email == email && it.password == password }
-            ?.let {
-                currentUser = it
-                Result.success(it)
-            }
-            ?: Result.failure(Exception("User not found"))
+    override suspend fun login(email: String, password: String): User {
+        val user = users.find { it.email == email && it.password == password }
+            ?: throw InvalidEmailOrPasswordException()
+        currentUser = user
+        return user
+
     }
 
-    override fun checkEmail(email: String): Result<Unit> {
-        return users
-            .find { it.email == email }
-            ?.let { Result.success(Unit) }
-            ?: Result.failure(Exception("User already exists"))
+    override suspend fun checkEmail(email: String) {
+        if (users.none { it.email == email }) {
+            throw Exception("User with email $email not found")
+        }
+
     }
 
-    override fun register(name: String, password: String, email: String): Result<User> {
-        return if (checkEmail(email).isSuccess) {
-            Result.failure(EmailAlreadyExistsException())
-        } else {
-            val user = User(
-                id = UUID.randomUUID(),
-                name = name,
-                password = password,
-                email = email,
-                role = Role.MATE
-            )
-            users.add(user)
-            Result.success(user)
+    override suspend fun register(name: String, password: String, email: String): User {
+         if (users.any { it.email == email }) {
+            throw EmailAlreadyExistsException()
+        }else{
+             val user = User(
+                 id = UUID.randomUUID(),
+                 name = name,
+                 password = password,
+                 email = email,
+                 role = Role.MATE
+             )
+             users.add(user)
+             currentUser = user // I add this line to make user when register currentUser
+             return user
         }
     }
 
-    override fun registerAdmin(name: String, password: String, email: String): Result<User> {
-        return if (checkEmail(email).isSuccess) {
-            Result.failure(EmailAlreadyExistsException())
+    override suspend fun registerAdmin(name: String, password: String, email: String): User {
+        if (users.any { it.email == email }) {
+            throw EmailAlreadyExistsException()
         } else {
             val user = User(
                 id = UUID.randomUUID(),
@@ -56,31 +57,30 @@ class AuthenticationDataSourceFakeImpl : AuthenticationDataSource {
                 role = Role.ADMIN
             )
             users.add(user)
-            Result.success(user)
+            currentUser = user
+            return user
         }
     }
 
-    override fun logout(): Result<Unit> {
-        return currentUser?.let {
-            currentUser = null
-            Result.success(Unit)
-        } ?: Result.failure(NoLoggedInUserException())
+    override suspend fun logout(){
+        if (currentUser == null) {
+            throw NoLoggedInUserException()
+        }
+        currentUser = null
     }
 
-    override fun checkIfFirstRegister(): Result<Unit> {
-        return if (users.isEmpty()) {
-            Result.success(Unit)
-        } else {
-            Result.failure(Exception("Users already exist"))
+    override suspend fun checkIfFirstRegister() {
+       if (users.isNotEmpty()) {
+            throw UsersAlreadyExistException()
         }
     }
 
-    override fun getCurrentLoggedInUser(): Result<User?> {
-        return Result.success(currentUser)
+    override suspend fun getCurrentLoggedInUser(): User? {
+        return currentUser
     }
 
-    override fun getUsers(): Result<List<User>> {
-        return Result.success(users)
+    override suspend fun getUsers(): List<User> {
+        return users
     }
 }
 

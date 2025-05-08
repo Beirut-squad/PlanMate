@@ -18,13 +18,13 @@ class ViewProjectStatesUi(
     private lateinit var project: Project
     private lateinit var states: List<State>
 
-    fun setProject(projectId: UUID) {
+    suspend fun setProject(projectId: UUID) {
         this.projectId = projectId
         this.project = getProject()
         this.states = project.state
     }
 
-    override fun show() {
+    override suspend fun show() {
         while (true) {
             viewer.printTitle("Project states")
 
@@ -53,11 +53,11 @@ class ViewProjectStatesUi(
         }
     }
 
-    private fun getProject(): Project {
-        return getProjectByIdUseCase.getProjectById(projectId).getOrThrow()
+    private suspend fun getProject(): Project {
+        return getProjectByIdUseCase.getProjectById(projectId)
     }
 
-    private fun displayNoStatesAndGoToCreateState() {
+    private suspend fun displayNoStatesAndGoToCreateState() {
         viewer.printTitle("You have no states, please create one first")
         CreateProjectStateUi(project).show()
     }
@@ -67,7 +67,7 @@ class ViewProjectStatesUi(
         viewer.printOptions(states.map { it.name } + "Exit")
     }
 
-    private fun goToSingleStateUi(state: State) {
+    private suspend fun goToSingleStateUi(state: State) {
         setProject(projectId)
         singleStateUi.setProject(project)
         singleStateUi.setState(state)

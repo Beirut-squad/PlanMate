@@ -8,31 +8,17 @@ class RegisterMateUseCase(
     private val authenticationRepository: AuthenticationRepository,
     private val encryptPassword: EncryptPassword
 ) {
-    fun addUser(
+    suspend fun addUser(
         name: String,
         password: String,
         email: String
-    ): Result<User> {
-        return saveUserWithEncryptedPassword(
+    ): User {
+        val encryptedPassword = encryptPassword.encryptPassword(password)
+        return authenticationRepository.register(
             name = name,
-            password = password,
+            password = encryptedPassword,
             email = email
         )
     }
 
-    private fun saveUserWithEncryptedPassword(password: String, name: String, email: String): Result<User> {
-        return encryptPassword.encryptPassword(password = password)
-            .fold(
-                onSuccess = { encryptedPassword ->
-                    authenticationRepository.register(
-                        name = name,
-                        password = encryptedPassword,
-                        email = email
-                    )
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
-    }
 }

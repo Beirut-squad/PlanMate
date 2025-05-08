@@ -11,16 +11,21 @@ class CreateNewProjectScreen(
     private val createProjectUseCase: CreateProjectUseCase
 
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Let's create a project")
         viewer.printInfoLine("Write your project name")
         val name = reader.readInput()
         viewer.printOption("Tell me more about description of your project")
         val description = reader.readInput()
-        createProjectUseCase.createProject(
-            name = name.toString(),
-            description = description.toString(),
-            stateNames = emptyList(),
-        )
+        try {
+            createProjectUseCase.createProject(
+                name = name.toString(),
+                description = description.toString(),
+                stateNames = emptyList(),
+            )
+        }catch (e:Exception){
+            viewer.printError("${e.message}")
+        }
+
     }
 }

@@ -4,7 +4,6 @@ import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -13,7 +12,8 @@ class MateHomeUI() : UiScreen, KoinComponent {
     private val reader: Reader by inject()
     private val viewProjectsForUserUI: ViewProjectsForUserUI by inject()
     private val authenticationMainScreen : AuthenticationMainScreen by inject()
-    override fun show() {
+
+    override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
         while (true) {
@@ -28,8 +28,8 @@ class MateHomeUI() : UiScreen, KoinComponent {
             when (option) {
                 1 -> {
                     goToViewProjectsScreen()
-
                 }
+
                 2 -> {
                     viewer.printGoodbyeMessage("Goodbye")
                     goToAuthenticationMainScreen()
@@ -38,10 +38,10 @@ class MateHomeUI() : UiScreen, KoinComponent {
         }
     }
 
-    private fun goToViewProjectsScreen() {
+    private suspend fun goToViewProjectsScreen() {
         viewProjectsForUserUI.show()
     }
-    private fun goToAuthenticationMainScreen() {
+    private suspend fun goToAuthenticationMainScreen() {
         authenticationMainScreen.show()
     }
 }

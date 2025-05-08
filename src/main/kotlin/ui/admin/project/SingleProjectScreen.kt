@@ -8,6 +8,7 @@ import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import java.io.InvalidObjectException
 import java.util.*
 
 class SingleProjectScreen(
@@ -20,10 +21,11 @@ class SingleProjectScreen(
     private val viewProjectStatesUi: ViewProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
-    val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
+    lateinit  var user: User
     private var running = true
 
-    override fun show() {
+    override suspend fun show() {
+        user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
         running = true
         while (running) {
             viewer.printTitle("Project ${project.name}")
@@ -42,32 +44,41 @@ class SingleProjectScreen(
         }
     }
 
-    private fun takeUserInput() {
+    private suspend fun takeUserInput() {
         val input = reader.readInt()
         when (input) {
             1 -> {
                 editProjectScreen.project = project
                 editProjectScreen.show()
             }
+
             2 -> {
-                deleteProjectUseCase.deleteProject(
-                    project = project,
-                    creatorUserID = user?.id ?: UUID.randomUUID()
-                )
-                running = false
+                try {
+                    deleteProjectUseCase.deleteProject(
+                        project = project,
+                        creatorUserID = user.id
+                    )
+                    running = false
+                } catch (e: Exception) {
+                    viewer.printError("${e.message}")
+                }
+
             }
+
             3 -> {
                 viewProjectStatesUi.setProject(project.id)
                 viewProjectStatesUi.show()
             }
+
             4 -> {
                 CreateProjectStateUi(project).show()
             }
-            5 ->{
+
+            5 -> {
                 AddUserForProjectUI(project.id).show()
             }
+
             6 -> {
-                viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
 
@@ -82,7 +93,11 @@ class SingleProjectScreen(
 
     }
 
-    private fun updateProject() {
-        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
+    private suspend fun updateProject() {
+        try {
+            project = getProjectByIdUseCase.getProjectById(project.id)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
 }

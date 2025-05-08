@@ -14,15 +14,15 @@ class CreateProjectUseCase(
     private val logUseCase: CreateProjectLogUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun createProject(name: String, description: String, stateNames: List<String>) {
-        val creatorUserID = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id
+    suspend fun createProject(name: String, description: String, stateNames: List<String>) {
+        val creatorUserID = getCurrentLoggedInUserUseCase.getCurrentUser()?.id
             ?: throw IllegalStateException("User is not logged in")
         if (name.isBlank() || description.isBlank()) {
             throw BlankFieldsException("You should write a valid input as a string.")
         } else {
             val project = buildProject(creatorUserID, name, description, stateNames)
-            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
             projectRepository.createProject(project)
+            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
         }
     }
 

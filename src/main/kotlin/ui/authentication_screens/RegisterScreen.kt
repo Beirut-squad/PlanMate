@@ -12,7 +12,7 @@ class RegisterScreen(
     private val loginScreen: LoginScreen,
 
     ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Register for Plan Mate")
 
         viewer.printInfoLine("Please enter your details to register:")
@@ -20,20 +20,20 @@ class RegisterScreen(
         takeUserRegisterInput()
     }
 
-    private fun takeUserRegisterInput() {
-        val name = takeUserInput("Name")
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
+    private suspend fun takeUserRegisterInput() {
+        try {
+            val name = takeUserInput("Name")
+            val email = takeUserInput("Email")
+            val password = takeUserInput("Password")
 
-        registerUseCase.add(name = name, email = email, password = password)
-            .onSuccess { user ->
-                viewer.printInfoLine("Register successfully!")
-                goToLoginScreen()
-            }
-            .onFailure {
-                viewer.printError("Register failed!")
-                takeUserRegisterInput()
-            }
+            registerUseCase.add(name = name, email = email, password = password)
+
+            viewer.printInfoLine("Register successfully!")
+            goToLoginScreen()
+        }catch (e: Exception) {
+            viewer.printError("Register failed!")
+            takeUserRegisterInput()
+        }
     }
 
     private fun takeUserInput(prompt: String): String {
@@ -46,7 +46,7 @@ class RegisterScreen(
         }
     }
 
-    private fun goToLoginScreen() {
+    private suspend fun goToLoginScreen() {
         loginScreen.show()
     }
 }

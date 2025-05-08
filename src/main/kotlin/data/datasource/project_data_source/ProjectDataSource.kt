@@ -6,16 +6,16 @@ import org.example.models.User
 import java.util.*
 
 interface ProjectDataSource {
-    fun createProject(project: Project) :Result<Unit>
-    fun editProject(project: Project) :Result<Unit>
-    fun deleteProject(id: UUID) :Result<Unit>
-    fun getAllProjects() : Result<List<Project>>
-    fun getProject(id:UUID) : Result<Project>
-    fun addStateToProject(projectId: UUID, state: State): Result<Project>
-    fun editStateToProject(projectId: UUID, state: State): Result<Project>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<Project>
-    fun getProjectForMateByUserId(userId : UUID):Result<List<Project>>
-    fun addMateToProject(projectId: UUID, user: User)
-    fun getProjectsForUserById(userid : UUID):Result<List<Project>>
+    suspend fun createProject(project: Project)
+    suspend fun editProject(project: Project)
+    suspend fun deleteProject(id: UUID)
+    suspend fun getAllProjects(): List<Project>
+    suspend fun getProject(id: UUID): Project
+    suspend fun addStateToProject(projectId: UUID, state: State): Project
+    suspend fun editStateToProject(projectId: UUID, state: State): Project
+    suspend fun removeStateFromProject(projectId: UUID, state: State): Project
+    suspend fun getProjectForMateByUserId(userId: UUID): List<Project>
+    suspend fun addMateToProject(projectId: UUID, user: User): Project
+    suspend fun getProjectsForUserById(userId: UUID): List<Project>
 
 }

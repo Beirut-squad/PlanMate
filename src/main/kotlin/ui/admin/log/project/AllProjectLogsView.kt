@@ -10,7 +10,7 @@ class AllProjectLogsView(
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val viewer: Viewer,
 ) : UiScreen, DisplayProjectLog(getUserByIdUseCase, viewer) {
-    override fun show() {
+    override suspend fun show() {
         getAllProjectLogsUseCase.getAllProjectLogs()
             .forEachIndexed { index, projectLog ->
                 displayProjectLog(index, projectLog)

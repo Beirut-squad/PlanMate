@@ -11,7 +11,7 @@ class EditProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun editProject(
+    suspend fun editProject(
         newProject: Project,
         newName: String?,
         newDescription: String?,
@@ -24,12 +24,12 @@ class EditProjectUseCase(
             newProject.name = if (newName.isNullOrBlank()) newProject.name else newName
             newProject.description = if (newDescription.isNullOrBlank()) newProject.description else newDescription
 
+            projectRepository.editProject(newProject)
             logUseCase.createProjectLog(
                 previousProject = newProject,
                 currentProject = newProject,
                 userId = creatorUserID
             )
-            projectRepository.editProject(newProject)
         }
     }
 }

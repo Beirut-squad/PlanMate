@@ -11,11 +11,11 @@ open class DisplayTaskLog(
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val viewer: Viewer,
 ) {
-    private fun getUserName(userId: UUID): String? {
-        return getUserByIdUseCase.getUser(userId).getOrThrow()?.name
+    private suspend fun getUserName(userId: UUID): String? {
+        return getUserByIdUseCase.getUser(userId)?.name
     }
 
-    protected fun displayTaskLog(index: Int, taskLog: TaskLog) {
+    protected suspend fun displayTaskLog(index: Int, taskLog: TaskLog) {
         when {
             taskLog.isCreation() -> handleTaskCreation(index, taskLog)
             taskLog.isDeletion() -> handleTaskDeletion(index, taskLog)
@@ -31,7 +31,7 @@ open class DisplayTaskLog(
         return previousEntity != null && currentEntity == null
     }
 
-    private fun handleTaskCreation(index: Int, taskLog: TaskLog) {
+    private suspend fun handleTaskCreation(index: Int, taskLog: TaskLog) {
         val currentTask = taskLog.currentEntity
         val userName = getUserName(taskLog.userId)
         viewer.printCorrectOutput(
@@ -39,7 +39,7 @@ open class DisplayTaskLog(
         )
     }
 
-    private fun handleTaskDeletion(index: Int, taskLog: TaskLog) {
+    private suspend fun handleTaskDeletion(index: Int, taskLog: TaskLog) {
         val previousTask = taskLog.previousEntity
         val userName = getUserName(taskLog.userId)
         viewer.printCorrectOutput(
@@ -47,7 +47,7 @@ open class DisplayTaskLog(
         )
     }
 
-    private fun handleTaskChanges(index: Int, taskLog: TaskLog) {
+    private suspend fun handleTaskChanges(index: Int, taskLog: TaskLog) {
         val previousTask = taskLog.previousEntity
         val currentTask = taskLog.currentEntity
         val userName = getUserName(taskLog.userId)
