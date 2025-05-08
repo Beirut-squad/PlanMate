@@ -20,8 +20,13 @@ class AllProjectsLogsView(
         getAllProjectLogsUseCase.getAllProjectLogs().fold(onFailure = {
             ErrorHandler().handle(it)
         }, onSuccess = { projectLogs ->
-            projectLogs.forEachIndexed { index, projectLog ->
-                displayProjectLog(index, projectLog)
+            if (projectLogs.isEmpty()) {
+                viewer.printError("No project logs found")
+                return@fold
+            } else {
+                projectLogs.forEachIndexed { index, projectLog ->
+                    displayProjectLog(index, projectLog)
+                }
             }
         })
     }
@@ -50,7 +55,7 @@ class AllProjectsLogsView(
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)
         viewer.printCorrectOutput(
-            "${index + 1}. User $userName created new project ${currentProject?.id} at ${currentProject?.createdAt?.formatDateTime()}"
+            "${index + 1}. User $userName created new project ${currentProject?.name} at ${currentProject?.createdAt?.formatDateTime()}"
         )
     }
 

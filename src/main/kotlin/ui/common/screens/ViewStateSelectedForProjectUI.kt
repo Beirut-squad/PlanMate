@@ -12,30 +12,37 @@ import java.util.*
 
 class ViewStateSelectedForProjectUI(
     private val projectId: UUID,
-) : UiScreen, KoinComponent {
+) : UiScreen,KoinComponent {
     private val viewer: Viewer by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
-    override suspend fun show() {
-        val states = getProjectStates() ?: return
-        if (states.isEmpty()) {
-            viewer.printInfoLine("No states available for this project.")
-            ViewProjectsForUserUI().show()
+    private var running = true
+    override fun show() {
+        running = true
+        while (running) {
+            val states = getProjectStates() ?: return
+            if (states.isEmpty()) {
+                viewer.printInfoLine("No states available for this project.")
+                running = false
+            }
+            displayStateOptions(states)
+            handleUserSelection(states)
         }
-        displayStateOptions(states)
-        handleUserSelection(states)
     }
 
-    private suspend fun getProjectStates(): List<State>? {
+    private fun getProjectStates(): List<State>? {
         viewer.printTitle("State Details")
+        var resultStates: List<State>? = null
 
-        return try {
-            val project = getProjectByIdUseCase.getProjectById(projectId)
-            project.state
-        } catch (e: Exception) {
-            viewer.printError("${e.message}")
-            null
-        }
+        getProjectByIdUseCase.getProjectById(projectId).fold(
+            onSuccess = { project ->
+                resultStates = project.state
+            },
+            onFailure = {
+                viewer.printError("Failed to retrieve project: ${it.message}")
+            }
+        )
+        return resultStates
     }
 
     private fun displayStateOptions(states: List<State>) {
@@ -44,43 +51,40 @@ class ViewStateSelectedForProjectUI(
         }
     }
 
-    private suspend fun handleUserSelection(states: List<State>) {
-        val choice = viewer.readIntInput(
-            "Enter the number of the state to view (Enter Any Thing To Go Back): ")
+    private fun handleUserSelection(states: List<State>) {
+        val choice = viewer.readIntInput("Enter the number of the state to view (Enter Any Thing To Go Back): ")
         when {
             choice != null && choice in 1..states.size -> {
                 val selectedState = states[choice - 1]
                 printStateDetails(selectedState)
-                ViewProjectsForUserUI().show()
+                running = false
             }
-
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
-                ViewProjectsForUserUI().show()
+                running = false
             }
         }
     }
 
-    private suspend fun printStateDetails(selectedState: State) {
+    private fun printStateDetails(selectedState: State) {
+        val result = getTaskByStateIdAndProjectId.getTaskByStateIdAndProjectId(projectId, selectedState.id)
         viewer.printTitle("State Details")
         viewer.printInfoLine("Name: ${selectedState.name}")
 
-        try {
-            val tasks = getTaskByStateIdAndProjectId
-                                .getTaskByStateIdAndProjectId(projectId, selectedState.id)
+        if (result.isSuccess) {
+            val tasks = result.getOrNull() ?: emptyList()
 
             if (tasks.isNotEmpty()) {
                 viewer.printInfoLine("Tasks:")
                 tasks.forEach { task ->
-                    viewer.printInfoLine(
-                        " - Name: ${task.title}, Description: ${task.description}")
+                    viewer.printInfoLine(" - Name: ${task.title}, Description: ${task.description}")
                 }
             } else {
                 viewer.printInfoLine("No tasks available for this state.")
-                ViewProjectsForUserUI().show()
+                running = false
             }
-        } catch (e:Exception){
-            viewer.printError("${e.message}")
+        } else {
+            viewer.printError("Failed to retrieve tasks: ${result.exceptionOrNull()?.message}")
         }
     }
 }

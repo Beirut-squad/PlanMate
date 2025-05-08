@@ -16,7 +16,7 @@ class LoginScreen(
     private val adminHomeScreen: AdminHomeScreen,
     private val mateHomeUI: MateHomeUI,
 ) : UiScreen {
-    override suspend fun show() {
+    override fun show() {
         viewer.printTitle("Login for Plan Mate")
 
         viewer.printInfoLine("Please enter your information to login:")
@@ -24,18 +24,19 @@ class LoginScreen(
         takeUserLoginInput()
     }
 
-    private suspend fun takeUserLoginInput() {
+    private fun takeUserLoginInput() {
         val email = takeUserInput("Email")
         val password = takeUserInput("Password")
 
-        try {
-            val user = loginUseCase.login(email, password)
-            viewer.printInfoLine("Login successful!")
-            checkAdminOrMate(user)
-            return 
-        } catch (e: Exception) {
-            viewer.printError("Login failed! ${e.message}")
-        }
+        loginUseCase.login(email, password)
+            .onSuccess { user ->
+                viewer.printCorrectOutput("Login successful!")
+                checkAdminOrMate(user)
+            }
+            .onFailure {
+                viewer.printError("Login failed!")
+                takeUserLoginInput()
+            }
     }
 
     private fun takeUserInput(prompt: String): String {
@@ -48,7 +49,7 @@ class LoginScreen(
         }
     }
 
-    private suspend fun checkAdminOrMate(user: User) {
+    private fun checkAdminOrMate(user: User) {
         if (user.role == Role.ADMIN) {
             goToAminHomeScreen()
         } else {
@@ -56,11 +57,11 @@ class LoginScreen(
         }
     }
 
-    private suspend fun goToAminHomeScreen() {
+    private fun goToAminHomeScreen() {
         adminHomeScreen.show()
     }
 
-    private suspend fun goToMateHomeScreen() {
+    private fun goToMateHomeScreen() {
         mateHomeUI.show()
     }
 }

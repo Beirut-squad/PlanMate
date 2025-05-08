@@ -23,29 +23,23 @@ class CreateNewTaskUI(
     private val createTaskUseCase: CreateTaskUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
 
-    override suspend fun show() {
-        try {
-            val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
-            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
+    override fun show() {
+        getProjectByIdUseCase.getProjectById(projectId).fold(
+            onSuccess = { selectedProject ->
+                getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()?.let { user ->
+                    viewer.printTitle("Let's create a task")
 
-            if (user == null) {
-                viewer.printError("No user found")
-                return
-            }
+                    val name = getValidInput("Write your task name:")
+                    val description = getValidInput("Tell me more about description of your task:")
 
-            viewer.printTitle("Let's create a task")
+                    val selectedStateIndex = getValidStateInput(selectedProject)
 
-            val name = getValidInput("Write your task name:")
-            val description = getValidInput("Tell me more about description of your task:")
-
-            val selectedStateIndex = getValidStateInput(selectedProject)
-            val selectedState = selectedProject.state[selectedStateIndex]
-
-            createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-            ViewProjectsForUserUI().show()
-        } catch (e: Exception) {
-            viewer.printError("Failed to retrieve project: ${e.message}")
-        }
+                    val selectedState = selectedProject.state[selectedStateIndex]
+                    createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
+                } ?: viewer.printError("No user found")
+            },
+            onFailure = { viewer.printError("Failed to retrieve project: ${it.message}") }
+        )
     }
 
 
@@ -85,4 +79,6 @@ class CreateNewTaskUI(
 
         return selectedStateIndex
     }
+
+
 }

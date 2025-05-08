@@ -8,7 +8,8 @@ import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import java.io.InvalidObjectException
+import org.example.ui.common.screens.CreateNewTaskUI
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import java.util.*
 
 class SingleProjectScreen(
@@ -21,11 +22,10 @@ class SingleProjectScreen(
     private val viewProjectStatesUi: ViewProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
-    lateinit  var user: User
+    val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
     private var running = true
 
-    override suspend fun show() {
-        user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
+    override fun show() {
         running = true
         while (running) {
             viewer.printTitle("Project ${project.name}")
@@ -36,7 +36,8 @@ class SingleProjectScreen(
                 "Delete project",
                 "View project states",
                 "Create new state",
-                "Add User to project",
+                "Add user to project",
+                "Add task to project",
                 "Exit"
             )
 
@@ -44,45 +45,41 @@ class SingleProjectScreen(
         }
     }
 
-    private suspend fun takeUserInput() {
+    private fun takeUserInput() {
         val input = reader.readInt()
         when (input) {
             1 -> {
                 editProjectScreen.project = project
                 editProjectScreen.show()
             }
-
             2 -> {
-                try {
-                    deleteProjectUseCase.deleteProject(
-                        project = project,
-                        creatorUserID = user.id ?: UUID.randomUUID()
-                    )
-                    running = false
-                } catch (e: Exception) {
-                    viewer.printError("${e.message}")
-                }
-
+                deleteProjectUseCase.deleteProject(
+                    project = project,
+                    creatorUserID = user?.id ?: UUID.randomUUID()
+                )
+                running = false
             }
-
             3 -> {
                 viewProjectStatesUi.setProject(project.id)
                 viewProjectStatesUi.show()
             }
-
             4 -> {
                 CreateProjectStateUi(project).show()
             }
-
-            5 -> {
+            5 ->{
                 AddUserForProjectUI(project.id).show()
             }
-
             6 -> {
+                if (project.state.isEmpty()) {
+                    viewer.printError("Cannot create a task because this project has no states.")
+                } else {
+                    CreateNewTaskUI(projectId = project.id).show()
+                }
+            }
+            7 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
-
 
             else -> {
                 viewer.printError("Invalid option")
@@ -94,11 +91,7 @@ class SingleProjectScreen(
 
     }
 
-    private suspend fun updateProject() {
-        try {
-            project = getProjectByIdUseCase.getProjectById(project.id)
-        } catch (e: Exception) {
-            viewer.printError("${e.message}")
-        }
+    private fun updateProject() {
+        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
     }
 }

@@ -17,7 +17,7 @@ class CreateProjectStateUi(
     override suspend fun show() {
         try {
             viewer.printTitle("Create State")
-            viewer.printTitle("Please, Write your state name")
+            viewer.printInfoLine("Please, Write your state name")
             val stateName = reader.readInput().toString()
             createStateUseCase.createState(name = stateName, project = project)
         } catch (e:Exception){
