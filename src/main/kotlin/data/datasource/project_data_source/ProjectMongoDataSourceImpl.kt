@@ -19,11 +19,8 @@ class ProjectMongoDataSourceImpl(
 ) : ProjectDataSource {
     override suspend fun createProject(project: Project) {
         withContext(Dispatchers.IO) {
-            try {
                 mongoConnection.projects.insertOne(project.toDocument())
-            } catch (e: Exception) {
-                throw e
-            }
+
         }
     }
 
@@ -136,16 +133,46 @@ class ProjectMongoDataSourceImpl(
     }
 
     override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            val filter = Filters.elemMatch(
+                USERS_FIELD, Filters.and(
+                    eq(ID_FIELD, userId.toString()),
+                    eq(ROLE_FIELD, Role.MATE.name)
+                )
+            )
+
+            val projectDocs = mongoConnection.projects.find(filter).toList()
+            projectDocs.mapNotNull { it?.toProject() }
+        }
     }
 
+
     override suspend fun addMateToProject(projectId: UUID, user: User) {
-        TODO("Not yet implemented")
+        withContext(Dispatchers.IO) {
+            val update = Updates.push(USERS_FIELD, Document(ID_FIELD, user.id.toString())
+                .append(NAME_FIELD, user.name)
+                .append(PASSWORD_FIELD, user.password)
+                .append(EMAIL_FIELD, user.email)
+                .append(ROLE_FIELD, user.role.name)
+                .append(IS_DELETED_FIELD, user.isDeleted)
+            )
+
+            val result = mongoConnection.projects.updateOne(eq(ID_FIELD, projectId.toString()), update)
+
+            if (result.matchedCount == 0L) {
+                throw NoSuchElementException("No project found with ID: $projectId")
+            }
+        }
     }
 
     override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            val filter = Filters.elemMatch(USERS_FIELD, eq(ID_FIELD, userId.toString()))
+            val projectDocs = mongoConnection.projects.find(filter).toList()
+            projectDocs.mapNotNull { it?.toProject() }
+        }
     }
+
 
     private fun Document.toStateList(): List<State> {
         return (this.get(STATE_FIELD) as? List<*>)?.mapNotNull { stateDoc ->
