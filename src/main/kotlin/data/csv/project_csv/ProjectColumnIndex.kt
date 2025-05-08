@@ -7,5 +7,6 @@ object ProjectColumnIndex {
     const val CREATOR_USER_ID = 3
     const val CREATED_AT = 4
     const val UPDATED_AT = 5
-    const val STATE = 6
+    const val USER = 6
+    const val STATE = 7
 }

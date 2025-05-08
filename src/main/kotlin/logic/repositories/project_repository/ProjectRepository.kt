@@ -2,15 +2,19 @@ package org.example.logic.repositories.project_repository
 
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.util.UUID
 
 interface ProjectRepository {
     suspend fun createProject(project: Project)
-    fun editProject(project: Project) :Result<Unit>
-    fun deleteProject(id: UUID) :Result<Unit>
+    suspend fun editProject(project: Project)
+    suspend fun deleteProject(id: UUID)
     suspend fun getAllProjects() : List<Project>
-    fun getProject(id:UUID) : Result<Project>
-    fun addStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun editStateToProject(projectId: UUID, state: State): Result<Unit>
-    fun removeStateFromProject(projectId: UUID, state: State): Result<Unit>
+    suspend fun getProject(id:UUID) : Project
+    suspend fun addStateToProject(projectId: UUID, state: State): Project
+    suspend fun editStateToProject(projectId: UUID, state: State): Project
+    suspend fun removeStateFromProject(projectId: UUID, state: State): Project
+    suspend fun getProjectForMateByUserId(userId : UUID): List<Project>
+    suspend fun addMateToProject(projectId: UUID, user: User)
+    suspend fun getProjectsForUserById(userid : UUID): List<Project>
 }

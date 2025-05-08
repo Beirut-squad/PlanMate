@@ -4,10 +4,12 @@ import CsvParser
 import org.example.data.csv.smartCsvSplit
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser<Project> {
+class ProjectCsvParser(private val stateCsvParser: CsvParser<State>,
+    private val userCsvParser:  CsvParser<User>) : CsvParser<Project> {
 
 
     override fun parseFile(csvLines: List<String>): List<Project> {
@@ -35,11 +37,16 @@ class ProjectCsvParser(private val stateCsvParser: CsvParser<State>) : CsvParser
             creatorUserID = UUID.fromString(parts[ProjectColumnIndex.CREATOR_USER_ID]),
             createdAt = LocalDateTime.parse(parts[ProjectColumnIndex.CREATED_AT]),
             updatedAt = LocalDateTime.parse(parts[ProjectColumnIndex.UPDATED_AT]),
+            users = parseMultiUser(parts[ProjectColumnIndex.USER]),
             state = parseMultiStates(parts[ProjectColumnIndex.STATE]),
             )
     }
-     fun parseMultiStates(line: String): List<State> {
+     private fun parseMultiStates(line: String): List<State> {
         val statesLines = smartCsvSplit(line)
         return stateCsvParser.parseFile(statesLines)
+    }
+    private fun parseMultiUser(line: String): List<User> {
+        val userLines = smartCsvSplit(line)
+        return userCsvParser.parseFile(userLines)
     }
 }

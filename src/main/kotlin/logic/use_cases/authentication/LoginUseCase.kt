@@ -9,33 +9,16 @@ class LoginUseCase(
     private val encryptPassword: EncryptPassword
 ) {
 
-    fun login(
+    suspend fun login(
         email: String,
         password: String
-    ): Result<User> {
-        return authenticationRepository.checkEmail(email = email)
-            .fold(
-                onSuccess = {
-                    authenticateUser(email, password)
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
+    ): User {
+        authenticationRepository.checkEmail(email)
+        val encryptedPassword = encryptPassword.encryptPassword(password)
+        return authenticationRepository.login(
+            email = email,
+            password = encryptedPassword
+        )
     }
 
-    private fun authenticateUser(email: String, password: String): Result<User> {
-        return encryptPassword.encryptPassword(password = password)
-            .fold(
-                onSuccess = { encryptedPassword ->
-                    authenticationRepository.login(
-                        email = email,
-                        password = encryptedPassword
-                    )
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
-    }
 }

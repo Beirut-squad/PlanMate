@@ -1,13 +1,19 @@
 package org.example.logic.use_cases.state_usecase
 
-import org.example.logic.repositories.state_repository.StateRepository
-import java.util.UUID
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
+import org.example.logic.use_cases.project_manegment.RemoveStateFromProjectUseCase
+import org.example.models.Project
+import org.example.models.State
 
 class DeleteStateUseCase(
-    private val stateRepository: StateRepository
+    private val removeStateFromProjectUseCase: RemoveStateFromProjectUseCase,
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun deleteState(id: UUID): Result<Unit> {
-        return stateRepository.deleteState(id)
-    }
+    suspend fun deleteState(project: Project, state: State): Project {
+        val currentUserId = getCurrentLoggedInUserUseCase
+                    .getCurrentUser()?.id ?: throw IllegalArgumentException()
 
+        return removeStateFromProjectUseCase
+                    .removeStateFromProject(currentUserId, project, state)
+    }
 }

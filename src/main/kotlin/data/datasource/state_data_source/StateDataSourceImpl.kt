@@ -11,15 +11,15 @@ class StateDataSourceImpl(
     private val reader: CsvReader<State>,
     private val filePath: String,
 ) : StateDataSource {
-    override fun createState(state: State): Result<State> = runCatching {
+    override fun createState(state: State): State{
 
         val states = reader.read(filePath)
         val newList = states + state
         writer.writeToFile(newList, filePath)
-        state
+        return state
     }
 
-    override fun editState(state: State): Result<State> = runCatching {
+    override fun editState(state: State): State {
 
         val states = reader.read(filePath)
         val updatedStates = states.map {
@@ -31,10 +31,10 @@ class StateDataSourceImpl(
         }
 
         writer.writeToFile(updatedStates, filePath)
-        state
+        return state
     }
 
-    override fun deleteState(id: UUID): Result<Unit> = runCatching {
+    override fun deleteState(id: UUID): Unit {
 
         val states = reader.read(filePath)
         if (states.none { it.id == id }) {

@@ -4,7 +4,7 @@ import org.example.models.State
 import java.util.UUID
 
 interface StateDataSource {
-    suspend fun createState(state: State)
-    suspend fun editState(state: State)
-    suspend fun deleteState(id: UUID)
+    fun createState(state: State): State
+    fun editState(state: State): State
+    fun deleteState(id: UUID)
 }

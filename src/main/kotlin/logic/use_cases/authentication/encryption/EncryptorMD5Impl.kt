@@ -3,12 +3,8 @@ package org.example.logic.use_cases.authentication.encryption
 import java.security.MessageDigest
 
 class EncryptorMD5Impl : Encryptor {
-    override fun encodePassword(password: String): Result<String> {
-        return try {
-            Result.success(makeMD5Hash(password))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun encodePassword(password: String): String {
+        return makeMD5Hash(password)
     }
 
     private fun makeMD5Hash(password: String): String {

@@ -18,6 +18,7 @@ import org.example.logic.exceptions.project_magement_exceptions.ProjectNotCreate
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotDeletedException
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotEditedException
 import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAllProjectsException
+import org.example.logic.exceptions.project_magement_exceptions.ProjectStateNotFoundException
 import org.example.models.Project
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -212,7 +213,7 @@ class ProjectRepositoryImplTest {
         // Given
         val project = createProjectHelper()
         val newState = createStateHelper(name = "Start")
-        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(Unit)
+        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.addStateToProject(project.id, newState)
@@ -228,7 +229,7 @@ class ProjectRepositoryImplTest {
         // Given
         val project = createProjectHelper()
         val newState = createStateHelper()
-        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(Unit)
+        every { projectDataSource.addStateToProject(project.id, newState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.addStateToProject(project.id, newState)
@@ -284,7 +285,7 @@ class ProjectRepositoryImplTest {
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
         oldState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
@@ -301,7 +302,7 @@ class ProjectRepositoryImplTest {
         val oldState = createStateHelper(name = "To Do")
         val project = createProjectHelper(state = listOf(oldState))
         oldState.name = "Done"
-        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(Unit)
+        every { projectDataSource.editStateToProject(project.id, oldState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.editStateToProject(project.id, oldState)
@@ -358,7 +359,7 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(Unit)
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)
@@ -374,7 +375,7 @@ class ProjectRepositoryImplTest {
         // Given
         val removeState = createStateHelper()
         val project = createProjectHelper(state = listOf(removeState))
-        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(Unit)
+        every { projectDataSource.removeStateFromProject(project.id, removeState) } returns Result.success(project)
 
         // When
         val result = projectRepositoryImpl.removeStateFromProject(project.id, removeState)
@@ -440,5 +441,39 @@ class ProjectRepositoryImplTest {
         assertTrue(exception is StateHasAssociatedTasksException)
         assertEquals(StringConstants.Project.STATE_HAS_TASKS, exception.message)
     }
+
+
+    @Test
+    fun `getProjectsForUserById should return success with list of projects`() {
+        // Given
+        val userId = UUID.randomUUID()
+        val expectedProjects = listOf(createProjectHelper(), createProjectHelper())
+        every { projectDataSource.getProjectsForUserById(userId) } returns Result.success(expectedProjects)
+
+        // When
+        val result = projectRepositoryImpl.getProjectsForUserById(userId)
+
+        // Then
+        assertTrue(result.isSuccess)
+        assertEquals(expectedProjects, result.getOrNull())
+        verify(exactly = 1) { projectDataSource.getProjectsForUserById(userId) }
+    }
+    @Test
+    fun `getProjectsForUserById should return failure when data source fails`() {
+        // Given
+        val userId = UUID.randomUUID()
+        val exception = NoProjectFoundException()
+        every { projectDataSource.getProjectsForUserById(userId) } returns Result.failure(exception)
+
+        // When
+        val result = projectRepositoryImpl.getProjectsForUserById(userId)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is NoProjectFoundException)
+        verify(exactly = 1) { projectDataSource.getProjectsForUserById(userId) }
+    }
+
+
 }
 

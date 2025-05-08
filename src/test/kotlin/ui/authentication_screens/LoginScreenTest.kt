@@ -10,7 +10,7 @@ import org.example.models.Role
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen
-import org.example.ui.mate.home_screen.MateHomeScreen
+import org.example.ui.mate.home_screen.MateHomeUI
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.example.ui.common.components.Viewer
@@ -20,12 +20,12 @@ class LoginScreenTest {
     private val viewer: Viewer = mockk(relaxed = true)
     private val loginUseCase: LoginUseCase = mockk()
     private val adminHomeScreen: AdminHomeScreen = mockk(relaxed = true)
-    private val mateHomeScreen: MateHomeScreen = mockk(relaxed = true)
+    private val mateHomeUI: MateHomeUI = mockk(relaxed = true)
     private lateinit var loginScreen: LoginScreen
 
     @BeforeEach
     fun setUp() {
-        loginScreen = LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeScreen)
+        loginScreen = LoginScreen(reader, viewer, loginUseCase, adminHomeScreen, mateHomeUI)
     }
 
     @Test
@@ -139,7 +139,7 @@ class LoginScreenTest {
 
         // Then
         verify(exactly = 1) { viewer.printInfoLine("Login successful!") }
-        verify(exactly = 1) { mateHomeScreen.show() }
+        verify(exactly = 1) { mateHomeUI.show() }
     }
 
     @Test

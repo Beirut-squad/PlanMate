@@ -2,6 +2,7 @@ package org.example.data.datasource.project_data_source
 
 import org.example.models.Project
 import org.example.models.State
+import org.example.models.User
 import java.util.*
 
 interface ProjectDataSource {
@@ -10,7 +11,11 @@ interface ProjectDataSource {
     suspend fun deleteProject(id: UUID)
     suspend fun getAllProjects(): List<Project>
     suspend fun getProject(id: UUID): Project
-    suspend fun addStateToProject(projectId: UUID, state: State)
-    suspend fun editStateToProject(projectId: UUID, state: State)
-    suspend fun removeStateFromProject(projectId: UUID, state: State)
+    suspend fun addStateToProject(projectId: UUID, state: State): Project
+    suspend fun editStateToProject(projectId: UUID, state: State): Project
+    suspend fun removeStateFromProject(projectId: UUID, state: State): Project
+    suspend fun getProjectForMateByUserId(userId: UUID): List<Project>
+    suspend fun addMateToProject(projectId: UUID, user: User)
+    suspend fun getProjectsForUserById(userId: UUID): List<Project>
+
 }

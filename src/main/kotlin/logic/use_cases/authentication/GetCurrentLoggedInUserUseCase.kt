@@ -7,11 +7,11 @@ class GetCurrentLoggedInUserUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
 
-    fun getCurrentUser(): Result<User?> {
+    suspend fun getCurrentUser(): User? {
         return getCurrentUserFromRepository()
     }
 
-    private fun getCurrentUserFromRepository(): Result<User?> {
+    private suspend fun getCurrentUserFromRepository(): User? {
         return authenticationRepository.getCurrentLoggedInUser()
     }
 }

@@ -1,8 +1,11 @@
 package org.example.constants
 
 object StringConstants {
-    // General
-//    const val APP_NAME = "My App"
+    // region General
+    object General {
+        const val INVALID_INPUT = "Invalid option"
+    }
+    // endregion
 
     // Project-related
     object Project {

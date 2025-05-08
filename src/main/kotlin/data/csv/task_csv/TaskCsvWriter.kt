@@ -9,14 +9,15 @@ import java.io.FileWriter
 import java.util.UUID
 
 class TaskCsvWriter : CsvWriter<Task> {
+
     override fun writeToFile(items: List<Task>, filePath: String): Result<Unit> {
         return runCatching {
-            val file = File(filePath)
+            val file = File("src/main/kotlin/$filePath")
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
-            val writer = BufferedWriter(FileWriter(file))
-            if (file.length() == 0L)
-                writer.write("[id,projectId,title,description,state,creatorUserID,createdAt,updatedAt]\n")
+
+
+            val writer = BufferedWriter(FileWriter(file, false))
             writeTask(items, writer)
             writer.close()
         }
@@ -25,7 +26,16 @@ class TaskCsvWriter : CsvWriter<Task> {
     private fun writeTask(items: List<Task>, writer: BufferedWriter) {
         items.forEach { task ->
             if (isValidTask(task))
-                writer.write("[${task.id}, ${task.projectId}, ${task.title}, ${task.description}, ${task.state},${task.creatorUserID},${task.createdAt},${task.updatedAt}]\n")
+                writer.write(
+                    "${task.id}," +
+                            "${task.projectId}," +
+                            "${task.title}," +
+                            "${task.description}," +
+                            "[${task.state.id},${task.state.name}]," +
+                            "${task.creatorUserID}," +
+                            "${task.createdAt}," +
+                            "${task.updatedAt}\n"
+                )
         }
     }
 

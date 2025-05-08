@@ -1,20 +1,16 @@
 package org.example.logic.use_cases.task_managemnt
 
 import logic.use_cases.log.CreateTaskLogUseCase
-import logic.exceptions.task_management_exception.TaskDeletionException
 import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.Task
-import java.util.UUID
+import java.util.*
 
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase
 ){
-    fun deleteTask(task: Task,id : UUID){
-        val result = taskRepository.deleteTask(id)
-        if (result.isFailure) {
-            throw TaskDeletionException("Failed to delete task")
-        }
+    suspend fun deleteTask(task: Task, id : UUID){
+        taskRepository.deleteTask(id)
         createTaskLogUseCase.createTaskLog(task.creatorUserID,task,null)
     }
 }

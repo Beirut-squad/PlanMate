@@ -13,23 +13,25 @@ class AuthenticationMainScreen(
     override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate, what would you like to do?")
 
-        var running = true
-        while (running) {
+        while (true) {
             viewer.printOptions(
                 "Register",
-                "Login"
+                "Login",
+                "Exit"
             )
 
             val input = reader.readInt()
             when (input) {
                 1 -> {
                     goToRegisterScreen()
-                    running = false
                 }
 
                 2 -> {
                     goToLoginScreen()
-                    running = false
+                }
+                3 -> {
+                    viewer.printGoodbyeMessage("See you later!")
+                    break
                 }
 
                 else -> {

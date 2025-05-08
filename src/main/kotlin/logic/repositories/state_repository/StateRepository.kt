@@ -4,7 +4,7 @@ import org.example.models.State
 import java.util.UUID
 
 interface StateRepository {
-    fun createState(state: State): Result<State>
-    fun editState(state: State): Result<State>
-    fun deleteState(id: UUID): Result<Unit>
+    fun createState(state: State): State
+    fun editState(state: State): State
+    fun deleteState(id: UUID)
 }
