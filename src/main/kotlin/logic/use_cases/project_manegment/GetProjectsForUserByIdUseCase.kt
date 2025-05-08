@@ -5,7 +5,7 @@ import org.example.models.Project
 import java.util.*
 
 class GetProjectsForUserByIdUseCase(private val repository: ProjectRepository) {
-    fun getProjectForUserById(userID: UUID): Result<List<Project>> {
+    fun getProjectForUserById(userID: UUID): List<Project> {
         return repository.getProjectsForUserById(userID)
     }
 }

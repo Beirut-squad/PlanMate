@@ -6,5 +6,5 @@ import java.util.UUID
 interface StateRepository {
     fun createState(state: State): State
     fun editState(state: State): State
-    fun deleteState(id: UUID): Unit
+    fun deleteState(id: UUID)
 }

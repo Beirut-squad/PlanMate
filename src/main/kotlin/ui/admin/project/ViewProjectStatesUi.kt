@@ -54,7 +54,7 @@ class ViewProjectStatesUi(
     }
 
     private fun getProject(): Project {
-        return getProjectByIdUseCase.getProjectById(projectId).getOrThrow()
+        return getProjectByIdUseCase.getProjectById(projectId)
     }
 
     private fun displayNoStatesAndGoToCreateState() {

@@ -12,11 +12,11 @@ class RemoveStateFromProjectUseCase(
     private val logUseCase: CreateProjectLogUseCase
 
 ) {
-    fun removeStateFromProject(currentUserID: UUID, project: Project, state: State): Result<Project> {
+    fun removeStateFromProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
-            return Result.failure(BlankFieldsException("State name is required."))
+            throw BlankFieldsException("State name is required.")
         }
-        return repository.removeStateFromProject(project.id, state).onSuccess { updatedProject ->
+        return repository.removeStateFromProject(project.id, state).also { updatedProject ->
             logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)
         }
     }

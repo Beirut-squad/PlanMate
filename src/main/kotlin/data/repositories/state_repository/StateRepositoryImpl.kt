@@ -17,7 +17,7 @@ class StateRepositoryImpl(
        return stateDataSource.editState(state)
     }
 
-    override fun deleteState(id: UUID): Unit {
+    override fun deleteState(id: UUID){
          stateDataSource.deleteState(id)
     }
 }

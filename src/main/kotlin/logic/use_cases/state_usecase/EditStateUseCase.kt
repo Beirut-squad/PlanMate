@@ -1,3 +1,5 @@
+package logic.use_cases.state_usecase
+
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.EditStateToProjectUseCase
 import org.example.models.Project
@@ -7,7 +9,7 @@ class EditStateUseCase(
     private val editStateToProjectUseCase: EditStateToProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun editState(stateToEdit: State, newName: String, project: Project): Result<Project> = runCatching {
+    fun editState(stateToEdit: State, newName: String, project: Project): Project{
         if (newName.isEmpty()) throw IllegalArgumentException("Edit failed: name cannot be blank!")
 
         val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id
@@ -21,6 +23,6 @@ class EditStateUseCase(
 
         editStateToProjectUseCase.editStateToProject(currentUserId, project, updatedState)
         
-        project.copy(state = updatedStates)
+        return project.copy(state = updatedStates)
     }
 }

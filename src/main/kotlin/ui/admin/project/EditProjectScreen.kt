@@ -41,15 +41,23 @@ class EditProjectScreen(
     private fun editProjectName() {
         viewer.printPlainText("Edit Project Name: ", withNewLine = false)
         val newProjectName = reader.readInput()
-        val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
-        editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
+        try {
+            val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
+            editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
+
     }
 
     private fun editProjectDescription() {
         viewer.printPlainText("Edit Project Description: ", withNewLine = false)
         val newProjectDescription = reader.readInput()
-        val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
-        editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
+        try {
+            val editorUserId = currentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: return
+            editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
-
 }
