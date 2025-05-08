@@ -37,6 +37,7 @@ class SingleStateUi(
                 }
                 2 -> {
                     DeleteProjectStateUi(project, state).show()
+                    break
                 }
                 3 -> {
                     // TODO
