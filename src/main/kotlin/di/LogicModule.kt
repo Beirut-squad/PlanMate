@@ -10,7 +10,6 @@ import org.example.logic.use_cases.authentication.encryption.EncryptPassword
 import org.example.logic.use_cases.authentication.encryption.Encryptor
 import org.example.logic.use_cases.authentication.encryption.EncryptorMD5Impl
 import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
-import org.example.logic.use_cases.log.GetTaskLogsByTaskIdUseCase
 import org.example.logic.use_cases.project_manegment.AddMateToProjectUseCase
 import org.example.logic.use_cases.project_manegment.AddStateToProjectUseCase
 import org.example.logic.use_cases.project_manegment.CreateProjectUseCase
@@ -25,9 +24,7 @@ import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
 import org.example.logic.use_cases.task_managemnt.CreateTaskUseCase
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
-import org.example.logic.use_cases.task_managemnt.GetAllTasksUseCase
 import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
-import org.example.logic.use_cases.task_managemnt.GetTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -35,7 +32,6 @@ import org.koin.dsl.module
 val logicModule = module {
     singleOf(::GetCurrentLoggedInUserUseCase)
     singleOf(::LoginUseCase)
-    singleOf(::LogoutUseCase)
     singleOf(::RegisterMateUseCase)
     singleOf(::RegisterUserOrAdminUseCase)
     singleOf(::GetUserByIdUseCase)
@@ -52,7 +48,6 @@ val logicModule = module {
     singleOf(::CreateTaskLogUseCase)
     singleOf(::GetCurrentLoggedInUserUseCase)
     singleOf(::LoginUseCase)
-    singleOf(::LogoutUseCase)
     singleOf(::RegisterMateUseCase)
     singleOf(::RegisterUserOrAdminUseCase)
     singleOf(::GetUserByIdUseCase)
@@ -72,10 +67,7 @@ val logicModule = module {
     singleOf(::GetProjectByIdUseCase)
     singleOf(::AddMateToProjectUseCase)
     singleOf(::GetAllUsersUseCase)
-    singleOf(::GetAllTasksUseCase)
     singleOf(::GetTasksForProjectUseCase)
     singleOf(::EditTaskUseCase)
-    singleOf(::GetTaskUseCase)
-    singleOf(::GetTaskLogsByTaskIdUseCase)
     singleOf(::DeleteTaskUseCase)
 }
