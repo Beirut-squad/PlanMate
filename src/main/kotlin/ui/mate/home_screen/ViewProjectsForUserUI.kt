@@ -29,13 +29,9 @@ class ViewProjectsForUserUI(
                 onSuccess = { projects ->
                     if (projects.isNotEmpty()) {
                         viewer.printTitle("Project For User: ${user.name}")
-                        projects.forEachIndexed { index, project ->
-                            viewer.printInfoLine(
-                                """
-                              ${index + 1}-Name Project: ${project.name}
-                          """.trimIndent()
-                            )
-                        }
+                        viewer.printOptions(
+                            projects.map { it.name }
+                        )
                         viewer.printTitle("Select a project to view details:")
                         handleProjectSelection(projects)
                     } else {
