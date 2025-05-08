@@ -123,4 +123,15 @@ class TaskMongoDataSourceImpl(
             throw GetTaskException("Failed to retrieve task: ${e.message}")
         }
     }
+
+    override suspend fun getTaskByStateIdAndProjectId(
+        projectId: UUID,
+        stateId: UUID
+    ): List<Task> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
+        TODO("Not yet implemented")
+    }
 }

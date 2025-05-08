@@ -1,10 +1,14 @@
 package org.example.di
 
 
+import data.mongo_db.MongoConnection
 import org.example.data.datasource.authentication_data_source.AuthenticationDataSource
+import org.example.data.datasource.authentication_data_source.AuthenticationMongoDataSourceImpl
 import org.example.data.datasource.log_data_source.LogDataSource
 import org.example.data.datasource.project_data_source.ProjectDataSource
+import org.example.data.datasource.project_data_source.ProjectMongoDataSourceImpl
 import org.example.data.datasource.task_data_source.TaskDataSource
+import org.example.data.datasource.task_data_source.TaskMongoDataSourceImpl
 import org.example.data.repositories.authentication_repository.AuthenticationRepositoryImpl
 import org.example.data.repositories.log_repository.LogRepositoryImpl
 import org.example.data.repositories.project_repository.ProjectRepositoryImpl
@@ -21,7 +25,7 @@ import org.koin.dsl.module
 
 val dataModule = module {
     single<AuthenticationDataSource> {
-        AuthenticationDataSourceFakeImpl()
+        AuthenticationMongoDataSourceImpl(MongoConnection)
     }
     single<AuthenticationRepository> {
         AuthenticationRepositoryImpl(get())
@@ -32,11 +36,11 @@ val dataModule = module {
     }
 
     single<ProjectDataSource> {
-        ProjectDataSourceFakeImpl()
+        ProjectMongoDataSourceImpl(MongoConnection)
     }
 
     single<TaskDataSource> {
-        TaskDataSourceFakeImpl()
+        TaskMongoDataSourceImpl(MongoConnection)
     }
 
     single<AuthenticationRepository> {

@@ -1,11 +1,12 @@
 package org.example.data.datasource.authentication_data_source
+
 import data.mongo_db.MongoConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import logic.exceptions.task_management_exception.AuthenticationInvalidException
 import org.bson.Document
 import org.example.logic.exceptions.authentication_exceptions.EmailAlreadyExistsException
 import org.example.logic.exceptions.authentication_exceptions.EmailNotFoundException
+import org.example.logic.exceptions.authentication_exceptions.InvalidEmailOrPasswordException
 import org.example.logic.exceptions.authentication_exceptions.NoLoggedInUserException
 import org.example.logic.exceptions.authentication_exceptions.UsersAlreadyExistException
 import org.example.models.Role
@@ -15,30 +16,26 @@ import java.util.*
 class AuthenticationMongoDataSourceImpl(
     private val mongoConnection: MongoConnection
 ) : AuthenticationDataSource {
-    override suspend fun login(email: String, password: String) {
-        withContext(Dispatchers.IO) {
-            try {
-                val filter = Document(EMAIL_FILED, email).append(PASSWORD_FILED, password)
-                val document = mongoConnection.users.find(filter).firstOrNull()
-                    ?: throw AuthenticationInvalidException("Invalid email or password")
+    override suspend fun login(email: String, password: String): User {
+        return withContext(Dispatchers.IO) {
+            val filter = Document(EMAIL_FILED, email).append(PASSWORD_FILED, password)
+            val document = mongoConnection.users.find(filter).firstOrNull()
+                ?: throw InvalidEmailOrPasswordException()
 
-                val user = User(
-                    id = UUID.fromString(document.getString(ID_FILED)),
-                    name = document.getString(NAME_FILED),
-                    password = document.getString(PASSWORD_FILED),
-                    email = document.getString(EMAIL_FILED),
-                    role = Role.valueOf(document.getString(ROLE_FILED)),
-                    isDeleted = document.getBoolean(IS_DELETED_FILED, false)
-                )
+            val user = User(
+                id = UUID.fromString(document.getString(ID_FILED)),
+                name = document.getString(NAME_FILED),
+                password = document.getString(PASSWORD_FILED),
+                email = document.getString(EMAIL_FILED),
+                role = Role.valueOf(document.getString(ROLE_FILED)),
+                isDeleted = document.getBoolean(IS_DELETED_FILED, false)
+            )
 
-                saveCurrentUser(user)
-            } catch (e: AuthenticationInvalidException) {
-                throw e
-            } catch (e: Exception) {
-                throw AuthenticationInvalidException("Login failed: ${e.message}")
-            }
+            saveCurrentUser(user)
+            user
         }
     }
+
     override suspend fun checkEmail(email: String) {
         withContext(Dispatchers.IO) {
             val filter = Document(EMAIL_FILED, email)
@@ -56,6 +53,7 @@ class AuthenticationMongoDataSourceImpl(
             newUser
         }
     }
+
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
         return withContext(Dispatchers.IO) {
             checkIfEmailExists(email)
@@ -88,6 +86,10 @@ class AuthenticationMongoDataSourceImpl(
         }
     }
 
+    override suspend fun getUsers(): List<User> {
+        TODO("Not yet implemented")
+    }
+
 
     private suspend fun saveCurrentUser(user: User?) = withContext(Dispatchers.IO) {
         try {
@@ -108,6 +110,7 @@ class AuthenticationMongoDataSourceImpl(
             throw Exception("Failed for current user${e.message}")
         }
     }
+
     private fun createUser(name: String, password: String, email: String, role: Role): User {
         return User(
             id = UUID.randomUUID(),
@@ -143,7 +146,8 @@ class AuthenticationMongoDataSourceImpl(
             isDeleted = this.getBoolean(IS_DELETED_FILED, false)
         )
     }
-    companion object{
+
+    companion object {
         private const val ID_FILED = "_id"
         private const val NAME_FILED = "name"
         private const val EMAIL_FILED = "email"
