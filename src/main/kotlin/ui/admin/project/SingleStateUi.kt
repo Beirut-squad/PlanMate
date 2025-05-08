@@ -7,6 +7,7 @@ import org.example.models.State
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import org.example.ui.common.screens.CreateNewTaskUI
 
 class SingleStateUi(
     private val viewer: Viewer,
@@ -40,7 +41,7 @@ class SingleStateUi(
                     break
                 }
                 3 -> {
-                    // TODO
+                    CreateNewTaskUI(projectId = project.id).show()
                 }
                 4 -> {
                     break
