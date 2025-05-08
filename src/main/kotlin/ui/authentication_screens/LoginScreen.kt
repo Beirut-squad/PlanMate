@@ -30,7 +30,7 @@ class LoginScreen(
 
         loginUseCase.login(email, password)
             .onSuccess { user ->
-                viewer.printInfoLine("Login successful!")
+                viewer.printCorrectOutput("Login successful!")
                 checkAdminOrMate(user)
             }
             .onFailure {
