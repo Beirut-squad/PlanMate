@@ -17,7 +17,7 @@ class EditProjectStateUi(
     private val reader: Reader by inject()
     private val editStateUseCase: EditStateUseCase by inject()
 
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Edit State")
 
         viewer.printTitle("Current state name: ${state.name}")

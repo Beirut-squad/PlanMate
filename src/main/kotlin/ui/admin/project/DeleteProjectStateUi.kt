@@ -20,7 +20,7 @@ class DeleteProjectStateUi(
     private val reader: Reader by inject()
     private val deleteStateUseCase: DeleteStateUseCase by inject()
 
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Confirm deletion of state '${state.name}': Y/N")
         when (reader.readInput()?.uppercase()) {
             "Y" -> deleteState()

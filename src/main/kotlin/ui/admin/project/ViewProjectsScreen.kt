@@ -17,7 +17,7 @@ class ViewProjectsScreen(
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : UiScreen {
     private var running = true
-    override fun show() {
+    override suspend fun show() {
         running = true
         val allProjects = getAllProjectsUseCases.getAllProjects()
 
@@ -50,14 +50,14 @@ class ViewProjectsScreen(
         }
     }
 
-    private fun chooseProject(projects: List<Project>) {
+    private suspend fun chooseProject(projects: List<Project>) {
         viewer.printInfoLine("Choose project: ")
         viewer.printOptions(projects.map { it.name } + "Exit")
 
         enterProject(projects)
     }
 
-    private fun enterProject(projects: List<Project>) {
+    private suspend fun enterProject(projects: List<Project>) {
         when (val input = reader.readInt()) {
             in 1..projects.size -> {
                 if (input != null) {
@@ -79,7 +79,7 @@ class ViewProjectsScreen(
         }
     }
 
-    private fun goToSingleProjectScreen(project: Project) {
+    private suspend fun goToSingleProjectScreen(project: Project) {
         singleProjectScreen.project = project
         singleProjectScreen.show()
     }

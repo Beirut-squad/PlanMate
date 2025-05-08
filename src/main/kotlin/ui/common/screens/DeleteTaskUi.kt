@@ -21,46 +21,40 @@ class DeleteTaskUI(
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val deleteTaskUseCase: DeleteTaskUseCase by inject()
 
-    override fun show() {
-        val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
+    override suspend fun show() {
 
-        tasksResult.fold(
-            onSuccess = { tasks ->
-                if (tasks.isEmpty()) {
-                    viewer.printInfoLine("No tasks available to delete.")
-                    return
-                }
-
-                viewer.printTitle("Select a Task to Delete:")
-                tasks.forEachIndexed { index, task ->
-                    viewer.printInfoLine(
-                        """
+        try {
+            val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
+            if (tasksResult.isEmpty()) {
+                viewer.printInfoLine("No tasks available to delete.")
+                return
+            }
+            viewer.printTitle("Select a Task to Delete:")
+            tasksResult.forEachIndexed { index, task ->
+                viewer.printInfoLine(
+                    """
                         Task #${index + 1}
                         - Title: ${task.title}
                         - Description: ${task.description}
                         - State: ${task.state.name}
                         """.trimIndent()
-                    )
-                }
-
-                viewer.printLoader("Enter the task number to delete:")
-                val taskIndex = reader.readInput()?.toIntOrNull()
-                if (taskIndex == null || taskIndex !in 1..tasks.size) {
-                    viewer.printError("Invalid task number.")
-                    return
-                }
-
-                val selectedTask = tasks[taskIndex - 1]
-                confirmAndDelete(selectedTask)
-
-            },
-            onFailure = {
-                viewer.printError("Failed to retrieve tasks: ${it.message}")
+                )
             }
-        )
+            viewer.printLoader("Enter the task number to delete:")
+            val taskIndex = reader.readInput()?.toIntOrNull()
+            if (taskIndex == null || taskIndex !in 1..tasksResult.size) {
+                viewer.printError("Invalid task number.")
+                return
+            }
+
+            val selectedTask = tasksResult[taskIndex - 1]
+            confirmAndDelete(selectedTask)
+        }catch (e:Exception){
+            viewer.printError("${e.message}")
+        }
     }
 
-    private fun confirmAndDelete(task: Task) {
+    private suspend fun confirmAndDelete(task: Task) {
         viewer.printInfoLine("Are you sure you want to delete the task: '${task.title}'? (yes/no)")
         val confirmation = reader.readInput()?.trim()?.lowercase()
         if (confirmation == "yes") {

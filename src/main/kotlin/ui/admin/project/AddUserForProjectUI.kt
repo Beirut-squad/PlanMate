@@ -16,7 +16,7 @@ class AddUserForProjectUI(
     private val reader : Reader by inject()
     private val  addMateToProjectUseCase:AddMateToProjectUseCase by inject()
     private val getAllUsersUseCase: GetAllUsersUseCase by inject()
-    override fun show() {
+    override suspend fun show() {
         val users = getAllUsersUseCase.getUsers().getOrThrow()
 
         viewer.printTitle("Add User")

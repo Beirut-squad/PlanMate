@@ -6,7 +6,6 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.java.KoinJavaComponent.inject
 
 class ViewTaskLogsScreenUI(
 
@@ -14,7 +13,7 @@ class ViewTaskLogsScreenUI(
     private val viewer: Viewer by inject()
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
     private val getUserTaskLogsUseCase: GetUserTaskLogsUseCase by inject()
-    override fun show() {
+    override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
         val user = currentUserResult.getOrNull()

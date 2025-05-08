@@ -13,3 +13,5 @@ class GetTaskException(massage: String) : Exception(massage)
 class BlankFieldsException(message: String) : IllegalArgumentException(message)
 
 class NoFieldsToUpdateException(message: String) : IllegalArgumentException(message)
+
+class FailedToReadTaskException(message: String) : IllegalArgumentException(message)

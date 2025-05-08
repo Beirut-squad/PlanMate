@@ -14,7 +14,7 @@ class CreateProjectStateUi(
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
     private val createStateUseCase: CreateStateUseCase by inject()
-    override fun show() {
+    override suspend fun show() {
         try {
             viewer.printTitle("Create State")
             viewer.printTitle("Please, Write your state name")
