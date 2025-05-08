@@ -41,7 +41,6 @@ class CreateNewTaskUi(
 
             val selectedState = selectedProject.state[selectedStateIndex]
             createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-            viewer.printError("No user found")
         } catch (e: Exception) {
             viewer.printError("Failed to retrieve project: ${e.message}")
         }

@@ -23,10 +23,6 @@ class ViewAllTaskForProjectUi(
     override suspend fun show() {
         try {
             val result = getTasksForProjectUseCase.getTasksForProject(projectId)
-            if (result.isEmpty()) {
-                viewer.printInfoLine("No tasks found for this project.")
-                ViewProjectsForUserUi().show()
-            } else {
                 viewer.printTitle("Tasks for Project:")
                 displayTasksInColumns(result)
                 viewer.printInfoLine("\nPlease choose an option:")
@@ -46,7 +42,6 @@ class ViewAllTaskForProjectUi(
                         ViewProjectsForUserUi().show()
                     }
                 }
-            }
         } catch (e: Exception) {
             viewer.printError("An error occurred while retrieving tasks: ${e.message}")
         }

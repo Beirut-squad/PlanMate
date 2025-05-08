@@ -1,5 +1,6 @@
 package org.example.ui.common.task
 
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.example.models.Task
@@ -20,11 +21,17 @@ class DeleteTaskUI(
     private val reader: Reader by inject()
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val deleteTaskUseCase: DeleteTaskUseCase by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
 
     override suspend fun show() {
-
         try {
             val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
+            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
+
+            if (user == null) {
+                viewer.printError("No user found")
+                return
+            }
             if (tasksResult.isEmpty()) {
                 viewer.printInfoLine("No tasks available to delete.")
                 return
@@ -48,18 +55,18 @@ class DeleteTaskUI(
             }
 
             val selectedTask = tasksResult[taskIndex - 1]
-            confirmAndDelete(selectedTask)
+            confirmAndDelete(selectedTask,user.id)
         }catch (e:Exception){
             viewer.printError("${e.message}")
         }
     }
 
-    private suspend fun confirmAndDelete(task: Task) {
+    private suspend fun confirmAndDelete(task: Task,currentUser : UUID) {
         viewer.printInfoLine("Are you sure you want to delete the task: '${task.title}'? (yes/no)")
         val confirmation = reader.readInput()?.trim()?.lowercase()
         if (confirmation == "yes") {
             try {
-                deleteTaskUseCase.deleteTask(task,task.id)
+                deleteTaskUseCase.deleteTask(task,currentUser)
                 viewer.printInfoLine("Task deleted successfully.")
                 ViewProjectsForUserUi().show()
             } catch (e: Exception) {
