@@ -9,6 +9,8 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.io.InvalidObjectException
+import org.example.ui.common.screens.CreateNewTaskUI
+import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import java.util.*
 
 class SingleProjectScreen(
@@ -36,7 +38,8 @@ class SingleProjectScreen(
                 "Delete project",
                 "View project states",
                 "Create new state",
-                "Add User to project",
+                "Add user to project",
+                "Add task to project",
                 "Exit"
             )
 
@@ -56,7 +59,7 @@ class SingleProjectScreen(
                 try {
                     deleteProjectUseCase.deleteProject(
                         project = project,
-                        creatorUserID = user.id ?: UUID.randomUUID()
+                        creatorUserID = user.id
                     )
                     running = false
                 } catch (e: Exception) {
@@ -79,10 +82,16 @@ class SingleProjectScreen(
             }
 
             6 -> {
+                if (project.state.isEmpty()) {
+                    viewer.printError("Cannot create a task because this project has no states.")
+                } else {
+                    CreateNewTaskUI(projectId = project.id).show()
+                }
+            }
+            7 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
-
 
             else -> {
                 viewer.printError("Invalid option")

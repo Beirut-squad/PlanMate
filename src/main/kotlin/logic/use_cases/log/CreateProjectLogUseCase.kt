@@ -9,10 +9,9 @@ import java.util.UUID
 class CreateProjectLogUseCase(
     private val logRepository: LogRepository
 ) {
-    fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?): Result<Unit> {
-        if (previousProject == null && currentProject == null) return Result.failure(
-            IllegalArgumentException("Both previous and current projects cannot be null")
-        )
+    fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?) {
+        if (previousProject == null && currentProject == null)
+            throw IllegalArgumentException("Both previous and current projects cannot be null")
 
         val entityId = listOfNotNull(currentProject?.id, previousProject?.id).first()
 

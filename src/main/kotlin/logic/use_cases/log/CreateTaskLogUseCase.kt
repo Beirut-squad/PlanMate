@@ -9,14 +9,13 @@ import java.util.UUID
 class CreateTaskLogUseCase(
     private val logRepository: LogRepository
 ) {
-    fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?): Result<Unit> {
-        if (previousTask == null && currentTask == null) return Result.failure(
-            IllegalArgumentException("Both previousTask and currentTask cannot be null")
-        )
+    fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?) {
+        if (previousTask == null && currentTask == null)
+            throw IllegalArgumentException("Both previousTask and currentTask cannot be null")
 
         val entityId = listOfNotNull(currentTask?.id, previousTask?.id).first()
 
-        return logRepository.saveTaskLog(
+        logRepository.saveTaskLog(
             TaskLog(
                 id = UUID.randomUUID(),
                 userId = userId,

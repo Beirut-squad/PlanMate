@@ -15,6 +15,6 @@ interface ProjectRepository {
     suspend fun editStateToProject(projectId: UUID, state: State): Project
     suspend fun removeStateFromProject(projectId: UUID, state: State): Project
     suspend fun getProjectForMateByUserId(userId : UUID): List<Project>
-    suspend fun addMateToProject(projectId: UUID, user: User)
+    suspend fun addMateToProject(projectId: UUID, user: User): Project
     suspend fun getProjectsForUserById(userid : UUID): List<Project>
 }

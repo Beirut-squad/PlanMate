@@ -26,7 +26,7 @@ class ViewProjectsUI(
                     )
                 }
             } else {
-                viewer.printInfoLine("No projects found.")
+                viewer.printError("No projects found.")
             }
         } catch (e: Exception) {
             viewer.printError("Failed to retrieve projects: ${e.message}")

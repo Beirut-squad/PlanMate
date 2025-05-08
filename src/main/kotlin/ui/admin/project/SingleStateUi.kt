@@ -37,13 +37,10 @@ class SingleStateUi(
 
                 2 -> {
                     DeleteProjectStateUi(project, state).show()
+                    break
                 }
 
                 3 -> {
-                    // TODO
-                }
-
-                4 -> {
                     break
                 }
 
@@ -60,7 +57,6 @@ class SingleStateUi(
         viewer.printOptions(
             "Edit state",
             "Delete state",
-            "Add task to state",
             "Exit"
         )
     }
@@ -73,6 +69,7 @@ class SingleStateUi(
     private suspend fun updateProject() {
         try {
             project = getProjectByIdUseCase.getProjectById(project.id)
+            state = project.state.find { it.id == state.id }!!
         } catch (e: Exception) {
             viewer.printError("${e.message}")
         }

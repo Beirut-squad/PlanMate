@@ -18,6 +18,11 @@ object StringConstants {
         const val STATE_HAS_TASKS = "Cannot remove state stateName because it has associated tasks."
     }
 
+    object Log {
+        const val NO_PROJECT_LOGS_AVAILABLE = "No project logs available"
+        const val NO_TASK_LOGS_AVAILABLE = "No task logs available"
+    }
+
 //    // Validation
 //    object Validation {
 //        const val INVALID_EMAIL = "Invalid email format"

@@ -10,7 +10,7 @@ class DeleteProjectUseCase(
     private val logUseCase: CreateProjectLogUseCase
 ) {
     suspend fun deleteProject(creatorUserID: UUID, project: Project) {
-        logUseCase.createProjectLog(creatorUserID, project, project)
         projectRepository.deleteProject(project.id)
+        logUseCase.createProjectLog(creatorUserID, project, null)
     }
 }

@@ -1,10 +1,10 @@
 package org.example.ui.admin.home_screen
 
-import org.example.ui.admin.log.AllProjectsLogsView
-import org.example.ui.admin.project.CreateNewProjectScreen
-import org.example.ui.admin.project.ViewProjectsScreen
+import org.example.ui.admin.log.project.AllProjectLogsView
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
+import org.example.ui.admin.project.CreateNewProjectScreen
+import org.example.ui.admin.project.ViewProjectsScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -16,7 +16,9 @@ class AdminHomeScreen(
     private val reader: Reader by inject()
     private val viewProjectsScreen: ViewProjectsScreen by inject()
     private val createNewProjectScreen: CreateNewProjectScreen by inject()
-    private val allProjectsLogsView: AllProjectsLogsView by inject()
+    private val allProjectLogsView: AllProjectLogsView by inject()
+    private val allTaskLogsView: AllProjectLogsView by inject()
+
     override suspend fun show() {
 
         while (true) {
@@ -25,6 +27,7 @@ class AdminHomeScreen(
                 "View Current Projects",
                 "Create a New Project",
                 "Show all project logs",
+                "Show all task logs",
                 "Exit"
             )
 
@@ -39,10 +42,14 @@ class AdminHomeScreen(
                 }
 
                 3 -> {
-                    goToViewAllLogsScreen()
+                    goToViewAllProjectLogsScreen()
                 }
 
                 4 -> {
+                    goToViewAllTaskLogsScreen()
+                }
+
+                5 -> {
                     viewer.printGoodbyeMessage("Goodbye")
                     break
                 }
@@ -59,7 +66,11 @@ class AdminHomeScreen(
         createNewProjectScreen.show()
     }
 
-    private suspend fun goToViewAllLogsScreen() {
-        allProjectsLogsView.show()
+    private suspend fun goToViewAllProjectLogsScreen() {
+        allProjectLogsView.show()
+    }
+
+    private suspend fun goToViewAllTaskLogsScreen() {
+        allTaskLogsView.show()
     }
 }

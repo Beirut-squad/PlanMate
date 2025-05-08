@@ -32,9 +32,11 @@ class EditProjectScreen(
     }
 
     private fun displayMenu() {
-        viewer.printOptions("1- Edit project name")
-        viewer.printOptions("2- Edit project description")
-        viewer.printOptions("3- Return")
+        viewer.printOptions(
+            "Edit project name",
+            "Edit project description",
+            "Return"
+        )
         viewer.printTitle("Choose what you want to change in project.")
     }
 

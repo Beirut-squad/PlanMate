@@ -24,12 +24,12 @@ class EditProjectUseCase(
             newProject.name = if (newName.isNullOrBlank()) newProject.name else newName
             newProject.description = if (newDescription.isNullOrBlank()) newProject.description else newDescription
 
+            projectRepository.editProject(newProject)
             logUseCase.createProjectLog(
                 previousProject = newProject,
                 currentProject = newProject,
                 userId = creatorUserID
             )
-            projectRepository.editProject(newProject)
         }
     }
 }

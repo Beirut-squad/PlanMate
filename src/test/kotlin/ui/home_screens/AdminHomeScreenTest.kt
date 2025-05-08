@@ -6,11 +6,10 @@ import io.mockk.verify
 import org.example.ui.common.components.Reader
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen
-import org.example.ui.admin.log.AllProjectsLogsView
+import org.example.ui.admin.log.project.AllProjectLogsView
 import org.example.ui.admin.project.ViewProjectsScreen
 import org.junit.jupiter.api.Test
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 
 class AdminHomeScreenTest {
 
@@ -18,14 +17,14 @@ class AdminHomeScreenTest {
     private val reader: Reader = mockk(relaxed = true)
     private val viewProjectsScreen = mockk<ViewProjectsScreen>(relaxed = true)
     private val createNewProjectScreen = mockk<CreateNewProjectScreen>(relaxed = true)
-    private val allProjectsLogsView: AllProjectsLogsView = mockk(relaxed = true)
+    private val allProjectLogsView: AllProjectLogsView = mockk(relaxed = true)
 
     private val adminHomeScreen = AdminHomeScreen(
         viewer,
         reader,
         viewProjectsScreen,
         createNewProjectScreen,
-        allProjectsLogsView
+        allProjectLogsView
     )
 
     @Test
@@ -52,7 +51,7 @@ class AdminHomeScreenTest {
 
         adminHomeScreen.show()
 
-        verify { allProjectsLogsView.show() }
+        verify { allProjectLogsView.show() }
     }
 
     @Test

@@ -16,32 +16,27 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
     private val getProjectsForUserById: GetProjectsForUserByIdUseCase by inject()
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
-        val user = currentUserResult
 
-        if (user == null) {
+        if (currentUserResult == null) {
             viewer.printError("No user found")
             return
         }
         try {
-            val userProjects = getProjectsForUserById.getProjectForUserById(user.id)
-        if (userProjects.isNotEmpty()) {
-            viewer.printTitle("Project For User: ${user.name}")
-            userProjects.forEachIndexed { index, project ->
-                viewer.printInfoLine(
-                    """
-                    ${index + 1}-Name Project: ${project.name}
-                    """.trimIndent()
+            val projects = getProjectsForUserById.getProjectForUserById(currentUserResult.id)
+            if (projects.isNotEmpty()) {
+                viewer.printTitle("Project For User: ${currentUserResult.name}")
+                viewer.printOptions(
+                    projects.map { it.name }
                 )
+                viewer.printTitle("Select a project to view details:")
+                handleProjectSelection(projects)
+            } else {
+                viewer.printError("No project found for the current user.")
             }
-            viewer.printTitle("Select a project to view details:")
-            handleProjectSelection(userProjects)
-        } else {
-            viewer.printInfoLine("No project found for the current user.")
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
         }
-    } catch (e: Exception) {
-        viewer.printError("${e.message}")
     }
-}
 
     private suspend fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
@@ -52,13 +47,12 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
     }
 
     private suspend fun handleUserInput(input: Int?, projects: List<Project>): Boolean {
-        return when {
-            input == null -> {
+        return when (input) {
+            null -> {
                 viewer.printError("Please enter a valid number.")
                 true
             }
-
-            input in 1..projects.size -> {
+            in 1..projects.size -> {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
