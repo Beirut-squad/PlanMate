@@ -66,7 +66,7 @@ class DeleteTaskUI(
         val confirmation = reader.readInput()?.trim()?.lowercase()
         if (confirmation == "yes") {
             try {
-                deleteTaskUseCase.deleteTask(task,task.id,currentUser)
+                deleteTaskUseCase.deleteTask(task,currentUser)
                 viewer.printInfoLine("Task deleted successfully.")
                 ViewProjectsForUserUI().show()
             } catch (e: Exception) {
