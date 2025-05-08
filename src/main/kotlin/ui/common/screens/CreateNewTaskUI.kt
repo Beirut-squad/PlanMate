@@ -7,7 +7,6 @@ import org.example.models.Project
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
@@ -39,10 +38,10 @@ class CreateNewTaskUI(
             val description = getValidInput("Tell me more about description of your task:")
 
             val selectedStateIndex = getValidStateInput(selectedProject)
-            val selectedState = selectedProject.state[selectedStateIndex]
 
+            val selectedState = selectedProject.state[selectedStateIndex]
             createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-            ViewProjectsForUserUI().show()
+            viewer.printError("No user found")
         } catch (e: Exception) {
             viewer.printError("Failed to retrieve project: ${e.message}")
         }

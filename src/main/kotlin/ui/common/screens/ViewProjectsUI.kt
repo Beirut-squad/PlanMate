@@ -10,7 +10,7 @@ class ViewProjectsUI(
 ) : UiScreen {
     override suspend fun show() {
         try {
-            val projects = getAllProjectsUseCases.getAllProjects()
+            val allProjects = getAllProjectsUseCases.getAllProjects()
             if (projects.isNotEmpty()) {
                 viewer.printTitle("Project: ")
                 projects.forEachIndexed { index, project ->
@@ -26,7 +26,7 @@ class ViewProjectsUI(
                     )
                 }
             } else {
-                viewer.printInfoLine("No projects found.")
+                viewer.printError("No projects found.")
             }
         } catch (e: Exception) {
             viewer.printError("Failed to retrieve projects: ${e.message}")

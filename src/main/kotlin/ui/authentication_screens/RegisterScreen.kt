@@ -28,7 +28,7 @@ class RegisterScreen(
 
             registerUseCase.add(name = name, email = email, password = password)
 
-            viewer.printInfoLine("Register successfully!")
+            viewer.printCorrectOutput("Register successfully!")
             goToLoginScreen()
         }catch (e: Exception) {
             viewer.printError("Register failed!")

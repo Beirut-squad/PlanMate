@@ -23,25 +23,21 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
             return
         }
         try {
-            val userProjects = getProjectsForUserById.getProjectForUserById(user.id)
-        if (userProjects.isNotEmpty()) {
-            viewer.printTitle("Project For User: ${user.name}")
-            userProjects.forEachIndexed { index, project ->
-                viewer.printInfoLine(
-                    """
-                    ${index + 1}-Name Project: ${project.name}
-                    """.trimIndent()
+            val userProjectsResult = getProjectsForUserById.getProjectForUserById(user.id)
+            if (projects.isNotEmpty()) {
+                viewer.printTitle("Project For User: ${user.name}")
+                viewer.printOptions(
+                    projects.map { it.name }
                 )
+                viewer.printTitle("Select a project to view details:")
+                handleProjectSelection(projects)
+            } else {
+                viewer.printError("No project found for the current user.")
             }
-            viewer.printTitle("Select a project to view details:")
-            handleProjectSelection(userProjects)
-        } else {
-            viewer.printInfoLine("No project found for the current user.")
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
         }
-    } catch (e: Exception) {
-        viewer.printError("${e.message}")
     }
-}
 
     private suspend fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
@@ -62,6 +58,7 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
+
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
                 MateHomeUI().show()

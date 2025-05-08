@@ -30,11 +30,12 @@ class LoginScreen(
 
         try {
             val user = loginUseCase.login(email, password)
-            viewer.printInfoLine("Login successful!")
+            viewer.printCorrectOutput("Login successful!")
             checkAdminOrMate(user)
-            return 
+            return
         } catch (e: Exception) {
             viewer.printError("Login failed! ${e.message}")
+            takeUserLoginInput()
         }
     }
 

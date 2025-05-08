@@ -34,7 +34,7 @@ class ViewProjectStatesUi(
             } else {
                 displayAvailableStates()
 
-                viewer.printTitle("Choose state number or exit: ")
+                viewer.printInfoLine("Choose state number or exit: ")
                 val selectedIndex = reader.readInput().toString().toIntOrNull()?.minus(1) ?: -1
 
                 when (selectedIndex) {
@@ -58,12 +58,12 @@ class ViewProjectStatesUi(
     }
 
     private suspend fun displayNoStatesAndGoToCreateState() {
-        viewer.printTitle("You have no states, please create one first")
+        viewer.printError("You have no states, please create one first")
         CreateProjectStateUi(project).show()
     }
 
     private fun displayAvailableStates() {
-        viewer.printTitle("Available States:")
+        viewer.printCorrectOutput("Available States:")
         viewer.printOptions(states.map { it.name } + "Exit")
     }
 

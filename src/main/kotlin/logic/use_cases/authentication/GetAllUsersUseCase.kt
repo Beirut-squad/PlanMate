@@ -1,14 +1,12 @@
 package org.example.logic.use_cases.authentication
 
 import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.models.Role
 import org.example.models.User
-import java.util.*
 
 class GetAllUsersUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
     suspend fun getUsers(): List<User> {
-        return authenticationRepository.getUsers().filter { it.role == Role.MATE }
+        return authenticationRepository.getUsers()
     }
 }
