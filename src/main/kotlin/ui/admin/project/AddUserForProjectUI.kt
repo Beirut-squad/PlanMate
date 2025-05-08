@@ -29,9 +29,11 @@ class AddUserForProjectUI(
         }
 
         users.forEachIndexed { index, user ->
+            viewer.printPlainText("These are all the registered users:")
             viewer.printInfoLine(
-                "${index + 1}." +
-                    "Name: ${user.name}")
+                "${index + 1}. " +
+                        user.name
+            )
         }
 
         viewer.printInfoLine("Enter the number of the user to add (Enter anything else to cancel):")
