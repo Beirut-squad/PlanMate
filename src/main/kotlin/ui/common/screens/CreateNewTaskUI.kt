@@ -26,7 +26,7 @@ class CreateNewTaskUI(
     override suspend fun show() {
         try {
             val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
-            val user = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
+            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
 
             if (user == null) {
                 viewer.printError("No user found")

@@ -14,8 +14,8 @@ class CreateProjectUseCase(
     private val logUseCase: CreateProjectLogUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun createProject(name: String, description: String, stateNames: List<String>) {
-        val creatorUserID = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id
+    suspend fun createProject(name: String, description: String, stateNames: List<String>) {
+        val creatorUserID = getCurrentLoggedInUserUseCase.getCurrentUser()?.id
             ?: throw IllegalStateException("User is not logged in")
         if (name.isBlank() || description.isBlank()) {
             throw BlankFieldsException("You should write a valid input as a string.")

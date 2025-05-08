@@ -9,9 +9,9 @@ class DeleteStateUseCase(
     private val removeStateFromProjectUseCase: RemoveStateFromProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun deleteState(project: Project, state: State): Project {
+    suspend fun deleteState(project: Project, state: State): Project {
         val currentUserId = getCurrentLoggedInUserUseCase
-                    .getCurrentUser().getOrThrow()?.id ?: throw IllegalArgumentException()
+                    .getCurrentUser()?.id ?: throw IllegalArgumentException()
 
         return removeStateFromProjectUseCase
                     .removeStateFromProject(currentUserId, project, state)

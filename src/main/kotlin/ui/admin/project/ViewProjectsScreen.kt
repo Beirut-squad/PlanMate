@@ -84,7 +84,7 @@ class ViewProjectsScreen(
         singleProjectScreen.show()
     }
 
-    private fun getUserById(id: UUID): User {
-        return getUserByIdUseCase.getUser(id).getOrThrow() ?: throw IllegalStateException("User not found")
+    private suspend fun getUserById(id: UUID): User {
+        return getUserByIdUseCase.getUser(id)?: throw IllegalStateException("User not found")
     }
 }

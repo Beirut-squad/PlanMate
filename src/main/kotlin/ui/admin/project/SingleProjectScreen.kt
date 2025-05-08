@@ -8,6 +8,7 @@ import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
+import java.io.InvalidObjectException
 import java.util.*
 
 class SingleProjectScreen(
@@ -20,10 +21,11 @@ class SingleProjectScreen(
     private val viewProjectStatesUi: ViewProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
-    val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
+    lateinit  var user: User
     private var running = true
 
     override suspend fun show() {
+        user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
         running = true
         while (running) {
             viewer.printTitle("Project ${project.name}")

@@ -26,11 +26,11 @@ class AllProjectsLogsView(
         })
     }
 
-    private fun getUserName(userId: UUID): String? {
-        return getUserByIdUseCase.getUser(userId).getOrThrow()?.name
+    private suspend fun getUserName(userId: UUID): String? {
+        return getUserByIdUseCase.getUser(userId)?.name
     }
 
-    private fun displayProjectLog(index: Int, projectLog: ProjectLog) {
+    private suspend fun displayProjectLog(index: Int, projectLog: ProjectLog) {
         when {
             projectLog.isCreation() -> handleProjectCreation(index, projectLog)
             projectLog.isDeletion() -> handleProjectDeletion(index, projectLog)
@@ -46,7 +46,7 @@ class AllProjectsLogsView(
         return previousEntity != null && currentEntity == null
     }
 
-    private fun handleProjectCreation(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectCreation(index: Int, projectLog: ProjectLog) {
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)
         viewer.printCorrectOutput(
@@ -54,7 +54,7 @@ class AllProjectsLogsView(
         )
     }
 
-    private fun handleProjectDeletion(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectDeletion(index: Int, projectLog: ProjectLog) {
         val previousProject = projectLog.previousEntity
         val userName = getUserName(projectLog.userId)
         viewer.printCorrectOutput(
@@ -62,7 +62,7 @@ class AllProjectsLogsView(
         )
     }
 
-    private fun handleProjectChanges(index: Int, projectLog: ProjectLog) {
+    private suspend fun handleProjectChanges(index: Int, projectLog: ProjectLog) {
         val previousProject = projectLog.previousEntity
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)

@@ -10,10 +10,10 @@ class CreateStateUseCase(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun createState(name: String, project: Project): State {
+    suspend fun createState(name: String, project: Project): State {
             if (name.isBlank()) throw (IllegalArgumentException("Create failed : name is Blank !!"))
             val newState = State(id = UUID.randomUUID(), name = name)
-            val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id ?: throw Exception()
+            val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser()?.id ?: throw Exception()
             addStateToProjectUseCase.addStateToProject(currentUserID = currentUserId, project = project, state = newState)
             return newState
     }

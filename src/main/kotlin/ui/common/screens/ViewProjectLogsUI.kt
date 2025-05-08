@@ -13,7 +13,7 @@ class ViewProjectLogsUI(
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
-        val user = currentUserResult.getOrNull()
+        val user = currentUserResult
         if (user == null) {
             viewer.printError("No user logged in")
             return

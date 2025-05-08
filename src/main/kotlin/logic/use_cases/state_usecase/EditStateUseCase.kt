@@ -9,10 +9,10 @@ class EditStateUseCase(
     private val editStateToProjectUseCase: EditStateToProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase
 ) {
-    fun editState(stateToEdit: State, newName: String, project: Project): Project{
+    suspend fun editState(stateToEdit: State, newName: String, project: Project): Project{
         if (newName.isEmpty()) throw IllegalArgumentException("Edit failed: name cannot be blank!")
 
-        val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser().getOrThrow()?.id
+        val currentUserId = getCurrentLoggedInUserUseCase.getCurrentUser()?.id
             ?: throw Exception("User not logged in")
 
         val updatedState = stateToEdit.copy(name = newName)

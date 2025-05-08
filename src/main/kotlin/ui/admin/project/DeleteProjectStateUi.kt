@@ -30,7 +30,7 @@ class DeleteProjectStateUi(
 
     }
 
-    private fun deleteState() {
+    private suspend fun deleteState() {
         try {
             deleteStateUseCase.deleteState(project, state)
         }catch (e:Exception){

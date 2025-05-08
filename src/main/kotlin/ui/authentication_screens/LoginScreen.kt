@@ -28,15 +28,14 @@ class LoginScreen(
         val email = takeUserInput("Email")
         val password = takeUserInput("Password")
 
-        loginUseCase.login(email, password)
-            .onSuccess { user ->
-                viewer.printInfoLine("Login successful!")
-                checkAdminOrMate(user)
-            }
-            .onFailure {
-                viewer.printError("Login failed!")
-                takeUserLoginInput()
-            }
+        try {
+            val user = loginUseCase.login(email, password)
+            viewer.printInfoLine("Login successful!")
+            checkAdminOrMate(user)
+            return 
+        } catch (e: Exception) {
+            viewer.printError("Login failed! ${e.message}")
+        }
     }
 
     private fun takeUserInput(prompt: String): String {
