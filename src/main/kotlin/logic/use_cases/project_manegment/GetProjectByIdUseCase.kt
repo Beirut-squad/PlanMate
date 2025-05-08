@@ -7,7 +7,7 @@ import java.util.UUID
 class GetProjectByIdUseCase(
     private val repository: ProjectRepository,
 ) {
-    fun getProjectById(id: UUID): Result<Project> {
+    fun getProjectById(id: UUID): Project {
         return repository.getProject(id)
     }
 }

@@ -49,23 +49,33 @@ class SingleProjectScreen(
                 editProjectScreen.project = project
                 editProjectScreen.show()
             }
+
             2 -> {
-                deleteProjectUseCase.deleteProject(
-                    project = project,
-                    creatorUserID = user?.id ?: UUID.randomUUID()
-                )
-                running = false
+                try {
+                    deleteProjectUseCase.deleteProject(
+                        project = project,
+                        creatorUserID = user?.id ?: UUID.randomUUID()
+                    )
+                    running = false
+                } catch (e: Exception) {
+                    viewer.printError("${e.message}")
+                }
+
             }
+
             3 -> {
                 viewProjectStatesUi.setProject(project.id)
                 viewProjectStatesUi.show()
             }
+
             4 -> {
                 CreateProjectStateUi(project).show()
             }
-            5 ->{
+
+            5 -> {
                 AddUserForProjectUI(project.id).show()
             }
+
             6 -> {
                 viewer.printGoodbyeMessage("Goodbye!")
                 running = false
@@ -83,6 +93,10 @@ class SingleProjectScreen(
     }
 
     private fun updateProject() {
-        project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
+        try {
+            project = getProjectByIdUseCase.getProjectById(project.id)
+        } catch (e: Exception) {
+            viewer.printError("${e.message}")
+        }
     }
 }
