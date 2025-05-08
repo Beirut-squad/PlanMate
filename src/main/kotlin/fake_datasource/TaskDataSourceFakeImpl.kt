@@ -49,8 +49,6 @@ class TaskDataSourceFakeImpl : TaskDataSource {
     }
 
     override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
-        val tasksForProject = tasks.filter { it.projectId == projectId }
-        Result.success(tasksForProject)
-        throw GetTaskException("Failed to retrieve task")
+        return tasks.filter { it.projectId == projectId }.ifEmpty { throw GetTaskException("No tasks found for this project.") }
     }
 }

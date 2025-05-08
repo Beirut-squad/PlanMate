@@ -1,5 +1,6 @@
 package org.example.ui.common.screens
 
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
@@ -22,10 +23,18 @@ class EditTaskUI(
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val editTaskUseCase: EditTaskUseCase by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
 
     override suspend fun show() {
         try {
             val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
+            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
+
+            if (user == null) {
+                viewer.printError("No user found")
+                return
+            }
+
             if (tasksResult.isEmpty()) {
                 viewer.printInfoLine("No tasks available to edit.")
                 return
@@ -51,13 +60,13 @@ class EditTaskUI(
             }
 
             val selectedTask = tasksResult[number - 1]
-            editSelectedTask(selectedTask)
+            editSelectedTask(selectedTask, user.id)
         } catch (e: Exception) {
             viewer.printError("${e.message}")
         }
     }
 
-    private suspend fun editSelectedTask(task: Task) {
+    private suspend fun editSelectedTask(task: Task,currentUser : UUID) {
         try {
             val selectedProject = getProjectByIdUseCase.getProjectById(task.projectId)
 
@@ -79,7 +88,7 @@ class EditTaskUI(
             val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
 
             try {
-                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState)
+                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState,currentUser)
                 viewer.printInfoLine("Task updated successfully!")
                 ViewProjectsForUserUI().show()
             } catch (e: Exception) {
