@@ -9,6 +9,7 @@ import org.example.logic.exceptions.authentication_exceptions.EmailNotFoundExcep
 import org.example.logic.exceptions.authentication_exceptions.InvalidEmailOrPasswordException
 import org.example.logic.exceptions.authentication_exceptions.NoLoggedInUserException
 import org.example.logic.exceptions.authentication_exceptions.UsersAlreadyExistException
+import org.example.models.Project
 import org.example.models.Role
 import org.example.models.User
 import java.util.*
@@ -87,9 +88,13 @@ class AuthenticationMongoDataSourceImpl(
     }
 
     override suspend fun getUsers(): List<User> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO){
+            val userDoc = mongoConnection.users.find().toList()
+            userDoc.map {
+                it?.toUser() ?: throw Exception("No any users ")
+            }
+        }
     }
-
 
     private suspend fun saveCurrentUser(user: User?) = withContext(Dispatchers.IO) {
         try {
