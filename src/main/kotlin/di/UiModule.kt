@@ -6,18 +6,22 @@ import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.ui.admin.home_screen.AdminHomeScreen
 import org.example.ui.admin.log.project.AllProjectLogsView
 import org.example.ui.admin.project.*
-import org.example.ui.authentication_screens.AuthenticationMainScreen
-import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.authentication_screens.RegisterScreen
+import org.example.ui.common.authentication_screens.AuthenticationMainScreen
+import org.example.ui.common.authentication_screens.LoginScreen
+import org.example.ui.common.authentication_screens.RegisterScreen
 import org.example.ui.common.components.Colors
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
 import org.example.ui.common.screens.*
-import org.example.ui.mate.home_screen.MateHomeUI
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.example.ui.mate.MateHomeUI
+import org.example.ui.mate.ViewProjectsForUserUI
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.example.ui.admin.log.project.DisplayProjectLog
+import org.example.ui.common.project.ViewAllTaskForProjectUI
+import org.example.ui.common.project.ViewProjectForMateUI
+import org.example.ui.common.project.ViewProjectsUI
+import org.example.ui.common.project.ViewStateSelectedForProjectUI
 
 val uiModule = module {
     singleOf(::AuthenticationMainScreen)

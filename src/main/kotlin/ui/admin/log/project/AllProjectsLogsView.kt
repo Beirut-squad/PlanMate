@@ -1,14 +1,14 @@
-package org.example.ui.admin.log
-
-import extensions.formatDateTime
-import org.example.logic.exceptions.ErrorHandler
-import org.example.logic.use_cases.authentication.GetUserByIdUseCase
-import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
-import org.example.models.Project
-import org.example.models.ProjectLog
-import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
-import java.util.UUID
+//package org.example.ui.admin.log
+//
+//import extensions.formatDateTime
+//import org.example.logic.exceptions.ErrorHandler
+//import org.example.logic.use_cases.authentication.GetUserByIdUseCase
+//import org.example.logic.use_cases.log.GetAllProjectLogsUseCase
+//import org.example.models.Project
+//import org.example.models.ProjectLog
+//import org.example.ui.common.components.UiScreen
+//import org.example.ui.common.components.Viewer
+//import java.util.UUID
 //
 //class AllProjectsLogsView(
 //    private val getAllProjectLogsUseCase: GetAllProjectLogsUseCase,

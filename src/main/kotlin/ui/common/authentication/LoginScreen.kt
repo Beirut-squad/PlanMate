@@ -1,4 +1,4 @@
-package org.example.ui.authentication_screens
+package org.example.ui.common.authentication_screens
 
 import org.example.logic.use_cases.authentication.LoginUseCase
 import org.example.models.Role
@@ -6,7 +6,7 @@ import org.example.models.User
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen
-import org.example.ui.mate.home_screen.MateHomeUI
+import org.example.ui.mate.MateHomeUI
 import org.example.ui.common.components.Viewer
 
 class LoginScreen(

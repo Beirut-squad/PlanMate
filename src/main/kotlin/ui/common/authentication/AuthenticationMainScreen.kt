@@ -1,4 +1,4 @@
-package org.example.ui.authentication_screens
+package org.example.ui.common.authentication_screens
 
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen

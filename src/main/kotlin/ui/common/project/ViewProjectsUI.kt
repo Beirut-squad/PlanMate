@@ -1,4 +1,4 @@
-package org.example.ui.common.screens
+package org.example.ui.common.project
 
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.ui.common.components.UiScreen

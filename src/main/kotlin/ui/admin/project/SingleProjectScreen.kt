@@ -10,7 +10,7 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.io.InvalidObjectException
 import org.example.ui.common.screens.CreateNewTaskUI
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.example.ui.mate.ViewProjectsForUserUI
 import java.util.*
 
 class SingleProjectScreen(

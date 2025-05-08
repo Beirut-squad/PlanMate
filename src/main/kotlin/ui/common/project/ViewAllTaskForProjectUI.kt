@@ -1,11 +1,13 @@
-package org.example.ui.common.screens
+package org.example.ui.common.project
 
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
 import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.example.ui.common.screens.DeleteTaskUI
+import org.example.ui.common.screens.EditTaskUI
+import org.example.ui.mate.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID

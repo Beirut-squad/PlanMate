@@ -1,11 +1,11 @@
-package org.example.ui.mate.home_screen
+package org.example.ui.mate
 
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCase
 import org.example.models.Project
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.ViewProjectForMateUI
+import org.example.ui.common.project.ViewProjectForMateUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
