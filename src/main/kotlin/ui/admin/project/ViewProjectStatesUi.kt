@@ -18,7 +18,7 @@ class ViewProjectStatesUi(
     private lateinit var project: Project
     private lateinit var states: List<State>
 
-    fun setProject(projectId: UUID) {
+    suspend fun setProject(projectId: UUID) {
         this.projectId = projectId
         this.project = getProject()
         this.states = project.state
@@ -53,7 +53,7 @@ class ViewProjectStatesUi(
         }
     }
 
-    private fun getProject(): Project {
+    private suspend fun getProject(): Project {
         return getProjectByIdUseCase.getProjectById(projectId)
     }
 

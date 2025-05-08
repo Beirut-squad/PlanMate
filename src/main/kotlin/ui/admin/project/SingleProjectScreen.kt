@@ -56,7 +56,7 @@ class SingleProjectScreen(
                 try {
                     deleteProjectUseCase.deleteProject(
                         project = project,
-                        creatorUserID = user?.id ?: UUID.randomUUID()
+                        creatorUserID = user.id ?: UUID.randomUUID()
                     )
                     running = false
                 } catch (e: Exception) {
@@ -94,7 +94,7 @@ class SingleProjectScreen(
 
     }
 
-    private fun updateProject() {
+    private suspend fun updateProject() {
         try {
             project = getProjectByIdUseCase.getProjectById(project.id)
         } catch (e: Exception) {

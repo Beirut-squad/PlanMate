@@ -9,11 +9,11 @@ import java.util.*
 class ProjectDataSourceFakeImpl : ProjectDataSource {
     private val projects = mutableListOf<Project>()
 
-    override fun createProject(project: Project) {
+    override suspend fun createProject(project: Project) {
         projects.add(project)
     }
 
-    override fun editProject(project: Project) {
+    override suspend fun editProject(project: Project) {
         val wasRemoved = projects.removeIf { it.id == project.id }
         if (wasRemoved) {
             projects.add(project)
@@ -23,7 +23,7 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
     }
 
 
-    override fun deleteProject(id: UUID) {
+    override suspend fun deleteProject(id: UUID) {
         val wasRemoved = projects.removeIf { it.id == id }
         if (!wasRemoved) {
             throw Exception("No project found with ID: $id")
@@ -31,45 +31,45 @@ class ProjectDataSourceFakeImpl : ProjectDataSource {
     }
 
 
-    override fun getAllProjects(): List<Project> {
+    override suspend fun getAllProjects(): List<Project> {
         return projects
     }
 
-    override fun getProject(id: UUID): Project {
+    override suspend fun getProject(id: UUID): Project {
         return projects.find { it.id == id } ?: throw Exception()
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
         val project = projects.find { it.id == projectId } ?: throw Exception()
         updateProjectState(projectId, state)
         return project
     }
 
 
-    override fun editStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
         val project = projects.find { it.id == projectId } ?: throw Exception()
         editProjectState(projectId, state)
         return project
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Project {
+    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
         val project = projects.find { it.id == projectId } ?: throw Exception()
         deleteProjectState(projectId, state)
         return project
     }
 
-    override fun getProjectsForUserById(userId: UUID): List<Project> {
+    override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
         return projects.filter { project ->
             project.users.any { user -> user.id == userId }
         }
     }
 
 
-    override fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun addMateToProject(projectId: UUID, user: User) {
+    override suspend fun addMateToProject(projectId: UUID, user: User) {
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val updatedUsers = if (user in project.users) project.users else project.users + user

@@ -11,7 +11,7 @@ class AddStateToProjectUseCase(
     private val repository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun addStateToProject(currentUserID: UUID, project: Project, state: State): Project {
+    suspend fun addStateToProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
             throw BlankFieldsException("State name is required.")
         }

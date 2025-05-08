@@ -18,7 +18,7 @@ class ProjectDataSourceImpl(
     private val fileName: String = FileName.PROJECTS
 
 ) : ProjectDataSource {
-    override fun createProject(project: Project) {
+    override suspend fun createProject(project: Project) {
         try {
             buildSuccessCreate(project)
         } catch (e: Exception) {
@@ -27,7 +27,7 @@ class ProjectDataSourceImpl(
     }
 
 
-    override fun editProject(project: Project) {
+    override suspend fun editProject(project: Project) {
         try {
             buildSuccessEditor(project)
         } catch (e: Exception) {
@@ -36,7 +36,7 @@ class ProjectDataSourceImpl(
     }
 
 
-    override fun deleteProject(id: UUID) {
+    override suspend fun deleteProject(id: UUID) {
         try {
             buildSuccessDelete(id)
         } catch (e: Exception) {
@@ -44,7 +44,7 @@ class ProjectDataSourceImpl(
         }
     }
 
-    override fun getAllProjects(): List<Project> {
+    override suspend fun getAllProjects(): List<Project> {
         return try {
             csvReader.read(fileName)
         } catch (e: FileNotFoundException) {
@@ -55,11 +55,11 @@ class ProjectDataSourceImpl(
     }
 
 
-    override fun getProject(id: UUID): Project {
+    override suspend fun getProject(id: UUID): Project {
         return csvReader.read(fileName).find { it.id == id } ?: throw NoProjectFoundException()
     }
 
-    override fun addStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             if (states.any { oldState -> haveSameStateName(oldState, state) }) {
                 throw DuplicateStateException()
@@ -69,7 +69,7 @@ class ProjectDataSourceImpl(
     }
 
 
-    override fun editStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
@@ -85,7 +85,7 @@ class ProjectDataSourceImpl(
         }
     }
 
-    override fun removeStateFromProject(projectId: UUID, state: State): Project {
+    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
@@ -99,11 +99,11 @@ class ProjectDataSourceImpl(
         }
     }
 
-    override fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
         TODO("Not yet implemented")
     }
 
-    override fun addMateToProject(projectId: UUID, user: User) {
+    override suspend fun addMateToProject(projectId: UUID, user: User) {
         modifyProjectUser(projectId) { users ->
             val updatedUser = mutableListOf<User>()
             var notFoundUser = true
@@ -120,13 +120,13 @@ class ProjectDataSourceImpl(
         }
     }
 
-    override fun getProjectsForUserById(userId: UUID): List<Project> {
+    override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
         val project = csvReader.read(fileName).filter { it.creatorUserID == userId }
         return project.ifEmpty { throw NoProjectFoundException() }
     }
 
 
-    private fun modifyProjectUser(projectId: UUID, userModifier: (List<User>) -> List<User>) {
+    private suspend fun modifyProjectUser(projectId: UUID, userModifier: (List<User>) -> List<User>) {
         val projects = getAllProjects()
 
         val (updatedProjects) = findAndUpdateProject(projects, projectId) { project ->
@@ -140,7 +140,7 @@ class ProjectDataSourceImpl(
     }
 
 
-    private fun modifyProjectState(
+    private suspend fun modifyProjectState(
         projectId: UUID, stateModifier: (List<State>) -> List<State>
     ): Project {
         val projects = getAllProjects()
@@ -177,7 +177,7 @@ class ProjectDataSourceImpl(
         return oldUser.id == newUser.id
     }
 
-    private fun buildSuccessCreate(project: Project){
+    private suspend fun buildSuccessCreate(project: Project){
         val existingProjects = getAllProjects()
         if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
             throw ProjectNotCreatedException(
@@ -187,7 +187,7 @@ class ProjectDataSourceImpl(
         csvWriter.writeToFile(existingProjects + project, fileName)
     }
 
-    private fun buildSuccessEditor(project: Project) {
+    private suspend fun buildSuccessEditor(project: Project) {
         val existingProjects = getAllProjects()
         val index = existingProjects.indexOfFirst { it.id == project.id }
         if (index == -1) {
@@ -199,7 +199,7 @@ class ProjectDataSourceImpl(
         csvWriter.writeToFile(updatedProjects, fileName)
     }
 
-    private fun buildSuccessDelete(id: UUID) {
+    private suspend fun buildSuccessDelete(id: UUID) {
         val existingProjects = getAllProjects()
         if (existingProjects.none { it.id == id }) {
             throw ProjectNotDeletedException("Project with ID $id not found")

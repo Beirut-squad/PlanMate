@@ -6,7 +6,7 @@ import org.example.models.Project
 class GetAllProjectsUseCases(
     private val projectRepository: ProjectRepository
 ) {
-    fun getAllProjects(): List<Project> {
+    suspend fun getAllProjects(): List<Project> {
         return projectRepository.getAllProjects()
     }
 }

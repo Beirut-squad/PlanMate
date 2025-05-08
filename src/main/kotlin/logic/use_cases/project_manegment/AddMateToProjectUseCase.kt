@@ -7,7 +7,7 @@ import java.util.*
 class AddMateToProjectUseCase(
     private val repository: ProjectRepository
 ) {
-    fun addMateToProject(projectId: UUID, user: User){
+    suspend fun addMateToProject(projectId: UUID, user: User){
         repository.addMateToProject(projectId, user)
     }
 }

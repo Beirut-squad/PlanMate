@@ -70,7 +70,7 @@ class SingleStateUi(
         viewer.printInfoLine("What would you like to do?")
     }
 
-    private fun updateProject() {
+    private suspend fun updateProject() {
         try {
             project = getProjectByIdUseCase.getProjectById(project.id)
         } catch (e: Exception) {

@@ -11,7 +11,7 @@ class EditProjectDescriptionUseCase(
     private val projectRepository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
-    fun editProject(project: Project, newDescription: String?, editorUserId: UUID) {
+    suspend fun editProject(project: Project, newDescription: String?, editorUserId: UUID) {
         if (newDescription.isNullOrBlank()) { throw EmptyProjectDescriptionException() }
         if (project.description == newDescription) { return }
         val editedProject = project.copy(

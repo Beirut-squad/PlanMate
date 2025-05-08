@@ -8,7 +8,7 @@ import kotlin.collections.List
 class GetProjectForMateByUserIdUseCase(
     private val repository: ProjectRepository,
 ) {
-    fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
         return repository.getAllProjects().filter {
             it.users.equals(userId)
         }

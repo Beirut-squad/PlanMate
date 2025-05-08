@@ -26,7 +26,7 @@ class ViewStateSelectedForProjectUI(
         handleUserSelection(states)
     }
 
-    private fun getProjectStates(): List<State>? {
+    private suspend fun getProjectStates(): List<State>? {
         viewer.printTitle("State Details")
 
         return try {

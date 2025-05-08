@@ -12,7 +12,7 @@ class RemoveStateFromProjectUseCase(
     private val logUseCase: CreateProjectLogUseCase
 
 ) {
-    fun removeStateFromProject(currentUserID: UUID, project: Project, state: State): Project {
+    suspend fun removeStateFromProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
             throw BlankFieldsException("State name is required.")
         }
