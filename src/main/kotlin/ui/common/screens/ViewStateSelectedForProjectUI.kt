@@ -16,14 +16,18 @@ class ViewStateSelectedForProjectUI(
     private val viewer: Viewer by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
+    private var running = true
     override fun show() {
-        val states = getProjectStates() ?: return
-        if (states.isEmpty()) {
-            viewer.printInfoLine("No states available for this project.")
-            ViewProjectsForUserUI().show()
+        running = true
+        while (running) {
+            val states = getProjectStates() ?: return
+            if (states.isEmpty()) {
+                viewer.printInfoLine("No states available for this project.")
+                running = false
+            }
+            displayStateOptions(states)
+            handleUserSelection(states)
         }
-        displayStateOptions(states)
-        handleUserSelection(states)
     }
 
     private fun getProjectStates(): List<State>? {
@@ -53,11 +57,11 @@ class ViewStateSelectedForProjectUI(
             choice != null && choice in 1..states.size -> {
                 val selectedState = states[choice - 1]
                 printStateDetails(selectedState)
-                ViewProjectsForUserUI().show()
+                running = false
             }
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
-                ViewProjectsForUserUI().show()
+                running = false
             }
         }
     }
@@ -77,7 +81,7 @@ class ViewStateSelectedForProjectUI(
                 }
             } else {
                 viewer.printInfoLine("No tasks available for this state.")
-                ViewProjectsForUserUI().show()
+                running = false
             }
         } else {
             viewer.printError("Failed to retrieve tasks: ${result.exceptionOrNull()?.message}")
