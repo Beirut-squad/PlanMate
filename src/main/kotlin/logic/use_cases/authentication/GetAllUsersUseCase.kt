@@ -8,9 +8,7 @@ import java.util.*
 class GetAllUsersUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    fun getUsers(): Result<List<User>> {
-        return runCatching {
-            authenticationRepository.getUsers().getOrThrow().filter { it.role == Role.MATE }
-        }
+    suspend fun getUsers(): List<User> {
+        return authenticationRepository.getUsers().filter { it.role == Role.MATE }
     }
 }

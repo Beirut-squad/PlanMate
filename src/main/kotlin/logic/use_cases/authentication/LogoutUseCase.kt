@@ -6,7 +6,7 @@ class LogoutUseCase(
     private val authenticationRepository: AuthenticationRepository
 ) {
 
-    fun logout(): Result<Unit> {
-        return authenticationRepository.logout()
+    suspend fun logout() {
+         authenticationRepository.logout()
     }
 }

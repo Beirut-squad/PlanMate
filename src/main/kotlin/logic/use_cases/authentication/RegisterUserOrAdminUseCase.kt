@@ -10,47 +10,21 @@ class RegisterUserOrAdminUseCase(
     private val registerMateUseCase: RegisterMateUseCase
 ) {
 
-    fun add(
+    suspend fun add(
         name: String,
         password: String,
         email: String,
-    ): Result<User> {
-        return authenticationRepository.checkIfFirstRegister()
-            .fold(
-                onSuccess = {
-                    saveUserWithEncryptedPassword(password = password, name = name, email = email)
-                },
-                onFailure = {
-                    registerMateUseCase.addUser(name = name, password = password, email = email)
-                }
+    ): User {
+        return try {
+            authenticationRepository.checkIfFirstRegister()
+            val encryptedPassword = encryptPassword.encryptPassword(password)
+            authenticationRepository.registerAdmin(
+                name = name,
+                password = encryptedPassword,
+                email = email
             )
-    }
-
-    private fun saveUserWithEncryptedPassword(password: String, name: String, email: String): Result<User> {
-        return encryptPassword.encryptPassword(password = password)
-            .fold(
-                onSuccess = { encryptedPassword ->
-                    addAdminAfterConfirmation(
-                        name = name,
-                        password = encryptedPassword,
-                        email = email
-                    )
-                },
-                onFailure = {
-                    Result.failure(it)
-                }
-            )
-    }
-
-    private fun addAdminAfterConfirmation(
-        name: String,
-        password: String,
-        email: String
-    ): Result<User> {
-        return authenticationRepository.registerAdmin(
-            name = name,
-            password = password,
-            email = email
-        )
+        } catch (e: Exception) {
+            registerMateUseCase.addUser(name = name, password = password, email = email)
+        }
     }
 }
