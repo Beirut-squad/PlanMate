@@ -6,7 +6,7 @@ import org.example.models.TaskLog
 class GetAllTaskLogsUseCase(
     private val logRepository: LogRepository
 ) {
-    fun getAllTaskLogs(): List<TaskLog> {
+    suspend fun getAllTaskLogs(): List<TaskLog> {
         return logRepository.getAllTaskLogs()
     }
 }

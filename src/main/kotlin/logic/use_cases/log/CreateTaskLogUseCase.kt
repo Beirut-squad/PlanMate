@@ -9,7 +9,7 @@ import java.util.UUID
 class CreateTaskLogUseCase(
     private val logRepository: LogRepository
 ) {
-    fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?) {
+    suspend fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?) {
         if (previousTask == null && currentTask == null)
             throw IllegalArgumentException("Both previousTask and currentTask cannot be null")
 

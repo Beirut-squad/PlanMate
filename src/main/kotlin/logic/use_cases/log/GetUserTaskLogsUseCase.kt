@@ -7,7 +7,7 @@ import java.util.UUID
 class GetUserTaskLogsUseCase(
     private val logRepository: LogRepository
 ) {
-    fun getUserTaskLogs(userId: UUID): List<TaskLog> {
+    suspend fun getUserTaskLogs(userId: UUID): List<TaskLog> {
         return logRepository.getAllTaskLogs().filter { log ->
             log.userId == userId
         }

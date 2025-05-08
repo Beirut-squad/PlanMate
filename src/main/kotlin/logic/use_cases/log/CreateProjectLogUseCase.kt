@@ -9,7 +9,7 @@ import java.util.UUID
 class CreateProjectLogUseCase(
     private val logRepository: LogRepository
 ) {
-    fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?) {
+    suspend fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?) {
         if (previousProject == null && currentProject == null)
             throw IllegalArgumentException("Both previous and current projects cannot be null")
 
