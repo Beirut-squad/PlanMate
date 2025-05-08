@@ -16,16 +16,15 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
     private val getProjectsForUserById: GetProjectsForUserByIdUseCase by inject()
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
-        val user = currentUserResult
 
-        if (user == null) {
+        if (currentUserResult == null) {
             viewer.printError("No user found")
             return
         }
         try {
-            val userProjectsResult = getProjectsForUserById.getProjectForUserById(user.id)
+            val projects = getProjectsForUserById.getProjectForUserById(currentUserResult.id)
             if (projects.isNotEmpty()) {
-                viewer.printTitle("Project For User: ${user.name}")
+                viewer.printTitle("Project For User: ${currentUserResult.name}")
                 viewer.printOptions(
                     projects.map { it.name }
                 )
@@ -48,17 +47,15 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
     }
 
     private suspend fun handleUserInput(input: Int?, projects: List<Project>): Boolean {
-        return when {
-            input == null -> {
+        return when (input) {
+            null -> {
                 viewer.printError("Please enter a valid number.")
                 true
             }
-
-            input in 1..projects.size -> {
+            in 1..projects.size -> {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
-
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
                 MateHomeUI().show()

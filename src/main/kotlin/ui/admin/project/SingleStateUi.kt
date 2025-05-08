@@ -1,13 +1,11 @@
 package org.example.ui.admin.project
 
-import EditProjectStateUi
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.models.Project
 import org.example.models.State
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.CreateNewTaskUI
 
 class SingleStateUi(
     private val viewer: Viewer,

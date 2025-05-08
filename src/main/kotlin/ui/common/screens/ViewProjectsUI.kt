@@ -10,7 +10,7 @@ class ViewProjectsUI(
 ) : UiScreen {
     override suspend fun show() {
         try {
-            val allProjects = getAllProjectsUseCases.getAllProjects()
+            val projects = getAllProjectsUseCases.getAllProjects()
             if (projects.isNotEmpty()) {
                 viewer.printTitle("Project: ")
                 projects.forEachIndexed { index, project ->

@@ -1,7 +1,6 @@
 package org.example.ui.common.screens
 
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
@@ -20,7 +19,7 @@ class ViewProjectForMateUI(
         try {
             var running = true
             while (running) {
-                val projectResult = getProjectByIdUseCase.getProjectById(projectId)
+                val project = getProjectByIdUseCase.getProjectById(projectId)
                 viewer.printInfoLine(
                     """
                 - Project Name: ${project.name}
