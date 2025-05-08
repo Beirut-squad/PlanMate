@@ -19,7 +19,7 @@ class ProjectMongoDataSourceImpl(
 ) : ProjectDataSource {
     override suspend fun createProject(project: Project) {
         withContext(Dispatchers.IO) {
-                mongoConnection.projects.insertOne(project.toDocument())
+            mongoConnection.projects.insertOne(project.toDocument())
 
         }
     }
@@ -43,7 +43,7 @@ class ProjectMongoDataSourceImpl(
     override suspend fun deleteProject(id: UUID) {
         withContext(Dispatchers.IO) {
             try {
-                mongoConnection.projects.deleteOne(Filters.eq(ID_FIELD, id.toString()))
+                mongoConnection.projects.deleteOne(eq(ID_FIELD, id.toString()))
             } catch (e: Exception) {
                 throw e
             }
@@ -97,7 +97,7 @@ class ProjectMongoDataSourceImpl(
             val project = mongoConnection.projects.find(eq(ID_FIELD, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found")
 
-            val states = (project.get(STATE_FIELD) as? List<*>)?.mapNotNull {
+            val states = (project[STATE_FIELD] as? List<*>)?.mapNotNull {
                 (it as? Document)
             }?.toMutableList() ?: mutableListOf()
 
@@ -147,14 +147,15 @@ class ProjectMongoDataSourceImpl(
     }
 
 
-    override suspend fun addMateToProject(projectId: UUID, user: User) {
-        withContext(Dispatchers.IO) {
-            val update = Updates.push(USERS_FIELD, Document(ID_FIELD, user.id.toString())
-                .append(NAME_FIELD, user.name)
-                .append(PASSWORD_FIELD, user.password)
-                .append(EMAIL_FIELD, user.email)
-                .append(ROLE_FIELD, user.role.name)
-                .append(IS_DELETED_FIELD, user.isDeleted)
+    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
+        return withContext(Dispatchers.IO) {
+            val update = Updates.push(
+                USERS_FIELD, Document(ID_FIELD, user.id.toString())
+                    .append(NAME_FIELD, user.name)
+                    .append(PASSWORD_FIELD, user.password)
+                    .append(EMAIL_FIELD, user.email)
+                    .append(ROLE_FIELD, user.role.name)
+                    .append(IS_DELETED_FIELD, user.isDeleted)
             )
 
             val result = mongoConnection.projects.updateOne(eq(ID_FIELD, projectId.toString()), update)
@@ -162,6 +163,11 @@ class ProjectMongoDataSourceImpl(
             if (result.matchedCount == 0L) {
                 throw NoSuchElementException("No project found with ID: $projectId")
             }
+
+            val updatedDoc = mongoConnection.projects.find(eq(ID_FIELD, projectId.toString())).firstOrNull()
+                ?: throw NoSuchElementException("Project not found after update")
+
+            updatedDoc.toProject()
         }
     }
 
@@ -175,7 +181,7 @@ class ProjectMongoDataSourceImpl(
 
 
     private fun Document.toStateList(): List<State> {
-        return (this.get(STATE_FIELD) as? List<*>)?.mapNotNull { stateDoc ->
+        return (this[STATE_FIELD] as? List<*>)?.mapNotNull { stateDoc ->
             (stateDoc as? Document)?.let {
                 State(
                     id = UUID.fromString(it.getString(ID_FIELD)),
@@ -211,14 +217,14 @@ class ProjectMongoDataSourceImpl(
             .append(STATE_FIELD, state.map {
                 Document(ID_FIELD, it.id.toString()).append(NAME_FIELD, it.name)
             })
-            .append(USERS_FIELD , users.map {
+            .append(USERS_FIELD, users.map {
                 Document(ID_FIELD, it.id.toString())
                     .append(NAME_FIELD, it.name)
                     .append(PASSWORD_FIELD, it.password)
                     .append(EMAIL_FIELD, it.email)
                     .append(ROLE_FIELD, it.role.name)
                     .append(IS_DELETED_FIELD, it.isDeleted)
-            } )
+            })
     }
 
     private fun State.toDocument(): Document {
@@ -226,8 +232,9 @@ class ProjectMongoDataSourceImpl(
             .append(ID_FIELD, this.id.toString())
             .append(NAME_FIELD, this.name)
     }
+
     private fun Document.toUserListFromField(fieldName: String = USERS_FIELD): List<User> {
-        return (this.get(fieldName) as? List<*>)?.mapNotNull { userDoc ->
+        return (this[fieldName] as? List<*>)?.mapNotNull { userDoc ->
             (userDoc as? Document)?.let {
                 User(
                     id = UUID.fromString(it.getString(ID_FIELD)),
@@ -240,6 +247,7 @@ class ProjectMongoDataSourceImpl(
             }
         } ?: emptyList()
     }
+
     companion object {
         private const val ID_FIELD = "_id"
         private const val NAME_FIELD = "name"
