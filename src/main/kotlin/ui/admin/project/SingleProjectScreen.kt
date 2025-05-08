@@ -23,7 +23,7 @@ class SingleProjectScreen(
     val user: User? = getCurrentLoggedInUserUseCase.getCurrentUser().getOrNull()
     private var running = true
 
-    override fun show() {
+    override suspend fun show() {
         running = true
         while (running) {
             viewer.printTitle("Project ${project.name}")
@@ -42,7 +42,7 @@ class SingleProjectScreen(
         }
     }
 
-    private fun takeUserInput() {
+    private suspend fun takeUserInput() {
         val input = reader.readInt()
         when (input) {
             1 -> {

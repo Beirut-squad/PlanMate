@@ -16,7 +16,7 @@ class AllProjectsLogsView(
     private val viewer: Viewer,
 ) : UiScreen {
 
-    override fun show() {
+    override suspend fun show() {
         getAllProjectLogsUseCase.getAllProjectLogs().fold(onFailure = {
             ErrorHandler().handle(it)
         }, onSuccess = { projectLogs ->

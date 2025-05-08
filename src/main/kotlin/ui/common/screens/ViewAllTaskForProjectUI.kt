@@ -18,39 +18,36 @@ class ViewAllTaskForProjectUI(
     private val reader: Reader by inject()
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
 
-    override fun show() {
-        val result = getTasksForProjectUseCase.getTasksForProject(projectId)
-        result.fold(
-            onSuccess = { tasks ->
-                if (tasks.isEmpty()) {
-                    viewer.printInfoLine("No tasks found for this project.")
-                    ViewProjectsForUserUI().show()
-                } else {
-                    viewer.printTitle("Tasks for Project:")
-                    displayTasksInColumns(tasks)
-                    viewer.printInfoLine("\nPlease choose an option:")
-                    viewer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
-                    val choice = reader.readInput()?.toIntOrNull()
-                    when (choice) {
-                        1 -> {
-                            EditTaskUI(projectId).show()
-                        }
+    override suspend fun show() {
+        try {
+            val result = getTasksForProjectUseCase.getTasksForProject(projectId)
+            if (result.isEmpty()) {
+                viewer.printInfoLine("No tasks found for this project.")
+                ViewProjectsForUserUI().show()
+            } else {
+                viewer.printTitle("Tasks for Project:")
+                displayTasksInColumns(result)
+                viewer.printInfoLine("\nPlease choose an option:")
+                viewer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
+                val choice = reader.readInput()?.toIntOrNull()
+                when (choice) {
+                    1 -> {
+                        EditTaskUI(projectId).show()
+                    }
 
-                        2 -> {
-                            DeleteTaskUI(projectId).show()
-                        }
+                    2 -> {
+                        DeleteTaskUI(projectId).show()
+                    }
 
-                        else -> {
-                            viewer.printGoodbyeMessage("Goodbye")
-                            ViewProjectsForUserUI().show()
-                        }
+                    else -> {
+                        viewer.printGoodbyeMessage("Goodbye")
+                        ViewProjectsForUserUI().show()
                     }
                 }
-            },
-            onFailure = {
-                viewer.printError("An error occurred while retrieving tasks: ${it.message}")
             }
-        )
+        } catch (e: Exception) {
+            viewer.printError("An error occurred while retrieving tasks: ${e.message}")
+        }
     }
 
     private fun displayTasksInColumns(tasks: List<Task>) {

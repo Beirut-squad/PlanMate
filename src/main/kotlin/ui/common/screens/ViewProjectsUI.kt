@@ -8,17 +8,14 @@ class ViewProjectsUI(
     private val viewer: Viewer,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
 ) : UiScreen {
-    override fun show() {
-
-        val allProjects = getAllProjectsUseCases.getAllProjects()
-
-        allProjects.fold(
-            onSuccess = { projects ->
-                if (projects.isNotEmpty()) {
-                    viewer.printTitle("Project: ")
-                    projects.forEachIndexed { index, project ->
-                        viewer.printInfoLine(
-                            """
+    override suspend fun show() {
+        try {
+            val projects = getAllProjectsUseCases.getAllProjects()
+            if (projects.isNotEmpty()) {
+                viewer.printTitle("Project: ")
+                projects.forEachIndexed { index, project ->
+                    viewer.printInfoLine(
+                        """
                         ${index + 1}.
                         - Made by: ${project.creatorUserID}
                         - Name: ${project.name}
@@ -26,15 +23,13 @@ class ViewProjectsUI(
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
                     """.trimIndent()
-                        )
-                    }
-                } else {
-                    viewer.printInfoLine("No projects found.")
+                    )
                 }
-            },
-            onFailure = {
-                viewer.printError("Failed to retrieve projects: ${it.message}")
+            } else {
+                viewer.printInfoLine("No projects found.")
             }
-        )
+        } catch (e: Exception) {
+            viewer.printError("Failed to retrieve projects: ${e.message}")
+        }
     }
 }

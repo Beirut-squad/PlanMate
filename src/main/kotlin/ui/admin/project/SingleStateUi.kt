@@ -23,7 +23,7 @@ class SingleStateUi(
         this.state = state
     }
 
-    override fun show() {
+    override suspend fun show() {
         while (true) {
             displayHeader()
             displayOptions()

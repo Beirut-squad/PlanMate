@@ -11,7 +11,7 @@ class CreateNewProjectScreen(
     private val createProjectUseCase: CreateProjectUseCase
 
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Let's create a project")
         viewer.printInfoLine("Write your project name")
         val name = reader.readInput()

@@ -24,7 +24,7 @@ class ViewProjectStatesUi(
         this.states = project.state
     }
 
-    override fun show() {
+    override suspend fun show() {
         while (true) {
             viewer.printTitle("Project states")
 
@@ -57,7 +57,7 @@ class ViewProjectStatesUi(
         return getProjectByIdUseCase.getProjectById(projectId)
     }
 
-    private fun displayNoStatesAndGoToCreateState() {
+    private suspend fun displayNoStatesAndGoToCreateState() {
         viewer.printTitle("You have no states, please create one first")
         CreateProjectStateUi(project).show()
     }
@@ -67,7 +67,7 @@ class ViewProjectStatesUi(
         viewer.printOptions(states.map { it.name } + "Exit")
     }
 
-    private fun goToSingleStateUi(state: State) {
+    private suspend fun goToSingleStateUi(state: State) {
         setProject(projectId)
         singleStateUi.setProject(project)
         singleStateUi.setState(state)

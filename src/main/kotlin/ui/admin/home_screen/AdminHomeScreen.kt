@@ -1,11 +1,10 @@
 package org.example.ui.admin.home_screen
 
 import org.example.ui.admin.log.AllProjectsLogsView
-import org.example.ui.common.components.Reader
-import org.example.ui.common.components.UiScreen
 import org.example.ui.admin.project.CreateNewProjectScreen
 import org.example.ui.admin.project.ViewProjectsScreen
-import org.example.ui.authentication_screens.AuthenticationMainScreen
+import org.example.ui.common.components.Reader
+import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -18,7 +17,7 @@ class AdminHomeScreen(
     private val viewProjectsScreen: ViewProjectsScreen by inject()
     private val createNewProjectScreen: CreateNewProjectScreen by inject()
     private val allProjectsLogsView: AllProjectsLogsView by inject()
-    override fun show() {
+    override suspend fun show() {
 
         while (true) {
             viewer.printInfoLine("Choose an option:")
@@ -52,15 +51,15 @@ class AdminHomeScreen(
         }
     }
 
-    private fun goToViewProjectScreen() {
+    private suspend fun goToViewProjectScreen() {
         viewProjectsScreen.show()
     }
 
-    private fun goToCreateNewProjectScreen() {
+    private suspend fun goToCreateNewProjectScreen() {
         createNewProjectScreen.show()
     }
 
-    private fun goToViewAllLogsScreen() {
+    private suspend fun goToViewAllLogsScreen() {
         allProjectsLogsView.show()
     }
 }

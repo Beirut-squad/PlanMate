@@ -10,7 +10,7 @@ class AuthenticationMainScreen(
     private val registerScreen: RegisterScreen,
     private val loginScreen: LoginScreen
 ) : UiScreen {
-    override fun show() {
+    override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate, what would you like to do?")
 
         while (true) {
@@ -41,11 +41,11 @@ class AuthenticationMainScreen(
         }
     }
 
-    private fun goToRegisterScreen() {
+    private suspend fun goToRegisterScreen() {
         registerScreen.show()
     }
 
-    private fun goToLoginScreen() {
+    private suspend fun goToLoginScreen() {
         loginScreen.show()
     }
 

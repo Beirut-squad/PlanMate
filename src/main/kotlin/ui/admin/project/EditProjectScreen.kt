@@ -18,7 +18,7 @@ class EditProjectScreen(
 
     lateinit var project: Project
 
-    override fun show() {
+    override suspend fun show() {
         var isContinueProcess = true
         while (isContinueProcess) {
             displayMenu()

@@ -1,122 +1,101 @@
 package org.example.data.datasource.task_data_source
 
 import data.csv.FileName
+import logic.exceptions.task_management_exception.*
 import org.example.data.csv.CsvReader
 import org.example.data.csv.CsvWriter
-
-import logic.exceptions.task_management_exception.GetAllTasksException
-import logic.exceptions.task_management_exception.GetTaskException
-import logic.exceptions.task_management_exception.TaskCreationException
-import logic.exceptions.task_management_exception.TaskDeletionException
-import logic.exceptions.task_management_exception.TaskEditException
 import org.example.models.Task
-import java.util.UUID
+import java.util.*
 
 class TaskDataSourceImpl(
     private val csvReader: CsvReader<Task>,
     private val csvWriter: CsvWriter<Task>,
-    private val TASKS: String = FileName.TASKS
+    private val taskFile: String = FileName.TASKS
 ) : TaskDataSource {
 
 
-    override fun createTask(task: Task): Result<Unit> {
-        return try {
-            val currentTasks = csvReader.read(TASKS)
-            val updatedTasks = addTaskToList(currentTasks, task)
-            csvWriter.writeToFile(updatedTasks, TASKS)
-            Result.success(Unit)
-        } catch (exception: Exception) {
-            Result.failure(TaskCreationException("Failed to create task: ${exception.message}"))
-        }
+    override suspend fun createTask(task: Task) {
+        val currentTasks = csvReader.read(taskFile)
+        val updatedTasks = addTaskToList(currentTasks, task)
+        if (updatedTasks.isNotEmpty())
+            csvWriter.writeToFile(updatedTasks, taskFile)
+        else
+            throw TaskCreationException("Failed to create task")
+
     }
 
-    override fun editTask(task: Task): Result<Unit> {
-        return try {
-            val currentTasks = csvReader.read(TASKS)
-            validateTasksExist(currentTasks, "No tasks found to edit")
+    override suspend fun editTask(task: Task) {
+        val currentTasks = csvReader.read(taskFile)
+        validateTasksExist(currentTasks, "No tasks found to edit")
 
-            val taskIndex = findTaskIndexById(currentTasks, task.id)
-            validateTaskExists(taskIndex, task.id, "No tasks found to edit")
+        val taskIndex = findTaskIndexById(currentTasks, task.id)
+        validateTaskExists(taskIndex, task.id, "No tasks found to edit")
 
-            val updatedTasks = updateTaskInList(currentTasks, taskIndex, task)
-            csvWriter.writeToFile(updatedTasks, TASKS)
+        val updatedTasks = updateTaskInList(currentTasks, taskIndex, task)
 
-            Result.success(Unit)
-        } catch (exception: Exception) {
-            Result.failure(TaskEditException("Failed to edit task: ${exception.message}"))
-        }
+        if (updatedTasks.isNotEmpty())
+            csvWriter.writeToFile(updatedTasks, taskFile)
+        else
+            throw TaskEditException("Failed to edit task")
     }
 
-    override fun deleteTask(id: UUID): Result<Unit> {
-        return try {
-            val currentTasks = csvReader.read(TASKS)
-            validateTasksExist(currentTasks, "No tasks found to delete")
+    override suspend fun deleteTask(id: UUID) {
+        val currentTasks = csvReader.read(taskFile)
+        validateTasksExist(currentTasks, "No tasks found to delete")
 
-            val taskIndex = findTaskIndexById(currentTasks, id)
-            validateTaskExists(taskIndex, id, "Cannot delete task")
+        val taskIndex = findTaskIndexById(currentTasks, id)
+        validateTaskExists(taskIndex, id, "Cannot delete task")
 
-            val updatedTasks = removeTaskFromList(currentTasks, taskIndex)
-            csvWriter.writeToFile(updatedTasks, TASKS)
-
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(TaskDeletionException("Failed to delete task: ${e.message}"))
-        }
+        val updatedTasks = removeTaskFromList(currentTasks, taskIndex)
+        if (updatedTasks.isNotEmpty())
+            csvWriter.writeToFile(updatedTasks, taskFile)
+        else
+            throw TaskDeletionException("Failed to delete task")
     }
 
-    override fun getAllTasks(): Result<List<Task>> {
-        return try {
-            val tasks = csvReader.read(TASKS)
+    override suspend fun getAllTasks(): List<Task> {
+        val tasks = csvReader.read(taskFile)
+        if (tasks.isEmpty()) {
             validateTasksExist(tasks, "No tasks found")
-
-            Result.success(tasks)
-
-        } catch (e: Exception) {
-            Result.failure(GetAllTasksException("Failed to read tasks: ${e.message}"))
+            throw GetAllTasksException("Failed to read tasks: ")
+        } else {
+            return tasks
         }
     }
 
-    override fun getTask(id: UUID): Result<Task> {
-        return try {
-            val tasks = csvReader.read(TASKS)
+    override suspend fun getTask(id: UUID): Task {
+        val tasks = csvReader.read(taskFile)
+        if (tasks.isEmpty())
+            throw GetTaskException("Failed to retrieve task")
+        else {
             val task = tasks.find { it.id == id }
-            if (task != null) {
-                Result.success(task)
+            if (task == null) {
+                throw GetTaskException("Task with ID $id not found")
             } else {
-                Result.failure(GetTaskException("Task with ID $id not found"))
+                return task
             }
-        } catch (e: Exception) {
-            Result.failure(GetTaskException("Failed to retrieve task: ${e.message}"))
         }
     }
 
-    override fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): Result<List<Task>> {
-        val allTasksResult = getAllTasks()
-        // if (allTasksResult.isSuccess) {
-        val tasks = allTasksResult.getOrNull() ?: emptyList()
+    override suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task> {
+        val tasks = getAllTasks()
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
-        return if (filteredTasks.isNotEmpty()) {
-            Result.success(filteredTasks)
-        } else {
-            Result.failure(Exception("No tasks found for the given project and state."))  // إذا لم تجد مهام
+        return filteredTasks.ifEmpty {
+            throw Exception("No tasks found for the given project and state.")
         }
     }
 
-    override fun getAllTasksForProject(projectId: UUID): Result<List<Task>> {
-        return try {
-            val tasks = csvReader.read(TASKS)
+    override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
+            val tasks = csvReader.read(taskFile)
             val tasksForProject = tasks.filter { it.projectId == projectId }
-            Result.success(tasksForProject)
-        } catch (e: Exception) {
-            Result.failure(GetTaskException("Failed to retrieve task: ${e.message}"))
-        }
+            return tasksForProject.ifEmpty { throw GetTaskException("Failed to retrieve task") }
     }
 
 
     private fun validateTasksExist(tasks: List<Task>, errorMessage: String) {
         if (tasks.isEmpty()) {
-            throw TaskEditException(errorMessage)
+            throw FailedToReadTaskException(errorMessage)
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.UUID
 class GetTasksForProjectUseCase(
     private val taskRepository: TaskRepository,
 ) {
-    fun getTasksForProject(projectId: UUID): Result<List<Task>> {
+    suspend fun getTasksForProject(projectId: UUID): List<Task> {
         return taskRepository.getAllTasksForProject(projectId)
 
     }
