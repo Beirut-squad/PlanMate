@@ -9,27 +9,27 @@ import java.util.*
 class LogRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : LogRepository {
-    override fun getProjectLogs(projectId: UUID): Result<List<ProjectLog>> {
+    override fun getProjectLogs(projectId: UUID): List<ProjectLog> {
         return logDataSource.getProjectLogs(projectId)
     }
 
-    override fun getTaskLogs(taskId: UUID): Result<List<TaskLog>> {
+    override fun getTaskLogs(taskId: UUID): List<TaskLog> {
         return logDataSource.getTaskLogs(taskId)
     }
 
-    override fun saveProjectLog(projectLog: ProjectLog): Result<Unit> {
-        return logDataSource.saveProjectLog(projectLog)
+    override fun saveProjectLog(projectLog: ProjectLog) {
+        logDataSource.saveProjectLog(projectLog)
     }
 
-    override fun saveTaskLog(taskLog: TaskLog): Result<Unit> {
-        return logDataSource.saveTaskLog(taskLog)
+    override fun saveTaskLog(taskLog: TaskLog) {
+        logDataSource.saveTaskLog(taskLog)
     }
 
-    override fun getAllProjectLogs(): Result<List<ProjectLog>> {
+    override fun getAllProjectLogs(): List<ProjectLog> {
         return logDataSource.getAllProjectLogs()
     }
 
-    override fun getAllTaskLogs(): Result<List<TaskLog>> {
+    override fun getAllTaskLogs(): List<TaskLog> {
         return logDataSource.getAllTaskLogs()
     }
 }

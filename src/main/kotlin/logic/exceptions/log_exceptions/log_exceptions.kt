@@ -1,4 +1,7 @@
 package org.example.logic.exceptions.log_exceptions
 
-class NoProjectLogsFoundException : Exception("No project logs found")
-class NoTaskLogsFoundException : Exception("No task logs found")
+import org.example.constants.StringConstants.Log.NO_PROJECT_LOGS_AVAILABLE
+import org.example.constants.StringConstants.Log.NO_TASK_LOGS_AVAILABLE
+
+class NoProjectLogsFoundException : Exception(NO_PROJECT_LOGS_AVAILABLE)
+class NoTaskLogsFoundException : Exception(NO_TASK_LOGS_AVAILABLE)

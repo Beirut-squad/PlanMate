@@ -3,7 +3,6 @@ package org.example.ui.mate.home_screen
 import org.example.ui.authentication_screens.AuthenticationMainScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.screens.ViewProjectLogsUI
 import org.example.ui.common.components.Viewer
 import org.example.ui.mate.home_screen.ViewProjectsForUserUI
 import org.koin.core.component.KoinComponent
@@ -14,14 +13,16 @@ class MateHomeUI() : UiScreen, KoinComponent {
     private val reader: Reader by inject()
     private val viewProjectsForUserUI: ViewProjectsForUserUI by inject()
     private val authenticationMainScreen : AuthenticationMainScreen by inject()
-    private val viewProjectLogsUI: ViewProjectLogsUI by inject()
     override fun show() {
         viewer.printTitle("Welcome to Plan Mate")
 
         while (true) {
 
             viewer.printInfoLine("Choose an option:")
-            viewer.printOptions("View Projects", "View Project Logs For User", "Exit")
+            viewer.printOptions(
+                "View Projects",
+                "Exit"
+            )
 
             val option = reader.readInt()
             when (option) {
@@ -29,13 +30,7 @@ class MateHomeUI() : UiScreen, KoinComponent {
                     goToViewProjectsScreen()
 
                 }
-
                 2 -> {
-                    goToViewProjectLogsScreen()
-
-                }
-
-                3 -> {
                     viewer.printGoodbyeMessage("Goodbye")
                     goToAuthenticationMainScreen()
                 }
@@ -48,9 +43,5 @@ class MateHomeUI() : UiScreen, KoinComponent {
     }
     private fun goToAuthenticationMainScreen() {
         authenticationMainScreen.show()
-    }
-
-    private fun goToViewProjectLogsScreen() {
-        viewProjectLogsUI.show()
     }
 }

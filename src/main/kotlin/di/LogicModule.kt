@@ -3,7 +3,6 @@ package org.example.di
 import EditStateUseCase
 import logic.use_cases.log.CreateProjectLogUseCase
 import logic.use_cases.log.CreateTaskLogUseCase
-import logic.use_cases.log.GetUserProjectLogsUseCase
 import logic.use_cases.project_manegment.EditProjectDescriptionUseCase
 import logic.use_cases.project_manegment.EditProjectNameUseCase
 import org.example.logic.use_cases.authentication.*
@@ -44,7 +43,6 @@ val logicModule = module {
     single<Encryptor> {
         EncryptorMD5Impl()
     }
-    singleOf(::GetUserProjectLogsUseCase)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::GetAllProjectLogsUseCase)
     singleOf(::GetProjectsForUserByIdUseCase)
