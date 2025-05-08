@@ -5,7 +5,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class CreateNewProjectScreen(
+class CreateNewProjectUi(
     private val viewer: Viewer,
     private val reader: Reader,
     private val createProjectUseCase: CreateProjectUseCase

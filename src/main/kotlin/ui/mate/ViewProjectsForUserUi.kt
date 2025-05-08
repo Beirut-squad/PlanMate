@@ -5,12 +5,12 @@ import org.example.logic.use_cases.project_manegment.GetProjectsForUserByIdUseCa
 import org.example.models.Project
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.project.ViewProjectForMateUI
+import org.example.ui.common.project.ViewProjectForMateUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class ViewProjectsForUserUI : UiScreen, KoinComponent {
+class ViewProjectsForUserUi : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
     private val getProjectsForUserById: GetProjectsForUserByIdUseCase by inject()
@@ -58,14 +58,14 @@ class ViewProjectsForUserUI : UiScreen, KoinComponent {
             }
             else -> {
                 viewer.printGoodbyeMessage("Goodbye")
-                MateHomeUI().show()
+                MateHomeUi().show()
                 true
             }
         }
     }
 
     private suspend fun handleProjectSelectionById(projectId: UUID) {
-        ViewProjectForMateUI(
+        ViewProjectForMateUi(
             projectId,
         ).show()
     }

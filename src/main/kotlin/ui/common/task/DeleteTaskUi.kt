@@ -1,4 +1,4 @@
-package org.example.ui.common.screens
+package org.example.ui.common.task
 
 import org.example.logic.use_cases.task_managemnt.DeleteTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
@@ -6,7 +6,7 @@ import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.ViewProjectsForUserUI
+import org.example.ui.mate.ViewProjectsForUserUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
@@ -61,7 +61,7 @@ class DeleteTaskUI(
             try {
                 deleteTaskUseCase.deleteTask(task,task.id)
                 viewer.printInfoLine("Task deleted successfully.")
-                ViewProjectsForUserUI().show()
+                ViewProjectsForUserUi().show()
             } catch (e: Exception) {
                 viewer.printError("Failed to delete task: ${e.message}")
             }

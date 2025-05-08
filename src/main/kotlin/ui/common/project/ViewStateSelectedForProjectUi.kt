@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class ViewStateSelectedForProjectUI(
+class ViewStateSelectedForProjectUi(
     private val projectId: UUID,
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()

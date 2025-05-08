@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
 
-class AddUserForProjectUI(
+class AddUserForProjectUi(
     private val projectId: UUID,
 ) :UiScreen,KoinComponent {
     private val viewer : Viewer by inject()

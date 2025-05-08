@@ -9,16 +9,14 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.io.InvalidObjectException
-import org.example.ui.common.screens.CreateNewTaskUI
-import org.example.ui.mate.ViewProjectsForUserUI
-import java.util.*
+import org.example.ui.common.task.CreateNewTaskUi
 
-class SingleProjectScreen(
+class SingleProjectUi(
     private val viewer: Viewer,
     private val reader: Reader,
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
-    private val editProjectScreen: EditProjectScreen,
+    private val editProjectUi: EditProjectUi,
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
     private val viewProjectStatesUi: ViewProjectStatesUi
 ) : UiScreen {
@@ -51,8 +49,8 @@ class SingleProjectScreen(
         val input = reader.readInt()
         when (input) {
             1 -> {
-                editProjectScreen.project = project
-                editProjectScreen.show()
+                editProjectUi.project = project
+                editProjectUi.show()
             }
 
             2 -> {
@@ -78,14 +76,14 @@ class SingleProjectScreen(
             }
 
             5 -> {
-                AddUserForProjectUI(project.id).show()
+                AddUserForProjectUi(project.id).show()
             }
 
             6 -> {
                 if (project.state.isEmpty()) {
                     viewer.printError("Cannot create a task because this project has no states.")
                 } else {
-                    CreateNewTaskUI(projectId = project.id).show()
+                    CreateNewTaskUi(projectId = project.id).show()
                 }
             }
             7 -> {

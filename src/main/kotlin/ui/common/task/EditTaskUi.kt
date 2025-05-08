@@ -1,4 +1,4 @@
-package org.example.ui.common.screens
+package org.example.ui.common.task
 
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
@@ -8,12 +8,12 @@ import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.ViewProjectsForUserUI
+import org.example.ui.mate.ViewProjectsForUserUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class EditTaskUI(
+class EditTaskUi(
     private val projectId: UUID
 ) : UiScreen, KoinComponent {
 
@@ -47,7 +47,7 @@ class EditTaskUI(
 
             if (number == null || number !in 1..tasksResult.size) {
                 viewer.printError("Invalid input. Returning to the projects screen.")
-                return ViewProjectsForUserUI().show()
+                return ViewProjectsForUserUi().show()
             }
 
             val selectedTask = tasksResult[number - 1]
@@ -81,7 +81,7 @@ class EditTaskUI(
             try {
                 editTaskUseCase.editTask(task, newTitle, newDescription, selectedState)
                 viewer.printInfoLine("Task updated successfully!")
-                ViewProjectsForUserUI().show()
+                ViewProjectsForUserUi().show()
             } catch (e: Exception) {
                 viewer.printError("Failed to update task: ${e.message}")
             }

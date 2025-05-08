@@ -5,15 +5,15 @@ import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.DeleteTaskUI
-import org.example.ui.common.screens.EditTaskUI
-import org.example.ui.mate.ViewProjectsForUserUI
+import org.example.ui.common.task.DeleteTaskUI
+import org.example.ui.common.task.EditTaskUi
+import org.example.ui.mate.ViewProjectsForUserUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
 import kotlin.getValue
 
-class ViewAllTaskForProjectUI(
+class ViewAllTaskForProjectUi(
     private val projectId: UUID,
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
@@ -25,7 +25,7 @@ class ViewAllTaskForProjectUI(
             val result = getTasksForProjectUseCase.getTasksForProject(projectId)
             if (result.isEmpty()) {
                 viewer.printInfoLine("No tasks found for this project.")
-                ViewProjectsForUserUI().show()
+                ViewProjectsForUserUi().show()
             } else {
                 viewer.printTitle("Tasks for Project:")
                 displayTasksInColumns(result)
@@ -34,7 +34,7 @@ class ViewAllTaskForProjectUI(
                 val choice = reader.readInput()?.toIntOrNull()
                 when (choice) {
                     1 -> {
-                        EditTaskUI(projectId).show()
+                        EditTaskUi(projectId).show()
                     }
 
                     2 -> {
@@ -43,7 +43,7 @@ class ViewAllTaskForProjectUI(
 
                     else -> {
                         viewer.printGoodbyeMessage("Goodbye")
-                        ViewProjectsForUserUI().show()
+                        ViewProjectsForUserUi().show()
                     }
                 }
             }

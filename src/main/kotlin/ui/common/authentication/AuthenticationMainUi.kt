@@ -1,14 +1,14 @@
-package org.example.ui.common.authentication_screens
+package org.example.ui.common.authentication
 
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class AuthenticationMainScreen(
+class AuthenticationMainUi(
     private val reader: Reader,
     private val viewer: Viewer,
-    private val registerScreen: RegisterScreen,
-    private val loginScreen: LoginScreen
+    private val registerUi: RegisterUi,
+    private val loginUi: LoginUi
 ) : UiScreen {
     override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate, what would you like to do?")
@@ -42,11 +42,11 @@ class AuthenticationMainScreen(
     }
 
     private suspend fun goToRegisterScreen() {
-        registerScreen.show()
+        registerUi.show()
     }
 
     private suspend fun goToLoginScreen() {
-        loginScreen.show()
+        loginUi.show()
     }
 
 }
