@@ -70,5 +70,6 @@ class SingleStateUi(
 
     private fun updateProject() {
         project = getProjectByIdUseCase.getProjectById(project.id).getOrThrow()
+        state = project.state.find { it.id == state.id }!!
     }
 }
