@@ -10,7 +10,7 @@ class GetAllUsersUseCase(
 ) {
     fun getUsers(): Result<List<User>> {
         return runCatching {
-            authenticationRepository.getUsers().getOrThrow().filter { it.role == Role.MATE }
+            authenticationRepository.getUsers().getOrThrow()
         }
     }
 }

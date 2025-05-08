@@ -41,9 +41,6 @@ class SingleStateUi(
                     break
                 }
                 3 -> {
-                    CreateNewTaskUI(projectId = project.id).show()
-                }
-                4 -> {
                     break
                 }
                 else -> {
@@ -59,7 +56,6 @@ class SingleStateUi(
         viewer.printOptions(
             "Edit state",
             "Delete state",
-            "Add task to state",
             "Exit"
         )
     }
