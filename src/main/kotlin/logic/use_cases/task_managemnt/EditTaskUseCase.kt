@@ -6,19 +6,20 @@ import org.example.logic.repositories.task_repository.TaskRepository
 import org.example.models.State
 import org.example.models.Task
 import java.time.LocalDateTime
+import java.util.UUID
 
 class EditTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase,
 ) {
-    suspend fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: State) {
+    suspend fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: State,editorUserId : UUID) {
         validateInputFields(newTitle, newDescription)
 
         val updatedTask = createUpdatedTask(task, newTitle, newDescription, newState)
 
         saveUpdatedTask(updatedTask)
 
-        createTaskLogUseCase.createTaskLog(task.creatorUserID, task, updatedTask)
+        createTaskLogUseCase.createTaskLog(editorUserId, task, updatedTask)
     }
 
     private fun validateInputFields(newTitle: String?, newDescription: String?) {

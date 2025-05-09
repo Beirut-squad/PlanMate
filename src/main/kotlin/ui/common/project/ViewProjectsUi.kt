@@ -1,10 +1,10 @@
-package org.example.ui.common.screens
+package org.example.ui.common.project
 
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class ViewProjectsUI(
+class ViewProjectsUi(
     private val viewer: Viewer,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
 ) : UiScreen {

@@ -9,11 +9,11 @@ import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import java.util.UUID
 
-class ViewProjectsScreen(
+class ViewProjectsUi(
     private val viewer: Viewer,
     private val reader: Reader,
     private val getAllProjectsUseCases: GetAllProjectsUseCases,
-    private val singleProjectScreen: SingleProjectScreen,
+    private val singleProjectUi: SingleProjectUi,
     private val getUserByIdUseCase: GetUserByIdUseCase
 ) : UiScreen {
     private var running = true
@@ -80,8 +80,8 @@ class ViewProjectsScreen(
     }
 
     private suspend fun goToSingleProjectScreen(project: Project) {
-        singleProjectScreen.project = project
-        singleProjectScreen.show()
+        singleProjectUi.project = project
+        singleProjectUi.show()
     }
 
     private suspend fun getUserById(id: UUID): User {

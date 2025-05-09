@@ -3,49 +3,54 @@ package org.example.di
 import org.example.ui.admin.project.EditProjectStateUi
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.ui.admin.home_screen.AdminHomeScreen
+import org.example.ui.admin.home_screen.AdminHomeUi
 import org.example.ui.admin.log.project.AllProjectLogsView
 import org.example.ui.admin.project.*
-import org.example.ui.authentication_screens.AuthenticationMainScreen
-import org.example.ui.authentication_screens.LoginScreen
-import org.example.ui.authentication_screens.RegisterScreen
+import org.example.ui.common.authentication.AuthenticationMainUi
+import org.example.ui.common.authentication.LoginUi
+import org.example.ui.common.authentication.RegisterUi
 import org.example.ui.common.components.Colors
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Viewer
-import org.example.ui.common.screens.*
-import org.example.ui.mate.home_screen.MateHomeUI
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.example.ui.mate.MateHomeUi
+import org.example.ui.mate.ViewProjectsForUserUi
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.example.ui.admin.log.project.DisplayProjectLog
+import org.example.ui.common.project.ViewAllTaskForProjectUi
+import org.example.ui.common.project.ViewProjectForMateUi
+import org.example.ui.common.project.ViewProjectsUi
+import org.example.ui.common.project.ViewStateSelectedForProjectUi
+import org.example.ui.common.task.CreateNewTaskUi
+import org.example.ui.common.task.EditTaskUi
 
 val uiModule = module {
-    singleOf(::AuthenticationMainScreen)
-    singleOf(::LoginScreen)
-    singleOf(::RegisterScreen)
+    singleOf(::AuthenticationMainUi)
+    singleOf(::LoginUi)
+    singleOf(::RegisterUi)
     singleOf(::Colors)
     singleOf(::Viewer)
     singleOf(::Reader)
-    singleOf(::AdminHomeScreen)
-    singleOf(::MateHomeUI)
-    singleOf(::ViewProjectsUI)
-    singleOf(::CreateNewProjectScreen)
+    singleOf(::AdminHomeUi)
+    singleOf(::MateHomeUi)
+    singleOf(::org.example.ui.common.project.ViewProjectsUi)
+    singleOf(::CreateNewProjectUi)
     singleOf(::GetAllProjectsUseCases)
-    singleOf(::ViewProjectsForUserUI)
-    singleOf(::ViewProjectForMateUI)
-    singleOf(::ViewStateSelectedForProjectUI)
+    singleOf(::ViewProjectsForUserUi)
+    singleOf(::ViewProjectForMateUi)
+    singleOf(::ViewStateSelectedForProjectUi)
     singleOf(::GetProjectByIdUseCase)
-    singleOf(::CreateNewTaskUI)
+    singleOf(::CreateNewTaskUi)
     singleOf(::AllProjectLogsView)
-    singleOf(::SingleProjectScreen)
-    singleOf(::EditProjectScreen)
-    singleOf(::EditTaskUI)
-    singleOf(::ViewAllTaskForProjectUI)
-    singleOf(::ViewProjectsScreen)
+    singleOf(::SingleProjectUi)
+    singleOf(::EditProjectUi)
+    singleOf(::EditTaskUi)
+    singleOf(::ViewAllTaskForProjectUi)
+    singleOf(::ViewProjectsUi)
     singleOf(::EditProjectStateUi)
     singleOf(::DeleteProjectStateUi)
     singleOf(::ViewProjectStatesUi)
     singleOf(::SingleStateUi)
-    singleOf(::AddUserForProjectUI)
+    singleOf(::AddUserForProjectUi)
     singleOf(::DisplayProjectLog)
 }

@@ -1,4 +1,4 @@
-package org.example.ui.common.screens
+package org.example.ui.common.project
 
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class ViewStateSelectedForProjectUI(
+class ViewStateSelectedForProjectUi(
     private val projectId: UUID,
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()

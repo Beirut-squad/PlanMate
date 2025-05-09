@@ -1,5 +1,6 @@
-package org.example.ui.common.screens
+package org.example.ui.common.task
 
+import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.EditTaskUseCase
 import org.example.logic.use_cases.task_managemnt.GetTasksForProjectUseCase
@@ -8,12 +9,12 @@ import org.example.models.Task
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
-import org.example.ui.mate.home_screen.ViewProjectsForUserUI
+import org.example.ui.mate.ViewProjectsForUserUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class EditTaskUI(
+class EditTaskUi(
     private val projectId: UUID
 ) : UiScreen, KoinComponent {
 
@@ -22,10 +23,18 @@ class EditTaskUI(
     private val getTasksForProjectUseCase: GetTasksForProjectUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val editTaskUseCase: EditTaskUseCase by inject()
+    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase by inject()
 
     override suspend fun show() {
         try {
             val tasksResult = getTasksForProjectUseCase.getTasksForProject(projectId)
+            val user = getCurrentLoggedInUserUseCase.getCurrentUser()
+
+            if (user == null) {
+                viewer.printError("No user found")
+                return
+            }
+
             if (tasksResult.isEmpty()) {
                 viewer.printInfoLine("No tasks available to edit.")
                 return
@@ -47,17 +56,17 @@ class EditTaskUI(
 
             if (number == null || number !in 1..tasksResult.size) {
                 viewer.printError("Invalid input. Returning to the projects screen.")
-                return ViewProjectsForUserUI().show()
+                return ViewProjectsForUserUi().show()
             }
 
             val selectedTask = tasksResult[number - 1]
-            editSelectedTask(selectedTask)
+            editSelectedTask(selectedTask, user.id)
         } catch (e: Exception) {
             viewer.printError("${e.message}")
         }
     }
 
-    private suspend fun editSelectedTask(task: Task) {
+    private suspend fun editSelectedTask(task: Task,currentUser : UUID) {
         try {
             val selectedProject = getProjectByIdUseCase.getProjectById(task.projectId)
 
@@ -79,9 +88,9 @@ class EditTaskUI(
             val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
 
             try {
-                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState)
+                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState,currentUser)
                 viewer.printInfoLine("Task updated successfully!")
-                ViewProjectsForUserUI().show()
+                ViewProjectsForUserUi().show()
             } catch (e: Exception) {
                 viewer.printError("Failed to update task: ${e.message}")
             }

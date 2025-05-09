@@ -3,19 +3,19 @@ package org.example.ui.admin.home_screen
 import org.example.ui.admin.log.project.AllProjectLogsView
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.admin.project.CreateNewProjectScreen
-import org.example.ui.admin.project.ViewProjectsScreen
+import org.example.ui.admin.project.CreateNewProjectUi
+import org.example.ui.admin.project.ViewProjectsUi
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AdminHomeScreen(
+class AdminHomeUi(
 
 ) : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val viewProjectsScreen: ViewProjectsScreen by inject()
-    private val createNewProjectScreen: CreateNewProjectScreen by inject()
+    private val viewProjectsUi: ViewProjectsUi by inject()
+    private val createNewProjectUi: CreateNewProjectUi by inject()
     private val allProjectLogsView: AllProjectLogsView by inject()
     private val allTaskLogsView: AllProjectLogsView by inject()
 
@@ -59,11 +59,11 @@ class AdminHomeScreen(
     }
 
     private suspend fun goToViewProjectScreen() {
-        viewProjectsScreen.show()
+        viewProjectsUi.show()
     }
 
     private suspend fun goToCreateNewProjectScreen() {
-        createNewProjectScreen.show()
+        createNewProjectUi.show()
     }
 
     private suspend fun goToViewAllProjectLogsScreen() {

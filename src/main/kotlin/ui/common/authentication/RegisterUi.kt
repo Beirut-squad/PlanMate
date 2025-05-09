@@ -1,15 +1,15 @@
-package org.example.ui.authentication_screens
+package org.example.ui.common.authentication
 
 import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class RegisterScreen(
+class RegisterUi(
     private val reader: Reader,
     private val viewer: Viewer,
     private val registerUseCase: RegisterUserOrAdminUseCase,
-    private val loginScreen: LoginScreen,
+    private val loginUi: LoginUi,
 
     ) : UiScreen {
     override suspend fun show() {
@@ -47,6 +47,6 @@ class RegisterScreen(
     }
 
     private suspend fun goToLoginScreen() {
-        loginScreen.show()
+        loginUi.show()
     }
 }

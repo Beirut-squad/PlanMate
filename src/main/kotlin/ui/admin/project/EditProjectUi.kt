@@ -8,7 +8,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 
-class EditProjectScreen(
+class EditProjectUi(
     private val viewer: Viewer,
     private val reader: Reader,
     private val editProjectNameUseCase: EditProjectNameUseCase,

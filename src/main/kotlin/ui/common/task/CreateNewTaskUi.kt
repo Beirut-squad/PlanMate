@@ -1,4 +1,4 @@
-package org.example.ui.common.screens
+package org.example.ui.common.task
 
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
@@ -12,7 +12,7 @@ import org.koin.core.component.inject
 import java.util.UUID
 import kotlin.getValue
 
-class CreateNewTaskUI(
+class CreateNewTaskUi(
     private val projectId: UUID,
 ) : UiScreen, KoinComponent {
 
@@ -41,7 +41,6 @@ class CreateNewTaskUI(
 
             val selectedState = selectedProject.state[selectedStateIndex]
             createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-            viewer.printError("No user found")
         } catch (e: Exception) {
             viewer.printError("Failed to retrieve project: ${e.message}")
         }

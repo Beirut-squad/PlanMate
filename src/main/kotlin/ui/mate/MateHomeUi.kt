@@ -1,17 +1,17 @@
-package org.example.ui.mate.home_screen
+package org.example.ui.mate
 
-import org.example.ui.authentication_screens.AuthenticationMainScreen
+import org.example.ui.common.authentication.AuthenticationMainUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Viewer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MateHomeUI() : UiScreen, KoinComponent {
+class MateHomeUi : UiScreen, KoinComponent {
     private val viewer: Viewer by inject()
     private val reader: Reader by inject()
-    private val viewProjectsForUserUI: ViewProjectsForUserUI by inject()
-    private val authenticationMainScreen : AuthenticationMainScreen by inject()
+    private val viewProjectsForUserUI: ViewProjectsForUserUi by inject()
+    private val authenticationMainUi : AuthenticationMainUi by inject()
 
     override suspend fun show() {
         viewer.printTitle("Welcome to Plan Mate")
@@ -42,6 +42,6 @@ class MateHomeUI() : UiScreen, KoinComponent {
         viewProjectsForUserUI.show()
     }
     private suspend fun goToAuthenticationMainScreen() {
-        authenticationMainScreen.show()
+        authenticationMainUi.show()
     }
 }
