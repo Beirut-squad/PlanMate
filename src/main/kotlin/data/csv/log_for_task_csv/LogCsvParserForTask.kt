@@ -10,8 +10,6 @@ import java.util.*
 
 class LogCsvParserForTask (private val taskCsvParser: TaskCsvParser):CsvParser<TaskLog> {
 
-
-
     override fun parseFile(csvLines: List<String>): List<TaskLog> {
         if (csvLines.isEmpty())
             return emptyList()

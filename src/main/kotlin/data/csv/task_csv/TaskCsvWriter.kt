@@ -10,8 +10,8 @@ import java.util.UUID
 
 class TaskCsvWriter : CsvWriter<Task> {
 
-    override fun writeToFile(items: List<Task>, filePath: String): Result<Unit> {
-        return runCatching {
+    override fun writeToFile(items: List<Task>, filePath: String) {
+        return try {
             val file = File("src/main/kotlin/$filePath")
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
@@ -20,6 +20,9 @@ class TaskCsvWriter : CsvWriter<Task> {
             val writer = BufferedWriter(FileWriter(file, false))
             writeTask(items, writer)
             writer.close()
+        } catch (error: Exception) {
+            println("Failed to write file: ${error.message}")
+            throw error
         }
     }
 

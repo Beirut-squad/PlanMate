@@ -9,8 +9,8 @@ import java.io.FileWriter
 import java.util.UUID
 
 class StateCsvWriter : CsvWriter<State> {
-    override fun writeToFile(items: List<State>, filePath: String): Result<Unit> {
-        return runCatching {
+    override fun writeToFile(items: List<State>, filePath: String) {
+        try {
             val file = File(filePath)
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Error: Invalid file name")
@@ -20,6 +20,9 @@ class StateCsvWriter : CsvWriter<State> {
             if (items.isNotEmpty())
                 writeState(items, writer)
             writer.close()
+        } catch (error: Exception) {
+            println("Failed to write file: ${error.message}")
+            throw error
         }
     }
 

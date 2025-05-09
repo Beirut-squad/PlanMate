@@ -8,28 +8,39 @@ import java.io.File
 import java.io.FileWriter
 import java.util.UUID
 
-class ProjectCsvWriter: CsvWriter<Project> {
-    override fun writeToFile(items: List<Project>, filePath: String): Result<Unit> {
-        return runCatching {
+class ProjectCsvWriter : CsvWriter<Project> {
+    override fun writeToFile(items: List<Project>, filePath: String) {
+        try {
             val file = File(filePath)
-           if(!isValidFileName(file.name))
-               throw IllegalArgumentException("Error : Invalid file name")
+            if (!isValidFileName(file.name))
+                throw IllegalArgumentException("Error : Invalid file name")
             val writer = BufferedWriter(FileWriter(file))
             if (file.length() == 0L)
                 writer.write("[id,name,description,creatorUserID,createdAt,updatedAt,state, user]\n")
             if (items.isNotEmpty())
-                writeProject(items,writer)
+                writeProject(items, writer)
             writer.close()
+        } catch (error: Exception) {
+            println("Failed to write file: ${error.message}")
+            throw error
         }
     }
+
     private fun writeProject(items: List<Project>, writer: BufferedWriter) {
         items.forEach { project ->
             if (isValidProject(project))
                 writer.write("[${project.id},${project.name},${project.description},${project.createdAt},${project.updatedAt},${project.state},${project.users}]\n")
         }
     }
-    internal fun isValidProject(project : Project): Boolean{
-        return project.id != UUID(0,0) && project.name.isNotBlank() && project.description.isNotBlank() && project.creatorUserID!= UUID(0,0) && project.state.isNotEmpty()
+
+    internal fun isValidProject(project: Project): Boolean {
+        return project.id != UUID(
+            0,
+            0
+        ) && project.name.isNotBlank() && project.description.isNotBlank() && project.creatorUserID != UUID(
+            0,
+            0
+        ) && project.state.isNotEmpty()
     }
 }
 

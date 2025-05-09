@@ -9,8 +9,8 @@ import java.io.FileWriter
 import java.util.*
 
 class LogCsvWriterForTask : CsvWriter<TaskLog> {
-    override fun writeToFile(items: List<TaskLog>, filePath: String): Result<Unit> {
-        return runCatching {
+    override fun writeToFile(items: List<TaskLog>, filePath: String) {
+         try {
             val file = File(filePath)
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Invalid file name")
@@ -20,6 +20,9 @@ class LogCsvWriterForTask : CsvWriter<TaskLog> {
             if (items.isNotEmpty())
                 writeTaskLog(items, writer)
             writer.close()
+        } catch (error: Exception) {
+            println("Failed to write file: ${error.message}")
+            throw error
         }
     }
 

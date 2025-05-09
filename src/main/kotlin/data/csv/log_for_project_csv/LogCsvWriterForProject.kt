@@ -9,28 +9,24 @@ import java.io.FileWriter
 import java.util.UUID
 
 class LogCsvWriterForProject : CsvWriter<ProjectLog> {
-    override fun writeToFile(items: List<ProjectLog>, filePath: String): Result<Unit> {
-        return runCatching {
-            if (items.isNotEmpty()){
-                val file = File("src/main/kotlin/$filePath")
-                if (!isValidFileName(file.name))
-                throw IllegalArgumentException("Invalid file name")
+    override fun writeToFile(items: List<ProjectLog>, filePath: String) {
+        try {
+            if (items.isEmpty()) return
+            val file = File("src/main/kotlin/$filePath")
+            if (!isValidFileName(file.name)) throw IllegalArgumentException("Invalid file name")
 
-//            if (file.length() == 0L)
-//                writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
-
-                val writer = BufferedWriter(FileWriter(file))
-                writeProjectLog(items, writer)
-                writer.close()
-            }
-
+            val writer = BufferedWriter(FileWriter(file))
+            writeProjectLog(items, writer)
+            writer.close()
+        } catch (e: Exception) {
+            println("Failed to write file: ${e.message}") // Or log properly
+            throw e // Re-throw if needed
         }
     }
 
     private fun writeProjectLog(items: List<ProjectLog>, writer: BufferedWriter) {
         items.forEach { projectLog ->
-            if (isValidProjectLog(projectLog))
-                writer.write("${projectLog.id},${projectLog.userId},${projectLog.entityId},${projectLog.currentEntity},${projectLog.currentEntity},${projectLog.createdAt}\n")
+            if (isValidProjectLog(projectLog)) writer.write("${projectLog.id},${projectLog.userId},${projectLog.entityId},${projectLog.currentEntity},${projectLog.currentEntity},${projectLog.createdAt}\n")
         }
     }
 

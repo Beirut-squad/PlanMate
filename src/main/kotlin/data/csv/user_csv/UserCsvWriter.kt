@@ -7,16 +7,16 @@ import java.io.File
 import java.util.*
 
 class UserCsvWriter : CsvWriter<User> {
-    override fun writeToFile(items: List<User>, filePath: String): Result<Unit> {
-        runCatching {
+    override fun writeToFile(items: List<User>, filePath: String) {
+        try {
             val file = File("src/main/kotlin/$filePath")
             if (!isValidFileName(file.name))
                 throw IllegalArgumentException("Error: Invalid file name")
             writeUser(items, file)
-        }.fold(
-            onSuccess = { return Result.success(Unit) },
-            onFailure = { return Result.failure(it) }
-        )
+        } catch (e: Exception) {
+            println("Failed to write file: ${e.message}")
+            throw e
+        }
     }
 
     private fun writeUser(items: List<User>, file: File) {
