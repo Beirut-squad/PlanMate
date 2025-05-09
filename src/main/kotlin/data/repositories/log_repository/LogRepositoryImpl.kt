@@ -9,9 +9,6 @@ import java.util.*
 class LogRepositoryImpl(
     private val logDataSource: LogDataSource
 ) : LogRepository {
-    override fun getProjectLogs(projectId: UUID): List<ProjectLog> {
-        return logDataSource.getProjectLogs(projectId)
-    }
 
     override fun getTaskLogs(taskId: UUID): List<TaskLog> {
         return logDataSource.getTaskLogs(taskId)

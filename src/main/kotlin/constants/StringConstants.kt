@@ -21,6 +21,8 @@ object StringConstants {
     object Log {
         const val NO_PROJECT_LOGS_AVAILABLE = "No project logs available"
         const val NO_TASK_LOGS_AVAILABLE = "No task logs available"
+        const val NULL_PROJECT_STATE_ERROR = "Both previous and current projects cannot be null"
+        const val NULL_TASK_STATE_ERROR = "Both previous and current tasks cannot be null"
     }
 
 //    // Validation

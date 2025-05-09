@@ -5,7 +5,6 @@ import org.example.models.TaskLog
 import java.util.UUID
 
 interface LogDataSource {
-    fun getProjectLogs(id: UUID): List<ProjectLog>
     fun getTaskLogs(id: UUID): List<TaskLog>
     fun saveProjectLog(projectLog: ProjectLog)
     fun saveTaskLog(taskLog: TaskLog)

@@ -17,11 +17,6 @@ class LogDataSourceImpl(
     private val csvTaskLogWriter: CsvWriter<TaskLog>,
 ) : LogDataSource {
 
-    override fun getProjectLogs(id: UUID): List<ProjectLog> {
-        return csvProjectLogReader.read(PROJECT_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
-            ?: throw NoProjectLogsFoundException()
-    }
-
     override fun getTaskLogs(id: UUID): List<TaskLog> {
         return csvTaskLogReader.read(TASK_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
             ?: throw NoTaskLogsFoundException()
