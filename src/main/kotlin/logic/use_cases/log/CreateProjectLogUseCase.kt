@@ -1,5 +1,6 @@
 package logic.use_cases.log
 
+import org.example.logic.exceptions.log_exceptions.InvalidCreateProjectLogException
 import org.example.logic.repositories.log_repository.LogRepository
 import org.example.models.Project
 import org.example.models.ProjectLog
@@ -11,7 +12,7 @@ class CreateProjectLogUseCase(
 ) {
     fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?) {
         if (previousProject == null && currentProject == null)
-            throw IllegalArgumentException("Both previous and current projects cannot be null")
+            throw InvalidCreateProjectLogException()
 
         val entityId = listOfNotNull(currentProject?.id, previousProject?.id).first()
 

@@ -2,6 +2,8 @@ package org.example.logic.exceptions.log_exceptions
 
 import org.example.constants.StringConstants.Log.NO_PROJECT_LOGS_AVAILABLE
 import org.example.constants.StringConstants.Log.NO_TASK_LOGS_AVAILABLE
+import org.example.constants.StringConstants.Log.NULL_PROJECT_STATE_ERROR
 
 class NoProjectLogsFoundException : Exception(NO_PROJECT_LOGS_AVAILABLE)
 class NoTaskLogsFoundException : Exception(NO_TASK_LOGS_AVAILABLE)
+class InvalidCreateProjectLogException : IllegalArgumentException(NULL_PROJECT_STATE_ERROR)
