@@ -27,7 +27,6 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun editProject(project: Project) {
         withContext(Dispatchers.IO) {
-            try {
                 val updateResult = mongoConnection.projects.replaceOne(
                     eq(ID_FILED, project.id.toString()),
                     project.toDocument()
@@ -35,44 +34,33 @@ class ProjectMongoDataSourceImpl(
                 if (updateResult.matchedCount == 0L) {
                     throw NoSuchElementException("No project found with ID: ${project.id}")
                 }
-            } catch (e: NoSuchElementException) {
-                throw e
-            }
+
         }
     }
 
     override suspend fun deleteProject(id: UUID) {
         withContext(Dispatchers.IO) {
-            try {
                 mongoConnection.projects.deleteOne(eq(ID_FILED, id.toString()))
-            } catch (e: Exception) {
-                throw e
-            }
+
         }
     }
 
     override suspend fun getAllProjects(): List<Project> {
         return withContext(Dispatchers.IO) {
-            try {
                 val projectsDoc = mongoConnection.projects.find().toList()
                 projectsDoc.map {
                     it?.toProject() ?: throw Exception("No any projects ")
                 }
-            } catch (e: Exception) {
-                throw e
-            }
+
         }
     }
 
     override suspend fun getProject(id: UUID): Project {
         return withContext(Dispatchers.IO) {
-            try {
                 val doc = mongoConnection.projects.find(eq(ID_FILED, id.toString())).firstOrNull()
                     ?: throw NoSuchElementException("No project found with ID: $id")
                 doc.toProject()
-            } catch (e: Exception) {
-                throw e
-            }
+
         }
     }
 
