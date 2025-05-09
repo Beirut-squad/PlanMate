@@ -3,8 +3,8 @@ package ui.common.screens
 import io.mockk.*
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Printer
 import org.example.ui.common.screens.CreateNewTaskUI
@@ -66,7 +66,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should print project info and goodbye when invalid option is selected`() {
   val project = Project(
    id = projectId,
-   name = "Test Project",
+   title = "Test Project",
    description = "Testing project",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -90,7 +90,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should print error when trying to create task but project has no states`() {
   val project = Project(
    id = projectId,
-   name = "No State Project",
+   title = "No State Project",
    description = "No states available",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -112,7 +112,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should navigate to ViewStateSelectedForProjectUI when option 1 is selected`() {
   val project = Project(
    id = projectId,
-   name = "With State",
+   title = "With State",
    description = "Project with states",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -134,7 +134,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should navigate to ViewAllTaskForProjectUI when option 2 is selected`() {
   val project = Project(
    id = projectId,
-   name = "With Tasks",
+   title = "With Tasks",
    description = "Project with tasks",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -157,7 +157,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should navigate to CreateNewTaskUI when option 3 is selected and project has states`() {
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -180,7 +180,7 @@ class ViewProjectFakeDataSourceWriterParserColumnIndexForMateUITest{
  fun `should navigate to ViewProjectsForUserUI when invalid option is selected`() {
   val project = Project(
    id = projectId,
-   name = "Another Project",
+   title = "Another Project",
    description = "With states",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),

@@ -1,7 +1,7 @@
 package org.example.data.csv.writer
 
 import org.example.data.csv.helper.isValidFileName
-import data.csv.model.Project
+import org.example.data.model.Project
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -24,11 +24,11 @@ class ProjectWriter: CsvWriter<Project> {
     private fun writeProject(items: List<Project>, writer: BufferedWriter) {
         items.forEach { project ->
             if (isValidProject(project))
-                writer.write("[${project.id},${project.name},${project.description},${project.createdAt},${project.updatedAt},${project.state},${project.users}]\n")
+                writer.write("[${project.id},${project.title},${project.description},${project.createdAt},${project.updatedAt},${project.state},${project.users}]\n")
         }
     }
     internal fun isValidProject(project : Project): Boolean{
-        return project.id != UUID(0,0) && project.name.isNotBlank() && project.description.isNotBlank() && project.creatorUserID!= UUID(0,0) && project.state.isNotEmpty()
+        return project.id != UUID(0,0) && project.title.isNotBlank() && project.description.isNotBlank() && project.creatorUserID!= UUID(0,0) && project.state.isNotEmpty()
     }
 }
 

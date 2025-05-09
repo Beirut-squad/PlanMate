@@ -1,6 +1,6 @@
 package domain.use_case.project
 
-import data.csv.model.Project
+import org.example.data.model.Project
 import domain.exception.project.EmptyProjectNameException
 import domain.use_case.log.CreateProjectLogUseCase
 import org.example.domain.repository.ProjectRepository
@@ -13,9 +13,9 @@ class EditProjectNameUseCase(
 ) {
     suspend fun editProject(project: Project, newName: String?, editorUserId: UUID) {
         if (newName.isNullOrBlank()) { throw EmptyProjectNameException() }
-        if (project.name == newName) { return }
+        if (project.title == newName) { return }
         val editedProject = project.copy(
-            name = newName,
+            title = newName,
             updatedAt = LocalDateTime.now()
         )
         projectRepository.editProject(editedProject)

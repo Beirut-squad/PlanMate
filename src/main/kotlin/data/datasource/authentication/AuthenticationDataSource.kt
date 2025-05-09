@@ -1,6 +1,6 @@
 package data.datasource.authentication
 
-import data.csv.model.User
+import org.example.data.model.User
 
 
 interface AuthenticationDataSource {

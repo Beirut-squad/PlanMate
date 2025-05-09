@@ -1,10 +1,10 @@
 package org.example.data.csv.parser
 
-import data.csv.model.Project
+import org.example.data.model.Project
 import org.example.data.csv.column_index.ProjectColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
-import data.csv.model.State
-import data.csv.model.User
+import org.example.data.model.State
+import org.example.data.model.User
 import java.time.LocalDateTime
 import java.util.*
 
@@ -33,7 +33,7 @@ class ProjectParser(private val stateCsvParser: CsvParser<State>,
         }
         return Project(
             id = UUID.fromString(parts[ProjectColumnIndex.PROJECT_ID]),
-            name = parts[ProjectColumnIndex.NAME],
+            title = parts[ProjectColumnIndex.NAME],
             description = parts[ProjectColumnIndex.DESCRIPTION],
             creatorUserID = UUID.fromString(parts[ProjectColumnIndex.CREATOR_USER_ID]),
             createdAt = LocalDateTime.parse(parts[ProjectColumnIndex.CREATED_AT]),

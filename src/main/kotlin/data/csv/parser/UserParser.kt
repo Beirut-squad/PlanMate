@@ -1,8 +1,8 @@
 package org.example.data.csv.parser
 
 import org.example.data.csv.helper.smartCsvSplit
-import data.csv.model.Role
-import data.csv.model.User
+import org.example.data.model.Role
+import org.example.data.model.User
 import org.example.data.csv.column_index.UserColumnIndex
 import java.util.*
 

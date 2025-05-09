@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.logic.use_cases.authentication.GetUserByIdUseCase
 import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
-import data.csv.model.Project
+import org.example.data.model.Project
 import org.example.ui.admin.project.SingleProjectScreen
 import org.example.ui.common.components.Printer
 import org.example.ui.admin.project.ViewProjectsScreen
@@ -28,7 +28,7 @@ class ProjectsUiScreenTest {
         // Given
         val project1 = Project(
             id = UUID.randomUUID(),
-            name = "Project Alpha",
+            title = "Project Alpha",
             description = "This is the first project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(1),
@@ -37,7 +37,7 @@ class ProjectsUiScreenTest {
         )
         val project2 = Project(
             id = UUID.randomUUID(),
-            name = "Project Beta",
+            title = "Project Beta",
             description = "This is the second project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(2),
@@ -103,7 +103,7 @@ class ProjectsUiScreenTest {
         // Given
         val project1 = Project(
             id = UUID.randomUUID(),
-            name = "Project Alpha",
+            title = "Project Alpha",
             description = "This is the first project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(1),
@@ -112,7 +112,7 @@ class ProjectsUiScreenTest {
         )
         val project2 = Project(
             id = UUID.randomUUID(),
-            name = "Project Beta",
+            title = "Project Beta",
             description = "This is the second project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(2),
@@ -136,7 +136,7 @@ class ProjectsUiScreenTest {
         // Given
         val project1 = Project(
             id = UUID.randomUUID(),
-            name = "Project Alpha",
+            title = "Project Alpha",
             description = "This is the first project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(1),
@@ -160,7 +160,7 @@ class ProjectsUiScreenTest {
         // Given
         val project1 = Project(
             id = UUID.randomUUID(),
-            name = "Project Alpha",
+            title = "Project Alpha",
             description = "This is the first project.",
             creatorUserID = UUID.randomUUID(),
             createdAt = LocalDateTime.now().minusDays(1),

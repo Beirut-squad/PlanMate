@@ -5,7 +5,7 @@ import io.mockk.*
 import org.example.logic.exceptions.ErrorHandler
 import org.example.logic.exceptions.NullInputException
 import org.example.logic.use_cases.state_usecase.DeleteStateUseCase
-import data.csv.model.State
+import org.example.data.model.State
 import org.example.ui.admin.project.DeleteProjectStateUi
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Printer

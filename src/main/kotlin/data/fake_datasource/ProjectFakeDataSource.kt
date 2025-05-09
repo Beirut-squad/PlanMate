@@ -1,8 +1,8 @@
 package org.example.data.fake_datasource
 
-import data.csv.model.Project
-import data.csv.model.State
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.State
+import org.example.data.model.User
 import data.datasource.project.ProjectDataSource
 import domain.exception.project.NoProjectFoundException
 import java.time.LocalDateTime

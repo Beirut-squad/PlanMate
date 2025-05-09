@@ -1,7 +1,7 @@
 package org.example.ui.common.task
 
-import data.csv.model.Project
-import data.csv.model.Task
+import org.example.data.model.Project
+import org.example.data.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.EditTaskUseCase
@@ -44,7 +44,7 @@ class EditTaskUi(
                 printer.printInfoLine(
                     """
                         Task #${index + 1}
-                        - Title: ${task.name}
+                        - Title: ${task.title}
                         - Description: ${task.description}
                         - State: ${task.state.name}
                         """.trimIndent()
@@ -70,17 +70,17 @@ class EditTaskUi(
         try {
             val selectedProject = getProjectByIdUseCase.getProjectById(task.projectId)
 
-            printer.printTitle("Edit Task - ${task.name}")
+            printer.printTitle("Edit Task - ${task.title}")
             printer.printInfoLine("Current Task Details:")
             printer.printInfoLine(
                 """
-            Title: ${task.name}
+            Title: ${task.title}
             Description: ${task.description}
             State: ${task.state.name}
             """.trimIndent()
             )
 
-            val newTitle = getValidInput("Enter new Title (Leave empty to keep the current):", task.name)
+            val newTitle = getValidInput("Enter new Title (Leave empty to keep the current):", task.title)
             val newDescription =
                 getValidInput("Enter new Description (Leave empty to keep the current):", task.description)
 

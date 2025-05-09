@@ -1,7 +1,7 @@
 package domain.use_case.project
 
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import domain.exception.project.BlankFieldsException
 import domain.use_case.log.CreateProjectLogUseCase
 import org.example.domain.repository.ProjectRepository

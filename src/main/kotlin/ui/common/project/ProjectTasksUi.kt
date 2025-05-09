@@ -1,6 +1,6 @@
 package org.example.ui.common.project
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import domain.use_case.task.GetProjectTasksUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
@@ -62,7 +62,7 @@ class ProjectTasksUi(
         for (i in 0 until maxTaskCount) {
             val rowContent = stateNames.joinToString("") { stateName ->
                 val task = groupedTasks[stateName]?.getOrNull(i)
-                val displayText = task?.name ?: ""
+                val displayText = task?.title ?: ""
                 displayText.padEnd(30)
             }
             printer.printInfoLine(rowContent)

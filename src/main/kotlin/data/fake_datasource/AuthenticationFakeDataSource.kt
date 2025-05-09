@@ -1,7 +1,7 @@
 package org.example.data.fake_datasource
 
-import data.csv.model.Role
-import data.csv.model.User
+import org.example.data.model.Role
+import org.example.data.model.User
 import data.datasource.authentication.AuthenticationDataSource
 import domain.exception.authentication.EmailAlreadyExistsException
 import domain.exception.authentication.InvalidEmailOrPasswordException

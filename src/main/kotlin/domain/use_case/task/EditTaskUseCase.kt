@@ -1,7 +1,7 @@
 package domain.use_case.task
 
-import data.csv.model.State
-import data.csv.model.Task
+import org.example.data.model.State
+import org.example.data.model.Task
 import domain.use_case.log.CreateTaskLogUseCase
 import org.example.domain.exceptions.task_management_exception.NoFieldsToUpdateException
 import org.example.domain.repository.TaskRepository
@@ -33,7 +33,7 @@ class EditTaskUseCase(
 
     private fun createUpdatedTask(task: Task, newTitle: String?, newDescription: String?, newState: State): Task {
         return task.copy(
-            name = newTitle?.takeIf { it.isNotBlank() } ?: task.name,
+            title = newTitle?.takeIf { it.isNotBlank() } ?: task.title,
             description = newDescription?.takeIf { it.isNotBlank() } ?: task.description,
             state = newState,
             updatedAt = LocalDateTime.now()

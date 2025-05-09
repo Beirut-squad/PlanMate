@@ -1,6 +1,6 @@
 package org.example.domain.repository
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import java.util.*
 
 interface TaskRepository {

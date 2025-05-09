@@ -2,7 +2,7 @@ package ui.admin.project
 
 import io.mockk.*
 import org.example.logic.use_cases.project_manegment.AddStateToProjectUseCase
-import data.csv.model.State
+import org.example.data.model.State
 import domain.use_case.state.CreateStateUseCase
 import org.example.ui.admin.project.CreateProjectStateUi
 import org.example.ui.common.components.Reader

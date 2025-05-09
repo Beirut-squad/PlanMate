@@ -1,4 +1,4 @@
-package domain.model
+package org.example.domain.models
 
 import org.example.data.model.Task
 import java.time.LocalDateTime

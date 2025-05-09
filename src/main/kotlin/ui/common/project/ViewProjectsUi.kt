@@ -18,7 +18,7 @@ class ViewProjectsUi(
                         """
                         ${index + 1}.
                         - Made by: ${project.creatorUserID}
-                        - Name: ${project.name}
+                        - Name: ${project.title}
                         - Description: ${project.description}
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}

@@ -1,8 +1,8 @@
 package org.example.domain.repository
 
-import data.csv.model.Project
-import data.csv.model.State
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.State
+import org.example.data.model.User
 import java.util.UUID
 
 interface ProjectRepository {

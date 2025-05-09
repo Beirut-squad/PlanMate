@@ -4,9 +4,9 @@ import io.mockk.*
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
 import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
 import org.example.logic.use_cases.task_managemnt.GetTaskByStateIdAndProjectId
-import data.csv.model.Project
-import data.csv.model.State
-import data.csv.model.Task
+import org.example.data.model.Project
+import org.example.data.model.State
+import org.example.data.model.Task
 import org.example.ui.common.components.Printer
 import org.example.ui.common.screens.ViewStateSelectedForProjectUI
 import org.example.ui.mate.home_screen.ViewProjectsForUserUI
@@ -52,7 +52,7 @@ fun tearDown(){
   // Given
   val project = Project(
    id = projectId,
-   name = "No States Project",
+   title = "No States Project",
    description = "No states available",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -89,7 +89,7 @@ fun tearDown(){
   val task = Task(
    id = UUID.randomUUID(),
    projectId = UUID.randomUUID(),
-   name = "Test Task",
+   title = "Test Task",
    description = "Task for testing state options",
    state = State(UUID.randomUUID(), "To Do"),
    creatorUserID = UUID.randomUUID(),
@@ -100,7 +100,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "To Do")
   val project = Project(
    id = projectId,
-   name = "Project with States",
+   title = "Project with States",
    description = "Contains states",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -132,7 +132,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "To Do")
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -158,7 +158,7 @@ fun tearDown(){
   // Given
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -186,7 +186,7 @@ fun tearDown(){
   val task = Task(
    id = UUID.randomUUID(),
    projectId = UUID.randomUUID(),
-   name = "Task 1",
+   title = "Task 1",
    description = "Task description",
    state = State(state.id, "To Do"),
    creatorUserID = UUID.randomUUID(),
@@ -196,7 +196,7 @@ fun tearDown(){
 
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -229,7 +229,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "To Do")
   val project = Project(
    id = projectId,
-   name = "Project with No Tasks in State",
+   title = "Project with No Tasks in State",
    description = "There are no tasks in the selected state",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -259,7 +259,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "In Progress")
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -286,7 +286,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "To Do")
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -319,7 +319,7 @@ fun tearDown(){
   val state = State(UUID.randomUUID(), "To Do")
   val project = Project(
    id = projectId,
-   name = "Valid Project",
+   title = "Valid Project",
    description = "Can create task",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),
@@ -349,7 +349,7 @@ fun tearDown(){
   val state2 = State(UUID.randomUUID(), "In Progress")
   val project = Project(
    id = projectId,
-   name = "Project with Multiple States",
+   title = "Project with Multiple States",
    description = "Contains multiple states",
    createdAt = LocalDateTime.now(),
    updatedAt = LocalDateTime.now(),

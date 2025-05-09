@@ -1,6 +1,6 @@
 package domain.use_case.task
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import org.example.domain.repository.TaskRepository
 import java.util.*
 

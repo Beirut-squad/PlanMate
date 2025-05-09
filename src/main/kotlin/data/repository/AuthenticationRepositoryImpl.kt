@@ -1,6 +1,6 @@
 package org.example.data.repository
 
-import data.csv.model.User
+import org.example.data.model.User
 import data.datasource.authentication.AuthenticationDataSource
 import org.example.domain.repository.AuthenticationRepository
 

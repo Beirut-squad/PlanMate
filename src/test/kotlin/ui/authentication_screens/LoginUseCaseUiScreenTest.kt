@@ -6,7 +6,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.example.logic.use_cases.authentication.LoginUseCase
-import data.csv.model.Role
+import org.example.data.model.Role
 import org.example.ui.common.components.Reader
 import org.example.ui.authentication_screens.LoginScreen
 import org.example.ui.admin.home_screen.AdminHomeScreen

@@ -6,7 +6,7 @@ import io.mockk.impl.annotations.MockK
 import logic.use_cases.project_manegment.EditProjectDescriptionUseCase
 import logic.use_cases.project_manegment.EditProjectNameUseCase
 import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
-import data.csv.model.Project
+import org.example.data.model.Project
 import org.example.ui.admin.project.EditProjectScreen
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.Printer

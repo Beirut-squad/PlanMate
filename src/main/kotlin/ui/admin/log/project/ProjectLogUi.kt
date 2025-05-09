@@ -1,8 +1,8 @@
 package org.example.ui.admin.log.project
 
-import data.csv.model.Project
-import data.csv.model.ProjectLog
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.ProjectLog
+import org.example.data.model.State
 import domain.use_case.authentication.GetUserByIdUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.extensions.formatDateTime
@@ -36,7 +36,7 @@ open class ProjectLogUi(
         val currentProject = projectLog.currentEntity
         val userName = getUserName(projectLog.userId)
         printer.printCorrectOutput(
-            "${index + 1}. User $userName created new project ${currentProject?.name} at ${currentProject?.createdAt?.formatDateTime()}"
+            "${index + 1}. User $userName created new project ${currentProject?.title} at ${currentProject?.createdAt?.formatDateTime()}"
         )
     }
 
@@ -44,7 +44,7 @@ open class ProjectLogUi(
         val previousProject = projectLog.previousEntity
         val userName = getUserName(projectLog.userId)
         printer.printCorrectOutput(
-            "${index + 1}. User $userName deleted project ${previousProject?.name} at ${previousProject?.updatedAt?.formatDateTime()}"
+            "${index + 1}. User $userName deleted project ${previousProject?.title} at ${previousProject?.updatedAt?.formatDateTime()}"
         )
     }
 
@@ -61,10 +61,10 @@ open class ProjectLogUi(
     private fun handleNameChange(
         index: Int, userName: String?, previousProject: Project?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
-        if (previousProject?.name != currentProject?.name) {
+        val projectName = currentProject?.title
+        if (previousProject?.title != currentProject?.title) {
             printer.printCorrectOutput(
-                "${index + 1}. User $userName changed project $projectName name from ${previousProject?.name} to ${currentProject?.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                "${index + 1}. User $userName changed project $projectName name from ${previousProject?.title} to ${currentProject?.title} at ${currentProject?.updatedAt?.formatDateTime()}"
             )
         }
     }
@@ -72,7 +72,7 @@ open class ProjectLogUi(
     private fun handleDescriptionChange(
         index: Int, userName: String?, previousProject: Project?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
+        val projectName = currentProject?.title
         if (previousProject?.description != currentProject?.description) {
             printer.printCorrectOutput(
                 "${index + 1}. User $userName changed project $projectName description from ${previousProject?.description} to ${currentProject?.description} at ${currentProject?.updatedAt?.formatDateTime()}"
@@ -100,7 +100,7 @@ open class ProjectLogUi(
     private fun handleStateAddition(
         index: Int, userName: String?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
+        val projectName = currentProject?.title
         printer.printCorrectOutput(
             "${index + 1}. User $userName added new state ${currentProject?.state?.last()?.name} to project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
         )
@@ -109,7 +109,7 @@ open class ProjectLogUi(
     private fun handleStateEdition(
         index: Int, userName: String?, previousProject: Project?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
+        val projectName = currentProject?.title
         val previousState = previousProject?.state.orEmpty()
         val currentState = currentProject?.state.orEmpty()
         findFirstStateChange(oldStates = previousState, updatedStates = currentState)?.let { (oldState, newState) ->
@@ -131,7 +131,7 @@ open class ProjectLogUi(
     private fun handleStateRemoval(
         index: Int, userName: String?, previousProject: Project?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
+        val projectName = currentProject?.title
         val deletedState = (previousProject?.state.orEmpty() - currentProject?.state.orEmpty().toSet()).first()
         printer.printCorrectOutput(
             "${index + 1}. User $userName deleted state ${deletedState.name} from project $projectName at ${currentProject?.updatedAt?.formatDateTime()}"
@@ -154,7 +154,7 @@ open class ProjectLogUi(
     private fun handleAssignedUserAddition(
         index: Int, userName: String?, currentProject: Project?
     ) {
-        val projectName = currentProject?.name
+        val projectName = currentProject?.title
         printer.printCorrectOutput(
             "${index + 1}. User $userName assigned user ${
                 currentProject?.users.orEmpty().last().name

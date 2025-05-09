@@ -1,7 +1,7 @@
 package creator_helper
 
-import data.csv.model.Project
-import data.csv.model.ProjectLog
+import org.example.data.model.Project
+import org.example.data.model.ProjectLog
 import java.time.LocalDateTime
 import java.util.*
 

@@ -1,6 +1,6 @@
 package org.example.domain.repository
 
-import data.csv.model.User
+import org.example.data.model.User
 
 interface AuthenticationRepository {
     suspend fun login(email: String, password: String): User

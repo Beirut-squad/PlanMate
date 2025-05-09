@@ -2,7 +2,7 @@ package data.repository.project
 
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
-import data.csv.model.Project
+import org.example.data.model.Project
 import data.datasource.project.ProjectDataSource
 import io.mockk.every
 import io.mockk.mockk

@@ -23,7 +23,7 @@ class ProjectMateUi(
                 val project = getProjectByIdUseCase.getProjectById(projectId)
                 printer.printInfoLine(
                     """
-                - Project Name: ${project.name}
+                - Project Name: ${project.title}
                 - Description: ${project.description}
                 - Created At: ${project.createdAt}
                 """.trimIndent()

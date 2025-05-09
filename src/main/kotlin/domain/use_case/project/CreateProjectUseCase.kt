@@ -1,7 +1,7 @@
 package domain.use_case.project
 
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import domain.exception.project.BlankFieldsException
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase
@@ -30,7 +30,7 @@ class CreateProjectUseCase(
             : Project {
         return Project(
             id = UUID.randomUUID(),
-            name = name,
+            title = name,
             description = description,
             state = stateNames.map { State(id = UUID.randomUUID(), name = it) },
             creatorUserID = creatorUserID,

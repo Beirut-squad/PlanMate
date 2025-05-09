@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import data.csv.model.Project
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.User
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.project.GetAllProjectsUseCase
 import org.example.ui.common.components.Printer
@@ -30,7 +30,7 @@ class ProjectsUi(
                             """
                         ${index + 1}.
                         - Made by: ${getUserById(project.creatorUserID).name}
-                        - Name: ${project.name}
+                        - Name: ${project.title}
                         - Description: ${project.description}
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
@@ -52,7 +52,7 @@ class ProjectsUi(
 
     private suspend fun chooseProject(projects: List<Project>) {
         printer.printInfoLine("Choose project: ")
-        printer.printOptions(projects.map { it.name } + "Exit")
+        printer.printOptions(projects.map { it.title } + "Exit")
 
         enterProject(projects)
     }

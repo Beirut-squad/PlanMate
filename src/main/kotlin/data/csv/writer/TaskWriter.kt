@@ -1,7 +1,7 @@
 package org.example.data.csv.writer
 
 import org.example.data.csv.helper.isValidFileName
-import data.csv.model.Task
+import org.example.data.model.Task
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -28,7 +28,7 @@ class TaskWriter : CsvWriter<Task> {
                 writer.write(
                     "${task.id}," +
                             "${task.projectId}," +
-                            "${task.name}," +
+                            "${task.title}," +
                             "${task.description}," +
                             "[${task.state.id},${task.state.name}]," +
                             "${task.creatorUserID}," +
@@ -41,6 +41,6 @@ class TaskWriter : CsvWriter<Task> {
     internal fun isValidTask(task: Task): Boolean {
         return task.id != UUID(0, 0) && task.description.isNotBlank()
                 && task.creatorUserID != UUID(0, 0)
-                && task.name.isNotBlank()
+                && task.title.isNotBlank()
     }
 }

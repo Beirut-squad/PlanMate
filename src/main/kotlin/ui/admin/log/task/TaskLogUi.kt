@@ -1,6 +1,6 @@
 package ui.admin.log.task
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import domain.model.TaskLog
 import domain.use_case.authentication.GetUserByIdUseCase
 import org.example.ui.common.components.Printer
@@ -35,7 +35,7 @@ open class TaskLogUi(
         val currentTask = taskLog.currentEntity
         val userName = getUserName(taskLog.userId)
         printer.printCorrectOutput(
-            "${index + 1}. User $userName created new task ${currentTask?.name} at ${currentTask?.createdAt?.formatDateTime()}"
+            "${index + 1}. User $userName created new task ${currentTask?.title} at ${currentTask?.createdAt?.formatDateTime()}"
         )
     }
 
@@ -43,7 +43,7 @@ open class TaskLogUi(
         val previousTask = taskLog.previousEntity
         val userName = getUserName(taskLog.userId)
         printer.printCorrectOutput(
-            "${index + 1}. User $userName deleted task ${previousTask?.name} at ${previousTask?.updatedAt?.formatDateTime()}"
+            "${index + 1}. User $userName deleted task ${previousTask?.title} at ${previousTask?.updatedAt?.formatDateTime()}"
         )
     }
 
@@ -59,10 +59,10 @@ open class TaskLogUi(
     private fun handleNameChange(
         index: Int, userName: String?, previousTask: Task?, currentTask: Task?
     ) {
-        val taskName = currentTask?.name
-        if (previousTask?.name != currentTask?.name) {
+        val taskName = currentTask?.title
+        if (previousTask?.title != currentTask?.title) {
             printer.printCorrectOutput(
-                "${index + 1}. User $userName changed task $taskName name from ${previousTask?.name} to ${currentTask?.name} at ${currentTask?.updatedAt?.formatDateTime()}"
+                "${index + 1}. User $userName changed task $taskName name from ${previousTask?.title} to ${currentTask?.title} at ${currentTask?.updatedAt?.formatDateTime()}"
             )
         }
     }
@@ -70,7 +70,7 @@ open class TaskLogUi(
     private fun handleDescriptionChange(
         index: Int, userName: String?, previousTask: Task?, currentTask: Task?
     ) {
-        val taskName = currentTask?.name
+        val taskName = currentTask?.title
         if (previousTask?.description != currentTask?.description) {
             printer.printCorrectOutput(
                 "${index + 1}. User $userName changed task $taskName description from ${previousTask?.description} to ${currentTask?.description} at ${currentTask?.updatedAt?.formatDateTime()}"
@@ -81,7 +81,7 @@ open class TaskLogUi(
     private fun handleStateChanges(
         index: Int, userName: String?, previousTask: Task?, currentTask: Task?
     ) {
-        val taskName = currentTask?.name
+        val taskName = currentTask?.title
         val previousStates = previousTask?.state
         val currentStates = currentTask?.state
         printer.printCorrectOutput(

@@ -1,7 +1,7 @@
 package org.example.data.csv.parser
 
-import data.csv.model.State
-import data.csv.model.Task
+import org.example.data.model.State
+import org.example.data.model.Task
 import org.example.data.csv.column_index.TaskColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
 import java.time.LocalDateTime
@@ -34,7 +34,7 @@ class TaskParser(
         return Task(
             id = UUID.fromString(parts[TaskColumnIndex.ID]),
             projectId = UUID.fromString(parts[TaskColumnIndex.PROJECT_ID]),
-            name = parts[TaskColumnIndex.NAME],
+            title = parts[TaskColumnIndex.NAME],
             description = parts[TaskColumnIndex.DESCRIPTION],
             state = stateCsvParser.parseLine(parts[TaskColumnIndex.STATE])!!,
             creatorUserID = UUID.fromString(parts[TaskColumnIndex.CREATOR_USER_ID]),

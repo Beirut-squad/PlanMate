@@ -43,7 +43,7 @@ class EditProjectFakeDataSourceWriterParserColumnIndexUiTest {
         )
 
         //Then
-        project.name = newName
+        project.title = newName
         project.description = newDescription
         verify(exactly = 1) {
             projectRepository.editProject(project)
@@ -57,7 +57,7 @@ class EditProjectFakeDataSourceWriterParserColumnIndexUiTest {
             )
         }
 
-        assertEquals(newName, project.name)
+        assertEquals(newName, project.title)
         assertEquals(newDescription, project.description)
     }
 

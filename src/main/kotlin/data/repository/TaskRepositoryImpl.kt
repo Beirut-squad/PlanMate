@@ -1,6 +1,6 @@
 package org.example.data.repository
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import data.datasource.task.TaskDataSource
 import org.example.domain.repository.TaskRepository
 import java.util.*

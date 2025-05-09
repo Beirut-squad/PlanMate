@@ -1,8 +1,8 @@
 package domain.use_case.task
 
 
-import data.csv.model.State
-import data.csv.model.Task
+import org.example.data.model.State
+import org.example.data.model.Task
 import domain.exception.project.BlankFieldsException
 import domain.use_case.log.CreateTaskLogUseCase
 import org.example.domain.repository.TaskRepository
@@ -30,7 +30,7 @@ class CreateTaskUseCase(
         return Task(
             id = UUID.randomUUID(),
             projectId = projectId,
-            name = title,
+            title = title,
             description = description,
             state = state,
             creatorUserID = creatorUserID,

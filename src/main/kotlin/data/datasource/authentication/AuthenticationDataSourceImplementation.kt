@@ -4,8 +4,8 @@ import org.example.data.csv.helper.FileName.CURRENT_USER_FILE
 import org.example.data.csv.helper.FileName.REGISTERED_USERS_FILE
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
-import data.csv.model.Role
-import data.csv.model.User
+import org.example.data.model.Role
+import org.example.data.model.User
 import domain.exception.authentication.*
 import java.util.*
 

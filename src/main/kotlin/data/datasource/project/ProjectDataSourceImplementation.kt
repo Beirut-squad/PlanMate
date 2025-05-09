@@ -1,9 +1,9 @@
 package data.datasource.project
 
 
-import data.csv.model.Project
-import data.csv.model.State
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.State
+import org.example.data.model.User
 import domain.exception.project.*
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
@@ -181,9 +181,9 @@ class ProjectDataSourceImplementation(
 
     private suspend fun buildSuccessCreate(project: Project) {
         val existingProjects = getAllProjects()
-        if (existingProjects.any { it.name == project.name && it.creatorUserID == project.creatorUserID }) {
+        if (existingProjects.any { it.title == project.title && it.creatorUserID == project.creatorUserID }) {
             throw ProjectNotCreatedException(
-                "Project '${project.name}' already exists for user ${project.creatorUserID}"
+                "Project '${project.title}' already exists for user ${project.creatorUserID}"
             )
         }
         csvWriter.writeToFile(existingProjects + project, fileName)

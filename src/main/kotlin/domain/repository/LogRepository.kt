@@ -1,6 +1,6 @@
 package org.example.domain.repository
 
-import data.csv.model.ProjectLog
+import org.example.data.model.ProjectLog
 import domain.model.TaskLog
 import java.util.*
 

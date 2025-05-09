@@ -1,7 +1,7 @@
 package creator_helper
 
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import java.time.LocalDateTime
 import java.util.*
 
@@ -16,7 +16,7 @@ fun createProjectHelper(
 ): Project {
     return Project(
         id = id,
-        name = name,
+        title = name,
         description = description,
         creatorUserID = creatorUserID,
         createdAt = createdAt,

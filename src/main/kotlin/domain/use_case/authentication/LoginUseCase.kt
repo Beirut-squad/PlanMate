@@ -1,6 +1,6 @@
 package domain.use_case.authentication
 
-import data.csv.model.User
+import org.example.data.model.User
 import org.example.domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 

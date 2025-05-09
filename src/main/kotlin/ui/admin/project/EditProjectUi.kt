@@ -1,6 +1,6 @@
 package org.example.ui.admin.project
 
-import data.csv.model.Project
+import org.example.data.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.EditProjectDescriptionUseCase
 import domain.use_case.project.EditProjectNameUseCase

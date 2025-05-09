@@ -17,7 +17,7 @@ import org.example.logic.exceptions.project_magement_exceptions.ProjectNotGetAll
 import org.example.logic.exceptions.project_magement_exceptions.DuplicateStateException
 import org.example.logic.exceptions.project_magement_exceptions.NoProjectFoundException
 import org.example.logic.exceptions.project_magement_exceptions.NoStateException
-import data.csv.model.Project
+import org.example.data.model.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.*
 import java.io.IOException
@@ -186,7 +186,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
     fun `editProject should update existing project in CSV`() {
         // Given
         val existingProject = createProjectHelper()
-        val updatedProject = existingProject.copy(name = "Updated Name")
+        val updatedProject = existingProject.copy(title = "Updated Name")
 
         every { csvReader.read(any()) } returns listOf(existingProject)
         every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
@@ -201,7 +201,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
                 match { projects ->
                     projects.size == 1 &&
                             projects[0].id == updatedProject.id &&
-                            projects[0].name == "Updated Name" &&
+                            projects[0].title == "Updated Name" &&
                             projects[0].updatedAt.isAfter(existingProject.updatedAt)
                 },
                 any()
@@ -228,7 +228,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
     fun `editProject should fail when CSV write fails`() {
         // Given
         val existingProject = createProjectHelper()
-        val updatedProject = existingProject.copy(name = "Updated")
+        val updatedProject = existingProject.copy(title = "Updated")
 
         every { csvReader.read(any()) } returns listOf(existingProject)
         every { csvWriter.writeToFile(any(), any()) } throws Exception("Write failed")
@@ -351,7 +351,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
             assertTrue(result.isSuccess)
             verify {
                 csvWriter.writeToFile(
-                    match { it.size == 1 && it[0].name == testProject.name },
+                    match { it.size == 1 && it[0].title == testProject.title },
                     any()
                 )
             }
@@ -383,7 +383,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
         fun `buildSuccessEditor should update project successfully`() {
             // Given
             val existingProject = createProjectHelper()
-            val updatedProject = existingProject.copy(name = "Updated Name")
+            val updatedProject = existingProject.copy(title = "Updated Name")
 
             every { csvReader.read(any()) } returns listOf(existingProject)
             every { csvWriter.writeToFile(any(), any()) } returns Result.success(Unit)
@@ -398,7 +398,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
                     match { projects ->
                         projects.size == 1 &&
                                 projects[0].id == updatedProject.id &&
-                                projects[0].name == "Updated Name"
+                                projects[0].title == "Updated Name"
                     },
                     any()
                 )
@@ -452,7 +452,7 @@ class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
         val expectedProject = result.getOrNull()
         assertNotNull(expectedProject)
         assertThat(expectedProject?.id).isEqualTo(project.id)
-        assertThat(expectedProject?.name).isEqualTo(project.name)
+        assertThat(expectedProject?.name).isEqualTo(project.title)
         assertThat(expectedProject?.description).isEqualTo(project.description)
         assertThat(expectedProject?.creatorUserID).isEqualTo(project.creatorUserID)
         assertThat(expectedProject?.createdAt).isEqualTo(project.createdAt)

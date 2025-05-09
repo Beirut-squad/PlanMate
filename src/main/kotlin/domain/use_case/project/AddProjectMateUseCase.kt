@@ -1,6 +1,6 @@
 package domain.use_case.project
 
-import data.csv.model.User
+import org.example.data.model.User
 import domain.exception.authentication.NoLoggedInUserException
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase

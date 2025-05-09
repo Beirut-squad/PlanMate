@@ -1,4 +1,4 @@
-package data.csv.model
+package org.example.data.model
 
 import java.time.LocalDateTime
 import java.util.UUID

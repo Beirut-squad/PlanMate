@@ -4,7 +4,7 @@ import org.example.data.csv.helper.FileName.PROJECT_LOG
 import org.example.data.csv.helper.FileName.TASK_LOG
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
-import data.csv.model.ProjectLog
+import org.example.data.model.ProjectLog
 import domain.exception.log.NoProjectLogsFoundException
 import domain.exception.log.NoTaskLogsFoundException
 import domain.model.TaskLog

@@ -1,6 +1,6 @@
 package org.example.ui.mate
 
-import data.csv.model.Project
+import org.example.data.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetUserProjectsByIdUseCase
 import org.example.ui.common.components.Printer
@@ -26,7 +26,7 @@ class UserProjectsUi : UiScreen, KoinComponent {
             if (projects.isNotEmpty()) {
                 printer.printTitle("Project For User: ${currentUserResult.name}")
                 printer.printOptions(
-                    projects.map { it.name }
+                    projects.map { it.title }
                 )
                 printer.printTitle("Select a project to view details:")
                 handleProjectSelection(projects)

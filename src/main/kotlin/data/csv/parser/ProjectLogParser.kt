@@ -1,6 +1,6 @@
 package org.example.data.csv.parser
 
-import data.csv.model.ProjectLog
+import org.example.data.model.ProjectLog
 import org.example.data.csv.column_index.ProjectLogColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
 import java.time.LocalDateTime

@@ -1,7 +1,7 @@
 package creator_helper
 
-import data.csv.model.State
-import data.csv.model.Task
+import org.example.data.model.State
+import org.example.data.model.Task
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,7 +18,7 @@ fun createTaskHelper(
     return Task(
         id = id,
         projectId = projectId,
-        name = title,
+        title = title,
         description = description,
         state = state,
         creatorUserID = creatorUserID,

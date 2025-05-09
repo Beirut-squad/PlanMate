@@ -1,13 +1,12 @@
-package data.csv.model
+package org.example.data.model
 
-import data.csv.model.State
 import java.time.LocalDateTime
 import java.util.UUID
 
 data class Task(
     val id: UUID,
     val projectId: UUID,
-    val name: String,
+    val title: String,
     val description: String,
     val state: State,
     val creatorUserID: UUID,

@@ -1,6 +1,6 @@
 package domain.use_case.log
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import domain.model.TaskLog
 import org.example.domain.repository.LogRepository
 import java.time.LocalDateTime

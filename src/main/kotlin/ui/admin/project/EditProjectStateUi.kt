@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import domain.use_case.state.EditStateUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader

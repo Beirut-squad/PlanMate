@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import data.csv.model.Project
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.DeleteProjectUseCase
 import domain.use_case.project.GetProjectByIdUseCase
@@ -28,7 +28,7 @@ class SingleProjectUi(
         user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
         running = true
         while (running) {
-            printer.printTitle("Project ${project.name}")
+            printer.printTitle("Project ${project.title}")
             printer.printInfoLine("What would you like to do?")
 
             printer.printOptions(

@@ -1,6 +1,6 @@
 package org.example.ui.common.task
 
-import data.csv.model.Task
+import org.example.data.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.task.DeleteTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
@@ -40,7 +40,7 @@ class DeleteTaskUI(
                 printer.printInfoLine(
                     """
                         Task #${index + 1}
-                        - Title: ${task.name}
+                        - Title: ${task.title}
                         - Description: ${task.description}
                         - State: ${task.state.name}
                         """.trimIndent()
@@ -61,7 +61,7 @@ class DeleteTaskUI(
     }
 
     private suspend fun confirmAndDelete(task: Task, currentUser : UUID) {
-        printer.printInfoLine("Are you sure you want to delete the task: '${task.name}'? (yes/no)")
+        printer.printInfoLine("Are you sure you want to delete the task: '${task.title}'? (yes/no)")
         val confirmation = reader.readInput()?.trim()?.lowercase()
         if (confirmation == "yes") {
             try {

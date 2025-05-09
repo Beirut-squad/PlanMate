@@ -1,8 +1,8 @@
 package data.datasource.project
 
-import data.csv.model.Project
-import data.csv.model.State
-import data.csv.model.User
+import org.example.data.model.Project
+import org.example.data.model.State
+import org.example.data.model.User
 import java.util.*
 
 interface ProjectDataSource {

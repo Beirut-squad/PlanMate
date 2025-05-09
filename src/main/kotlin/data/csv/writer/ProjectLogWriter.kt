@@ -1,6 +1,6 @@
 package org.example.data.csv.writer
 
-import data.csv.model.ProjectLog
+import org.example.data.model.ProjectLog
 import org.example.data.csv.helper.isValidFileName
 import java.io.BufferedWriter
 import java.io.File

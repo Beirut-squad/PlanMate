@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import data.csv.model.Project
-import data.csv.model.State
+import org.example.data.model.Project
+import org.example.data.model.State
 import domain.exception.ErrorHandler
 import domain.exception.NullInputException
 import domain.use_case.state.DeleteStateUseCase

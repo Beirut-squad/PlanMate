@@ -1,6 +1,6 @@
 package org.example.ui.common.project
 
-import data.csv.model.State
+import org.example.data.model.State
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Printer
@@ -76,7 +76,7 @@ class ProjectStateSelectedUi(
                 printer.printInfoLine("Tasks:")
                 tasks.forEach { task ->
                     printer.printInfoLine(
-                        " - Name: ${task.name}, Description: ${task.description}")
+                        " - Name: ${task.title}, Description: ${task.description}")
                 }
             } else {
                 printer.printInfoLine("No tasks available for this state.")

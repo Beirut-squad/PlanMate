@@ -1,6 +1,6 @@
 package domain.model
 
-import data.csv.model.State
+import org.example.data.model.State
 import java.time.LocalDateTime
 import java.util.UUID
 

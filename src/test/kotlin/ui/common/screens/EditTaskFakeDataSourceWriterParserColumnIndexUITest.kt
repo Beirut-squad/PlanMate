@@ -198,7 +198,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
             "",
             "invalid"
         )
-        every { editTaskUseCase.editTask(task, task.name, task.description, task.state) } just runs
+        every { editTaskUseCase.editTask(task, task.title, task.description, task.state) } just runs
 
         // When
         editTaskUI.show()
@@ -209,7 +209,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
         verify { printer.printLoader(match { it.contains("Enter new Description") }) }
         verify { printer.printOptions("Choose a state for the task (Current: To Do):") }
         verify { printer.printInfoLine("Keeping the current state: To Do") }
-        verify { editTaskUseCase.editTask(task, task.name, task.description, task.state) }
+        verify { editTaskUseCase.editTask(task, task.title, task.description, task.state) }
         verify { printer.printInfoLine("Task updated successfully!") }
     }
 
@@ -277,7 +277,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
             "",
             "3"
         )
-        every { editTaskUseCase.editTask(task, task.name, task.description, doneState) } just runs
+        every { editTaskUseCase.editTask(task, task.title, task.description, doneState) } just runs
 
         // When
         editTaskUI.show()
@@ -289,7 +289,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
         verify { printer.printInfoLine("2. In Progress") }
         verify { printer.printInfoLine("3. Done") }
 
-        verify { editTaskUseCase.editTask(task, task.name, task.description, doneState) }
+        verify { editTaskUseCase.editTask(task, task.title, task.description, doneState) }
     }
 
     @Test
@@ -313,7 +313,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
             "",
             "0"
         )
-        every { editTaskUseCase.editTask(task2, task2.name, task2.description, task2.state) } just runs
+        every { editTaskUseCase.editTask(task2, task2.title, task2.description, task2.state) } just runs
 
         // When
         editTaskUI.show()
@@ -324,7 +324,7 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
         verify { printer.printInfoLine(match { it.contains("Task #2") && it.contains("Another Task") }) }
 
         verify { printer.printTitle("Edit Task - Another Task") }
-        verify { editTaskUseCase.editTask(task2, task2.name, task2.description, task2.state) }
+        verify { editTaskUseCase.editTask(task2, task2.title, task2.description, task2.state) }
     }
 
     @Test
@@ -422,14 +422,14 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
             "invalid"
         )
 
-        every { editTaskUseCase.editTask(task, task.name, task.description, task.state) } just runs
+        every { editTaskUseCase.editTask(task, task.title, task.description, task.state) } just runs
 
         // When
         editTaskUI.show()
 
         // Then
         verify { printer.printInfoLine("Keeping the current state: To Do") }
-        verify { editTaskUseCase.editTask(task, task.name, task.description, task.state) }
+        verify { editTaskUseCase.editTask(task, task.title, task.description, task.state) }
         verify { printer.printInfoLine("Task updated successfully!") }
     }
     @Test
@@ -473,13 +473,13 @@ class EditTaskFakeDataSourceWriterParserColumnIndexUITest {
             "invalid"
         )
 
-        every { editTaskUseCase.editTask(task, task.name, task.description, task.state) } just runs
+        every { editTaskUseCase.editTask(task, task.title, task.description, task.state) } just runs
 
         // When
         editTaskUI.show()
 
         // Then
-        verify { editTaskUseCase.editTask(task, task.name, task.description, task.state) }
+        verify { editTaskUseCase.editTask(task, task.title, task.description, task.state) }
         verify { printer.printInfoLine("Task updated successfully!") }
     }
 
