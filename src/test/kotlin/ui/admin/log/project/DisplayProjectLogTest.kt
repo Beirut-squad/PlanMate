@@ -252,6 +252,81 @@ class DisplayProjectLogTest {
             )
         }
     }
+
+//
+//    @Test
+//    fun `should not print anything if states are same`() = runTest {
+//        // Given
+//        val user = createUserHelper()
+//        coEvery { getUserByIdUseCase.getUser(any()) } returns user
+//
+//        val state1 = createStateHelper(name = "s1")
+//
+//        val previousProject = createProjectHelper(state = listOf(state1))
+//        val currentProject = createProjectHelper(state = listOf(state1))
+//
+//        val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
+//        val index = 0
+//
+//        displayProjectLog.displayProjectLog(index, projectLog)
+//
+//        // Then
+//        verify(exactly = 0) {
+//            viewer.printCorrectOutput(any())
+//        }
+//    }
+//
+//
+//    @Test
+//    fun `should handle null user gracefully`() = runTest {
+//        // Given
+//        coEvery { getUserByIdUseCase.getUser(any()) } returns null
+//
+//        val currentProject = createProjectHelper()
+//        val projectLog = createProjectLogHelper(currentEntity = currentProject)
+//        val index = 0
+//
+//        displayProjectLog.displayProjectLog(index, projectLog)
+//
+//        // Then
+//        verify {
+//            viewer.printCorrectOutput(
+//                "${index + 1}. User null created new project ${currentProject.name} at ${currentProject.createdAt.formatDateTime()}"
+//            )
+//        }
+//    }
+//
+//    @Test
+//    fun `should not print anything if there is no change between previous and current project`() = runTest {
+//        // Given
+//        val user = createUserHelper()
+//        coEvery { getUserByIdUseCase.getUser(any()) } returns user
+//
+//        val state = createStateHelper(name = "s1")
+//        val assignedUser = createUserHelper()
+//
+//        val currentProject = createProjectHelper(
+//            name = "same",
+//            description = "same",
+//            state = listOf(state),
+//            users = listOf(assignedUser)
+//        )
+//        val previousProject = createProjectHelper(
+//            name = "same",
+//            description = "same",
+//            state = listOf(state),
+//            users = listOf(assignedUser)
+//        )
+//
+//        val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
+//        val index = 0
+//
+//        displayProjectLog.displayProjectLog(index, projectLog)
+//
+//        // Then
+//        verify(exactly = 0) { viewer.printCorrectOutput(any()) }
+//    }
+
 }
 
 
