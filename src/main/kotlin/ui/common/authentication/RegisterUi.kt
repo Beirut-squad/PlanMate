@@ -1,21 +1,21 @@
 package org.example.ui.common.authentication
 
-import org.example.logic.use_cases.authentication.RegisterUserOrAdminUseCase
+import domain.use_case.authentication.RegisterUserUseCase
+import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
 
 class RegisterUi(
     private val reader: Reader,
-    private val viewer: Viewer,
-    private val registerUseCase: RegisterUserOrAdminUseCase,
+    private val printer: Printer,
+    private val registerUseCase: RegisterUserUseCase,
     private val loginUi: LoginUi,
 
     ) : UiScreen {
     override suspend fun show() {
-        viewer.printTitle("Register for Plan Mate")
+        printer.printTitle("Register for Plan Mate")
 
-        viewer.printInfoLine("Please enter your details to register:")
+        printer.printInfoLine("Please enter your details to register:")
 
         takeUserRegisterInput()
     }
@@ -28,20 +28,20 @@ class RegisterUi(
 
             registerUseCase.add(name = name, email = email, password = password)
 
-            viewer.printCorrectOutput("Register successfully!")
+            printer.printCorrectOutput("Register successfully!")
             goToLoginScreen()
         }catch (e: Exception) {
-            viewer.printError("Register failed!")
+            printer.printError("Register failed!")
             takeUserRegisterInput()
         }
     }
 
     private fun takeUserInput(prompt: String): String {
-        viewer.printInfoLine("$prompt: ")
+        printer.printInfoLine("$prompt: ")
         try {
             return reader.readInput() ?: throw Exception()
         } catch (e: Exception) {
-            viewer.printError("Invalid input")
+            printer.printError("Invalid input")
             return takeUserInput(prompt)
         }
     }

@@ -1,14 +1,14 @@
 package org.example.ui.admin.project
 
-import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.models.Project
-import org.example.models.State
+import data.csv.model.Project
+import data.csv.model.State
+import domain.use_case.project.GetProjectByIdUseCase
+import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
 
 class SingleStateUi(
-    private val viewer: Viewer,
+    private val printer: Printer,
     private val reader: Reader,
     private val getProjectByIdUseCase: GetProjectByIdUseCase
 ) : UiScreen {
@@ -45,7 +45,7 @@ class SingleStateUi(
                 }
 
                 else -> {
-                    viewer.printError("Invalid option")
+                    printer.printError("Invalid option")
                 }
             }
 
@@ -54,7 +54,7 @@ class SingleStateUi(
     }
 
     private fun displayOptions() {
-        viewer.printOptions(
+        printer.printOptions(
             "Edit state",
             "Delete state",
             "Exit"
@@ -62,8 +62,8 @@ class SingleStateUi(
     }
 
     private fun displayHeader() {
-        viewer.printTitle("State '${state.name}'")
-        viewer.printInfoLine("What would you like to do?")
+        printer.printTitle("State '${state.name}'")
+        printer.printInfoLine("What would you like to do?")
     }
 
     private suspend fun updateProject() {
@@ -71,7 +71,7 @@ class SingleStateUi(
             project = getProjectByIdUseCase.getProjectById(project.id)
             state = project.state.find { it.id == state.id }!!
         } catch (e: Exception) {
-            viewer.printError("${e.message}")
+            printer.printError("${e.message}")
         }
     }
 }
