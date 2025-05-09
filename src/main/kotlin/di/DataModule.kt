@@ -3,11 +3,13 @@ package org.example.di
 
 import data.datasource.authentication.AuthenticationDataSource
 import data.datasource.log.LogDataSource
+import data.datasource.log.LogMongoDataSourceImpl
 import data.datasource.project.ProjectDataSource
 import data.datasource.task.TaskDataSource
 import data.mongo_db.MongoConnection
 import org.example.data.datasource.authentication_data_source.AuthenticationMongoDataSourceImpl
 import org.example.data.datasource.project_data_source.ProjectMongoDataSourceImpl
+import org.example.data.datasource.task_data_source.TaskMongoDataSourceImpl
 import org.example.data.fake_datasource.LogFakeDataSource
 import org.example.data.fake_datasource.TaskFakeDataSource
 import org.example.data.repository.AuthenticationRepositoryImpl
@@ -29,7 +31,7 @@ val dataModule = module {
     }
 
     single<LogDataSource> {
-        LogFakeDataSource()
+        LogMongoDataSourceImpl(MongoConnection)
     }
 
     single<ProjectDataSource> {
@@ -37,7 +39,7 @@ val dataModule = module {
     }
 
     single<TaskDataSource> {
-        TaskFakeDataSource()
+        TaskMongoDataSourceImpl(MongoConnection)
     }
 
     single<AuthenticationRepository> {
