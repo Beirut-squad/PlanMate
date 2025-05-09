@@ -1,7 +1,7 @@
 package ui.admin.project
 
-import org.example.ui.admin.project.ViewProjectStatesUi
+import org.example.ui.admin.project.ProjectStatesUi
 
 class ViewProjectStatesUiTest {
-    private val viewProjectStatesUi = ViewProjectStatesUi()
+    private val viewProjectStates = ProjectStatesUi()
 }

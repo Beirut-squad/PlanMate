@@ -1,24 +1,24 @@
 package org.example.ui.common.project
 
-import org.example.logic.use_cases.project_manegment.GetAllProjectsUseCases
+import domain.use_case.project.GetAllProjectsUseCase
+import org.example.ui.common.components.Printer
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
 
 class ViewProjectsUi(
-    private val viewer: Viewer,
-    private val getAllProjectsUseCases: GetAllProjectsUseCases,
+    private val printer: Printer,
+    private val getAllProjectsUseCases: GetAllProjectsUseCase,
 ) : UiScreen {
     override suspend fun show() {
         try {
             val projects = getAllProjectsUseCases.getAllProjects()
             if (projects.isNotEmpty()) {
-                viewer.printTitle("Project: ")
+                printer.printTitle("Project: ")
                 projects.forEachIndexed { index, project ->
-                    viewer.printInfoLine(
+                    printer.printInfoLine(
                         """
                         ${index + 1}.
                         - Made by: ${project.creatorUserID}
-                        - Name: ${project.name}
+                        - Name: ${project.title}
                         - Description: ${project.description}
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
@@ -26,10 +26,10 @@ class ViewProjectsUi(
                     )
                 }
             } else {
-                viewer.printError("No projects found.")
+                printer.printError("No projects found.")
             }
         } catch (e: Exception) {
-            viewer.printError("Failed to retrieve projects: ${e.message}")
+            printer.printError("Failed to retrieve projects: ${e.message}")
         }
     }
 }

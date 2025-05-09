@@ -1,37 +1,37 @@
 package org.example.ui.admin.project
 
-import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
-import org.example.logic.use_cases.project_manegment.DeleteProjectUseCase
-import org.example.logic.use_cases.project_manegment.GetProjectByIdUseCase
-import org.example.models.Project
-import org.example.models.User
+import domain.model.Project
+import domain.model.User
+import domain.use_case.authentication.GetCurrentUserUseCase
+import domain.use_case.project.DeleteProjectUseCase
+import domain.use_case.project.GetProjectByIdUseCase
+import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
+import org.example.ui.common.task.CreateTaskUi
 import java.io.InvalidObjectException
-import org.example.ui.common.task.CreateNewTaskUi
 
 class SingleProjectUi(
-    private val viewer: Viewer,
+    private val printer: Printer,
     private val reader: Reader,
     private val deleteProjectUseCase: DeleteProjectUseCase,
-    private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
+    private val getCurrentLoggedInUserUseCase: GetCurrentUserUseCase,
     private val editProjectUi: EditProjectUi,
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
-    private val viewProjectStatesUi: ViewProjectStatesUi
+    private val viewProjectStates: ProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
-    lateinit  var user: User
+    lateinit var user: User
     private var running = true
 
     override suspend fun show() {
-        user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
+        user = getCurrentLoggedInUserUseCase.getCurrentUser() ?: throw InvalidObjectException("User is not logged in")
         running = true
         while (running) {
-            viewer.printTitle("Project ${project.name}")
-            viewer.printInfoLine("What would you like to do?")
+            printer.printTitle("Project ${project.title}")
+            printer.printInfoLine("What would you like to do?")
 
-            viewer.printOptions(
+            printer.printOptions(
                 "Edit project",
                 "Delete project",
                 "View project states",
@@ -61,14 +61,15 @@ class SingleProjectUi(
                     )
                     running = false
                 } catch (e: Exception) {
-                    viewer.printError("${e.message}")
+                    printer.printError("${e.message}")
+                    running = false
                 }
 
             }
 
             3 -> {
-                viewProjectStatesUi.setProject(project.id)
-                viewProjectStatesUi.show()
+                viewProjectStates.setProject(project.id)
+                viewProjectStates.show()
             }
 
             4 -> {
@@ -76,28 +77,31 @@ class SingleProjectUi(
             }
 
             5 -> {
-                AddUserForProjectUi(project.id).show()
+                AddProjectUserUi(project.id).show()
             }
 
             6 -> {
                 if (project.state.isEmpty()) {
-                    viewer.printError("Cannot create a task because this project has no states.")
+                    printer.printError("Cannot create a task because this project has no states.")
                 } else {
-                    CreateNewTaskUi(projectId = project.id).show()
+                    CreateTaskUi(projectId = project.id).show()
                 }
             }
+
             7 -> {
-                viewer.printGoodbyeMessage("Goodbye!")
+                printer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
 
             else -> {
-                viewer.printError("Invalid option")
+                printer.printError("Invalid option")
                 takeUserInput()
             }
         }
 
-        updateProject()
+        if (running) {
+            updateProject()
+        }
 
     }
 
@@ -105,7 +109,7 @@ class SingleProjectUi(
         try {
             project = getProjectByIdUseCase.getProjectById(project.id)
         } catch (e: Exception) {
-            viewer.printError("${e.message}")
+            printer.printError("${e.message}")
         }
     }
 }
