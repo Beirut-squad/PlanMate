@@ -6,7 +6,7 @@ import org.example.domain.repository.LogRepository
 class GetAllProjectLogsUseCase(
     private val logRepository: LogRepository
 ) {
-    fun getAllProjectLogs(): List<ProjectLog> {
+    suspend fun getAllProjectLogs(): List<ProjectLog> {
         return logRepository.getAllProjectLogs()
     }
 }

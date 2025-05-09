@@ -17,35 +17,35 @@ class LogDataSourceImplementation(
     private val csvTaskLogWriter: CsvWriter<TaskLog>,
 ) : LogDataSource {
 
-    override fun getProjectLogs(id: UUID): List<ProjectLog> {
+    override suspend fun getProjectLogs(id: UUID): List<ProjectLog> {
         return csvProjectLogReader.read(PROJECT_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
-    override fun getTaskLogs(id: UUID): List<TaskLog> {
+    override suspend fun getTaskLogs(id: UUID): List<TaskLog> {
         return csvTaskLogReader.read(TASK_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
             ?: throw NoTaskLogsFoundException()
     }
 
-    override fun saveProjectLog(projectLog: ProjectLog) {
+    override suspend fun saveProjectLog(projectLog: ProjectLog) {
         val logs = csvProjectLogReader.read(PROJECT_LOG).toMutableList()
         logs.add(projectLog)
         csvProjectLogWriter.writeToFile(logs, PROJECT_LOG)
     }
 
-    override fun saveTaskLog(taskLog: TaskLog) {
+    override suspend fun saveTaskLog(taskLog: TaskLog) {
         val logs = csvTaskLogReader.read(TASK_LOG).toMutableList()
         logs.add(taskLog)
         csvTaskLogWriter.writeToFile(logs, TASK_LOG)
     }
 
-    override fun getAllProjectLogs(): List<ProjectLog> {
+    override suspend fun getAllProjectLogs(): List<ProjectLog> {
         return csvProjectLogReader.read(PROJECT_LOG)
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
-    override fun getAllTaskLogs(): List<TaskLog> {
+    override suspend fun getAllTaskLogs(): List<TaskLog> {
         return csvTaskLogReader.read(TASK_LOG)
             .takeIf { it.isNotEmpty() }
             ?: throw NoTaskLogsFoundException()

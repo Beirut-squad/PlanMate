@@ -10,31 +10,31 @@ class LogFakeDataSource : LogDataSource {
     private val projectLogs = mutableListOf<ProjectLog>()
     private val taskLogs = mutableListOf<TaskLog>()
 
-    override fun getProjectLogs(id: UUID): List<ProjectLog> {
+    override suspend fun getProjectLogs(id: UUID): List<ProjectLog> {
         return projectLogs.filter { it.entityId == id }
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
-    override fun getTaskLogs(id: UUID): List<TaskLog> {
+    override suspend fun getTaskLogs(id: UUID): List<TaskLog> {
         return taskLogs.filter { it.entityId == id }
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
-    override fun saveProjectLog(projectLog: ProjectLog) {
+    override suspend fun saveProjectLog(projectLog: ProjectLog) {
         projectLogs.add(projectLog)
     }
 
-    override fun saveTaskLog(taskLog: TaskLog) {
+    override suspend fun saveTaskLog(taskLog: TaskLog) {
         taskLogs.add(taskLog)
     }
 
-    override fun getAllProjectLogs(): List<ProjectLog> {
+    override suspend fun getAllProjectLogs(): List<ProjectLog> {
         return projectLogs
     }
 
-    override fun getAllTaskLogs(): List<TaskLog> {
+    override suspend fun getAllTaskLogs(): List<TaskLog> {
         return taskLogs
     }
 }
