@@ -1,7 +1,7 @@
 package domain.use_case.log
 
-import org.example.data.model.Project
-import org.example.data.model.ProjectLog
+import domain.model.Project
+import domain.model.ProjectLog
 import org.example.domain.repository.LogRepository
 import java.time.LocalDateTime
 import java.util.*

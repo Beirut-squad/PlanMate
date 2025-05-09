@@ -1,6 +1,6 @@
 package org.example.data.csv.parser
 
-import org.example.data.model.State
+import domain.model.State
 import org.example.data.csv.column_index.StateColumnIndex
 import java.util.*
 

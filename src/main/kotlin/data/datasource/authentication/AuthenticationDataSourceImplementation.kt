@@ -4,9 +4,9 @@ import org.example.data.csv.helper.FileName.CURRENT_USER_FILE
 import org.example.data.csv.helper.FileName.REGISTERED_USERS_FILE
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
-import org.example.data.model.Role
-import org.example.data.model.User
 import domain.exception.authentication.*
+import domain.model.Role
+import domain.model.User
 import java.util.*
 
 class AuthenticationDataSourceImplementation(

@@ -1,6 +1,6 @@
 package org.example.ui.mate
 
-import org.example.data.model.Project
+import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetUserProjectsByIdUseCase
 import org.example.ui.common.components.Printer

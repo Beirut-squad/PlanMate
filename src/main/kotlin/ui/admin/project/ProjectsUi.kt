@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import org.example.data.model.Project
-import org.example.data.model.User
+import domain.model.Project
+import domain.model.User
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.project.GetAllProjectsUseCase
 import org.example.ui.common.components.Printer

@@ -1,6 +1,6 @@
 package ui.admin.log.task
 
-import org.example.data.model.Task
+import domain.model.Task
 import domain.model.TaskLog
 import domain.use_case.authentication.GetUserByIdUseCase
 import org.example.ui.common.components.Printer

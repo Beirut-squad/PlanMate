@@ -1,10 +1,10 @@
 package org.example.data.fake_datasource
 
-import org.example.data.model.Project
-import org.example.data.model.State
-import org.example.data.model.User
 import data.datasource.project.ProjectDataSource
 import domain.exception.project.NoProjectFoundException
+import domain.model.Project
+import domain.model.State
+import domain.model.User
 import java.time.LocalDateTime
 import java.util.*
 
@@ -38,7 +38,7 @@ class ProjectFakeDataSource : ProjectDataSource {
     }
 
     override suspend fun getProject(id: UUID): Project {
-        return projects.find { it.id == id } ?: throw Exception()
+        return projects.find { it.id == id } ?: throw NoProjectFoundException()
     }
 
     override suspend fun addStateToProject(projectId: UUID, state: State): Project {

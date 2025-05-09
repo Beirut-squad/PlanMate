@@ -1,6 +1,6 @@
 package domain.use_case.authentication
 
-import org.example.data.model.User
+import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 
 class GetCurrentUserUseCase(

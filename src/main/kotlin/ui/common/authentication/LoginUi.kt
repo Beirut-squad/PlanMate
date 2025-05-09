@@ -1,7 +1,7 @@
 package org.example.ui.common.authentication
 
-import org.example.data.model.Role
-import org.example.data.model.User
+import domain.model.Role
+import domain.model.User
 import domain.use_case.authentication.LoginUseCase
 import org.example.ui.admin.home.AdminUi
 import org.example.ui.common.components.Printer

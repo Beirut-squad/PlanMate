@@ -1,6 +1,5 @@
 package domain.model
 
-import org.example.data.model.Role
 import java.util.UUID
 
 data class User(

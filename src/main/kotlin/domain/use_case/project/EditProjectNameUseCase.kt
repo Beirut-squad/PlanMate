@@ -1,7 +1,7 @@
 package domain.use_case.project
 
-import org.example.data.model.Project
 import domain.exception.project.EmptyProjectNameException
+import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
 import org.example.domain.repository.ProjectRepository
 import java.time.LocalDateTime

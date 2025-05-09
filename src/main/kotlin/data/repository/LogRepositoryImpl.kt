@@ -1,7 +1,7 @@
 package org.example.data.repository
 
-import org.example.data.model.ProjectLog
 import data.datasource.log.LogDataSource
+import domain.model.ProjectLog
 import domain.model.TaskLog
 import org.example.domain.repository.LogRepository
 import java.util.*

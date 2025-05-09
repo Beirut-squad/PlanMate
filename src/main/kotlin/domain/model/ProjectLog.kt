@@ -1,6 +1,5 @@
 package domain.model
 
-import org.example.data.model.Project
 import java.time.LocalDateTime
 import java.util.UUID
 

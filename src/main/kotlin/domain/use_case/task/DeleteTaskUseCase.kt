@@ -1,6 +1,6 @@
 package domain.use_case.task
 
-import org.example.data.model.Task
+import domain.model.Task
 import domain.use_case.log.CreateTaskLogUseCase
 import org.example.domain.repository.TaskRepository
 import java.util.*

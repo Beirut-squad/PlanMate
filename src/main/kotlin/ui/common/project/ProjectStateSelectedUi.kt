@@ -1,6 +1,6 @@
 package org.example.ui.common.project
 
-import org.example.data.model.State
+import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.GetTaskByStateIdAndProjectId
 import org.example.ui.common.components.Printer
@@ -49,7 +49,8 @@ class ProjectStateSelectedUi(
 
     private suspend fun handleUserSelection(states: List<State>) {
         val choice = printer.readIntInput(
-            "Enter the number of the state to view (Enter Any Thing To Go Back): ")
+            "Enter the number of the state to view (Enter Any Thing To Go Back): "
+        )
         when {
             choice != null && choice in 1..states.size -> {
                 val selectedState = states[choice - 1]
@@ -70,19 +71,20 @@ class ProjectStateSelectedUi(
 
         try {
             val tasks = getTaskByStateIdAndProjectId
-                                .getTaskByStateIdAndProjectId(projectId, selectedState.id)
+                .getTaskByStateIdAndProjectId(projectId, selectedState.id)
 
             if (tasks.isNotEmpty()) {
                 printer.printInfoLine("Tasks:")
                 tasks.forEach { task ->
                     printer.printInfoLine(
-                        " - Name: ${task.title}, Description: ${task.description}")
+                        " - Name: ${task.title}, Description: ${task.description}"
+                    )
                 }
             } else {
                 printer.printInfoLine("No tasks available for this state.")
                 running = false
             }
-        } catch (e:Exception){
+        } catch (e: Exception) {
             printer.printError("${e.message}")
         }
     }

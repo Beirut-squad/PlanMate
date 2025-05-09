@@ -1,6 +1,6 @@
 package org.example.ui.common.project
 
-import org.example.data.model.Task
+import domain.model.Task
 import domain.use_case.task.GetProjectTasksUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader

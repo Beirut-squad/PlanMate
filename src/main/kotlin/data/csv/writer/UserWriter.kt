@@ -1,7 +1,7 @@
 package org.example.data.csv.writer
 
+import domain.model.User
 import org.example.data.csv.helper.isValidFileName
-import org.example.data.model.User
 import java.io.File
 import java.util.*
 

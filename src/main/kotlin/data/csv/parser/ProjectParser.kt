@@ -1,10 +1,10 @@
 package org.example.data.csv.parser
 
-import org.example.data.model.Project
+import domain.model.Project
+import domain.model.User
+import domain.model.State
 import org.example.data.csv.column_index.ProjectColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
-import org.example.data.model.State
-import org.example.data.model.User
 import java.time.LocalDateTime
 import java.util.*
 

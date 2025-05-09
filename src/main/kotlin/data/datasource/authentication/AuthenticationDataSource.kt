@@ -1,6 +1,6 @@
 package data.datasource.authentication
 
-import org.example.data.model.User
+import domain.model.User
 
 
 interface AuthenticationDataSource {

@@ -1,7 +1,7 @@
 package org.example.data.csv.writer
 
+import domain.model.Project
 import org.example.data.csv.helper.isValidFileName
-import org.example.data.model.Project
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -14,8 +14,6 @@ class ProjectWriter: CsvWriter<Project> {
            if(!isValidFileName(file.name))
                throw IllegalArgumentException("Error : Invalid file name")
             val writer = BufferedWriter(FileWriter(file))
-            if (file.length() == 0L)
-                writer.write("[id,name,description,creatorUserID,createdAt,updatedAt,state, user]\n")
             if (items.isNotEmpty())
                 writeProject(items,writer)
             writer.close()

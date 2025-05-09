@@ -1,7 +1,7 @@
 package org.example.data.csv.writer
 
 import org.example.data.csv.helper.isValidFileName
-import org.example.data.model.State
+import domain.model.State
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter

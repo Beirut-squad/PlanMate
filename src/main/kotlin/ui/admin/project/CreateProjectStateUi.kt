@@ -1,6 +1,6 @@
 package org.example.ui.admin.project
 
-import org.example.data.model.Project
+import domain.model.Project
 import domain.use_case.state.CreateStateUseCase
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen

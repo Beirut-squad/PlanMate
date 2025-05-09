@@ -1,6 +1,6 @@
 package data.datasource.log
 
-import org.example.data.model.ProjectLog
+import domain.model.ProjectLog
 import domain.model.TaskLog
 import java.util.UUID
 

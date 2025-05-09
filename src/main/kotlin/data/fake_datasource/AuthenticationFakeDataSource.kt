@@ -1,12 +1,12 @@
 package org.example.data.fake_datasource
 
-import org.example.data.model.Role
-import org.example.data.model.User
 import data.datasource.authentication.AuthenticationDataSource
 import domain.exception.authentication.EmailAlreadyExistsException
 import domain.exception.authentication.InvalidEmailOrPasswordException
 import domain.exception.authentication.NoLoggedInUserException
 import domain.exception.authentication.UsersAlreadyExistException
+import domain.model.Role
+import domain.model.User
 import java.util.*
 
 class AuthenticationFakeDataSource : AuthenticationDataSource {
@@ -83,5 +83,3 @@ class AuthenticationFakeDataSource : AuthenticationDataSource {
         return users
     }
 }
-
-// https://meet.google.com/ida-kuzh-khe

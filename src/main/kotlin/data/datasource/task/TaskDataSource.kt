@@ -1,6 +1,6 @@
 package data.datasource.task
 
-import org.example.data.model.Task
+import domain.model.Task
 import java.util.*
 
 interface TaskDataSource {

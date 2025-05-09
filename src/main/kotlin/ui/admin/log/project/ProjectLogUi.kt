@@ -1,8 +1,8 @@
 package org.example.ui.admin.log.project
 
-import org.example.data.model.Project
-import org.example.data.model.ProjectLog
-import org.example.data.model.State
+import domain.model.Project
+import domain.model.ProjectLog
+import domain.model.State
 import domain.use_case.authentication.GetUserByIdUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.extensions.formatDateTime

@@ -1,9 +1,9 @@
 package org.example.ui.admin.project
 
-import org.example.data.model.Project
-import org.example.data.model.State
 import domain.exception.ErrorHandler
 import domain.exception.NullInputException
+import domain.model.Project
+import domain.model.State
 import domain.use_case.state.DeleteStateUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader

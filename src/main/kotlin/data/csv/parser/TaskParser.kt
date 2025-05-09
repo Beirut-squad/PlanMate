@@ -1,7 +1,7 @@
 package org.example.data.csv.parser
 
-import org.example.data.model.State
-import org.example.data.model.Task
+import domain.model.State
+import domain.model.Task
 import org.example.data.csv.column_index.TaskColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
 import java.time.LocalDateTime

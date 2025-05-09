@@ -1,8 +1,8 @@
 package domain.use_case.project
 
 import domain.exception.project.BlankFieldsException
-import org.example.data.model.Project
-import org.example.data.model.State
+import domain.model.Project
+import domain.model.State
 import org.example.domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase
 import java.util.*

@@ -1,6 +1,7 @@
 package org.example.domain.repository
 
-import org.example.data.model.User
+import domain.model.User
+
 
 interface AuthenticationRepository {
     suspend fun login(email: String, password: String): User

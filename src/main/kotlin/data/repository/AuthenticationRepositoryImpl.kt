@@ -1,7 +1,7 @@
 package org.example.data.repository
 
-import org.example.data.model.User
 import data.datasource.authentication.AuthenticationDataSource
+import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(

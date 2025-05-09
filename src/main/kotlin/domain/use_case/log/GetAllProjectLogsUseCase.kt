@@ -1,6 +1,6 @@
 package domain.use_case.log
 
-import org.example.data.model.ProjectLog
+import domain.model.ProjectLog
 import org.example.domain.repository.LogRepository
 
 class GetAllProjectLogsUseCase(

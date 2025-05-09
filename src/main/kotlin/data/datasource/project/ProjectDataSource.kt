@@ -1,8 +1,8 @@
 package data.datasource.project
 
-import org.example.data.model.Project
-import org.example.data.model.State
-import org.example.data.model.User
+import domain.model.Project
+import domain.model.State
+import domain.model.User
 import java.util.*
 
 interface ProjectDataSource {

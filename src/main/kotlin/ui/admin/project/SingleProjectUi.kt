@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import org.example.data.model.Project
-import org.example.data.model.User
+import domain.model.Project
+import domain.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.DeleteProjectUseCase
 import domain.use_case.project.GetProjectByIdUseCase
@@ -21,11 +21,11 @@ class SingleProjectUi(
     private val viewProjectStates: ProjectStatesUi
 ) : UiScreen {
     lateinit var project: Project
-    lateinit  var user: User
+    lateinit var user: User
     private var running = true
 
     override suspend fun show() {
-        user = getCurrentLoggedInUserUseCase.getCurrentUser()?:throw InvalidObjectException("User is not logged in")
+        user = getCurrentLoggedInUserUseCase.getCurrentUser() ?: throw InvalidObjectException("User is not logged in")
         running = true
         while (running) {
             printer.printTitle("Project ${project.title}")
@@ -62,6 +62,7 @@ class SingleProjectUi(
                     running = false
                 } catch (e: Exception) {
                     printer.printError("${e.message}")
+                    running = false
                 }
 
             }
@@ -86,6 +87,7 @@ class SingleProjectUi(
                     CreateTaskUi(projectId = project.id).show()
                 }
             }
+
             7 -> {
                 printer.printGoodbyeMessage("Goodbye!")
                 running = false
@@ -97,7 +99,9 @@ class SingleProjectUi(
             }
         }
 
-        updateProject()
+        if (running) {
+            updateProject()
+        }
 
     }
 

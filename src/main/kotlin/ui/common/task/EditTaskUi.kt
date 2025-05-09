@@ -1,7 +1,7 @@
 package org.example.ui.common.task
 
-import org.example.data.model.Project
-import org.example.data.model.Task
+import domain.model.Project
+import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.EditTaskUseCase

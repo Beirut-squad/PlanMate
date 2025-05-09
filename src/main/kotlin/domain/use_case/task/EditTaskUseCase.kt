@@ -1,7 +1,7 @@
 package domain.use_case.task
 
-import org.example.data.model.State
-import org.example.data.model.Task
+import domain.model.Task
+import domain.model.State
 import domain.use_case.log.CreateTaskLogUseCase
 import org.example.domain.exceptions.task_management_exception.NoFieldsToUpdateException
 import org.example.domain.repository.TaskRepository

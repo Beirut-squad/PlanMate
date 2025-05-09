@@ -1,6 +1,6 @@
 package org.example.data.csv.writer
 
-import org.example.data.model.ProjectLog
+import domain.model.ProjectLog
 import org.example.data.csv.helper.isValidFileName
 import java.io.BufferedWriter
 import java.io.File
@@ -14,9 +14,6 @@ class ProjectLogWriter : CsvWriter<ProjectLog> {
                 val file = File("src/main/kotlin/$filePath")
                 if (!isValidFileName(file.name))
                     throw IllegalArgumentException("Invalid file name")
-
-//            if (file.length() == 0L)
-//                writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
 
                 val writer = BufferedWriter(FileWriter(file))
                 writeProjectLog(items, writer)

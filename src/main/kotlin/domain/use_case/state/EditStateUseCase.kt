@@ -1,7 +1,7 @@
 package domain.use_case.state
 
-import org.example.data.model.Project
-import org.example.data.model.State
+import domain.model.Project
+import domain.model.State
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.EditProjectStateUseCase
 

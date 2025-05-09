@@ -1,10 +1,10 @@
 package data.datasource.project
 
 
-import org.example.data.model.Project
-import org.example.data.model.State
-import org.example.data.model.User
 import domain.exception.project.*
+import domain.model.Project
+import domain.model.State
+import domain.model.User
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
@@ -108,14 +108,14 @@ class ProjectDataSourceImplementation(
             val updatedUser = mutableListOf<User>()
             var notFoundUser = true
             users.forEach { oldUsers ->
-                if (haveSameUserID(oldUsers, user)) throw DuplicateStateException() //Make Exception For User Duplicate
+                if (haveSameUserID(oldUsers, user)) throw DuplicateStateException()
                 updatedUser += if (oldUsers.id == user.id) {
                     notFoundUser = false
                     user
                 } else
                     oldUsers
             }
-            if (notFoundUser) throw NoStateException() //Make Exception No User
+            if (notFoundUser) throw NoStateException()
             updatedUser
         }
     }
