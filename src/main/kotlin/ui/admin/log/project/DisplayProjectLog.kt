@@ -16,7 +16,7 @@ open class DisplayProjectLog(
         return getUserByIdUseCase.getUser(userId)?.name
     }
 
-    protected suspend fun displayProjectLog(index: Int, projectLog: ProjectLog) {
+     suspend fun displayProjectLog(index: Int, projectLog: ProjectLog) {
         when {
             projectLog.isCreation() -> handleProjectCreation(index, projectLog)
             projectLog.isDeletion() -> handleProjectDeletion(index, projectLog)

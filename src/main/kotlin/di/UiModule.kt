@@ -19,7 +19,6 @@ import org.koin.dsl.module
 import org.example.ui.admin.log.project.DisplayProjectLog
 import org.example.ui.common.project.ViewAllTaskForProjectUi
 import org.example.ui.common.project.ViewProjectForMateUi
-import org.example.ui.common.project.ViewProjectsUi
 import org.example.ui.common.project.ViewStateSelectedForProjectUi
 import org.example.ui.common.task.CreateNewTaskUi
 import org.example.ui.common.task.EditTaskUi
@@ -33,7 +32,6 @@ val uiModule = module {
     singleOf(::Reader)
     singleOf(::AdminHomeUi)
     singleOf(::MateHomeUi)
-    singleOf(::org.example.ui.common.project.ViewProjectsUi)
     singleOf(::CreateNewProjectUi)
     singleOf(::GetAllProjectsUseCases)
     singleOf(::ViewProjectsForUserUi)
