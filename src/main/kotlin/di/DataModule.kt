@@ -5,9 +5,10 @@ import data.datasource.authentication.AuthenticationDataSource
 import data.datasource.log.LogDataSource
 import data.datasource.project.ProjectDataSource
 import data.datasource.task.TaskDataSource
-import org.example.data.fake_datasource.AuthenticationFakeDataSource
+import data.mongo_db.MongoConnection
+import org.example.data.datasource.authentication_data_source.AuthenticationMongoDataSourceImpl
+import org.example.data.datasource.project_data_source.ProjectMongoDataSourceImpl
 import org.example.data.fake_datasource.LogFakeDataSource
-import org.example.data.fake_datasource.ProjectFakeDataSource
 import org.example.data.fake_datasource.TaskFakeDataSource
 import org.example.data.repository.AuthenticationRepositoryImpl
 import org.example.data.repository.LogRepositoryImpl
@@ -21,7 +22,7 @@ import org.koin.dsl.module
 
 val dataModule = module {
     single<AuthenticationDataSource> {
-        AuthenticationFakeDataSource()
+        AuthenticationMongoDataSourceImpl(MongoConnection)
     }
     single<AuthenticationRepository> {
         AuthenticationRepositoryImpl(get())
@@ -32,7 +33,7 @@ val dataModule = module {
     }
 
     single<ProjectDataSource> {
-        ProjectFakeDataSource()
+        ProjectMongoDataSourceImpl(MongoConnection)
     }
 
     single<TaskDataSource> {

@@ -3,15 +3,13 @@ package org.example.data.datasource.project_data_source
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates
+import data.datasource.project.ProjectDataSource
 import data.mongo_db.MongoConnection
+import domain.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
 import org.example.data.datasource.utils.*
-import org.example.models.Project
-import org.example.models.Role
-import org.example.models.State
-import org.example.models.User
 import java.time.LocalDateTime
 import java.util.*
 

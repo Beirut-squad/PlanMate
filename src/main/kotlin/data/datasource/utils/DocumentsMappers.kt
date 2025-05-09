@@ -1,13 +1,7 @@
 package org.example.data.datasource.utils
 
+import domain.model.*
 import org.bson.Document
-import org.example.models.Project
-import org.example.models.ProjectLog
-import org.example.models.Role
-import org.example.models.State
-import org.example.models.Task
-import org.example.models.TaskLog
-import org.example.models.User
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -112,7 +106,7 @@ private fun Document.toTask(): Task {
 
     return Project(
         id = UUID.fromString(this.getString(ID_FILED)),
-        name = this.getString(NAME_FILED),
+        title = this.getString(NAME_FILED),
         description = this.getString(DESCRIPTION_FILED),
         creatorUserID = UUID.fromString(this.getString(CREATOR_USER_ID_FILED)),
         createdAt = LocalDateTime.parse(this.getString(CREATED_AT_FILED)),
@@ -124,7 +118,7 @@ private fun Document.toTask(): Task {
 
  fun Project.toDocument(): Document {
     return Document(ID_FILED, id.toString())
-        .append(NAME_FILED, name)
+        .append(NAME_FILED, title)
         .append(DESCRIPTION_FILED, description)
         .append(CREATOR_USER_ID_FILED, creatorUserID.toString())
         .append(CREATED_AT_FILED, createdAt.toString())

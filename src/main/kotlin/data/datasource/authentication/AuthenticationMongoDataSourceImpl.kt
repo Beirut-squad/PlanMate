@@ -1,19 +1,18 @@
 package org.example.data.datasource.authentication_data_source
 
+import data.datasource.authentication.AuthenticationDataSource
 import data.mongo_db.MongoConnection
+import domain.exception.authentication.EmailAlreadyExistsException
+import domain.exception.authentication.EmailNotFoundException
+import domain.exception.authentication.InvalidEmailOrPasswordException
+import domain.exception.authentication.NoLoggedInUserException
+import domain.exception.authentication.UsersAlreadyExistException
+import domain.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
 import org.example.data.datasource.utils.toDocument
 import org.example.data.datasource.utils.toUser
-import org.example.logic.exceptions.authentication_exceptions.EmailAlreadyExistsException
-import org.example.logic.exceptions.authentication_exceptions.EmailNotFoundException
-import org.example.logic.exceptions.authentication_exceptions.InvalidEmailOrPasswordException
-import org.example.logic.exceptions.authentication_exceptions.NoLoggedInUserException
-import org.example.logic.exceptions.authentication_exceptions.UsersAlreadyExistException
-import org.example.models.Project
-import org.example.models.Role
-import org.example.models.User
 import java.util.*
 
 class AuthenticationMongoDataSourceImpl(

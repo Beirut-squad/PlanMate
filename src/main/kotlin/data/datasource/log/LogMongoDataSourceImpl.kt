@@ -1,13 +1,14 @@
-package org.example.data.datasource.log_data_source
+package data.datasource.log
 
 import com.mongodb.client.model.Filters
 import data.mongo_db.MongoConnection
+import domain.exception.log.NoProjectLogsFoundException
+import domain.exception.log.NoTaskLogsFoundException
+import domain.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.example.data.datasource.utils.*
-import org.example.logic.exceptions.log_exceptions.NoProjectLogsFoundException
-import org.example.logic.exceptions.log_exceptions.NoTaskLogsFoundException
-import org.example.models.*
+
 import java.util.*
 
 class LogMongoDataSourceImpl(
