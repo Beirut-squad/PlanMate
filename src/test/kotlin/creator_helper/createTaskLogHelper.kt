@@ -23,55 +23,30 @@ fun createTaskLogHelper(
     )
 }
 
-
+val project1Id: UUID = UUID.randomUUID()
 val testTaskId: UUID = UUID.randomUUID()
+val task1 = createTaskHelper(title = "Task 1", projectId = project1Id)
+val task2 = createTaskHelper(title = "Task 2", projectId = project1Id)
+val task3 = createTaskHelper(title = "Task 3", projectId = project1Id)
+val task4 = createTaskHelper(title = "Task 4", projectId = project1Id)
 
 val taskLog = createTaskLogHelper(
-    previousEntity = createTaskHelper(title = "Task 1"),
-    currentEntity = createTaskHelper(title = "Task 2")
+    entityId = listOfNotNull(task2.id, task1.id).first(), previousEntity = task1, currentEntity = task2
+)
+
+val taskLog23 = createTaskLogHelper(
+    entityId = listOfNotNull(task3.id, task2.id).first(), previousEntity = task2, currentEntity = task3
+)
+val taskLog34 = createTaskLogHelper(
+    entityId = listOfNotNull(task4.id, task3.id).first(), previousEntity = task3, currentEntity = task4
 )
 
 val taskLogsByTaskId = listOf(
-    createTaskLogHelper(
-        entityId = testTaskId,
-        previousEntity = createTaskHelper(title = "Task 1"),
-        currentEntity = createTaskHelper(title = "Task 2")
-    ),
-    createTaskLogHelper(
-        entityId = testTaskId,
-        previousEntity = createTaskHelper(title = "Task 2"),
-        currentEntity = createTaskHelper(title = "Task 3")
-    )
+    taskLog, taskLog23
 )
 
-val taskLogsForTestUser =
-    listOf(
-        createTaskLogHelper(
-            userId = testUserId,
-            previousEntity = createTaskHelper(title = "Task 1"),
-            currentEntity = createTaskHelper(title = "Task 2")
-        ),
-        createTaskLogHelper(
-            userId = testUserId,
-            previousEntity = createTaskHelper(title = "Task 1"),
-            currentEntity = createTaskHelper(title = "Task 2")
-        ),
-    )
-
-val taskLogsForAllUsers =
-    listOf(
-        createTaskLogHelper(
-            userId = testUserId,
-            previousEntity = createTaskHelper(title = "Task 1"),
-            currentEntity = createTaskHelper(title = "Task 2")
-        ),
-        createTaskLogHelper(
-            userId = testUserId,
-            previousEntity = createTaskHelper(title = "Task 1"),
-            currentEntity = createTaskHelper(title = "Task 2")
-        ),
-        createTaskLogHelper(
-            previousEntity = createTaskHelper(title = "Task 1"),
-            currentEntity = createTaskHelper(title = "Task 2")
-        ),
-    )
+val taskLogsForAllUsers = listOf(
+    taskLog23,
+    taskLog23,
+    taskLog34,
+)

@@ -1,5 +1,6 @@
 package logic.use_cases.log
 
+import org.example.logic.exceptions.log_exceptions.InvalidCreateTaskLogException
 import org.example.logic.repositories.log_repository.LogRepository
 import org.example.models.Task
 import org.example.models.TaskLog
@@ -11,7 +12,7 @@ class CreateTaskLogUseCase(
 ) {
     fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?) {
         if (previousTask == null && currentTask == null)
-            throw IllegalArgumentException("Both previousTask and currentTask cannot be null")
+            throw InvalidCreateTaskLogException()
 
         val entityId = listOfNotNull(currentTask?.id, previousTask?.id).first()
 
