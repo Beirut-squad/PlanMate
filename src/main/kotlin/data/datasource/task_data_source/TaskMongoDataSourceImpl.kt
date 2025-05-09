@@ -16,11 +16,11 @@ class TaskMongoDataSourceImpl(
 
     override suspend fun createTask(task: Task) {
         withContext(Dispatchers.IO) {
-            val docTask = Document("id", task.id.toString())
+            val docTask = Document("_id", task.id.toString())
                 .append("projectId", task.projectId.toString())
                 .append("title", task.title)
                 .append("description", task.description)
-                .append("state", Document("id", task.state.id.toString()).append("name", task.state.name))
+                .append("state", Document("_id", task.state.id.toString()).append("name", task.state.name))
                 .append("creatorUserID", task.creatorUserID.toString())
                 .append("createdAt", task.createdAt)
                 .append("updatedAt", task.updatedAt)
@@ -34,20 +34,20 @@ class TaskMongoDataSourceImpl(
     }
     override suspend fun editTask(task: Task) = withContext(Dispatchers.IO) {
         try {
-            val findTasks = mongoConnection.tasks.find(Document("id", task.id.toString())).first()
+            val findTasks = mongoConnection.tasks.find(Document("_id", task.id.toString())).first()
                 ?: throw TaskEditException("Task not found with id: ${task.id}")
 
             val updatedTask = Document()
                 .append("projectId", task.projectId.toString())
                 .append("title", task.title)
                 .append("description", task.description)
-                .append("state", Document("id", task.state.id.toString()).append("name", task.state.name))
+                .append("state", Document("_id", task.state.id.toString()).append("name", task.state.name))
                 .append("creatorUserID", task.creatorUserID.toString())
                 .append("createdAt", task.createdAt)
                 .append("updatedAt", task.updatedAt)
 
             val updateResult = mongoConnection.tasks.updateOne(
-                Document("id", task.id.toString()),
+                Document("_id", task.id.toString()),
                 Document("\$set", updatedTask)
             )
 
@@ -61,7 +61,7 @@ class TaskMongoDataSourceImpl(
 
     override suspend fun deleteTask(id: UUID) = withContext(Dispatchers.IO) {
         try {
-            val deletedTask = mongoConnection.tasks.findOneAndDelete(Document("id", id.toString()))
+            val deletedTask = mongoConnection.tasks.findOneAndDelete(Document("_id", id.toString()))
             if (deletedTask == null) {
                 throw TaskDeletionException("No task found with id: $id")
             }
@@ -81,12 +81,12 @@ class TaskMongoDataSourceImpl(
             documents.map { doc ->
                 val stateDoc = doc.get("state", Document::class.java)
                 Task(
-                    id = UUID.fromString(doc.getString("id")),
+                    id = UUID.fromString(doc.getString("_id")),
                     projectId = UUID.fromString(doc.getString("projectId")),
                     title = doc.getString("title"),
                     description = doc.getString("description"),
                     state = State(
-                        id = UUID.fromString(stateDoc.getString("id")),
+                        id = UUID.fromString(stateDoc.getString("_id")),
                         name = stateDoc.getString("name")
                     ),
                     creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
@@ -101,18 +101,18 @@ class TaskMongoDataSourceImpl(
 
     override suspend fun getTask(id: UUID) = withContext(Dispatchers.IO) {
         try {
-            val doc = mongoConnection.tasks.find(Document("id", id.toString())).first()
+            val doc = mongoConnection.tasks.find(Document("_id", id.toString())).first()
                 ?: throw GetTaskException("Task with ID $id not found")
 
             val stateDoc = doc.get("state", Document::class.java)
 
             Task(
-                id = UUID.fromString(doc.getString("id")),
+                id = UUID.fromString(doc.getString("_id")),
                 projectId = UUID.fromString(doc.getString("projectId")),
                 title = doc.getString("title"),
                 description = doc.getString("description"),
                 state = State(
-                    id = UUID.fromString(stateDoc.getString("id")),
+                    id = UUID.fromString(stateDoc.getString("_id")),
                     name = stateDoc.getString("name")
                 ),
                 creatorUserID = UUID.fromString(doc.getString("creatorUserID")),

@@ -4,6 +4,8 @@ import data.mongo_db.MongoConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
+import org.example.data.datasource.utils.toDocument
+import org.example.data.datasource.utils.toUser
 import org.example.logic.exceptions.authentication_exceptions.EmailAlreadyExistsException
 import org.example.logic.exceptions.authentication_exceptions.EmailNotFoundException
 import org.example.logic.exceptions.authentication_exceptions.InvalidEmailOrPasswordException
@@ -132,25 +134,7 @@ class AuthenticationMongoDataSourceImpl(
         if (exists) throw EmailAlreadyExistsException()
     }
 
-    private fun User.toDocument(): Document {
-        return Document(ID_FILED, this.id.toString())
-            .append(NAME_FILED, this.name)
-            .append(EMAIL_FILED, this.email)
-            .append(PASSWORD_FILED, this.password)
-            .append(ROLE_FILED, this.role.name)
-            .append(IS_DELETED_FILED, this.isDeleted)
-    }
 
-    private fun Document.toUser(): User {
-        return User(
-            id = UUID.fromString(this.getString(ID_FILED)),
-            name = this.getString(NAME_FILED),
-            password = this.getString(PASSWORD_FILED),
-            email = this.getString(EMAIL_FILED),
-            role = Role.valueOf(this.getString(ROLE_FILED)),
-            isDeleted = this.getBoolean(IS_DELETED_FILED, false)
-        )
-    }
 
     companion object {
         private const val ID_FILED = "_id"
