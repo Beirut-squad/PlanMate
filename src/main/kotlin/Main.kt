@@ -3,11 +3,11 @@ package org.example
 import org.example.di.dataModule
 import org.example.di.logicModule
 import org.example.di.uiModule
-import org.example.ui.authentication_screens.AuthenticationMainScreen
+import org.example.ui.common.authentication.StartUpMenuUi
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 
-fun main() {
+suspend fun main() {
     startKoin {
         modules(
             uiModule,
@@ -16,7 +16,7 @@ fun main() {
         )
     }
 
-    val authenticationMainScreen: AuthenticationMainScreen = getKoin().get()
+    val startUpMenuUi: StartUpMenuUi = getKoin().get()
 
-    authenticationMainScreen.show()
+    startUpMenuUi.show()
 }

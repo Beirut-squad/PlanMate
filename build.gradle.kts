@@ -19,7 +19,13 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("com.google.truth:truth:1.4.4")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
-    //MD5 Hashing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+
+    // MongoDB Kotlin driver dependency
+    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+    // Kotlin coroutine dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
 }
 

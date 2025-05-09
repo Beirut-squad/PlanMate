@@ -1,44 +1,63 @@
 package org.example.di
 
-import data.csv.log_for_project_csv.LogCsvParserForProject
-import data.csv.log_for_project_csv.LogCsvWriterForProject
-import data.csv.project_csv.ProjectCsvParser
-import data.csv.task_csv.TaskCsvParser
-import org.example.data.csv.CsvReader
-import org.example.data.csv.log_for_task_csv.LogCsvParserForTask
-import org.example.data.csv.log_for_task_csv.LogCsvWriterForTask
-import org.example.data.csv.state_csv.StateCsvParser
-import org.example.data.csv.user_csv.UserCsvParser
-import org.example.data.csv.user_csv.UserCsvWriter
-import org.example.data.datasource.authentication_data_source.AuthenticationDataSource
-import org.example.data.datasource.authentication_data_source.AuthenticationDataSourceImpl
-import org.example.data.datasource.log_data_source.LogDataSource
-import org.example.data.datasource.log_data_source.LogDataSourceImpl
-import org.example.data.repositories.authentication_repository.AuthenticationRepositoryImpl
-import org.example.data.repositories.log_repository.LogRepositoryImpl
-import org.example.logic.repositories.authentication_repository.AuthenticationRepository
-import org.example.logic.repositories.log_repository.LogRepository
+
+import data.datasource.authentication.AuthenticationDataSource
+import data.datasource.log.LogDataSource
+import data.datasource.log.LogMongoDataSourceImpl
+import data.datasource.project.ProjectDataSource
+import data.datasource.task.TaskDataSource
+import data.mongo_db.MongoConnection
+import org.example.data.datasource.authentication_data_source.AuthenticationMongoDataSourceImpl
+import org.example.data.datasource.project_data_source.ProjectMongoDataSourceImpl
+import org.example.data.datasource.task_data_source.TaskMongoDataSourceImpl
+import org.example.data.fake_datasource.LogFakeDataSource
+import org.example.data.fake_datasource.TaskFakeDataSource
+import org.example.data.repository.AuthenticationRepositoryImpl
+import org.example.data.repository.LogRepositoryImpl
+import org.example.data.repository.ProjectRepositoryImpl
+import org.example.data.repository.TaskRepositoryImpl
+import org.example.domain.repository.AuthenticationRepository
+import org.example.domain.repository.LogRepository
+import org.example.domain.repository.ProjectRepository
+import org.example.domain.repository.TaskRepository
 import org.koin.dsl.module
 
 val dataModule = module {
     single<AuthenticationDataSource> {
-        AuthenticationDataSourceImpl(UserCsvWriter(), CsvReader(UserCsvParser()))
+        AuthenticationMongoDataSourceImpl(MongoConnection)
+    }
+    single<AuthenticationRepository> {
+        AuthenticationRepositoryImpl(get())
+    }
+
+    single<LogDataSource> {
+        LogMongoDataSourceImpl(MongoConnection)
+    }
+
+    single<ProjectDataSource> {
+        ProjectMongoDataSourceImpl(MongoConnection)
+    }
+
+    single<TaskDataSource> {
+        TaskMongoDataSourceImpl(MongoConnection)
     }
 
     single<AuthenticationRepository> {
         AuthenticationRepositoryImpl(get())
     }
 
-    single<LogDataSource> {
-        LogDataSourceImpl(
-            csvProjectLogReader = CsvReader(LogCsvParserForProject(ProjectCsvParser(StateCsvParser()))),
-            csvProjectLogWriter = LogCsvWriterForProject(),
-            csvTaskLogReader = CsvReader(LogCsvParserForTask(TaskCsvParser(StateCsvParser()))),
-            csvTaskLogWriter = LogCsvWriterForTask()
-        )
-    }
-
     single<LogRepository> {
         LogRepositoryImpl(get())
+    }
+
+    single<ProjectRepository> {
+        ProjectRepositoryImpl(get())
+    }
+    single<TaskRepository> {
+        TaskRepositoryImpl(get())
+    }
+
+    single<TaskRepository> {
+        TaskRepositoryImpl(get())
     }
 }
