@@ -1,7 +1,7 @@
 package creator_helper
 
-import org.example.data.model.Role
-import org.example.data.model.User
+import domain.model.Role
+import domain.model.User
 import java.util.*
 
 fun createUserForCsvWriter(
