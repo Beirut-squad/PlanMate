@@ -90,7 +90,7 @@ class TaskMongoDataSourceImpl(
 
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(
+    override suspend fun getTasksByStateAndProjectIds(
         projectId: UUID,
         stateId: UUID
     ): List<Task> {

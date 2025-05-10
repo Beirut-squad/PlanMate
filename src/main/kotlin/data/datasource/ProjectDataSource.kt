@@ -11,11 +11,11 @@ interface ProjectDataSource {
     suspend fun deleteProject(id: UUID)
     suspend fun getAllProjects(): List<Project>
     suspend fun getProject(id: UUID): Project
-    suspend fun addStateToProject(projectId: UUID, state: State): Project
-    suspend fun editStateToProject(projectId: UUID, state: State): Project
-    suspend fun removeStateFromProject(projectId: UUID, state: State): Project
-    suspend fun getProjectForMateByUserId(userId: UUID): List<Project>
-    suspend fun addMateToProject(projectId: UUID, user: User): Project
-    suspend fun getProjectsForUserById(userId: UUID): List<Project>
+    suspend fun addState(projectId: UUID, state: State): Project
+    suspend fun editState(projectId: UUID, state: State): Project
+    suspend fun deleteState(projectId: UUID, state: State): Project
+    suspend fun getMateProjectByUserId(userId: UUID): List<Project>
+    suspend fun addMate(projectId: UUID, user: User): Project
+    suspend fun getUserProjectsById(userId: UUID): List<Project>
 
 }

@@ -41,31 +41,31 @@ class ProjectFakeDataSource : ProjectDataSource {
         return projects.find { it.id == id } ?: throw NoProjectFoundException()
     }
 
-    override suspend fun addStateToProject(projectId: UUID, state: State): domain.model.Project {
+    override suspend fun addState(projectId: UUID, state: State): domain.model.Project {
         return updateProjectState(projectId, state)
     }
 
 
-    override suspend fun editStateToProject(projectId: UUID, state: State): domain.model.Project {
+    override suspend fun editState(projectId: UUID, state: State): domain.model.Project {
         return editProjectState(projectId, state)
     }
 
-    override suspend fun removeStateFromProject(projectId: UUID, state: State): domain.model.Project {
+    override suspend fun deleteState(projectId: UUID, state: State): domain.model.Project {
         return deleteProjectState(projectId, state)
     }
 
-    override suspend fun getProjectsForUserById(userId: UUID): List<domain.model.Project> {
+    override suspend fun getUserProjectsById(userId: UUID): List<domain.model.Project> {
         return projects.filter { project ->
             project.users.any { user -> user.id == userId }
         }
     }
 
 
-    override suspend fun getProjectForMateByUserId(userId: UUID): List<domain.model.Project> {
+    override suspend fun getMateProjectByUserId(userId: UUID): List<domain.model.Project> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User): domain.model.Project {
+    override suspend fun addMate(projectId: UUID, user: User): domain.model.Project {
         var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {

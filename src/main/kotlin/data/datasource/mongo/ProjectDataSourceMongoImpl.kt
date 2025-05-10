@@ -64,7 +64,7 @@ class ProjectDataSourceMongoImpl(
         }
     }
 
-    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun addState(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
 
             val update = Updates.push(STATE_FILED, state.toDocument())
@@ -81,7 +81,7 @@ class ProjectDataSourceMongoImpl(
     }
 
 
-    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun editState(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
             val project = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found")
@@ -104,7 +104,7 @@ class ProjectDataSourceMongoImpl(
     }
 
 
-    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
+    override suspend fun deleteState(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
             val filter = Filters.eq(ID_FILED, projectId.toString())
             val update = Updates.pull(STATE_FILED, Document(ID_FILED, state.id.toString()))
@@ -121,7 +121,7 @@ class ProjectDataSourceMongoImpl(
         }
     }
 
-    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    override suspend fun getMateProjectByUserId(userId: UUID): List<Project> {
         return withContext(Dispatchers.IO) {
             val filter = Filters.elemMatch(
                 USERS_FILED, Filters.and(
@@ -136,7 +136,7 @@ class ProjectDataSourceMongoImpl(
     }
 
 
-    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
+    override suspend fun addMate(projectId: UUID, user: User): Project {
         return withContext(Dispatchers.IO) {
             val update = Updates.push(
                 USERS_FILED, Document(ID_FILED, user.id.toString())
@@ -160,7 +160,7 @@ class ProjectDataSourceMongoImpl(
         }
     }
 
-    override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
+    override suspend fun getUserProjectsById(userId: UUID): List<Project> {
         return withContext(Dispatchers.IO) {
             val filter = Filters.elemMatch(USERS_FILED, Filters.eq(ID_FILED, userId.toString()))
             val projectDocs = mongoConnection.projects.find(filter).toList()

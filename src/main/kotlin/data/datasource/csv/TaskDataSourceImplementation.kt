@@ -83,7 +83,7 @@ class TaskDataSourceImplementation(
         }
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task> {
+    override suspend fun getTasksByStateAndProjectIds(projectId: UUID, stateId: UUID): List<Task> {
         val tasks = getAllTasks()
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }

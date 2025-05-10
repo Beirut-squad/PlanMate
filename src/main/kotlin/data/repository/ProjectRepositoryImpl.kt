@@ -32,15 +32,15 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun addStateToProject(projectId: UUID, state: State): Project {
-        return projectDataSource.addStateToProject(projectId, state)
+        return projectDataSource.addState(projectId, state)
     }
 
     override suspend fun editStateToProject(projectId: UUID, state: State): Project {
-        return projectDataSource.editStateToProject(projectId, state)
+        return projectDataSource.editState(projectId, state)
     }
 
     override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
-        return projectDataSource.removeStateFromProject(projectId, state)
+        return projectDataSource.deleteState(projectId, state)
     }
 
     override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
@@ -48,11 +48,11 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun addMateToProject(projectId: UUID, user: User): Project {
-        return projectDataSource.addMateToProject(projectId, user)
+        return projectDataSource.addMate(projectId, user)
     }
 
     override suspend fun getProjectsForUserById(userid: UUID): List<Project> {
-        return projectDataSource.getProjectsForUserById(userid)
+        return projectDataSource.getUserProjectsById(userid)
     }
 
 }

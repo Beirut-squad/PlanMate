@@ -37,7 +37,7 @@ class TaskFakeDataSource : TaskDataSource {
             ?: throw NoSuchElementException("Task with id $id not found")
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(
+    override suspend fun getTasksByStateAndProjectIds(
         projectId: UUID,
         stateId: UUID
     ): List<Task> {
