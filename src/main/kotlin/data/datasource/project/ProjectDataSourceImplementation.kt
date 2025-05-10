@@ -1,7 +1,6 @@
 package data.datasource.project
 
-
-import domain.exception.project.*
+import data.exception.*
 import domain.model.Project
 import domain.model.State
 import domain.model.User
@@ -19,44 +18,26 @@ class ProjectDataSourceImplementation(
 
 ) : ProjectDataSource {
     override suspend fun createProject(project: Project) {
-        try {
-            buildSuccessCreate(project)
-        } catch (e: Exception) {
-            throw ProjectNotCreatedException("Failed to create project: ${e.message}")
-        }
+        buildSuccessCreate(project)
     }
 
 
     override suspend fun editProject(project: Project) {
-        try {
-            buildSuccessEditor(project)
-        } catch (e: Exception) {
-            throw ProjectNotEditedException("Failed to edit project: ${e.message}")
-        }
+        buildSuccessEditor(project)
     }
 
 
     override suspend fun deleteProject(id: UUID) {
-        try {
-            buildSuccessDelete(id)
-        } catch (e: Exception) {
-            throw ProjectNotDeletedException("Failed to delete project: ${e.message}")
-        }
+        buildSuccessDelete(id)
     }
 
     override suspend fun getAllProjects(): List<Project> {
-        return try {
-            csvReader.read(fileName)
-        } catch (e: FileNotFoundException) {
-            emptyList()
-        } catch (e: Exception) {
-            throw ProjectNotGetAllProjectsException("Failed to get projects: ${e.message}")
-        }
+        return csvReader.read(fileName).ifEmpty { throw FileNotFoundException() }
     }
 
 
     override suspend fun getProject(id: UUID): Project {
-        return csvReader.read(fileName).find { it.id == id } ?: throw NoProjectFoundException()
+        return csvReader.read(fileName).find { it.id == id } ?: throw ProjectNotFoundException()
     }
 
     override suspend fun addStateToProject(projectId: UUID, state: State): Project {
@@ -80,7 +61,7 @@ class ProjectDataSourceImplementation(
                     state
                 } else oldState
             }
-            if (notFoundState) throw NoStateException()
+            if (notFoundState) throw StateNotFoundException()
             updatedStates
         }
     }
@@ -94,7 +75,7 @@ class ProjectDataSourceImplementation(
                     notFoundState = false
                 } else updatedStates += oldState
             }
-            if (notFoundState) throw NoStateException()
+            if (notFoundState) throw StateNotFoundException()
             updatedStates
         }
     }
@@ -115,14 +96,14 @@ class ProjectDataSourceImplementation(
                 } else
                     oldUsers
             }
-            if (notFoundUser) throw NoStateException()
+            if (notFoundUser) throw StateNotFoundException()
             updatedUser
         }
     }
 
     override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
         val project = csvReader.read(fileName).filter { it.creatorUserID == userId }
-        return project.ifEmpty { throw NoProjectFoundException() }
+        return project.ifEmpty { throw ProjectNotFoundException() }
     }
 
 
@@ -137,7 +118,7 @@ class ProjectDataSourceImplementation(
         }
 
         csvWriter.writeToFile(updatedProjects, fileName)
-        return updatedProject ?: throw NoProjectFoundException()
+        return updatedProject ?: throw ProjectNotFoundException()
     }
 
 
@@ -151,7 +132,7 @@ class ProjectDataSourceImplementation(
 
         csvWriter.writeToFile(updatedProject, fileName)
 
-        return project ?: throw NoProjectFoundException()
+        return project ?: throw ProjectNotFoundException()
     }
 
 
@@ -182,9 +163,7 @@ class ProjectDataSourceImplementation(
     private suspend fun buildSuccessCreate(project: Project) {
         val existingProjects = getAllProjects()
         if (existingProjects.any { it.title == project.title && it.creatorUserID == project.creatorUserID }) {
-            throw ProjectNotCreatedException(
-                "Project '${project.title}' already exists for user ${project.creatorUserID}"
-            )
+            throw ProjectCreationFailedException()
         }
         csvWriter.writeToFile(existingProjects + project, fileName)
     }
@@ -193,7 +172,7 @@ class ProjectDataSourceImplementation(
         val existingProjects = getAllProjects()
         val index = existingProjects.indexOfFirst { it.id == project.id }
         if (index == -1) {
-            throw ProjectNotEditedException("Project with ID ${project.id} not found")
+            throw ProjectEditFailedException()
         }
         val updatedProjects = existingProjects.toMutableList().apply {
             this[index] = project.copy(updatedAt = LocalDateTime.now())
@@ -204,7 +183,7 @@ class ProjectDataSourceImplementation(
     private suspend fun buildSuccessDelete(id: UUID) {
         val existingProjects = getAllProjects()
         if (existingProjects.none { it.id == id }) {
-            throw ProjectNotDeletedException("Project with ID $id not found")
+            throw ProjectDeletionFailedException()
         }
         val updatedProjects = existingProjects.filterNot { it.id == id }
         csvWriter.writeToFile(updatedProjects, fileName)

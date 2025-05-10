@@ -1,5 +1,8 @@
 package org.example.di
 
+import data.exception.handler.DataExceptionHandler
+import domain.exception.handler.DomainExceptionHandler
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.authentication.*
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.use_case.log.CreateTaskLogUseCase
@@ -12,6 +15,7 @@ import domain.use_case.task.*
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 import org.example.domain.use_cases.authentication.encryption.Encryptor
 import org.example.domain.use_cases.authentication.encryption.EncryptorMD5Impl
+import org.example.ui.exception.UIExceptionHandler
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -56,4 +60,9 @@ val logicModule = module {
     singleOf(::GetProjectTasksUseCase)
     singleOf(::EditTaskUseCase)
     singleOf(::DeleteTaskUseCase)
+
+    single<ExceptionHandler> {
+        DomainExceptionHandler(get())
+    }
+
 }

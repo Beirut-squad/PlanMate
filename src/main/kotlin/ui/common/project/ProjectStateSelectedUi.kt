@@ -1,5 +1,6 @@
 package org.example.ui.common.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.GetTaskByStateIdAndProjectId
@@ -15,11 +16,13 @@ class ProjectStateSelectedUi(
     private val printer: Printer by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
+    private val expectationHandler: ExceptionHandler by inject()
+
     private var running = true
     override suspend fun show() {
         running = true
+        val states = getProjectStates()
         while (running) {
-            val states = getProjectStates() ?: return
             if (states.isEmpty()) {
                 printer.printInfoLine("No states available for this project.")
                 running = false
@@ -29,16 +32,12 @@ class ProjectStateSelectedUi(
         }
     }
 
-    private suspend fun getProjectStates(): List<State>? {
+    private suspend fun getProjectStates(): List<State> {
         printer.printTitle("State Details")
-
-        return try {
+        return expectationHandler.runSafely {
             val project = getProjectByIdUseCase.getProjectById(projectId)
             project.state
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
-            null
-        }
+        }.getOrThrow()
     }
 
     private fun displayStateOptions(states: List<State>) {
@@ -69,7 +68,7 @@ class ProjectStateSelectedUi(
         printer.printTitle("State Details")
         printer.printInfoLine("Name: ${selectedState.name}")
 
-        try {
+        expectationHandler.runSafely {
             val tasks = getTaskByStateIdAndProjectId
                 .getTaskByStateIdAndProjectId(projectId, selectedState.id)
 
@@ -84,8 +83,6 @@ class ProjectStateSelectedUi(
                 printer.printInfoLine("No tasks available for this state.")
                 running = false
             }
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
         }
     }
 }

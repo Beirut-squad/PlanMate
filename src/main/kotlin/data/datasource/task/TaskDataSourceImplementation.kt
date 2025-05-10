@@ -1,10 +1,10 @@
 package data.datasource.task
 
+import data.exception.*
 import domain.model.Task
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
-import org.example.domain.exceptions.task_management_exception.*
 import java.util.*
 
 class TaskDataSourceImplementation(
@@ -17,64 +17,45 @@ class TaskDataSourceImplementation(
     override suspend fun createTask(task: Task) {
         val currentTasks = csvReader.read(taskFile)
         val updatedTasks = addTaskToList(currentTasks, task)
-        if (updatedTasks.isNotEmpty())
-            csvWriter.writeToFile(updatedTasks, taskFile)
-        else
-            throw TaskCreationException("Failed to create task")
+        if (updatedTasks.isNotEmpty()) csvWriter.writeToFile(updatedTasks, taskFile)
+        else throw TaskCreationFailedException()
 
     }
 
     override suspend fun editTask(task: Task) {
         val currentTasks = csvReader.read(taskFile)
-        validateTasksExist(currentTasks, "No tasks found to edit")
+        validateTasksExist(currentTasks)
 
         val taskIndex = findTaskIndexById(currentTasks, task.id)
-        validateTaskExists(taskIndex, task.id, "No tasks found to edit")
+        validateTaskExists(taskIndex, task.id)
 
         val updatedTasks = updateTaskInList(currentTasks, taskIndex, task)
 
-        if (updatedTasks.isNotEmpty())
-            csvWriter.writeToFile(updatedTasks, taskFile)
-        else
-            throw TaskEditException("Failed to edit task")
+        if (updatedTasks.isNotEmpty()) csvWriter.writeToFile(updatedTasks, taskFile)
+        else throw TaskEditFailedException()
     }
 
     override suspend fun deleteTask(id: UUID) {
         val currentTasks = csvReader.read(taskFile)
-        validateTasksExist(currentTasks, "No tasks found to delete")
+        validateTasksExist(currentTasks)
 
         val taskIndex = findTaskIndexById(currentTasks, id)
-        validateTaskExists(taskIndex, id, "Cannot delete task")
+        validateTaskExists(taskIndex, id)
 
         val updatedTasks = removeTaskFromList(currentTasks, taskIndex)
-        if (updatedTasks.isNotEmpty())
-            csvWriter.writeToFile(updatedTasks, taskFile)
-        else
-            throw TaskDeletionException("Failed to delete task")
+        if (updatedTasks.isNotEmpty()) csvWriter.writeToFile(updatedTasks, taskFile)
+        else throw TaskDeletionFailedException()
     }
 
     override suspend fun getAllTasks(): List<Task> {
-        val tasks = csvReader.read(taskFile)
-        if (tasks.isEmpty()) {
-            validateTasksExist(tasks, "No tasks found")
-            throw GetAllTasksException("Failed to read tasks: ")
-        } else {
-            return tasks
+        return csvReader.read(taskFile).ifEmpty {
+            throw TaskFetchAllFailedException()
         }
     }
 
     override suspend fun getTask(id: UUID): Task {
         val tasks = csvReader.read(taskFile)
-        if (tasks.isEmpty())
-            throw GetTaskException("Failed to retrieve task")
-        else {
-            val task = tasks.find { it.id == id }
-            if (task == null) {
-                throw GetTaskException("Task with ID $id not found")
-            } else {
-                return task
-            }
-        }
+        return tasks.find { it.id == id } ?: throw TaskNotFoundException()
     }
 
     override suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task> {
@@ -87,16 +68,14 @@ class TaskDataSourceImplementation(
     }
 
     override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
-            val tasks = csvReader.read(taskFile)
-            val tasksForProject = tasks.filter { it.projectId == projectId }
-            return tasksForProject.ifEmpty { throw GetTaskException("Failed to retrieve task") }
+        val tasks = csvReader.read(taskFile)
+        val tasksForProject = tasks.filter { it.projectId == projectId }
+        return tasksForProject.ifEmpty { throw TaskNotFoundException() }
     }
 
 
-    private fun validateTasksExist(tasks: List<Task>, errorMessage: String) {
-        if (tasks.isEmpty()) {
-            throw FailedToReadTaskException(errorMessage)
-        }
+    private fun validateTasksExist(tasks: List<Task>) {
+        if (tasks.isEmpty()) throw TaskNotFoundException()
     }
 
     private fun findTaskIndexById(tasks: List<Task>, id: UUID): Int {
@@ -104,9 +83,9 @@ class TaskDataSourceImplementation(
     }
 
 
-    private fun validateTaskExists(taskIndex: Int, id: UUID, errorMessage: String) {
+    private fun validateTaskExists(taskIndex: Int, id: UUID) {
         if (taskIndex == -1) {
-            throw TaskEditException("Task with ID $id not found: $errorMessage")
+            throw TaskEditFailedException()
         }
     }
 

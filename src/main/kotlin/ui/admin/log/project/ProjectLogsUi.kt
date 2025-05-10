@@ -1,5 +1,6 @@
 package org.example.ui.admin.log.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllProjectLogsUseCase
 import org.example.ui.common.components.Printer
@@ -9,11 +10,14 @@ class ProjectLogsUi(
     private val getAllProjectLogsUseCase: GetAllProjectLogsUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val printer: Printer,
-) : UiScreen, ProjectLogUi(getUserByIdUseCase, printer) {
+    private val exceptionHandler: ExceptionHandler,
+) : UiScreen, ProjectLogUi(getUserByIdUseCase, printer, exceptionHandler) {
     override suspend fun show() {
-        getAllProjectLogsUseCase.getAllProjectLogs()
-            .forEachIndexed { index, projectLog ->
-                displayProjectLog(index, projectLog)
-            }
+        exceptionHandler.runSafely {
+            getAllProjectLogsUseCase.getAllProjectLogs()
+                .forEachIndexed { index, projectLog ->
+                    displayProjectLog(index, projectLog)
+                }
+        }
     }
 }

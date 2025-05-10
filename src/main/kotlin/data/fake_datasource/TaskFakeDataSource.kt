@@ -1,8 +1,8 @@
 package org.example.data.fake_datasource
 
 import data.datasource.task.TaskDataSource
+import data.exception.TaskNotFoundException
 import domain.model.Task
-import org.example.domain.exceptions.task_management_exception.GetTaskException
 import java.util.*
 
 class TaskFakeDataSource : TaskDataSource {
@@ -49,6 +49,6 @@ class TaskFakeDataSource : TaskDataSource {
     }
 
     override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
-        return tasks.filter { it.projectId == projectId }.ifEmpty { throw GetTaskException("No tasks found for this project.") }
+        return tasks.filter { it.projectId == projectId }.ifEmpty { throw TaskNotFoundException() }
     }
 }

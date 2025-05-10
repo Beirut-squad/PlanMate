@@ -1,5 +1,6 @@
 package org.example.ui.common.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Task
 import domain.use_case.task.GetProjectTasksUseCase
 import org.example.ui.common.components.Printer
@@ -18,31 +19,31 @@ class ProjectTasksUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val getTasksForProjectUseCase: GetProjectTasksUseCase by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        try {
-            val result = getTasksForProjectUseCase.getTasksForProject(projectId)
-                printer.printTitle("Tasks for Project:")
-                displayTasksInColumns(result)
-                printer.printInfoLine("\nPlease choose an option:")
-                printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
-                val choice = reader.readInput()?.toIntOrNull()
-                when (choice) {
-                    1 -> {
-                        EditTaskUi(projectId).show()
-                    }
-
-                    2 -> {
-                        DeleteTaskUI(projectId).show()
-                    }
-
-                    else -> {
-                        printer.printGoodbyeMessage("Goodbye")
-                        UserProjectsUi().show()
-                    }
+        exceptionHandler.runSafely {
+            getTasksForProjectUseCase.getTasksForProject(projectId)
+        }.onSuccess {
+            printer.printTitle("Tasks for Project:")
+            displayTasksInColumns(it)
+            printer.printInfoLine("\nPlease choose an option:")
+            printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
+            val choice = reader.readInput()?.toIntOrNull()
+            when (choice) {
+                1 -> {
+                    EditTaskUi(projectId).show()
                 }
-        } catch (e: Exception) {
-            printer.printError("An error occurred while retrieving tasks: ${e.message}")
+
+                2 -> {
+                    DeleteTaskUI(projectId).show()
+                }
+
+                else -> {
+                    printer.printGoodbyeMessage("Goodbye")
+                    UserProjectsUi().show()
+                }
+            }
         }
     }
 

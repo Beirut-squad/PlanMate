@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.state.EditStateUseCase
@@ -16,6 +17,7 @@ class EditProjectStateUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val editStateUseCase: EditStateUseCase by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
         printer.printTitle("Edit State")
@@ -24,11 +26,9 @@ class EditProjectStateUi(
         printer.printTitle("Enter new state name:")
         val newName = reader.readInput().toString()
 
-        try {
+        exceptionHandler.runSafely {
             editStateUseCase.editState(state, newName, project)
             printer.printTitle("State updated successfully to: $newName")
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
         }
     }
 

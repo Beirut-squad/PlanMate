@@ -1,7 +1,7 @@
 package org.example.data.fake_datasource
 
 import data.datasource.log.LogDataSource
-import domain.exception.log.NoProjectLogsFoundException
+import data.exception.NoProjectLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import java.util.*

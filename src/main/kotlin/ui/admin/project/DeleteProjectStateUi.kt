@@ -1,7 +1,7 @@
 package org.example.ui.admin.project
 
-import domain.exception.ErrorHandler
 import domain.exception.NullInputException
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.state.DeleteStateUseCase
@@ -12,10 +12,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class DeleteProjectStateUi(
-    private val project: Project,
-    private val state: State
+    private val project: Project, private val state: State
 ) : UiScreen, KoinComponent {
-    private val errorHandler: ErrorHandler by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val deleteStateUseCase: DeleteStateUseCase by inject()
@@ -31,10 +30,8 @@ class DeleteProjectStateUi(
     }
 
     private suspend fun deleteState() {
-        try {
+        exceptionHandler.runSafely {
             deleteStateUseCase.deleteState(project, state)
-        }catch (e:Exception){
-            printer.printError("${e.message}")
         }
     }
 }

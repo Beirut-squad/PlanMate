@@ -1,5 +1,6 @@
 package org.example.ui.mate
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetUserProjectsByIdUseCase
@@ -14,15 +15,14 @@ class UserProjectsUi : UiScreen, KoinComponent {
     private val printer: Printer by inject()
     private val getCurrentLoggedInUserUseCase: GetCurrentUserUseCase by inject()
     private val getUserProjectsByIdUseCase: GetUserProjectsByIdUseCase by inject()
+    private val expectationHandle: ExceptionHandler by inject()
+
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
-        if (currentUserResult == null) {
-            printer.printError("No user found")
-            return
-        }
-        try {
-            val projects = getUserProjectsByIdUseCase.getProjectForUserById(currentUserResult.id)
+        expectationHandle.runSafely {
+            getUserProjectsByIdUseCase.getProjectForUserById(currentUserResult.id)
+        }.onSuccess { projects ->
             if (projects.isNotEmpty()) {
                 printer.printTitle("Project For User: ${currentUserResult.name}")
                 printer.printOptions(
@@ -33,8 +33,6 @@ class UserProjectsUi : UiScreen, KoinComponent {
             } else {
                 printer.printError("No project found for the current user.")
             }
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
         }
     }
 
@@ -52,10 +50,12 @@ class UserProjectsUi : UiScreen, KoinComponent {
                 printer.printError("Please enter a valid number.")
                 true
             }
+
             in 1..projects.size -> {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
+
             else -> {
                 printer.printGoodbyeMessage("Goodbye")
                 MateUi().show()

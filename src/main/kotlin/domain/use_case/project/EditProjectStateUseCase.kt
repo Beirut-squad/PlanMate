@@ -1,6 +1,6 @@
 package domain.use_case.project
 
-import domain.exception.project.BlankFieldsException
+import domain.exception.EmptyStateNameException
 import domain.model.Project
 import domain.model.State
 import org.example.domain.repository.ProjectRepository
@@ -13,7 +13,7 @@ class EditProjectStateUseCase(
 ) {
     suspend fun editStateToProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
-            throw BlankFieldsException("State name is required.")
+            throw EmptyStateNameException()
         }
         return repository.editStateToProject(project.id, state).also { updatedProject ->
             logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)

@@ -1,9 +1,9 @@
 package data.datasource.log
 
 import com.mongodb.client.model.Filters
+import data.exception.NoProjectLogsFoundException
+import data.exception.NoTaskLogsFoundException
 import data.mongo_db.MongoConnection
-import domain.exception.log.NoProjectLogsFoundException
-import domain.exception.log.NoTaskLogsFoundException
 import domain.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

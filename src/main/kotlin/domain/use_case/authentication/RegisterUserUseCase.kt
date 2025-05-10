@@ -1,5 +1,6 @@
 package domain.use_case.authentication
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
@@ -7,7 +8,8 @@ import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 class RegisterUserUseCase(
     private val authenticationRepository: AuthenticationRepository,
     private val encryptPassword: EncryptPassword,
-    private val registerMateUseCase: RegisterMateUseCase
+    private val registerMateUseCase: RegisterMateUseCase,
+    private val exceptionHandler: ExceptionHandler,
 ) {
 
     suspend fun add(
@@ -15,7 +17,7 @@ class RegisterUserUseCase(
         password: String,
         email: String,
     ): User {
-        return try {
+        return exceptionHandler.runSafely {
             authenticationRepository.checkIfFirstRegister()
             val encryptedPassword = encryptPassword.encryptPassword(password)
             authenticationRepository.registerAdmin(
@@ -23,8 +25,13 @@ class RegisterUserUseCase(
                 password = encryptedPassword,
                 email = email
             )
-        } catch (e: Exception) {
-            registerMateUseCase.addUser(name = name, password = password, email = email)
-        }
+        }.fold(
+            onFailure = {
+                registerMateUseCase.addUser(name = name, password = password, email = email)
+            },
+            onSuccess = {
+                it
+            }
+        )
     }
 }

@@ -1,5 +1,6 @@
 package org.example.ui.common.task
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
@@ -20,16 +21,12 @@ class CreateTaskUi(
     private val getCurrentUserUseCase: GetCurrentUserUseCase by inject()
     private val createTaskUseCase: CreateTaskUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
+    private val expectationHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        try {
+        expectationHandler.runSafely {
             val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
             val user = getCurrentUserUseCase.getCurrentUser()
-
-            if (user == null) {
-                printer.printError("No user found")
-                return
-            }
 
             printer.printTitle("Let's create a task")
 
@@ -40,8 +37,6 @@ class CreateTaskUi(
 
             val selectedState = selectedProject.state[selectedStateIndex]
             createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-        } catch (e: Exception) {
-            printer.printError("Failed to retrieve project: ${e.message}")
         }
     }
 

@@ -1,5 +1,6 @@
 package domain.use_case.log
 
+import domain.exception.NullTasksComparisonException
 import domain.model.Task
 import domain.model.TaskLog
 import org.example.domain.repository.LogRepository
@@ -11,7 +12,7 @@ class CreateTaskLogUseCase(
 ) {
     suspend fun createTaskLog(userId: UUID, previousTask: Task?, currentTask: Task?) {
         if (previousTask == null && currentTask == null)
-            throw IllegalArgumentException("Both previousTask and currentTask cannot be null")
+            throw NullTasksComparisonException()
 
         val entityId = listOfNotNull(currentTask?.id, previousTask?.id).first()
 

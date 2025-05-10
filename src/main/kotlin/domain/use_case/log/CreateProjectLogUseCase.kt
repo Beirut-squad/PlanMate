@@ -1,5 +1,6 @@
 package domain.use_case.log
 
+import domain.exception.NullProjectsComparisonException
 import domain.model.Project
 import domain.model.ProjectLog
 import org.example.domain.repository.LogRepository
@@ -11,7 +12,7 @@ class CreateProjectLogUseCase(
 ) {
     suspend fun createProjectLog(userId: UUID, previousProject: Project?, currentProject: Project?) {
         if (previousProject == null && currentProject == null)
-            throw IllegalArgumentException("Both previous and current projects cannot be null")
+            throw NullProjectsComparisonException()
 
         val entityId = listOfNotNull(currentProject?.id, previousProject?.id).first()
 

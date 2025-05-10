@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.EditProjectDescriptionUseCase
@@ -14,6 +15,7 @@ class EditProjectUi(
     private val editProjectNameUseCase: EditProjectNameUseCase,
     private val editProjectDescriptionUseCase: EditProjectDescriptionUseCase,
     private val currentUserUseCase: GetCurrentUserUseCase,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
 
     lateinit var project: Project
@@ -22,20 +24,20 @@ class EditProjectUi(
         var isContinueProcess = true
         while (isContinueProcess) {
             displayMenu()
-            val option = reader.readInt()
-            when (option) {
-                1 -> editProjectName()
-                2 -> editProjectDescription()
-                3 -> isContinueProcess = false
+            exceptionHandler.runSafely {
+                val option = reader.readInt()
+                when (option) {
+                    1 -> editProjectName()
+                    2 -> editProjectDescription()
+                    3 -> isContinueProcess = false
+                }
             }
         }
     }
 
     private fun displayMenu() {
         printer.printOptions(
-            "Edit project name",
-            "Edit project description",
-            "Return"
+            "Edit project name", "Edit project description", "Return"
         )
         printer.printTitle("Choose what you want to change in project.")
     }
@@ -43,23 +45,15 @@ class EditProjectUi(
     private suspend fun editProjectName() {
         printer.printPlainText("Edit Project Name: ", withNewLine = false)
         val newProjectName = reader.readInput()
-        try {
-            val editorUserId = currentUserUseCase.getCurrentUser()?.id ?: return
-            editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
-        }
-
+        val editorUserId = currentUserUseCase.getCurrentUser().id
+        editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
     }
 
     private suspend fun editProjectDescription() {
         printer.printPlainText("Edit Project Description: ", withNewLine = false)
         val newProjectDescription = reader.readInput()
-        try {
-            val editorUserId = currentUserUseCase.getCurrentUser()?.id ?: return
-            editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
-        }
+        val editorUserId = currentUserUseCase.getCurrentUser().id
+        editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
+
     }
 }

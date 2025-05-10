@@ -1,5 +1,6 @@
 package org.example.ui.admin.log.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.ProjectLog
 import domain.model.State
@@ -11,9 +12,12 @@ import java.util.*
 open class ProjectLogUi(
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val printer: Printer,
+    private val exceptionHandler: ExceptionHandler,
 ) {
-    private suspend fun getUserName(userId: UUID): String? {
-        return getUserByIdUseCase.getUser(userId)?.name
+    private suspend fun getUserName(userId: UUID): String {
+        return exceptionHandler.runSafely {
+            getUserByIdUseCase.getUser(userId)
+        }.getOrThrow().name
     }
 
     protected suspend fun displayProjectLog(index: Int, projectLog: ProjectLog) {
@@ -91,6 +95,7 @@ open class ProjectLogUi(
             previousStates.size == currentStates.size -> handleStateEdition(
                 index, userName, previousProject, currentProject,
             )
+
             previousStates.size > currentStates.size -> handleStateRemoval(
                 index, userName, previousProject, currentProject,
             )

@@ -1,6 +1,7 @@
 package domain.use_case.project
 
-import domain.exception.project.BlankFieldsException
+import domain.exception.EmptyProjectDescriptionException
+import domain.exception.EmptyProjectNameException
 import domain.model.Project
 import domain.model.State
 import domain.use_case.authentication.GetCurrentUserUseCase
@@ -15,15 +16,14 @@ class CreateProjectUseCase(
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) {
     suspend fun createProject(name: String, description: String, stateNames: List<String>) {
-        val creatorUserID = getCurrentUserUseCase.getCurrentUser()?.id
-            ?: throw IllegalStateException("User is not logged in")
-        if (name.isBlank() || description.isBlank()) {
-            throw BlankFieldsException("You should write a valid input as a string.")
-        } else {
-            val project = buildProject(creatorUserID, name, description, stateNames)
-            projectRepository.createProject(project)
-            logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
+        val creatorUserID = getCurrentUserUseCase.getCurrentUser().id
+        when {
+            name.isBlank() -> throw EmptyProjectNameException()
+            description.isBlank() -> throw EmptyProjectDescriptionException()
         }
+        val project = buildProject(creatorUserID, name, description, stateNames)
+        projectRepository.createProject(project)
+        logUseCase.createProjectLog(creatorUserID, previousProject = null, currentProject = project)
     }
 
     private fun buildProject(creatorUserID: UUID, name: String, description: String, stateNames: List<String>)

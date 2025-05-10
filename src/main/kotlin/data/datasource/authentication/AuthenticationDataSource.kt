@@ -10,6 +10,6 @@ interface AuthenticationDataSource {
     suspend fun registerAdmin(name: String, password: String, email: String): User
     suspend fun logout()
     suspend fun checkIfFirstRegister()
-    suspend fun getCurrentLoggedInUser(): User?
+    suspend fun getCurrentLoggedInUser(): User
     suspend fun getUsers(): List<User>
 }
