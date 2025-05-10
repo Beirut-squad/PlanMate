@@ -1,7 +1,7 @@
-package data.datasource.task
+package org.example.data.datasource
 
 import domain.model.Task
-import java.util.*
+import java.util.UUID
 
 interface TaskDataSource {
     suspend fun createTask(task: Task)
@@ -9,7 +9,6 @@ interface TaskDataSource {
     suspend fun deleteTask(id: UUID)
     suspend fun getAllTasks(): List<Task>
     suspend fun getTask(id: UUID): Task
-    suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task>
+    suspend fun getTasksByStateAndProjectIds(projectId: UUID, stateId: UUID): List<Task>
     suspend fun getAllTasksForProject(projectId: UUID): List<Task>
 }
-

@@ -1,41 +1,41 @@
 package org.example.data.repository
 
-import data.datasource.authentication.AuthenticationDataSource
+import org.example.data.datasource.AuthenticationDataSource
 import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
-    private val authentication: AuthenticationDataSource
+    private val authenticationDataSource: AuthenticationDataSource
 ) : AuthenticationRepository {
     override suspend fun login(email: String, password: String): User {
-        return authentication.login(email = email, password = password)
+        return authenticationDataSource.login(email = email, password = password)
     }
 
     override suspend fun checkEmail(email: String) {
-         authentication.checkEmail(email)
+         authenticationDataSource.isValidEmail(email)
     }
 
     override suspend fun register(name: String, password: String, email: String): User {
-        return authentication.register(email = email, password = password, name = name)
+        return authenticationDataSource.register(email = email, password = password, name = name)
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
-        return authentication.registerAdmin(email = email, password = password, name = name)
+        return authenticationDataSource.registerAdmin(email = email, password = password, name = name)
     }
 
     override suspend fun logout() {
-         authentication.logout()
+         authenticationDataSource.logout()
     }
 
     override suspend fun checkIfFirstRegister() {
-         authentication.checkIfFirstRegister()
+         authenticationDataSource.isFirstRegister()
     }
 
     override suspend fun getCurrentLoggedInUser(): User? {
-        return authentication.getCurrentLoggedInUser()
+        return authenticationDataSource.getCurrentUser()
     }
 
     override suspend fun getUsers(): List<User> {
-        return authentication.getUsers()
+        return authenticationDataSource.getUsers()
     }
 }

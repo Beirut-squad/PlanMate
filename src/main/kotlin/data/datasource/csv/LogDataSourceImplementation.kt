@@ -1,13 +1,13 @@
-package data.datasource.log
+package org.example.data.datasource.csv
 
-import org.example.data.csv.helper.FileName.PROJECT_LOG
-import org.example.data.csv.helper.FileName.TASK_LOG
-import org.example.data.csv.reader.CsvReader
-import org.example.data.csv.writer.CsvWriter
 import domain.exception.log.NoProjectLogsFoundException
 import domain.exception.log.NoTaskLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
+import org.example.data.csv.helper.FileName
+import org.example.data.csv.reader.CsvReader
+import org.example.data.csv.writer.CsvWriter
+import org.example.data.datasource.LogDataSource
 import java.util.UUID
 
 class LogDataSourceImplementation(
@@ -18,35 +18,35 @@ class LogDataSourceImplementation(
 ) : LogDataSource {
 
     override suspend fun getProjectLogs(id: UUID): List<ProjectLog> {
-        return csvProjectLogReader.read(PROJECT_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
+        return csvProjectLogReader.read(FileName.PROJECT_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
     override suspend fun getTaskLogs(id: UUID): List<TaskLog> {
-        return csvTaskLogReader.read(TASK_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
+        return csvTaskLogReader.read(FileName.TASK_LOG).filter { it.entityId == id }.takeIf { it.isNotEmpty() }
             ?: throw NoTaskLogsFoundException()
     }
 
     override suspend fun saveProjectLog(projectLog: ProjectLog) {
-        val logs = csvProjectLogReader.read(PROJECT_LOG).toMutableList()
+        val logs = csvProjectLogReader.read(FileName.PROJECT_LOG).toMutableList()
         logs.add(projectLog)
-        csvProjectLogWriter.writeToFile(logs, PROJECT_LOG)
+        csvProjectLogWriter.writeToFile(logs, FileName.PROJECT_LOG)
     }
 
     override suspend fun saveTaskLog(taskLog: TaskLog) {
-        val logs = csvTaskLogReader.read(TASK_LOG).toMutableList()
+        val logs = csvTaskLogReader.read(FileName.TASK_LOG).toMutableList()
         logs.add(taskLog)
-        csvTaskLogWriter.writeToFile(logs, TASK_LOG)
+        csvTaskLogWriter.writeToFile(logs, FileName.TASK_LOG)
     }
 
     override suspend fun getAllProjectLogs(): List<ProjectLog> {
-        return csvProjectLogReader.read(PROJECT_LOG)
+        return csvProjectLogReader.read(FileName.PROJECT_LOG)
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectLogsFoundException()
     }
 
     override suspend fun getAllTaskLogs(): List<TaskLog> {
-        return csvTaskLogReader.read(TASK_LOG)
+        return csvTaskLogReader.read(FileName.TASK_LOG)
             .takeIf { it.isNotEmpty() }
             ?: throw NoTaskLogsFoundException()
     }

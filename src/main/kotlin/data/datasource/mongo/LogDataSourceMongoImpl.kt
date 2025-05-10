@@ -1,17 +1,20 @@
-package data.datasource.log
+package org.example.data.datasource.mongo
 
 import com.mongodb.client.model.Filters
-import data.mongo_db.MongoConnection
+import data.datasource.mapper.toDocument
+import data.datasource.mapper.toProjectLog
+import data.datasource.mapper.toTaskLog
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
 import domain.exception.log.NoProjectLogsFoundException
 import domain.exception.log.NoTaskLogsFoundException
-import domain.model.*
+import domain.model.ProjectLog
+import domain.model.TaskLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.example.data.datasource.utils.*
+import org.example.data.datasource.LogDataSource
+import java.util.UUID
 
-import java.util.*
-
-class LogMongoDataSourceImpl(
+class LogDataSourceMongoImpl(
     private val mongoConnection: MongoConnection
 ) : LogDataSource {
 

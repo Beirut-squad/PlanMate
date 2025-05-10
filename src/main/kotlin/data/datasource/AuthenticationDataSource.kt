@@ -1,15 +1,14 @@
-package data.datasource.authentication
+package org.example.data.datasource
 
 import domain.model.User
 
-
 interface AuthenticationDataSource {
     suspend fun login(email: String, password: String): User
-    suspend fun checkEmail(email: String)
+    suspend fun isValidEmail(email: String): Boolean
     suspend fun register(name: String, password: String, email: String): User
     suspend fun registerAdmin(name: String, password: String, email: String): User
     suspend fun logout()
-    suspend fun checkIfFirstRegister()
-    suspend fun getCurrentLoggedInUser(): User?
+    suspend fun isFirstRegister(): Boolean
+    suspend fun getCurrentUser(): User?
     suspend fun getUsers(): List<User>
 }

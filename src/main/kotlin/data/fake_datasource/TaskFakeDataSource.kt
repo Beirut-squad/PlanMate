@@ -1,6 +1,6 @@
 package org.example.data.fake_datasource
 
-import data.datasource.task.TaskDataSource
+import org.example.data.datasource.TaskDataSource
 import domain.model.Task
 import org.example.domain.exceptions.task_management_exception.GetTaskException
 import java.util.*
@@ -37,7 +37,7 @@ class TaskFakeDataSource : TaskDataSource {
             ?: throw NoSuchElementException("Task with id $id not found")
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(
+    override suspend fun getTasksByStateAndProjectIds(
         projectId: UUID,
         stateId: UUID
     ): List<Task> {
