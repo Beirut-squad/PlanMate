@@ -12,7 +12,7 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun checkEmail(email: String) {
-         authenticationDataSource.checkEmail(email)
+         authenticationDataSource.isValidEmail(email)
     }
 
     override suspend fun register(name: String, password: String, email: String): User {
@@ -28,11 +28,11 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun checkIfFirstRegister() {
-         authenticationDataSource.checkIfFirstRegister()
+         authenticationDataSource.isFirstRegister()
     }
 
     override suspend fun getCurrentLoggedInUser(): User? {
-        return authenticationDataSource.getCurrentLoggedInUser()
+        return authenticationDataSource.getCurrentUser()
     }
 
     override suspend fun getUsers(): List<User> {

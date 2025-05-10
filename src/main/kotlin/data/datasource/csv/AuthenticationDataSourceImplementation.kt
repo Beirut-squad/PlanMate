@@ -1,10 +1,8 @@
 package org.example.data.datasource.csv
 
 import domain.exception.authentication.EmailAlreadyExistsException
-import domain.exception.authentication.EmailNotFoundException
 import domain.exception.authentication.InvalidEmailOrPasswordException
 import domain.exception.authentication.NoLoggedInUserException
-import domain.exception.authentication.UsersAlreadyExistException
 import domain.model.Role
 import domain.model.User
 import org.example.data.csv.helper.FileName
@@ -20,17 +18,17 @@ class AuthenticationDataSourceImplementation(
 
     override suspend fun login(email: String, password: String): User {
         val users = readUsersFromCsv()
-        val user = users.find { it.email == email && it.password == password } ?: throw InvalidEmailOrPasswordException()
-             saveCurrentUser(user)
-               return user
+        val user =
+            users.find { it.email == email && it.password == password } ?: throw InvalidEmailOrPasswordException()
+        saveCurrentUser(user)
+        return user
 
     }
 
-    override suspend fun checkEmail(email: String) {
+    override suspend fun isValidEmail(email: String): Boolean {
         val users = readUsersFromCsv()
-         if (users.none { it.email == email }) {
-         throw EmailNotFoundException()
-         }
+        return users.none { it.email == email }
+
     }
 
     override suspend fun register(name: String, password: String, email: String): User {
@@ -78,21 +76,19 @@ class AuthenticationDataSourceImplementation(
     }
 
     override suspend fun logout() {
-        if (getCurrentLoggedInUser() == null) {
+        if (getCurrentUser() == null) {
             throw NoLoggedInUserException()
         }
         saveCurrentUser(null)
     }
 
-    override suspend fun checkIfFirstRegister() {
+    override suspend fun isFirstRegister(): Boolean {
         val users = readUsersFromCsv()
-         if (users.isNotEmpty()) {
-            throw UsersAlreadyExistException()
-        }
+        return users.isEmpty()
     }
 
     private fun saveCurrentUser(user: User?) {
-         try {
+        try {
             if (user != null) {
                 csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
             } else {
@@ -103,8 +99,8 @@ class AuthenticationDataSourceImplementation(
         }
     }
 
-    override suspend fun getCurrentLoggedInUser(): User? {
-            return readUsersFromCsv().singleOrNull()
+    override suspend fun getCurrentUser(): User? {
+        return readUsersFromCsv().singleOrNull()
     }
 
     override suspend fun getUsers(): List<User> {

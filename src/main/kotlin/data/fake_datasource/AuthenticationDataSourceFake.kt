@@ -21,10 +21,9 @@ class AuthenticationDataSourceFake : AuthenticationDataSource {
 
     }
 
-    override suspend fun checkEmail(email: String) {
-        if (users.none { it.email == email }) {
-            throw Exception("User with email $email not found")
-        }
+    override suspend fun isValidEmail(email: String): Boolean {
+        return !users.none { it.email == email }
+
 
     }
 
@@ -69,13 +68,11 @@ class AuthenticationDataSourceFake : AuthenticationDataSource {
         currentUser = null
     }
 
-    override suspend fun checkIfFirstRegister() {
-       if (users.isNotEmpty()) {
-            throw UsersAlreadyExistException()
-        }
+    override suspend fun isFirstRegister(): Boolean {
+       return users.isEmpty()
     }
 
-    override suspend fun getCurrentLoggedInUser(): User? {
+    override suspend fun getCurrentUser(): User? {
         return currentUser
     }
 
