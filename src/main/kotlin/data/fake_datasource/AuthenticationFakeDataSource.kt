@@ -1,10 +1,10 @@
 package org.example.data.fake_datasource
 
+import data.exception.EmailAlreadyExistsException
+import data.exception.InvalidCredentialsException
+import data.exception.UserNotLoggedInException
+import data.exception.UsersAlreadyExistException
 import data.datasource.authentication.AuthenticationDataSource
-import domain.exception.authentication.EmailAlreadyExistsException
-import domain.exception.authentication.InvalidEmailOrPasswordException
-import domain.exception.authentication.NoLoggedInUserException
-import domain.exception.authentication.UsersAlreadyExistException
 import domain.model.Role
 import domain.model.User
 import java.util.*
@@ -15,7 +15,7 @@ class AuthenticationFakeDataSource : AuthenticationDataSource {
 
     override suspend fun login(email: String, password: String): User {
         val user = users.find { it.email == email && it.password == password }
-            ?: throw InvalidEmailOrPasswordException()
+            ?: throw InvalidCredentialsException()
         currentUser = user
         return user
 
@@ -64,7 +64,7 @@ class AuthenticationFakeDataSource : AuthenticationDataSource {
 
     override suspend fun logout(){
         if (currentUser == null) {
-            throw NoLoggedInUserException()
+            throw UserNotLoggedInException()
         }
         currentUser = null
     }
@@ -75,8 +75,8 @@ class AuthenticationFakeDataSource : AuthenticationDataSource {
         }
     }
 
-    override suspend fun getCurrentLoggedInUser(): User? {
-        return currentUser
+    override suspend fun getCurrentLoggedInUser(): User {
+        return currentUser ?: throw UserNotLoggedInException()
     }
 
     override suspend fun getUsers(): List<User> {

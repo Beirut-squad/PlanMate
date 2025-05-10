@@ -1,5 +1,7 @@
 package org.example.ui.common.authentication
 
+import domain.exception.EmptyFieldException
+import domain.exception.handler.ExceptionHandler
 import domain.model.Role
 import domain.model.User
 import domain.use_case.authentication.LoginUseCase
@@ -15,6 +17,7 @@ class LoginUi(
     private val loginUseCase: LoginUseCase,
     private val adminUi: AdminUi,
     private val mateUI: MateUi,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     override suspend fun show() {
         printer.printTitle("Login for Plan Mate")
@@ -25,28 +28,26 @@ class LoginUi(
     }
 
     private suspend fun takeUserLoginInput() {
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
+        exceptionHandler.runSafely {
+            val email = takeUserInput("Email")
+            val password = takeUserInput("Password")
 
-        try {
-            val user = loginUseCase.login(email, password)
-            printer.printCorrectOutput("Login successful!")
-            checkAdminOrMate(user)
-            return
-        } catch (e: Exception) {
-            printer.printError("Login failed! ${e.message}")
-            takeUserLoginInput()
-        }
+            loginUseCase.login(email, password)
+        }.fold(
+            onFailure = {
+                takeUserLoginInput()
+            },
+            onSuccess = {
+                printer.printCorrectOutput("Login successful!")
+                checkAdminOrMate(it)
+                return
+            }
+        )
     }
 
     private fun takeUserInput(prompt: String): String {
         printer.printInfoLine("$prompt: ")
-        try {
-            return reader.readInput() ?: throw Exception()
-        } catch (e: Exception) {
-            printer.printError("Invalid input")
-            return takeUserInput(prompt)
-        }
+        return reader.readInput() ?: throw EmptyFieldException()
     }
 
     private suspend fun checkAdminOrMate(user: User) {

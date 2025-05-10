@@ -1,5 +1,7 @@
 package org.example.ui.common.authentication
 
+import domain.exception.EmptyFieldException
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.authentication.RegisterUserUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
@@ -10,8 +12,8 @@ class RegisterUi(
     private val printer: Printer,
     private val registerUseCase: RegisterUserUseCase,
     private val loginUi: LoginUi,
-
-    ) : UiScreen {
+    private val exceptionHandler: ExceptionHandler,
+) : UiScreen {
     override suspend fun show() {
         printer.printTitle("Register for Plan Mate")
 
@@ -21,29 +23,27 @@ class RegisterUi(
     }
 
     private suspend fun takeUserRegisterInput() {
-        try {
+        exceptionHandler.runSafely {
             val name = takeUserInput("Name")
             val email = takeUserInput("Email")
             val password = takeUserInput("Password")
 
             registerUseCase.add(name = name, email = email, password = password)
-
-            printer.printCorrectOutput("Register successfully!")
-            goToLoginScreen()
-        }catch (e: Exception) {
-            printer.printError("Register failed!")
-            takeUserRegisterInput()
-        }
+        }.fold(
+            onFailure = {
+                printer.printError("Register failed!")
+                takeUserRegisterInput()
+            },
+            onSuccess = {
+                printer.printCorrectOutput("Register successfully!")
+                goToLoginScreen()
+            }
+        )
     }
 
     private fun takeUserInput(prompt: String): String {
         printer.printInfoLine("$prompt: ")
-        try {
-            return reader.readInput() ?: throw Exception()
-        } catch (e: Exception) {
-            printer.printError("Invalid input")
-            return takeUserInput(prompt)
-        }
+        return reader.readInput() ?: throw EmptyFieldException()
     }
 
     private suspend fun goToLoginScreen() {

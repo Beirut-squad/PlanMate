@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
@@ -10,7 +11,8 @@ import org.example.ui.common.components.UiScreen
 class SingleStateUi(
     private val printer: Printer,
     private val reader: Reader,
-    private val getProjectByIdUseCase: GetProjectByIdUseCase
+    private val getProjectByIdUseCase: GetProjectByIdUseCase,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private lateinit var project: Project
     private lateinit var state: State
@@ -67,11 +69,9 @@ class SingleStateUi(
     }
 
     private suspend fun updateProject() {
-        try {
+        exceptionHandler.runSafely {
             project = getProjectByIdUseCase.getProjectById(project.id)
-            state = project.state.find { it.id == state.id }!!
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
+            state = project.state.find { it.id == state.id }!! // Warning: Potential crash detected here!
         }
     }
 }

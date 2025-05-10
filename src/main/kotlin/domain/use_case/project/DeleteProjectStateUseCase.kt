@@ -1,6 +1,6 @@
 package domain.use_case.project
 
-import domain.exception.project.BlankFieldsException
+import domain.exception.EmptyStateNameException
 import domain.model.Project
 import domain.model.State
 import domain.use_case.log.CreateProjectLogUseCase
@@ -14,7 +14,7 @@ class DeleteProjectStateUseCase(
 ) {
     suspend fun removeStateFromProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
-            throw BlankFieldsException("State name is required.")
+            throw EmptyStateNameException()
         }
         return repository.removeStateFromProject(project.id, state).also { updatedProject ->
             logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)

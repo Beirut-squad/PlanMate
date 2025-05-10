@@ -1,5 +1,6 @@
 package ui.admin.log.task
 
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllTaskLogsUseCase
 import org.example.ui.common.components.Printer
@@ -9,12 +10,15 @@ class TaskLogsUi(
     private val getAllTaskLogsUseCase: GetAllTaskLogsUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val printer: Printer,
-) : UiScreen, TaskLogUi(getUserByIdUseCase, printer) {
+    private val exceptionHandler: ExceptionHandler,
+) : UiScreen, TaskLogUi(getUserByIdUseCase, printer, exceptionHandler) {
 
     override suspend fun show() {
-        getAllTaskLogsUseCase.getAllTaskLogs()
-            .forEachIndexed { index, taskLog ->
-                displayTaskLog(index, taskLog)
-            }
+        exceptionHandler.runSafely {
+            getAllTaskLogsUseCase.getAllTaskLogs()
+                .forEachIndexed { index, taskLog ->
+                    displayTaskLog(index, taskLog)
+                }
+        }
     }
 }

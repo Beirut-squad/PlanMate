@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
@@ -12,7 +13,8 @@ class ProjectStatesUi(
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
     private val singleStateUi: SingleStateUi,
     private val printer: Printer,
-    private val reader: Reader
+    private val reader: Reader,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private lateinit var projectId: UUID
     private lateinit var project: Project
@@ -41,9 +43,11 @@ class ProjectStatesUi(
                     in states.indices -> {
                         goToSingleStateUi(states[selectedIndex])
                     }
+
                     states.size -> {
                         break
                     }
+
                     else -> {
                         printer.printError("Invalid selection")
                     }
@@ -54,7 +58,9 @@ class ProjectStatesUi(
     }
 
     private suspend fun getProject(): Project {
-        return getProjectByIdUseCase.getProjectById(projectId)
+        return exceptionHandler.runSafely {
+            getProjectByIdUseCase.getProjectById(projectId)
+        }.getOrThrow()
     }
 
     private suspend fun displayNoStatesAndGoToCreateState() {

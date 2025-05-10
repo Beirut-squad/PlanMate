@@ -1,5 +1,8 @@
 package org.example.di
 
+import core.exception.handler.DefaultExceptionHandler
+import domain.exception.handler.DomainExceptionHandler
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.authentication.*
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.use_case.log.CreateTaskLogUseCase
@@ -56,4 +59,13 @@ val logicModule = module {
     singleOf(::GetProjectTasksUseCase)
     singleOf(::EditTaskUseCase)
     singleOf(::DeleteTaskUseCase)
+
+    single<ExceptionHandler> {
+        DomainExceptionHandler(get())
+    }
+
+    single<ExceptionHandler> {
+        DefaultExceptionHandler(get())
+    }
+
 }

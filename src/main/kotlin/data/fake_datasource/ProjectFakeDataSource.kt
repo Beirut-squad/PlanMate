@@ -1,7 +1,7 @@
 package org.example.data.fake_datasource
 
 import data.datasource.project.ProjectDataSource
-import domain.exception.project.NoProjectFoundException
+import data.exception.ProjectNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User
@@ -38,7 +38,7 @@ class ProjectFakeDataSource : ProjectDataSource {
     }
 
     override suspend fun getProject(id: UUID): Project {
-        return projects.find { it.id == id } ?: throw NoProjectFoundException()
+        return projects.find { it.id == id } ?: throw ProjectNotFoundException()
     }
 
     override suspend fun addStateToProject(projectId: UUID, state: State): Project {
@@ -80,7 +80,7 @@ class ProjectFakeDataSource : ProjectDataSource {
                 project
             }
         }
-        return updatedProject ?: throw NoProjectFoundException()
+        return updatedProject ?: throw ProjectNotFoundException()
     }
 
 
@@ -98,7 +98,7 @@ class ProjectFakeDataSource : ProjectDataSource {
                 project
             }
         }
-        return updatedProject ?: throw NoProjectFoundException()
+        return updatedProject ?: throw ProjectNotFoundException()
     }
 
     private fun editProjectState(projectId: UUID, updatedState: State): Project {
@@ -118,7 +118,7 @@ class ProjectFakeDataSource : ProjectDataSource {
                 project
             }
         }
-        return updatedProject ?: throw NoProjectFoundException()
+        return updatedProject ?: throw ProjectNotFoundException()
     }
 
     private fun deleteProjectState(projectId: UUID, state: State): Project {
@@ -135,6 +135,6 @@ class ProjectFakeDataSource : ProjectDataSource {
                 project
             }
         }
-        return updatedProject ?: throw NoProjectFoundException()
+        return updatedProject ?: throw ProjectNotFoundException()
     }
 }

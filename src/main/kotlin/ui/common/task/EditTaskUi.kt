@@ -1,5 +1,6 @@
 package org.example.ui.common.task
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
@@ -24,23 +25,20 @@ class EditTaskUi(
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val editTaskUseCase: EditTaskUseCase by inject()
     private val getCurrentUserUseCase: GetCurrentUserUseCase by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        try {
-            val tasksResult = getProjectTasksUseCase.getTasksForProject(projectId)
+        exceptionHandler.runSafely {
+            getProjectTasksUseCase.getTasksForProject(projectId)
+        }.onSuccess { tasks ->
             val user = getCurrentUserUseCase.getCurrentUser()
 
-            if (user == null) {
-                printer.printError("No user found")
-                return
-            }
-
-            if (tasksResult.isEmpty()) {
+            if (tasks.isEmpty()) {
                 printer.printInfoLine("No tasks available to edit.")
                 return
             }
             printer.printTitle("Select a Task to Edit:")
-            tasksResult.forEachIndexed { index, task ->
+            tasks.forEachIndexed { index, task ->
                 printer.printInfoLine(
                     """
                         Task #${index + 1}
@@ -54,22 +52,20 @@ class EditTaskUi(
             val input = reader.readInput()?.trim()
             val number = input?.toIntOrNull()
 
-            if (number == null || number !in 1..tasksResult.size) {
+            if (number == null || number !in 1..tasks.size) {
                 printer.printError("Invalid input. Returning to the projects screen.")
                 return UserProjectsUi().show()
             }
 
-            val selectedTask = tasksResult[number - 1]
+            val selectedTask = tasks[number - 1]
             editSelectedTask(selectedTask, user.id)
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
         }
     }
 
-    private suspend fun editSelectedTask(task: Task, currentUser : UUID) {
-        try {
-            val selectedProject = getProjectByIdUseCase.getProjectById(task.projectId)
-
+    private suspend fun editSelectedTask(task: Task, currentUser: UUID) {
+        exceptionHandler.runSafely {
+            getProjectByIdUseCase.getProjectById(task.projectId)
+        }.onSuccess { selectedProject ->
             printer.printTitle("Edit Task - ${task.title}")
             printer.printInfoLine("Current Task Details:")
             printer.printInfoLine(
@@ -87,16 +83,12 @@ class EditTaskUi(
             val selectedStateIndex = getValidStateInput(selectedProject, task.state.name)
             val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
 
-            try {
-                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState,currentUser)
+            exceptionHandler.runSafely {
+                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState, currentUser)
+            }.onSuccess {
                 printer.printInfoLine("Task updated successfully!")
                 UserProjectsUi().show()
-            } catch (e: Exception) {
-                printer.printError("Failed to update task: ${e.message}")
             }
-
-        } catch (e: Exception) {
-            printer.printError("Failed to retrieve project: ${e.message}")
         }
     }
 

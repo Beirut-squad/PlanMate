@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
@@ -9,7 +10,6 @@ import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.task.CreateTaskUi
-import java.io.InvalidObjectException
 
 class SingleProjectUi(
     private val printer: Printer,
@@ -18,14 +18,15 @@ class SingleProjectUi(
     private val getCurrentLoggedInUserUseCase: GetCurrentUserUseCase,
     private val editProjectUi: EditProjectUi,
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
-    private val viewProjectStates: ProjectStatesUi
+    private val viewProjectStates: ProjectStatesUi,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     lateinit var project: Project
     lateinit var user: User
     private var running = true
 
     override suspend fun show() {
-        user = getCurrentLoggedInUserUseCase.getCurrentUser() ?: throw InvalidObjectException("User is not logged in")
+        user = getCurrentLoggedInUserUseCase.getCurrentUser()
         running = true
         while (running) {
             printer.printTitle("Project ${project.title}")
@@ -40,8 +41,9 @@ class SingleProjectUi(
                 "Add task to project",
                 "Exit"
             )
-
-            takeUserInput()
+            exceptionHandler.runSafely {
+                takeUserInput()
+            }
         }
     }
 
@@ -54,17 +56,11 @@ class SingleProjectUi(
             }
 
             2 -> {
-                try {
-                    deleteProjectUseCase.deleteProject(
-                        project = project,
-                        creatorUserID = user.id
-                    )
-                    running = false
-                } catch (e: Exception) {
-                    printer.printError("${e.message}")
-                    running = false
-                }
-
+                deleteProjectUseCase.deleteProject(
+                    project = project,
+                    creatorUserID = user.id
+                )
+                running = false
             }
 
             3 -> {
@@ -106,10 +102,6 @@ class SingleProjectUi(
     }
 
     private suspend fun updateProject() {
-        try {
-            project = getProjectByIdUseCase.getProjectById(project.id)
-        } catch (e: Exception) {
-            printer.printError("${e.message}")
-        }
+        project = getProjectByIdUseCase.getProjectById(project.id)
     }
 }

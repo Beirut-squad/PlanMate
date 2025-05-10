@@ -1,5 +1,6 @@
 package org.example.ui.admin.project
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.User
 import domain.use_case.authentication.GetUserByIdUseCase
@@ -14,37 +15,42 @@ class ProjectsUi(
     private val reader: Reader,
     private val getAllProjectsUseCases: GetAllProjectsUseCase,
     private val singleProjectUi: SingleProjectUi,
-    private val getUserByIdUseCase: GetUserByIdUseCase
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private var running = true
     override suspend fun show() {
         running = true
-        val allProjects = getAllProjectsUseCases.getAllProjects()
+        exceptionHandler.runSafely {
+            val projects = getAllProjectsUseCases.getAllProjects()
+            showProjectDetails(projects)
+        }
+    }
 
+    private suspend fun showProjectDetails(projects: List<Project>) {
         while (running) {
-            try {
-                if (allProjects.isNotEmpty()) {
+            exceptionHandler.runSafely {
+                if (projects.isNotEmpty()) {
                     printer.printTitle("Project: ")
-                    allProjects.forEachIndexed { index, project ->
+                    projects.forEachIndexed { index, project ->
                         printer.printInfoLine(
                             """
-                        ${index + 1}.
-                        - Made by: ${getUserById(project.creatorUserID).name}
-                        - Name: ${project.title}
-                        - Description: ${project.description}
-                        - Creation Date: ${project.createdAt}
-                        - Update Date: ${project.updatedAt}
-                    """.trimIndent()
+                            ${index + 1}.
+                            - Made by: ${getUserById(project.creatorUserID).name}
+                            - Name: ${project.title}
+                            - Description: ${project.description}
+                            - Creation Date: ${project.createdAt}
+                            - Update Date: ${project.updatedAt}
+                        """.trimIndent()
                         )
                     }
 
-                    chooseProject(allProjects)
+                    chooseProject(projects)
                 } else {
                     printer.printInfoLine("No projects found.")
                     running = false
                 }
-            } catch (e: Exception) {
-                printer.printError("Failed to retrieve projects: ${e.message}")
+            }.onFailure {
                 running = false
             }
         }
@@ -53,7 +59,6 @@ class ProjectsUi(
     private suspend fun chooseProject(projects: List<Project>) {
         printer.printInfoLine("Choose project: ")
         printer.printOptions(projects.map { it.title } + "Exit")
-
         enterProject(projects)
     }
 
@@ -85,6 +90,6 @@ class ProjectsUi(
     }
 
     private suspend fun getUserById(id: UUID): User {
-        return getUserByIdUseCase.getUser(id)?: throw IllegalStateException("User not found")
+        return getUserByIdUseCase.getUser(id)
     }
 }

@@ -31,7 +31,7 @@ class AuthenticationRepositoryImpl(
          authentication.checkIfFirstRegister()
     }
 
-    override suspend fun getCurrentLoggedInUser(): User? {
+    override suspend fun getCurrentLoggedInUser(): User {
         return authentication.getCurrentLoggedInUser()
     }
 

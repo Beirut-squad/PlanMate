@@ -1,5 +1,7 @@
 package org.example.ui.common.project
 
+import domain.exception.handler.ExceptionHandler
+import domain.model.Project
 import domain.use_case.project.GetProjectByIdUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
@@ -16,55 +18,60 @@ class ProjectMateUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
+    private val expectationHandler: ExceptionHandler by inject()
+
     override suspend fun show() {
-        try {
-            var running = true
-            while (running) {
-                val project = getProjectByIdUseCase.getProjectById(projectId)
-                printer.printInfoLine(
-                    """
-                - Project Name: ${project.title}
-                - Description: ${project.description}
-                - Created At: ${project.createdAt}
-                """.trimIndent()
-                )
+        expectationHandler.runSafely {
+            getProjectByIdUseCase.getProjectById(projectId)
+        }.onSuccess { project ->
+            displayProjectOptions(project)
+        }
+    }
 
-                printer.printInfoLine("Choose an option:")
-                printer.printOptions(
-                    "View state for project", "View all task for project", "Create new task", "" +
-                            "Enter Any Thing To Go Back"
-                )
+    private suspend fun displayProjectOptions(project: Project) {
+        var running = true
+        while (running) {
+            printer.printInfoLine(
+                """
+                    - Project Name: ${project.title}
+                    - Description: ${project.description}
+                    - Created At: ${project.createdAt}
+                    """.trimIndent()
+            )
 
-                val option = reader.readInt()
-                when (option) {
-                    1 -> {
-                        ProjectStateSelectedUi(
-                            project.id,
-                        ).show()
-                    }
+            printer.printInfoLine("Choose an option:")
+            printer.printOptions(
+                "View state for project", "View all task for project", "Create new task", "" +
+                        "Enter Any Thing To Go Back"
+            )
 
-                    2 -> {
-                        ProjectTasksUi(
-                            project.id
-                        ).show()
-                    }
+            val option = reader.readInt()
+            when (option) {
+                1 -> {
+                    ProjectStateSelectedUi(
+                        project.id,
+                    ).show()
+                }
 
-                    3 -> {
-                        if (project.state.isEmpty()) {
-                            printer.printError("Cannot create a task because this project has no states.")
-                            UserProjectsUi().show()
-                        } else {
-                            CreateTaskUi(projectId).show()
-                        }
-                    }
+                2 -> {
+                    ProjectTasksUi(
+                        project.id
+                    ).show()
+                }
 
-                    else -> {
-                        running = false
+                3 -> {
+                    if (project.state.isEmpty()) {
+                        printer.printError("Cannot create a task because this project has no states.")
+                        UserProjectsUi().show()
+                    } else {
+                        CreateTaskUi(projectId).show()
                     }
                 }
+
+                else -> {
+                    running = false
+                }
             }
-        } catch (e: Exception) {
-            printer.printError("Failed to retrieve project: ${e.message}")
         }
     }
 }
