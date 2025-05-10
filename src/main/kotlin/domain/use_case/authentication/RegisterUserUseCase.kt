@@ -17,20 +17,18 @@ class RegisterUserUseCase(
         password: String,
         email: String,
     ): User {
-        return exceptionHandler.runSafely {
-            authenticationRepository.checkIfFirstRegister()
-            val encryptedPassword = encryptPassword.encryptPassword(password)
-            authenticationRepository.registerAdmin(
-                name = name,
-                password = encryptedPassword,
-                email = email
-            )
-        }.fold(
-            onFailure = {
-                registerMateUseCase.addUser(name = name, password = password, email = email)
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                authenticationRepository.checkIfFirstRegister()
+                val encryptedPassword = encryptPassword.encryptPassword(password)
+                authenticationRepository.registerAdmin(
+                    name = name,
+                    password = encryptedPassword,
+                    email = email
+                )
             },
-            onSuccess = {
-                it
+            onError = {
+                registerMateUseCase.addUser(name = name, password = password, email = email)
             }
         )
     }

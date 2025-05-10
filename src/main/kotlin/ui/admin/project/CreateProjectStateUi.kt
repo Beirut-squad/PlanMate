@@ -18,11 +18,13 @@ class CreateProjectStateUi(
     private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            printer.printTitle("Create State")
-            printer.printInfoLine("Please, Write your state name")
-            val stateName = reader.readInput().toString()
-            createStateUseCase.createState(name = stateName, project = project)
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                printer.printTitle("Create State")
+                printer.printInfoLine("Please, Write your state name")
+                val stateName = reader.readInput().toString()
+                createStateUseCase.createState(name = stateName, project = project)
+            }
+        )
     }
 }

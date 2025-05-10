@@ -11,8 +11,10 @@ class GetCurrentUserUseCase(
     ) {
 
     suspend fun getCurrentUser(): User {
-        return exceptionHandler.runSafely {
-            authenticationRepository.getCurrentLoggedInUser()
-        }.getOrThrow()
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                authenticationRepository.getCurrentLoggedInUser()
+            }
+        )
     }
 }

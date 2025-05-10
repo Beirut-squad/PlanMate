@@ -33,17 +33,10 @@ class AuthenticationDataSourceImplementation(
 
     override suspend fun register(name: String, password: String, email: String): User {
         val users = readUsersFromCsv()
-        if (users.any { it.email == email }) {
-            throw EmailAlreadyExistsException()
-        }
+        validateUniqueEmail(users, email)
 
         val newUser = User(
-            id = UUID.randomUUID(),
-            name = name,
-            password = password,
-            email = email,
-            role = Role.MATE,
-            isDeleted = false
+            id = UUID.randomUUID(), name = name, password = password, email = email, role = Role.MATE, isDeleted = false
         )
 
         addUserToCsv(newUser)
@@ -54,31 +47,37 @@ class AuthenticationDataSourceImplementation(
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
-        return exceptionHandler.runSafely {
-            val users = readUsersFromCsv()
-            if (users.any { it.email == email }) {
-                throw EmailAlreadyExistsException()
-            }
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                val users = readUsersFromCsv()
+                validateUniqueEmail(users, email)
+                val newAdmin = User(
+                    id = UUID.randomUUID(),
+                    name = name,
+                    password = password,
+                    email = email,
+                    role = Role.ADMIN,
+                    isDeleted = false
+                )
+                newAdmin
+            },
+            onSuccess = {
+                addUserToCsv(it)
+                saveCurrentUser(it)
+            },
+        )
+    }
 
-            val newAdmin = User(
-                id = UUID.randomUUID(),
-                name = name,
-                password = password,
-                email = email,
-                role = Role.ADMIN,
-                isDeleted = false
-            )
-
-            addUserToCsv(newAdmin)
-            saveCurrentUser(newAdmin)
-            newAdmin
-        }.getOrThrow()
+    private fun validateUniqueEmail(users: List<User>, email: String) {
+        if (users.any { it.email == email }) {
+            throw EmailAlreadyExistsException()
+        }
     }
 
     override suspend fun logout() {
-        exceptionHandler.runSafely {
-            saveCurrentUser(null)
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = { saveCurrentUser(null) }
+        )
     }
 
     override suspend fun checkIfFirstRegister() {

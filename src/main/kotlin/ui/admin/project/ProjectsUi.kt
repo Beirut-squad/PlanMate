@@ -21,15 +21,16 @@ class ProjectsUi(
     private var running = true
     override suspend fun show() {
         running = true
-        exceptionHandler.runSafely {
-            val projects = getAllProjectsUseCases.getAllProjects()
-            showProjectDetails(projects)
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val projects = getAllProjectsUseCases.getAllProjects()
+                showProjectDetails(projects)
+            })
     }
 
     private suspend fun showProjectDetails(projects: List<Project>) {
         while (running) {
-            exceptionHandler.runSafely {
+            exceptionHandler.tryCatchingAsync(action = {
                 if (projects.isNotEmpty()) {
                     printer.printTitle("Project: ")
                     projects.forEachIndexed { index, project ->
@@ -50,9 +51,9 @@ class ProjectsUi(
                     printer.printInfoLine("No projects found.")
                     running = false
                 }
-            }.onFailure {
+            }, onError = {
                 running = false
-            }
+            })
         }
     }
 

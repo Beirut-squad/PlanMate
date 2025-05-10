@@ -58,9 +58,11 @@ class ProjectStatesUi(
     }
 
     private suspend fun getProject(): Project {
-        return exceptionHandler.runSafely {
-            getProjectByIdUseCase.getProjectById(projectId)
-        }.getOrThrow()
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getProjectByIdUseCase.getProjectById(projectId)
+            }
+        )
     }
 
     private suspend fun displayNoStatesAndGoToCreateState() {

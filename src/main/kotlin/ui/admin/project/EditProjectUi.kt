@@ -24,14 +24,16 @@ class EditProjectUi(
         var isContinueProcess = true
         while (isContinueProcess) {
             displayMenu()
-            exceptionHandler.runSafely {
-                val option = reader.readInt()
-                when (option) {
-                    1 -> editProjectName()
-                    2 -> editProjectDescription()
-                    3 -> isContinueProcess = false
+            exceptionHandler.tryCatchingAsync(
+                action = {
+                    val option = reader.readInt()
+                    when (option) {
+                        1 -> editProjectName()
+                        2 -> editProjectDescription()
+                        3 -> isContinueProcess = false
+                    }
                 }
-            }
+            )
         }
     }
 

@@ -34,10 +34,12 @@ class ProjectStateSelectedUi(
 
     private suspend fun getProjectStates(): List<State> {
         printer.printTitle("State Details")
-        return expectationHandler.runSafely {
-            val project = getProjectByIdUseCase.getProjectById(projectId)
-            project.state
-        }.getOrThrow()
+        return expectationHandler.tryCatchingAsyncWithResult(
+            action = {
+                val project = getProjectByIdUseCase.getProjectById(projectId)
+                project.state
+            }
+        )
     }
 
     private fun displayStateOptions(states: List<State>) {
@@ -68,21 +70,23 @@ class ProjectStateSelectedUi(
         printer.printTitle("State Details")
         printer.printInfoLine("Name: ${selectedState.name}")
 
-        expectationHandler.runSafely {
-            val tasks = getTaskByStateIdAndProjectId
-                .getTaskByStateIdAndProjectId(projectId, selectedState.id)
+        expectationHandler.tryCatchingAsync(
+            action = {
+                val tasks = getTaskByStateIdAndProjectId
+                    .getTaskByStateIdAndProjectId(projectId, selectedState.id)
 
-            if (tasks.isNotEmpty()) {
-                printer.printInfoLine("Tasks:")
-                tasks.forEach { task ->
-                    printer.printInfoLine(
-                        " - Name: ${task.title}, Description: ${task.description}"
-                    )
+                if (tasks.isNotEmpty()) {
+                    printer.printInfoLine("Tasks:")
+                    tasks.forEach { task ->
+                        printer.printInfoLine(
+                            " - Name: ${task.title}, Description: ${task.description}"
+                        )
+                    }
+                } else {
+                    printer.printInfoLine("No tasks available for this state.")
+                    running = false
                 }
-            } else {
-                printer.printInfoLine("No tasks available for this state.")
-                running = false
             }
-        }
+        )
     }
 }

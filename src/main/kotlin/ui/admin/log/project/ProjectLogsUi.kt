@@ -13,11 +13,13 @@ class ProjectLogsUi(
     private val exceptionHandler: ExceptionHandler,
 ) : UiScreen, ProjectLogUi(getUserByIdUseCase, printer, exceptionHandler) {
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            getAllProjectLogsUseCase.getAllProjectLogs()
-                .forEachIndexed { index, projectLog ->
-                    displayProjectLog(index, projectLog)
-                }
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                getAllProjectLogsUseCase.getAllProjectLogs()
+                    .forEachIndexed { index, projectLog ->
+                        displayProjectLog(index, projectLog)
+                    }
+            }
+        )
     }
 }

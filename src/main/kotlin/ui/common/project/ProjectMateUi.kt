@@ -21,11 +21,14 @@ class ProjectMateUi(
     private val expectationHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        expectationHandler.runSafely {
-            getProjectByIdUseCase.getProjectById(projectId)
-        }.onSuccess { project ->
-            displayProjectOptions(project)
-        }
+        expectationHandler.tryCatchingAsyncWithResult(
+            action = {
+                getProjectByIdUseCase.getProjectById(projectId)
+            },
+            onSuccess = { project ->
+                displayProjectOptions(project)
+            }
+        )
     }
 
     private suspend fun displayProjectOptions(project: Project) {

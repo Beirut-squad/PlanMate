@@ -22,29 +22,32 @@ class ProjectTasksUi(
     private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            getTasksForProjectUseCase.getTasksForProject(projectId)
-        }.onSuccess {
-            printer.printTitle("Tasks for Project:")
-            displayTasksInColumns(it)
-            printer.printInfoLine("\nPlease choose an option:")
-            printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
-            val choice = reader.readInput()?.toIntOrNull()
-            when (choice) {
-                1 -> {
-                    EditTaskUi(projectId).show()
-                }
+        exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getTasksForProjectUseCase.getTasksForProject(projectId)
+            },
+            onSuccess = {
+                printer.printTitle("Tasks for Project:")
+                displayTasksInColumns(it)
+                printer.printInfoLine("\nPlease choose an option:")
+                printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
+                val choice = reader.readInput()?.toIntOrNull()
+                when (choice) {
+                    1 -> {
+                        EditTaskUi(projectId).show()
+                    }
 
-                2 -> {
-                    DeleteTaskUI(projectId).show()
-                }
+                    2 -> {
+                        DeleteTaskUI(projectId).show()
+                    }
 
-                else -> {
-                    printer.printGoodbyeMessage("Goodbye")
-                    UserProjectsUi().show()
+                    else -> {
+                        printer.printGoodbyeMessage("Goodbye")
+                        UserProjectsUi().show()
+                    }
                 }
             }
-        }
+        )
     }
 
     private fun displayTasksInColumns(tasks: List<Task>) {

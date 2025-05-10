@@ -15,14 +15,16 @@ class RegisterMateUseCase(
         password: String,
         email: String
     ): User {
-        return exceptionHandler.runSafely {
-            val encryptedPassword = encryptPassword.encryptPassword(password)
-            authenticationRepository.register(
-                name = name,
-                password = encryptedPassword,
-                email = email
-            )
-        }.getOrThrow()
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                val encryptedPassword = encryptPassword.encryptPassword(password)
+                authenticationRepository.register(
+                    name = name,
+                    password = encryptedPassword,
+                    email = email
+                )
+            }
+        )
     }
 
 }

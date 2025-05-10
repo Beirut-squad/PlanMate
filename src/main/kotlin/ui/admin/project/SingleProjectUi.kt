@@ -41,9 +41,11 @@ class SingleProjectUi(
                 "Add task to project",
                 "Exit"
             )
-            exceptionHandler.runSafely {
-                takeUserInput()
-            }
+            exceptionHandler.tryCatchingAsync(
+                action = {
+                    takeUserInput()
+                }
+            )
         }
     }
 

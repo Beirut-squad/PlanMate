@@ -19,13 +19,15 @@ class CreateProjectUi(
         val name = reader.readInput()
         printer.printOption("Tell me more about description of your project")
         val description = reader.readInput()
-        exceptionHandler.runSafely {
-            createProjectUseCase.createProject(
-                name = name.toString(),
-                description = description.toString(),
-                stateNames = emptyList(),
-            )
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                createProjectUseCase.createProject(
+                    name = name.toString(),
+                    description = description.toString(),
+                    stateNames = emptyList(),
+                )
+            }
+        )
 
     }
 }

@@ -23,20 +23,20 @@ class RegisterUi(
     }
 
     private suspend fun takeUserRegisterInput() {
-        exceptionHandler.runSafely {
-            val name = takeUserInput("Name")
-            val email = takeUserInput("Email")
-            val password = takeUserInput("Password")
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val name = takeUserInput("Name")
+                val email = takeUserInput("Email")
+                val password = takeUserInput("Password")
 
-            registerUseCase.add(name = name, email = email, password = password)
-        }.fold(
-            onFailure = {
-                printer.printError("Register failed!")
-                takeUserRegisterInput()
-            },
-            onSuccess = {
+                registerUseCase.add(name = name, email = email, password = password)
+
                 printer.printCorrectOutput("Register successfully!")
                 goToLoginScreen()
+            },
+            onError = {
+                printer.printError("Register failed!")
+                takeUserRegisterInput()
             }
         )
     }

@@ -69,9 +69,11 @@ class SingleStateUi(
     }
 
     private suspend fun updateProject() {
-        exceptionHandler.runSafely {
-            project = getProjectByIdUseCase.getProjectById(project.id)
-            state = project.state.find { it.id == state.id }!! // Warning: Potential crash detected here!
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                project = getProjectByIdUseCase.getProjectById(project.id)
+                state = project.state.find { it.id == state.id }!! // Warning: Potential crash detected here!
+            }
+        )
     }
 }

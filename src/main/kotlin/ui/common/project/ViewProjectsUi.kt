@@ -11,17 +11,19 @@ class ViewProjectsUi(
     private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            getAllProjectsUseCases.getAllProjects()
-        }.onSuccess { projects ->
-            if (projects.isEmpty()) {
-                printer.printError("No projects found.")
-                return
-            }
-            printer.printTitle("Project: ")
-            projects.forEachIndexed { index, project ->
-                printer.printInfoLine(
-                    """
+        exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getAllProjectsUseCases.getAllProjects()
+            },
+            onSuccess = { projects ->
+                if (projects.isEmpty()) {
+                    printer.printError("No projects found.")
+                    return@tryCatchingAsyncWithResult
+                }
+                printer.printTitle("Project: ")
+                projects.forEachIndexed { index, project ->
+                    printer.printInfoLine(
+                        """
                         ${index + 1}.
                         - Made by: ${project.creatorUserID}
                         - Name: ${project.title}
@@ -29,8 +31,9 @@ class ViewProjectsUi(
                         - Creation Date: ${project.createdAt}
                         - Update Date: ${project.updatedAt}
                     """.trimIndent()
-                )
+                    )
+                }
             }
-        }
+        )
     }
 }

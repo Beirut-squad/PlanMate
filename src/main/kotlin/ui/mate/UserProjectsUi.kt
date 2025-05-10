@@ -20,20 +20,23 @@ class UserProjectsUi : UiScreen, KoinComponent {
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
-        expectationHandle.runSafely {
-            getUserProjectsByIdUseCase.getProjectForUserById(currentUserResult.id)
-        }.onSuccess { projects ->
-            if (projects.isNotEmpty()) {
-                printer.printTitle("Project For User: ${currentUserResult.name}")
-                printer.printOptions(
-                    projects.map { it.title }
-                )
-                printer.printTitle("Select a project to view details:")
-                handleProjectSelection(projects)
-            } else {
-                printer.printError("No project found for the current user.")
+        expectationHandle.tryCatchingAsyncWithResult(
+            action = {
+                getUserProjectsByIdUseCase.getProjectForUserById(currentUserResult.id)
+            },
+            onSuccess = { projects ->
+                if (projects.isNotEmpty()) {
+                    printer.printTitle("Project For User: ${currentUserResult.name}")
+                    printer.printOptions(
+                        projects.map { it.title }
+                    )
+                    printer.printTitle("Select a project to view details:")
+                    handleProjectSelection(projects)
+                } else {
+                    printer.printError("No project found for the current user.")
+                }
             }
-        }
+        )
     }
 
     private suspend fun handleProjectSelection(projects: List<Project>) {

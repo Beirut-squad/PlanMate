@@ -24,20 +24,22 @@ class CreateTaskUi(
     private val expectationHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        expectationHandler.runSafely {
-            val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
-            val user = getCurrentUserUseCase.getCurrentUser()
+        expectationHandler.tryCatchingAsync(
+            action = {
+                val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
+                val user = getCurrentUserUseCase.getCurrentUser()
 
-            printer.printTitle("Let's create a task")
+                printer.printTitle("Let's create a task")
 
-            val name = getValidInput("Write your task name:")
-            val description = getValidInput("Tell me more about description of your task:")
+                val name = getValidInput("Write your task name:")
+                val description = getValidInput("Tell me more about description of your task:")
 
-            val selectedStateIndex = getValidStateInput(selectedProject)
+                val selectedStateIndex = getValidStateInput(selectedProject)
 
-            val selectedState = selectedProject.state[selectedStateIndex]
-            createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-        }
+                val selectedState = selectedProject.state[selectedStateIndex]
+                createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
+            }
+        )
     }
 
 

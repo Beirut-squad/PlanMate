@@ -28,21 +28,22 @@ class LoginUi(
     }
 
     private suspend fun takeUserLoginInput() {
-        exceptionHandler.runSafely {
-            val email = takeUserInput("Email")
-            val password = takeUserInput("Password")
+        val email = takeUserInput("Email")
+        val password = takeUserInput("Password")
 
-            loginUseCase.login(email, password)
-        }.fold(
-            onFailure = {
+        exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                loginUseCase.login(email, password)
+            },
+            onError = {
                 takeUserLoginInput()
             },
             onSuccess = {
                 printer.printCorrectOutput("Login successful!")
                 checkAdminOrMate(it)
-                return
             }
         )
+
     }
 
     private fun takeUserInput(prompt: String): String {

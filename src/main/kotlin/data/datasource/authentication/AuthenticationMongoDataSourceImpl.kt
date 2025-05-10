@@ -95,21 +95,23 @@ class AuthenticationMongoDataSourceImpl(
     }
 
     private suspend fun saveCurrentUser(user: User?) = withContext(Dispatchers.IO) {
-        exceptionHandler.runSafely {
-            val currentUser = MongoConnection.currentUser
-            currentUser.deleteMany(Document())
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val currentUser = MongoConnection.currentUser
+                currentUser.deleteMany(Document())
 
-            if (user != null) {
-                val document = Document(ID_FILED, user.id.toString())
-                    .append(NAME_FILED, user.name)
-                    .append(EMAIL_FILED, user.email)
-                    .append(PASSWORD_FILED, user.password)
-                    .append(ROLE_FILED, user.role.name)
-                    .append(IS_DELETED_FILED, user.isDeleted)
+                if (user != null) {
+                    val document = Document(ID_FILED, user.id.toString())
+                        .append(NAME_FILED, user.name)
+                        .append(EMAIL_FILED, user.email)
+                        .append(PASSWORD_FILED, user.password)
+                        .append(ROLE_FILED, user.role.name)
+                        .append(IS_DELETED_FILED, user.isDeleted)
 
-                currentUser.insertOne(document)
+                    currentUser.insertOne(document)
+                }
             }
-        }
+        )
     }
 
     private fun createUser(name: String, password: String, email: String, role: Role): User {

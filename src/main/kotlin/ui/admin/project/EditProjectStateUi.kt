@@ -26,10 +26,12 @@ class EditProjectStateUi(
         printer.printTitle("Enter new state name:")
         val newName = reader.readInput().toString()
 
-        exceptionHandler.runSafely {
-            editStateUseCase.editState(state, newName, project)
-            printer.printTitle("State updated successfully to: $newName")
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                editStateUseCase.editState(state, newName, project)
+                printer.printTitle("State updated successfully to: $newName")
+            }
+        )
     }
 
 }

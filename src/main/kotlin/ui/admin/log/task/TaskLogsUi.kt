@@ -14,11 +14,13 @@ class TaskLogsUi(
 ) : UiScreen, TaskLogUi(getUserByIdUseCase, printer, exceptionHandler) {
 
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            getAllTaskLogsUseCase.getAllTaskLogs()
-                .forEachIndexed { index, taskLog ->
-                    displayTaskLog(index, taskLog)
-                }
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                getAllTaskLogsUseCase.getAllTaskLogs()
+                    .forEachIndexed { index, taskLog ->
+                        displayTaskLog(index, taskLog)
+                    }
+            }
+        )
     }
 }

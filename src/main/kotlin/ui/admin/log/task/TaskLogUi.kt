@@ -15,9 +15,11 @@ open class TaskLogUi(
 
     ) {
     private suspend fun getUserName(userId: UUID): String {
-       return exceptionHandler.runSafely {
-            getUserByIdUseCase.getUser(userId)
-        }.getOrThrow().name
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getUserByIdUseCase.getUser(userId).name
+            }
+        )
     }
 
     protected suspend fun displayTaskLog(index: Int, taskLog: TaskLog) {

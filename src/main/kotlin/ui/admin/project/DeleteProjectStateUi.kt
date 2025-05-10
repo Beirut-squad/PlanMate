@@ -30,8 +30,10 @@ class DeleteProjectStateUi(
     }
 
     private suspend fun deleteState() {
-        exceptionHandler.runSafely {
-            deleteStateUseCase.deleteState(project, state)
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                deleteStateUseCase.deleteState(project, state)
+            }
+        )
     }
 }

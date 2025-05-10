@@ -3,6 +3,7 @@ package org.example.ui.common.task
 import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.Task
+import domain.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.EditTaskUseCase
@@ -28,68 +29,82 @@ class EditTaskUi(
     private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        exceptionHandler.runSafely {
-            getProjectTasksUseCase.getTasksForProject(projectId)
-        }.onSuccess { tasks ->
-            val user = getCurrentUserUseCase.getCurrentUser()
+        exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getProjectTasksUseCase.getTasksForProject(projectId)
+            },
+            onSuccess = { tasks ->
+                val user = getCurrentUserUseCase.getCurrentUser()
 
-            if (tasks.isEmpty()) {
-                printer.printInfoLine("No tasks available to edit.")
-                return
-            }
-            printer.printTitle("Select a Task to Edit:")
-            tasks.forEachIndexed { index, task ->
-                printer.printInfoLine(
-                    """
+                if (tasks.isEmpty()) {
+                    printer.printInfoLine("No tasks available to edit.")
+                    return@tryCatchingAsyncWithResult
+                }
+                printer.printTitle("Select a Task to Edit:")
+                tasks.forEachIndexed { index, task ->
+                    printer.printInfoLine(
+                        """
                         Task #${index + 1}
                         - Title: ${task.title}
                         - Description: ${task.description}
                         - State: ${task.state.name}
                         """.trimIndent()
-                )
+                    )
+                }
+                handleEditTask(tasks, user)
             }
-            printer.printLoader("Enter the task number to edit(or any thing to exit):")
-            val input = reader.readInput()?.trim()
-            val number = input?.toIntOrNull()
+        )
+    }
 
-            if (number == null || number !in 1..tasks.size) {
-                printer.printError("Invalid input. Returning to the projects screen.")
-                return UserProjectsUi().show()
-            }
+    private suspend fun EditTaskUi.handleEditTask(
+        tasks: List<Task>,
+        user: User
+    ) {
+        printer.printLoader("Enter the task number to edit(or any thing to exit):")
+        val input = reader.readInput()?.trim()
+        val number = input?.toIntOrNull()
 
-            val selectedTask = tasks[number - 1]
-            editSelectedTask(selectedTask, user.id)
+        if (number == null || number !in 1..tasks.size) {
+            printer.printError("Invalid input. Returning to the projects screen.")
+            return
         }
+
+        val selectedTask = tasks[number - 1]
+        editSelectedTask(selectedTask, user.id)
     }
 
     private suspend fun editSelectedTask(task: Task, currentUser: UUID) {
-        exceptionHandler.runSafely {
-            getProjectByIdUseCase.getProjectById(task.projectId)
-        }.onSuccess { selectedProject ->
-            printer.printTitle("Edit Task - ${task.title}")
-            printer.printInfoLine("Current Task Details:")
-            printer.printInfoLine(
-                """
+        exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getProjectByIdUseCase.getProjectById(task.projectId)
+            },
+            onSuccess = { selectedProject ->
+                printer.printTitle("Edit Task - ${task.title}")
+                printer.printInfoLine("Current Task Details:")
+                printer.printInfoLine(
+                    """
             Title: ${task.title}
             Description: ${task.description}
             State: ${task.state.name}
             """.trimIndent()
-            )
+                )
 
-            val newTitle = getValidInput("Enter new Title (Leave empty to keep the current):", task.title)
-            val newDescription =
-                getValidInput("Enter new Description (Leave empty to keep the current):", task.description)
+                val newTitle = getValidInput("Enter new Title (Leave empty to keep the current):", task.title)
+                val newDescription =
+                    getValidInput("Enter new Description (Leave empty to keep the current):", task.description)
 
-            val selectedStateIndex = getValidStateInput(selectedProject, task.state.name)
-            val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
+                val selectedStateIndex = getValidStateInput(selectedProject, task.state.name)
+                val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
 
-            exceptionHandler.runSafely {
-                editTaskUseCase.editTask(task, newTitle, newDescription, selectedState, currentUser)
-            }.onSuccess {
-                printer.printInfoLine("Task updated successfully!")
-                UserProjectsUi().show()
+                exceptionHandler.tryCatchingAsync(
+                    action = {
+                        editTaskUseCase.editTask(task, newTitle, newDescription, selectedState, currentUser)
+                        printer.printInfoLine("Task updated successfully!")
+                        UserProjectsUi().show()
+                    }
+                )
             }
-        }
+        )
     }
 
 
