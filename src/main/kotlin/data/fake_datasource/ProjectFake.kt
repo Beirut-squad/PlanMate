@@ -61,7 +61,7 @@ class ProjectFakeDataSource : ProjectDataSource {
     }
 
 
-    override suspend fun getMateProjectByUserId(userId: UUID): List<domain.model.Project> {
+    override suspend fun getMateProjectsByUserId(userId: UUID): List<domain.model.Project> {
         TODO("Not yet implemented")
     }
 

@@ -14,7 +14,7 @@ interface ProjectDataSource {
     suspend fun addState(projectId: UUID, state: State): Project
     suspend fun editState(projectId: UUID, state: State): Project
     suspend fun deleteState(projectId: UUID, state: State): Project
-    suspend fun getMateProjectByUserId(userId: UUID): List<Project>
+    suspend fun getMateProjectsByUserId(userId: UUID): List<Project>
     suspend fun addMate(projectId: UUID, user: User): Project
     suspend fun getUserProjectsById(userId: UUID): List<Project>
 

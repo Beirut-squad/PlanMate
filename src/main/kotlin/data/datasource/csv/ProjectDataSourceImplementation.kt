@@ -106,7 +106,7 @@ class ProjectDataSourceImplementation(
         }
     }
 
-    override suspend fun getMateProjectByUserId(userId: UUID): List<Project> {
+    override suspend fun getMateProjectsByUserId(userId: UUID): List<Project> {
         TODO("Not yet implemented")
     }
 
