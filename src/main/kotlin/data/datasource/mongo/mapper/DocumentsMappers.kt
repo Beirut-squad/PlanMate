@@ -85,7 +85,7 @@ private fun Document.toStateList(): List<State> {
 
 
 
-private fun Document.toTask(): Task {
+ fun Document.toTask(): Task {
     return Task(
         id = UUID.fromString(this.getString(ID_FILED)),
         projectId = UUID.fromString(this.getString(PROJECT_ID_FILED)),
@@ -142,8 +142,8 @@ private fun Document.toTask(): Task {
         .append(NAME_FILED, this.name)
 }
 
- fun Document.toUserList(FILEDName: String = USERS_FILED): List<User> {
-    return (this[FILEDName] as? List<*>)?.mapNotNull { userDoc ->
+ fun Document.toUserList(filedName: String = USERS_FILED): List<User> {
+    return (this[filedName] as? List<*>)?.mapNotNull { userDoc ->
         (userDoc as? Document)?.let {
             User(
                 id = UUID.fromString(it.getString(ID_FILED)),

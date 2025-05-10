@@ -1,8 +1,9 @@
 package org.example.data.datasource.mongo
 
+import com.mongodb.client.model.Filters
 import data.datasource.mapper.toDocument
+import data.datasource.mapper.toTask
 import org.example.data.datasource.mongo.mongo_db.MongoConnection
-import domain.model.State
 import domain.model.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,7 +12,6 @@ import org.example.data.datasource.TaskDataSource
 import org.example.domain.exceptions.task_management_exception.GetTaskException
 import org.example.domain.exceptions.task_management_exception.TaskDeletionException
 import org.example.domain.exceptions.task_management_exception.TaskEditException
-import java.time.LocalDateTime
 import java.util.UUID
 
 class TaskMongoDataSourceImpl(
@@ -23,81 +23,74 @@ class TaskMongoDataSourceImpl(
             mongoConnection.tasks.insertOne(task.toDocument())
         }
     }
-    override suspend fun editTask(task: Task) = withContext(Dispatchers.IO) {
-        val updateResult = mongoConnection.tasks.updateOne(
-            Document("_id", task.id.toString()),
-            Document("\$set", task.toDocument())
-        )
 
-        if (updateResult.modifiedCount == 0L) {
-            throw TaskEditException("Failed to edit task with id: ${task.id}")
-        }
-    }
-
-    override suspend fun deleteTask(id: UUID) = withContext(Dispatchers.IO) {
-        val deletedTask = mongoConnection.tasks.findOneAndDelete(Document("_id", id.toString()))
-        if (deletedTask == null) {
-            throw TaskDeletionException("No task found with id: $id")
-        }
-
-    }
-
-    override suspend fun getAllTasks()= withContext(Dispatchers.IO) {
-
-        val documents = mongoConnection.tasks.find().toList()
-
-        if (documents.isEmpty()) {
-            throw GetTaskException("No tasks found")
-        }
-
-        documents.map { doc ->
-            val stateDoc = doc.get("state", Document::class.java)
-            Task(
-                id = UUID.fromString(doc.getString("_id")),
-                projectId = UUID.fromString(doc.getString("projectId")),
-                title = doc.getString("title"),
-                description = doc.getString("description"),
-                state = State(
-                    id = UUID.fromString(stateDoc.getString("_id")),
-                    name = stateDoc.getString("name")
-                ),
-                creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
-                createdAt = doc.get("createdAt", LocalDateTime::class.java),
-                updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
+    override suspend fun editTask(task: Task) {
+        withContext(Dispatchers.IO) {
+            val updatedTask = mongoConnection.tasks.replaceOne(
+                Filters.eq(ID_FILED, task.id.toString()),
+                task.toDocument()
             )
+            if (updatedTask.modifiedCount == 0L) {
+                throw TaskEditException("Failed to edit task with id: ${task.id}")
+            }
         }
     }
 
-    override suspend fun getTask(id: UUID) = withContext(Dispatchers.IO) {
-        val doc = mongoConnection.tasks.find(Document("_id", id.toString())).first()
-            ?: throw GetTaskException("Task with ID $id not found")
-
-        val stateDoc = doc.get("state", Document::class.java)
-
-        Task(
-            id = UUID.fromString(doc.getString("_id")),
-            projectId = UUID.fromString(doc.getString("projectId")),
-            title = doc.getString("title"),
-            description = doc.getString("description"),
-            state = State(
-                id = UUID.fromString(stateDoc.getString("_id")),
-                name = stateDoc.getString("name")
-            ),
-            creatorUserID = UUID.fromString(doc.getString("creatorUserID")),
-            createdAt = doc.get("createdAt", LocalDateTime::class.java),
-            updatedAt = doc.get("updatedAt", LocalDateTime::class.java)
-        )
-
+    override suspend fun deleteTask(id: UUID) {
+        withContext(Dispatchers.IO) {
+            val deletedTask = mongoConnection.tasks.findOneAndDelete(Document(ID_FILED, id.toString()))
+            if (deletedTask == null) {
+                throw TaskDeletionException("No task found with id: $id")
+            }
+        }
     }
 
-    override suspend fun getTasksByStateAndProjectIds(
-        projectId: UUID,
-        stateId: UUID
-    ): List<Task> {
-        TODO("Not yet implemented")
+    override suspend fun getAllTasks(): List<Task> {
+        return withContext(Dispatchers.IO) {
+            val documents = mongoConnection.tasks.find().toList()
+
+            documents.map {document ->
+                document?.toTask() ?: throw Exception("No any tasks ")
+            }
+        }
+    }
+
+    override suspend fun getTask(id: UUID): Task {
+        return withContext(Dispatchers.IO) {
+            val document = mongoConnection.tasks.find(Document(ID_FILED, id.toString())).firstOrNull()
+                ?: throw GetTaskException("Task with ID $id not found")
+
+            document.toTask()
+        }
+    }
+
+    override suspend fun getTasksByStateAndProjectIds(projectId: UUID, stateId: UUID): List<Task> {
+        return withContext(Dispatchers.IO) {
+            val filter = Document(PROJECT_ID_FILED, projectId.toString())
+                .append(ID_FILED, stateId.toString())
+
+            val documents = mongoConnection.tasks.find(filter).toList()
+
+            documents.map {document ->
+                document?.toTask() ?: throw Exception("Invalid task document")
+            }
+        }
     }
 
     override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            val filter = Document(PROJECT_ID_FILED, projectId.toString())
+            val documents = mongoConnection.tasks.find(filter).toList()
+
+            documents.map {document ->
+                document?.toTask() ?: throw Exception("Task document is null or invalid")
+            }
+        }
+    }
+
+
+    companion object {
+        const val ID_FILED = "_id"
+        const val PROJECT_ID_FILED = "projectId"
     }
 }
