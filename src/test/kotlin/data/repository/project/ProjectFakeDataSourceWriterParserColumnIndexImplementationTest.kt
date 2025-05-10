@@ -2,8 +2,7 @@ package data.repository.project
 
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
-import org.example.data.model.Project
-import data.datasource.project.ProjectDataSource
+import org.example.data.datasource.ProjectDataSource
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -27,12 +26,12 @@ import org.junit.jupiter.api.assertThrows
 class ProjectFakeDataSourceWriterParserColumnIndexImplementationTest {
     private val projectDataSource: ProjectDataSource = mockk(relaxed = true)
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
-    private var project: Project = createProjectHelper()
+    private var project: ProjectDataSource = createProjectHelper()
 
     @BeforeEach
     fun setup() {
         projectRepositoryImpl = ProjectRepositoryImpl(
-            projectDataSource= projectDataSource
+            project= projectDataSource
         )
     }
 

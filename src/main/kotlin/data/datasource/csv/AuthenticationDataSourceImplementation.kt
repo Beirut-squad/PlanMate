@@ -1,13 +1,17 @@
-package data.datasource.authentication
+package org.example.data.datasource.csv
 
-import org.example.data.csv.helper.FileName.CURRENT_USER_FILE
-import org.example.data.csv.helper.FileName.REGISTERED_USERS_FILE
-import org.example.data.csv.reader.CsvReader
-import org.example.data.csv.writer.CsvWriter
-import domain.exception.authentication.*
+import domain.exception.authentication.EmailAlreadyExistsException
+import domain.exception.authentication.EmailNotFoundException
+import domain.exception.authentication.InvalidEmailOrPasswordException
+import domain.exception.authentication.NoLoggedInUserException
+import domain.exception.authentication.UsersAlreadyExistException
 import domain.model.Role
 import domain.model.User
-import java.util.*
+import org.example.data.csv.helper.FileName
+import org.example.data.csv.reader.CsvReader
+import org.example.data.csv.writer.CsvWriter
+import org.example.data.datasource.AuthenticationDataSource
+import java.util.UUID
 
 class AuthenticationDataSourceImplementation(
     private val csvWriter: CsvWriter<User>,
@@ -90,9 +94,9 @@ class AuthenticationDataSourceImplementation(
     private fun saveCurrentUser(user: User?) {
          try {
             if (user != null) {
-                csvWriter.writeToFile(listOf(user), CURRENT_USER_FILE)
+                csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
             } else {
-                csvWriter.writeToFile(emptyList(), CURRENT_USER_FILE)
+                csvWriter.writeToFile(emptyList(), FileName.CURRENT_USER_FILE)
             }
         } catch (e: Exception) {
             throw e
@@ -108,7 +112,7 @@ class AuthenticationDataSourceImplementation(
     }
 
     private fun readUsersFromCsv(): List<User> {
-        return csvReader.read(CURRENT_USER_FILE)
+        return csvReader.read(FileName.CURRENT_USER_FILE)
     }
 
     private fun addUserToCsv(user: User) {
@@ -117,6 +121,6 @@ class AuthenticationDataSourceImplementation(
     }
 
     private fun writeUsersToCsv(users: List<User>) {
-        csvWriter.writeToFile(users, REGISTERED_USERS_FILE)
+        csvWriter.writeToFile(users, FileName.REGISTERED_USERS_FILE)
     }
 }

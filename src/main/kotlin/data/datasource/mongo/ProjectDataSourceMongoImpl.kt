@@ -1,21 +1,23 @@
-package org.example.data.datasource.project_data_source
+package org.example.data.datasource.mongo
 
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates
-import data.datasource.project.ProjectDataSource
-import data.mongo_db.MongoConnection
-import domain.model.*
+import data.datasource.mapper.toDocument
+import data.datasource.mapper.toProject
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
+import domain.model.Project
+import domain.model.Role
+import domain.model.State
+import domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import org.example.data.datasource.utils.*
-import java.time.LocalDateTime
-import java.util.*
+import java.util.NoSuchElementException
+import java.util.UUID
 
-class ProjectMongoDataSourceImpl(
+class ProjectDataSourceMongoImpl(
     private val mongoConnection: MongoConnection
-) : ProjectDataSource {
+) : org.example.data.datasource.ProjectDataSource {
     override suspend fun createProject(project: Project) {
         withContext(Dispatchers.IO) {
             mongoConnection.projects.insertOne(project.toDocument())
@@ -25,39 +27,39 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun editProject(project: Project) {
         withContext(Dispatchers.IO) {
-                val updateResult = mongoConnection.projects.replaceOne(
-                    eq(ID_FILED, project.id.toString()),
-                    project.toDocument()
-                )
-                if (updateResult.matchedCount == 0L) {
-                    throw NoSuchElementException("No project found with ID: ${project.id}")
-                }
+            val updateResult = mongoConnection.projects.replaceOne(
+                Filters.eq(ID_FILED, project.id.toString()),
+                project.toDocument()
+            )
+            if (updateResult.matchedCount == 0L) {
+                throw NoSuchElementException("No project found with ID: ${project.id}")
+            }
 
         }
     }
 
     override suspend fun deleteProject(id: UUID) {
         withContext(Dispatchers.IO) {
-                mongoConnection.projects.deleteOne(eq(ID_FILED, id.toString()))
+            mongoConnection.projects.deleteOne(Filters.eq(ID_FILED, id.toString()))
 
         }
     }
 
     override suspend fun getAllProjects(): List<Project> {
         return withContext(Dispatchers.IO) {
-                val projectsDoc = mongoConnection.projects.find().toList()
-                projectsDoc.map {
-                    it?.toProject() ?: throw Exception("No any projects ")
-                }
+            val projectsDoc = mongoConnection.projects.find().toList()
+            projectsDoc.map {
+                it?.toProject() ?: throw Exception("No any projects ")
+            }
 
         }
     }
 
     override suspend fun getProject(id: UUID): Project {
         return withContext(Dispatchers.IO) {
-                val doc = mongoConnection.projects.find(eq(ID_FILED, id.toString())).firstOrNull()
-                    ?: throw NoSuchElementException("No project found with ID: $id")
-                doc.toProject()
+            val doc = mongoConnection.projects.find(Filters.eq(ID_FILED, id.toString())).firstOrNull()
+                ?: throw NoSuchElementException("No project found with ID: $id")
+            doc.toProject()
 
         }
     }
@@ -66,12 +68,12 @@ class ProjectMongoDataSourceImpl(
         return withContext(Dispatchers.IO) {
 
             val update = Updates.push(STATE_FILED, state.toDocument())
-            val result = mongoConnection.projects.updateOne(eq(ID_FILED, projectId.toString()), update)
+            val result = mongoConnection.projects.updateOne(Filters.eq(ID_FILED, projectId.toString()), update)
 
             if (result.matchedCount == 0L) {
                 throw NoSuchElementException("No project found with ID: $projectId")
             }
-            val updatedDoc = mongoConnection.projects.find(eq(ID_FILED, projectId.toString())).firstOrNull()
+            val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found after update")
 
             updatedDoc.toProject()
@@ -81,7 +83,7 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun editStateToProject(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
-            val project = mongoConnection.projects.find(eq(ID_FILED, projectId.toString())).firstOrNull()
+            val project = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found")
 
             val states = (project[STATE_FILED] as? List<*>)?.mapNotNull {
@@ -94,7 +96,7 @@ class ProjectMongoDataSourceImpl(
             states[index] = state.toDocument()
 
             val update = Updates.set(STATE_FILED, states)
-            mongoConnection.projects.updateOne(eq(ID_FILED, projectId.toString()), update)
+            mongoConnection.projects.updateOne(Filters.eq(ID_FILED, projectId.toString()), update)
             project.toProject()
 
 
@@ -104,14 +106,14 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
-            val filter = eq(ID_FILED, projectId.toString())
+            val filter = Filters.eq(ID_FILED, projectId.toString())
             val update = Updates.pull(STATE_FILED, Document(ID_FILED, state.id.toString()))
             val result = mongoConnection.projects.updateOne(filter, update)
 
             if (result.modifiedCount == 0L) {
                 throw NoSuchElementException("State not found or already removed from project $projectId")
             }
-            val updatedDoc = mongoConnection.projects.find(eq(ID_FILED, projectId.toString())).firstOrNull()
+            val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found after update")
 
             updatedDoc.toProject()
@@ -123,8 +125,8 @@ class ProjectMongoDataSourceImpl(
         return withContext(Dispatchers.IO) {
             val filter = Filters.elemMatch(
                 USERS_FILED, Filters.and(
-                    eq(ID_FILED, userId.toString()),
-                    eq(ROLE_FILED, Role.MATE.name)
+                    Filters.eq(ID_FILED, userId.toString()),
+                    Filters.eq(ROLE_FILED, Role.MATE.name)
                 )
             )
 
@@ -145,13 +147,13 @@ class ProjectMongoDataSourceImpl(
                     .append(IS_DELETED_FILED, user.isDeleted)
             )
 
-            val result = mongoConnection.projects.updateOne(eq(ID_FILED, projectId.toString()), update)
+            val result = mongoConnection.projects.updateOne(Filters.eq(ID_FILED, projectId.toString()), update)
 
             if (result.matchedCount == 0L) {
                 throw NoSuchElementException("No project found with ID: $projectId")
             }
 
-            val updatedDoc = mongoConnection.projects.find(eq(ID_FILED, projectId.toString())).firstOrNull()
+            val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
                 ?: throw NoSuchElementException("Project not found after update")
 
             updatedDoc.toProject()
@@ -160,7 +162,7 @@ class ProjectMongoDataSourceImpl(
 
     override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
         return withContext(Dispatchers.IO) {
-            val filter = Filters.elemMatch(USERS_FILED, eq(ID_FILED, userId.toString()))
+            val filter = Filters.elemMatch(USERS_FILED, Filters.eq(ID_FILED, userId.toString()))
             val projectDocs = mongoConnection.projects.find(filter).toList()
             projectDocs.mapNotNull { it?.toProject() }
         }

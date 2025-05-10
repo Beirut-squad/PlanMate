@@ -1,4 +1,4 @@
-package org.example.data.datasource.utils
+package data.datasource.mapper
 
 import domain.model.*
 import org.bson.Document

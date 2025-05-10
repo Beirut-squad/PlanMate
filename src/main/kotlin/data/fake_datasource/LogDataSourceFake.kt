@@ -1,12 +1,12 @@
 package org.example.data.fake_datasource
 
-import data.datasource.log.LogDataSource
+import org.example.data.datasource.LogDataSource
 import domain.exception.log.NoProjectLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import java.util.*
 
-class LogFakeDataSource : LogDataSource {
+class LogDataSourceFake : LogDataSource {
     private val projectLogs = mutableListOf<ProjectLog>()
     private val taskLogs = mutableListOf<TaskLog>()
 

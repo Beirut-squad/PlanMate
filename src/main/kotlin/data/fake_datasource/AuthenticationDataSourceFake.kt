@@ -1,6 +1,6 @@
 package org.example.data.fake_datasource
 
-import data.datasource.authentication.AuthenticationDataSource
+import org.example.data.datasource.AuthenticationDataSource
 import domain.exception.authentication.EmailAlreadyExistsException
 import domain.exception.authentication.InvalidEmailOrPasswordException
 import domain.exception.authentication.NoLoggedInUserException
@@ -9,7 +9,7 @@ import domain.model.Role
 import domain.model.User
 import java.util.*
 
-class AuthenticationFakeDataSource : AuthenticationDataSource {
+class AuthenticationDataSourceFake : AuthenticationDataSource {
     private val users = mutableListOf<User>()
     private var currentUser: User? = null
 

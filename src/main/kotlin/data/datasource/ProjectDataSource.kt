@@ -1,9 +1,9 @@
-package data.datasource.project
+package org.example.data.datasource
 
 import domain.model.Project
 import domain.model.State
 import domain.model.User
-import java.util.*
+import java.util.UUID
 
 interface ProjectDataSource {
     suspend fun createProject(project: Project)

@@ -1,4 +1,4 @@
-package data.datasource.log
+package org.example.data.datasource
 
 import domain.model.ProjectLog
 import domain.model.TaskLog

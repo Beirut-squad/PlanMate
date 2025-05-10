@@ -1,21 +1,22 @@
-package org.example.data.datasource.authentication_data_source
+package org.example.data.datasource.mongo
 
-import data.datasource.authentication.AuthenticationDataSource
-import data.mongo_db.MongoConnection
+import data.datasource.mapper.toDocument
+import data.datasource.mapper.toUser
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
 import domain.exception.authentication.EmailAlreadyExistsException
 import domain.exception.authentication.EmailNotFoundException
 import domain.exception.authentication.InvalidEmailOrPasswordException
 import domain.exception.authentication.NoLoggedInUserException
 import domain.exception.authentication.UsersAlreadyExistException
-import domain.model.*
+import domain.model.Role
+import domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import org.example.data.datasource.utils.toDocument
-import org.example.data.datasource.utils.toUser
-import java.util.*
+import org.example.data.datasource.AuthenticationDataSource
+import java.util.UUID
 
-class AuthenticationMongoDataSourceImpl(
+class AuthenticationDataSourceMongoImpl(
     private val mongoConnection: MongoConnection
 ) : AuthenticationDataSource {
     override suspend fun login(email: String, password: String): User {
@@ -89,7 +90,7 @@ class AuthenticationMongoDataSourceImpl(
     }
 
     override suspend fun getUsers(): List<User> {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             val userDoc = mongoConnection.users.find().toList()
             userDoc.map {
                 it?.toUser() ?: throw Exception("No any users ")

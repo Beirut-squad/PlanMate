@@ -1,6 +1,6 @@
 package org.example.data.repository
 
-import data.datasource.log.LogDataSource
+import org.example.data.datasource.LogDataSource
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import org.example.domain.repository.LogRepository

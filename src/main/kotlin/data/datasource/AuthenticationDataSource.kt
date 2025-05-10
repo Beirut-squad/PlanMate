@@ -1,7 +1,6 @@
-package data.datasource.authentication
+package org.example.data.datasource
 
 import domain.model.User
-
 
 interface AuthenticationDataSource {
     suspend fun login(email: String, password: String): User
