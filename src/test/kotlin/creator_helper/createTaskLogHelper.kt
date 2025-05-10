@@ -1,6 +1,6 @@
 package creator_helper
 
-import org.example.data.model.Task
+import domain.model.Task
 import domain.model.TaskLog
 import java.time.LocalDateTime
 import java.util.*
