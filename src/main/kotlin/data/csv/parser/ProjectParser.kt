@@ -1,5 +1,6 @@
 package org.example.data.csv.parser
 
+import data.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.User
 import domain.model.State
@@ -8,19 +9,20 @@ import org.example.data.csv.helper.smartCsvSplit
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectParser(private val stateCsvParser: CsvParser<State>,
-                    private val userCsvParser: CsvParser<User>
+class ProjectParser(
+    private val stateCsvParser: CsvParser<State>,
+    private val userCsvParser: CsvParser<User>
 ) : CsvParser<Project> {
 
 
-    override fun parseFile(csvLines: List<String>): List<Project> {
+    override suspend fun parseFile(csvLines: List<String>): List<Project> {
         if (csvLines.isEmpty())
             return emptyList()
         csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
-    override fun parseLine(line: String): Project? {
+    override suspend fun parseLine(line: String): Project? {
         var cleanedLine = line.replace(" ", "")
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
@@ -28,8 +30,8 @@ class ProjectParser(private val stateCsvParser: CsvParser<State>,
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = smartCsvSplit(cleanedLine)
 
-        if (stateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null){
-            throw Exception("no states in the project")
+        if (stateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null) {
+            throw StateNotFoundException()
         }
         return Project(
             id = UUID.fromString(parts[ProjectColumnIndex.PROJECT_ID]),
@@ -42,11 +44,13 @@ class ProjectParser(private val stateCsvParser: CsvParser<State>,
             state = parseMultiStates(parts[ProjectColumnIndex.STATE]),
         )
     }
-     private fun parseMultiStates(line: String): List<State> {
+
+    private suspend fun parseMultiStates(line: String): List<State> {
         val statesLines = smartCsvSplit(line)
         return stateCsvParser.parseFile(statesLines)
     }
-    private fun parseMultiUser(line: String): List<User> {
+
+    private suspend fun parseMultiUser(line: String): List<User> {
         val userLines = smartCsvSplit(line)
         return userCsvParser.parseFile(userLines)
     }

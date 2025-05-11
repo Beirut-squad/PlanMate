@@ -82,7 +82,7 @@ class AuthenticationMongoDataSourceImpl(
         return withContext(Dispatchers.IO) {
             val userDoc = mongoConnection.users.find().toList()
             userDoc.map {
-                it?.toUser() ?: throw Exception("No any users ")
+                it?.toUser() ?: throw ProjectNotFoundException()
             }
         }
     }

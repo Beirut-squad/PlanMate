@@ -1,5 +1,6 @@
 package org.example.data.csv.parser
 
+import data.exception.StateNotFoundException
 import domain.model.State
 import domain.model.Task
 import org.example.data.csv.column_index.TaskColumnIndex
@@ -11,14 +12,14 @@ class TaskParser(
     private val stateCsvParser: CsvParser<State>
 ) : CsvParser<Task> {
 
-    override fun parseFile(csvLines: List<String>): List<Task> {
+    override suspend fun parseFile(csvLines: List<String>): List<Task> {
         if (csvLines.isEmpty())
             return emptyList()
         csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
-    override fun parseLine(line: String): Task? {
+    override suspend fun parseLine(line: String): Task? {
         var cleanedLine = line.replace(" ", "")
 
         if (cleanedLine == "[]" || cleanedLine == "")
@@ -28,7 +29,7 @@ class TaskParser(
         val parts = smartCsvSplit(cleanedLine)
 
         if (stateCsvParser.parseLine(parts[TaskColumnIndex.STATE]) == null) {
-            throw Exception("state of the task is unavailable")
+            throw StateNotFoundException()
         }
 
         return Task(

@@ -4,6 +4,8 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import data.datasource.mapper.toDocument
 import data.datasource.mapper.toProject
+import data.exception.ProjectNotFoundException
+import data.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User
@@ -28,7 +30,7 @@ class ProjectDataSourceMongoImpl(
             mongoConnection.projects.replaceOne(
                 Filters.eq(ID_FILED, project.id.toString()),
                 project.toDocument()
-            ) ?: throw NoSuchElementException("No project found with ID: ${project.id}")
+            ) ?: throw ProjectNotFoundException()
 
         }
     }
@@ -44,7 +46,7 @@ class ProjectDataSourceMongoImpl(
         return withContext(Dispatchers.IO) {
             val projectsDoc = mongoConnection.projects.find().toList()
             projectsDoc.map {
-                it?.toProject() ?: throw Exception("No any projects ")
+                it?.toProject() ?: throw ProjectNotFoundException()
             }
 
         }
@@ -53,7 +55,7 @@ class ProjectDataSourceMongoImpl(
     override suspend fun getProject(id: UUID): Project {
         return withContext(Dispatchers.IO) {
             val document = mongoConnection.projects.find(Filters.eq(ID_FILED, id.toString())).firstOrNull()
-                ?: throw NoSuchElementException("No project found with ID: $id")
+                ?: throw ProjectNotFoundException()
             document.toProject()
 
         }
@@ -66,7 +68,7 @@ class ProjectDataSourceMongoImpl(
             mongoConnection.projects.updateOne(Filters.eq(ID_FILED, projectId.toString()), stateDoc)
 
             val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
-                ?: throw NoSuchElementException("Project not found after update")
+                ?: throw ProjectNotFoundException()
 
             updatedDoc.toProject()
         }
@@ -75,14 +77,14 @@ class ProjectDataSourceMongoImpl(
     override suspend fun editState(projectId: UUID, state: State): Project {
         return withContext(Dispatchers.IO) {
             val project = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
-                ?: throw NoSuchElementException("Project not found")
+                ?: throw ProjectNotFoundException()
 
             val states = (project[STATE_FILED] as? List<*>)?.mapNotNull {
                 (it as? Document)
             }?.toMutableList() ?: mutableListOf()
 
             val index = states.indexOfFirst { it.getString(ID_FILED) == state.id.toString() }
-            if (index == -1) throw NoSuchElementException("State not found in project")
+            if (index == -1) throw StateNotFoundException()
 
             states[index] = state.toDocument()
 
@@ -101,10 +103,10 @@ class ProjectDataSourceMongoImpl(
             val result = mongoConnection.projects.updateOne(filter, update)
 
             if (result.modifiedCount == 0L) {
-                throw NoSuchElementException("State not found or already removed from project $projectId")
+                throw StateNotFoundException()
             }
             val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
-                ?: throw NoSuchElementException("Project not found after update")
+                ?: throw ProjectNotFoundException()
 
             updatedDoc.toProject()
 
@@ -131,11 +133,11 @@ class ProjectDataSourceMongoImpl(
             val result = mongoConnection.projects.updateOne(Filters.eq(ID_FILED, projectId.toString()), update)
 
             if (result.matchedCount == 0L) {
-                throw NoSuchElementException("No project found with ID: $projectId")
+                throw ProjectNotFoundException()
             }
 
             val updatedDoc = mongoConnection.projects.find(Filters.eq(ID_FILED, projectId.toString())).firstOrNull()
-                ?: throw NoSuchElementException("Project not found after update")
+                ?: throw ProjectNotFoundException()
 
             updatedDoc.toProject()
         }

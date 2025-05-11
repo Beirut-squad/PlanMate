@@ -7,6 +7,14 @@ object StringConstants {
         const val UNKNOWN_ERROR = "Unknown error"
     }
 
+    object File {
+        const val INVALID_FILE_NAME = "Invalid file name. File name must be non-empty and contain only valid characters."
+        const val INVALID_DATA_FILE = "Invalid data file provided"
+        const val EMPTY_CSV_FILE = "Empty CSV FILE"
+        const val MISSING_ENTITY = "Required entity is missing in CSV line"
+        const val UNKNOWN_FILE_ERROR = "File error"
+    }
+
     object Authentication {
         const val EMAIL_ALREADY_EXISTS = "This email is already registered."
         const val INVALID_EMAIL_FORMAT = "Invalid email format."

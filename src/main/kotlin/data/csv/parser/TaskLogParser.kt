@@ -1,5 +1,6 @@
 package org.example.data.csv.parser
 
+import data.exception.CsvValidationException
 import org.example.data.csv.column_index.TaskLogColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
 import domain.model.TaskLog
@@ -10,14 +11,14 @@ class TaskLogParser (private val taskParser: TaskParser): CsvParser<TaskLog> {
 
 
 
-    override fun parseFile(csvLines: List<String>): List<TaskLog> {
+    override suspend fun parseFile(csvLines: List<String>): List<TaskLog> {
         if (csvLines.isEmpty())
             return emptyList()
         csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
-    override fun parseLine(line: String): TaskLog? {
+    override suspend fun parseLine(line: String): TaskLog? {
         var cleanedLine = line.replace(" ", "")
 
         if (cleanedLine == "[]" || cleanedLine == "")
@@ -27,7 +28,7 @@ class TaskLogParser (private val taskParser: TaskParser): CsvParser<TaskLog> {
         val parts = smartCsvSplit(cleanedLine)
 
         if (taskParser.parseLine(parts[TaskLogColumnIndex.PREVIOUS_ENTITY]) == null || taskParser.parseLine(parts[TaskLogColumnIndex.CURRENT_ENTITY]) == null)
-            throw Exception("entity is missing")
+            throw CsvValidationException()
 
         return TaskLog(
             id = UUID.fromString(parts[TaskLogColumnIndex.ID]),

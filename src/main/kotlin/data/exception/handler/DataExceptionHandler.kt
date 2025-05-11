@@ -8,6 +8,11 @@ import data.constants.StringConstants.Authentication.INVALID_EMAIL_FORMAT
 import data.constants.StringConstants.Authentication.UNKNOWN_AUTH_ERROR
 import data.constants.StringConstants.Authentication.USERS_ALREADY_EXIST
 import data.constants.StringConstants.Authentication.USER_NOT_LOGGED_IN
+import data.constants.StringConstants.File.EMPTY_CSV_FILE
+import data.constants.StringConstants.File.INVALID_DATA_FILE
+import data.constants.StringConstants.File.INVALID_FILE_NAME
+import data.constants.StringConstants.File.MISSING_ENTITY
+import data.constants.StringConstants.File.UNKNOWN_FILE_ERROR
 import data.constants.StringConstants.General.UNEXPECTED_ERROR
 import data.constants.StringConstants.General.UNKNOWN_ERROR
 import data.constants.StringConstants.Logs.NO_PROJECT_LOGS_AVAILABLE
@@ -37,13 +42,24 @@ class DataExceptionHandler(
 ) : ExceptionHandler {
     override suspend fun handle(exception: Throwable) {
         val errorMessage = when (exception) {
+            is FileException -> handleFileException(exception)
             is AuthenticationException -> handleAuthenticationException(exception)
             is ProjectException -> handleProjectException(exception)
             is TaskException -> handleTaskException(exception)
             is LogException -> handleLogException(exception)
-            else -> handleUnexpectedException(exception)
+            else -> handleUnexpectedException(exception = exception)
         }
         printer.printError(errorMessage)
+    }
+
+    private fun handleFileException(exception: Throwable): String {
+        return when (exception) {
+            is InvalidFileNameException -> INVALID_FILE_NAME
+            is InvalidDataFileException -> INVALID_DATA_FILE
+            is EmptyCSVFileException -> EMPTY_CSV_FILE
+            is CsvValidationException -> MISSING_ENTITY
+            else -> handleUnexpectedException(UNKNOWN_FILE_ERROR, exception)
+        }
     }
 
     private fun handleAuthenticationException(exception: Throwable): String {
@@ -54,7 +70,7 @@ class DataExceptionHandler(
             is InvalidCredentialsException -> INVALID_CREDENTIALS
             is UsersAlreadyExistException -> USERS_ALREADY_EXIST
             is UserNotLoggedInException -> USER_NOT_LOGGED_IN
-            else -> "${UNKNOWN_AUTH_ERROR}: ${exception.message ?: UNKNOWN_ERROR}"
+            else -> handleUnexpectedException(UNKNOWN_AUTH_ERROR, exception)
         }
     }
 
@@ -67,7 +83,7 @@ class DataExceptionHandler(
             is ProjectFetchAllFailedException -> PROJECT_FETCH_ALL_FAILED
             is DuplicateStateException -> DUPLICATE_STATE
             is StateNotFoundException -> NO_STATE_FOUND
-            else -> "${UNKNOWN_PROJECT_ERROR}: ${exception.message ?: UNKNOWN_ERROR}"
+            else -> handleUnexpectedException(UNKNOWN_PROJECT_ERROR, exception)
         }
     }
 
@@ -79,7 +95,7 @@ class DataExceptionHandler(
             is TaskFetchAllFailedException -> TASK_FETCH_ALL_FAILED
             is TaskNotFoundException -> TASK_NOT_FOUND
             is FailedToReadTaskException -> FAILED_TO_READ_TASK
-            else -> "${UNKNOWN_TASK_ERROR}: ${exception.message ?: UNKNOWN_ERROR}"
+            else -> handleUnexpectedException(UNKNOWN_TASK_ERROR, exception)
         }
     }
 
@@ -87,11 +103,11 @@ class DataExceptionHandler(
         return when (exception) {
             is NoProjectLogsFoundException -> NO_PROJECT_LOGS_AVAILABLE
             is NoTaskLogsFoundException -> NO_TASK_LOGS_AVAILABLE
-            else -> "${UNKNOWN_LOG_ERROR}: ${exception.message ?: UNKNOWN_ERROR}"
+            else -> handleUnexpectedException(UNKNOWN_LOG_ERROR, exception)
         }
     }
 
-    private fun handleUnexpectedException(exception: Throwable): String {
-        return "${UNEXPECTED_ERROR}: ${exception.message}"
+    private fun handleUnexpectedException(exceptionType: String = UNEXPECTED_ERROR, exception: Throwable): String {
+        return "${exceptionType}: ${exception.message ?: UNKNOWN_ERROR}"
     }
 }

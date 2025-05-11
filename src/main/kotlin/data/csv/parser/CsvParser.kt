@@ -2,6 +2,6 @@ package org.example.data.csv.parser
 
 interface CsvParser<T> {
 
-    fun parseLine(line: String): T?
-    fun parseFile(csvLines: List<String>): List<T>
+    suspend fun parseLine(line: String): T?
+    suspend fun parseFile(csvLines: List<String>): List<T>
 }

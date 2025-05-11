@@ -64,7 +64,7 @@ class TaskDataSourceImplementation(
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
         return filteredTasks.ifEmpty {
-            throw Exception("No tasks found for the given project and state.")
+            throw TaskNotFoundException()
         }
     }
 

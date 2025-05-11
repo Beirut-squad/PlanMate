@@ -1,5 +1,6 @@
 package org.example.data.csv.parser
 
+import data.exception.CsvValidationException
 import domain.model.ProjectLog
 import org.example.data.csv.column_index.ProjectLogColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
@@ -7,14 +8,14 @@ import java.time.LocalDateTime
 import java.util.*
 
 class ProjectLogParser(private val projectParser: ProjectParser): CsvParser<ProjectLog> {
-    override fun parseFile(csvLines: List<String>): List<ProjectLog> {
+    override suspend fun parseFile(csvLines: List<String>): List<ProjectLog> {
         if (csvLines.isEmpty())
             return emptyList()
         csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
-    override fun parseLine(line: String): ProjectLog? {
+    override suspend fun parseLine(line: String): ProjectLog? {
         var cleanedLine = line.replace(" ", "")
         if (cleanedLine == "[]" || cleanedLine == "")
             return null
@@ -23,7 +24,7 @@ class ProjectLogParser(private val projectParser: ProjectParser): CsvParser<Proj
         val parts = smartCsvSplit(cleanedLine)
 
         if (projectParser.parseLine(parts[ProjectLogColumnIndex.PREVIOUS_ENTITY]) == null || projectParser.parseLine(parts[ProjectLogColumnIndex.CURRENT_ENTITY]) == null)
-            throw Exception("entity is missing")
+            throw CsvValidationException()
 
         return ProjectLog(
             id = UUID.fromString(parts[ProjectLogColumnIndex.ID]),

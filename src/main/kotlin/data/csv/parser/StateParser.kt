@@ -6,13 +6,13 @@ import java.util.*
 
 class StateParser : CsvParser<State> {
 
-    override fun parseFile(csvLines: List<String>): List<State> {
+    override suspend fun parseFile(csvLines: List<String>): List<State> {
         if (csvLines.isEmpty())
             return emptyList()
         return csvLines.map { parseLine(it) }
     }
 
-    override fun parseLine(line: String): State {
+    override suspend fun parseLine(line: String): State {
         val cleanedLine = line.replace(" ", "")
 
         val cleanLine = line.removeSurrounding("[", "]")

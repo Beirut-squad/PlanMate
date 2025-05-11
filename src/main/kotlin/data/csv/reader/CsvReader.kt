@@ -1,13 +1,14 @@
 package org.example.data.csv.reader
 
+import data.exception.InvalidFileNameException
 import org.example.data.csv.parser.CsvParser
 import org.example.data.csv.helper.FileName
 import java.io.File
 
 class CsvReader<T>(private val parser: CsvParser<T>){
-    fun read(fileName: String): List<T>{
+    suspend fun read(fileName: String): List<T>{
         if (fileName !in FileName.allFiles)
-            throw Exception("File $fileName cannot be found in file names")
+            throw InvalidFileNameException()
         val filePath = "src/main/kotlin/$fileName"
         val file = File(filePath)
         if (file.exists()){

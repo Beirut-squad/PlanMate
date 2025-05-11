@@ -83,7 +83,7 @@ class AuthenticationDataSourceImplementation(
         return readUsersFromCsv().isEmpty()
     }
 
-    private fun saveCurrentUser(user: User?) {
+    private suspend fun saveCurrentUser(user: User?) {
          try {
             if (user != null) {
                 csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
@@ -103,16 +103,16 @@ class AuthenticationDataSourceImplementation(
         return readUsersFromCsv()
     }
 
-    private fun readUsersFromCsv(): List<User> {
+    private suspend fun readUsersFromCsv(): List<User> {
         return csvReader.read(FileName.CURRENT_USER_FILE)
     }
 
-    private fun addUserToCsv(user: User) {
+    private suspend fun addUserToCsv(user: User) {
         val users = readUsersFromCsv() + user
         writeUsersToCsv(users)
     }
 
-    private fun writeUsersToCsv(users: List<User>) {
+    private suspend fun writeUsersToCsv(users: List<User>) {
         csvWriter.writeToFile(users, FileName.REGISTERED_USERS_FILE)
     }
 }
