@@ -21,7 +21,7 @@ class ProjectTasksUi(
 
     override suspend fun show() {
         try {
-            val result = getTasksForProjectUseCase.getTasksForProject(projectId)
+            val result = getTasksForProjectUseCase.getProjectTasks(projectId)
                 printer.printTitle("Tasks for Project:")
                 displayTasksInColumns(result)
                 printer.printInfoLine("\nPlease choose an option:")
