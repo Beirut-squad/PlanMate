@@ -19,13 +19,20 @@ class RegisterUserUseCase(
     ): User {
         return exceptionHandler.tryCatchingAsyncWithResult(
             action = {
-                authenticationRepository.isFirstRegister()
                 val encryptedPassword = encryptPassword.encryptPassword(password)
-                authenticationRepository.registerAdmin(
-                    name = name,
-                    password = encryptedPassword,
-                    email = email
-                )
+                if (authenticationRepository.isFirstRegister()) {
+                    authenticationRepository.registerAdmin(
+                        name = name,
+                        password = encryptedPassword,
+                        email = email
+                    )
+                }else{
+                    authenticationRepository.register(
+                        name = name,
+                        password = encryptedPassword,
+                        email = email
+                    )
+                }
             },
             onError = {
                 registerMateUseCase.addUser(name = name, password = password, email = email)
