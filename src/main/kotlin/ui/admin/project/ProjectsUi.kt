@@ -19,9 +19,9 @@ class ProjectsUi(
     private var running = true
     override suspend fun show() {
         running = true
-        val allProjects = getAllProjectsUseCases.getAllProjects()
 
         while (running) {
+            val allProjects = getAllProjectsUseCases.getAllProjects()
             try {
                 if (allProjects.isNotEmpty()) {
                     printer.printTitle("Project: ")
