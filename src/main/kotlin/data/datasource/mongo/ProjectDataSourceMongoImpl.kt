@@ -37,8 +37,7 @@ class ProjectDataSourceMongoImpl(
 
     override suspend fun deleteProject(id: UUID) {
         withContext(Dispatchers.IO) {
-            mongoConnection.projects.deleteOne(Filters.eq(ID_FILED, id.toString()))
-
+            mongoConnection.projects.deleteOne(Filters.eq(ID_FILED,  ))
         }
     }
 
