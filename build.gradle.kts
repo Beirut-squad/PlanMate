@@ -22,6 +22,11 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
 
+    // MongoDB Kotlin driver dependency
+    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+    // Kotlin coroutine dependency
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
 }
 
 tasks.test {

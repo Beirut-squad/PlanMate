@@ -1,19 +1,19 @@
 package org.example.ui.admin.project
 
-import logic.use_cases.project_manegment.EditProjectDescriptionUseCase
-import logic.use_cases.project_manegment.EditProjectNameUseCase
-import org.example.logic.use_cases.authentication.GetCurrentLoggedInUserUseCase
-import org.example.models.Project
+import domain.model.Project
+import domain.use_case.authentication.GetCurrentUserUseCase
+import domain.use_case.project.EditProjectDescriptionUseCase
+import domain.use_case.project.EditProjectNameUseCase
+import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
-import org.example.ui.common.components.Viewer
 
 class EditProjectUi(
-    private val viewer: Viewer,
+    private val printer: Printer,
     private val reader: Reader,
     private val editProjectNameUseCase: EditProjectNameUseCase,
     private val editProjectDescriptionUseCase: EditProjectDescriptionUseCase,
-    private val currentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
+    private val currentUserUseCase: GetCurrentUserUseCase,
 ) : UiScreen {
 
     lateinit var project: Project
@@ -32,34 +32,34 @@ class EditProjectUi(
     }
 
     private fun displayMenu() {
-        viewer.printOptions(
+        printer.printOptions(
             "Edit project name",
             "Edit project description",
             "Return"
         )
-        viewer.printTitle("Choose what you want to change in project.")
+        printer.printTitle("Choose what you want to change in project.")
     }
 
     private suspend fun editProjectName() {
-        viewer.printPlainText("Edit Project Name: ", withNewLine = false)
+        printer.printPlainText("Edit Project Name: ", withNewLine = false)
         val newProjectName = reader.readInput()
         try {
-            val editorUserId = currentLoggedInUserUseCase.getCurrentUser()?.id ?: return
+            val editorUserId = currentUserUseCase.getCurrentUser()?.id ?: return
             editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
         } catch (e: Exception) {
-            viewer.printError("${e.message}")
+            printer.printError("${e.message}")
         }
 
     }
 
     private suspend fun editProjectDescription() {
-        viewer.printPlainText("Edit Project Description: ", withNewLine = false)
+        printer.printPlainText("Edit Project Description: ", withNewLine = false)
         val newProjectDescription = reader.readInput()
         try {
-            val editorUserId = currentLoggedInUserUseCase.getCurrentUser()?.id ?: return
+            val editorUserId = currentUserUseCase.getCurrentUser()?.id ?: return
             editProjectDescriptionUseCase.editProject(project, newProjectDescription, editorUserId)
         } catch (e: Exception) {
-            viewer.printError("${e.message}")
+            printer.printError("${e.message}")
         }
     }
 }

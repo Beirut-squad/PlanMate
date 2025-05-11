@@ -1,6 +1,6 @@
 package creator_helper
 
-import org.example.models.State
+import domain.model.State
 import java.util.*
 
 fun createStateHelper(

@@ -1,7 +1,7 @@
 package creator_helper
 
-import org.example.models.State
-import org.example.models.Task
+import domain.model.State
+import domain.model.Task
 import java.time.LocalDateTime
 import java.util.*
 

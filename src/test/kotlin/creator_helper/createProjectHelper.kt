@@ -1,8 +1,8 @@
 package creator_helper
 
-import org.example.models.Project
-import org.example.models.State
-import org.example.models.User
+import domain.model.Project
+import domain.model.State
+import domain.model.User
 import java.time.LocalDateTime
 import java.util.*
 
@@ -14,11 +14,11 @@ fun createProjectHelper(
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
     state: List<State> = listOf(createStateHelper()),
-    users: List<User> = emptyList()
+    users: List<User> = listOf(createUserHelper())
 ): Project {
     return Project(
         id = id,
-        name = name,
+        title = name,
         description = description,
         creatorUserID = creatorUserID,
         createdAt = createdAt,
