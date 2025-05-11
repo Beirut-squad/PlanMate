@@ -99,9 +99,8 @@ class SingleProjectUi(
             }
         }
 
-        if (running) {
             updateProject()
-        }
+
 
     }
 
