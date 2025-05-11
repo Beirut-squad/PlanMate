@@ -27,7 +27,7 @@ class EditTaskUi(
 
     override suspend fun show() {
         try {
-            val tasksResult = getProjectTasksUseCase.getTasksForProject(projectId)
+            val tasksResult = getProjectTasksUseCase.getProjectTasks(projectId)
             val user = getCurrentUserUseCase.getCurrentUser()
 
             if (user == null) {
