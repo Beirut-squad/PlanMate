@@ -16,13 +16,21 @@ class RegisterUserUseCase(
         email: String,
     ): User {
         return try {
-            authenticationRepository.checkIfFirstRegister()
+
             val encryptedPassword = encryptPassword.encryptPassword(password)
-            authenticationRepository.registerAdmin(
-                name = name,
-                password = encryptedPassword,
-                email = email
-            )
+            if (authenticationRepository.isFirstRegister()) {
+                authenticationRepository.registerAdmin(
+                    name = name,
+                    password = encryptedPassword,
+                    email = email
+                )
+            }else{
+                authenticationRepository.register(
+                    name = name,
+                    password = encryptedPassword,
+                    email = email
+                )
+            }
         } catch (e: Exception) {
             registerMateUseCase.addUser(name = name, password = password, email = email)
         }
