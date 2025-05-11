@@ -4,33 +4,33 @@ import creator_helper.createProjectHelper
 import creator_helper.createProjectLogHelper
 import creator_helper.createStateHelper
 import creator_helper.createUserHelper
-import extensions.formatDateTime
+import domain.use_case.authentication.GetUserByIdUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import org.example.logic.use_cases.authentication.GetUserByIdUseCase
-import org.example.ui.admin.log.project.DisplayProjectLog
-import org.example.ui.common.components.Viewer
+import org.example.ui.admin.log.project.ProjectLogUi
+import org.example.ui.common.components.Printer
+import org.example.ui.extensions.formatDateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class DisplayProjectLogTest {
+class ProjectLogUiTest {
 
-    private lateinit var displayProjectLog: DisplayProjectLog
+    private lateinit var projectLogUi: ProjectLogUi
     private lateinit var getUserByIdUseCase: GetUserByIdUseCase
-    private lateinit var viewer: Viewer
+    private lateinit var printer: Printer
 
 
     @BeforeEach
     fun setup() {
         getUserByIdUseCase = mockk(relaxed = true)
-        viewer = mockk(relaxed = true)
-        displayProjectLog = DisplayProjectLog(getUserByIdUseCase, viewer)
+        printer = mockk(relaxed = true)
+        projectLogUi = ProjectLogUi(getUserByIdUseCase, printer)
     }
 
     @Test
-    fun `should  view project log creation if project previous entity not found && current entity is found`() {
+    fun `should view project log creation if project previous entity not found && current entity is found`() {
         runTest {
             // Given
             val user = createUserHelper()
@@ -42,12 +42,12 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName created new project ${currentProject?.name} at ${currentProject?.createdAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName created new project ${currentProject?.title} at ${currentProject?.createdAt?.formatDateTime()}"
                 )
             }
         }
@@ -66,11 +66,11 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
-            viewer.printCorrectOutput(
-                "${index + 1}. User $userName deleted project ${previousProject?.name} at ${previousProject?.updatedAt?.formatDateTime()}"
+            printer.printCorrectOutput(
+                "${index + 1}. User $userName deleted project ${previousProject?.title} at ${previousProject?.updatedAt?.formatDateTime()}"
             )
         }
     }
@@ -89,12 +89,12 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName changed project ${currentProject?.name} name from ${previousProject?.name} to ${currentProject?.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName changed project ${currentProject?.title} name from ${previousProject?.title} to ${currentProject?.title} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -115,12 +115,12 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName changed project ${currentProject.name} description from ${previousProject?.description} to ${currentProject?.description} at ${currentProject?.updatedAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName changed project ${currentProject.title} description from ${previousProject?.description} to ${currentProject?.description} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -150,12 +150,12 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName added new state ${currentProject?.state?.last()?.name} to project ${currentProject.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName added new state ${currentProject?.state?.last()?.name} to project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -182,12 +182,44 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName deleted state ${state2.name} from project ${currentProject.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName deleted state ${state2.name} from project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `  should print state deletion if a state has been removed`() {
+        runTest {
+            // Given
+            val user = createUserHelper()
+            coEvery { getUserByIdUseCase.getUser(any()) } returns user
+
+
+            // When
+            val state1 = createStateHelper(name = "s1")
+            val state2 = createStateHelper(name = "s2")
+
+            val currentStates = listOf(state1)
+            val previousStates = listOf(state1,state2)
+
+            val currentProject = createProjectHelper(state = currentStates)
+            val previousProject = createProjectHelper(state = previousStates)
+
+            val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
+            val index = 0
+            val userName = user.name
+            projectLogUi.displayProjectLog(index, projectLog)
+
+            // Then
+            verify {
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName deleted state ${state2.name} from project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -215,12 +247,12 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
             verify {
-                viewer.printCorrectOutput(
-                    "${index + 1}. User $userName edited state form ${state1.name} to ${state2.name} project ${currentProject.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                printer.printCorrectOutput(
+                    "${index + 1}. User $userName edited state form ${state1.name} to ${state2.name} project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -242,90 +274,85 @@ class DisplayProjectLogTest {
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
             val userName = user.name
-            displayProjectLog.displayProjectLog(index, projectLog)
+            projectLogUi.displayProjectLog(index, projectLog)
 
             // Then
-            viewer.printCorrectOutput(
+            printer.printCorrectOutput(
                 "${index + 1}. User $userName assigned user ${
                     currentProject?.users.orEmpty().last().name
-                } to project ${currentProject.name} at ${currentProject?.updatedAt?.formatDateTime()}"
+                } to project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
             )
         }
     }
 
-//
-//    @Test
-//    fun `should not print anything if states are same`() = runTest {
-//        // Given
-//        val user = createUserHelper()
-//        coEvery { getUserByIdUseCase.getUser(any()) } returns user
-//
-//        val state1 = createStateHelper(name = "s1")
-//
-//        val previousProject = createProjectHelper(state = listOf(state1))
-//        val currentProject = createProjectHelper(state = listOf(state1))
-//
-//        val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
-//        val index = 0
-//
-//        displayProjectLog.displayProjectLog(index, projectLog)
-//
-//        // Then
-//        verify(exactly = 0) {
-//            viewer.printCorrectOutput(any())
-//        }
-//    }
-//
-//
-//    @Test
-//    fun `should handle null user gracefully`() = runTest {
-//        // Given
-//        coEvery { getUserByIdUseCase.getUser(any()) } returns null
-//
-//        val currentProject = createProjectHelper()
-//        val projectLog = createProjectLogHelper(currentEntity = currentProject)
-//        val index = 0
-//
-//        displayProjectLog.displayProjectLog(index, projectLog)
-//
-//        // Then
-//        verify {
-//            viewer.printCorrectOutput(
-//                "${index + 1}. User null created new project ${currentProject.name} at ${currentProject.createdAt.formatDateTime()}"
-//            )
-//        }
-//    }
-//
-//    @Test
-//    fun `should not print anything if there is no change between previous and current project`() = runTest {
-//        // Given
-//        val user = createUserHelper()
-//        coEvery { getUserByIdUseCase.getUser(any()) } returns user
-//
-//        val state = createStateHelper(name = "s1")
-//        val assignedUser = createUserHelper()
-//
-//        val currentProject = createProjectHelper(
-//            name = "same",
-//            description = "same",
-//            state = listOf(state),
-//            users = listOf(assignedUser)
-//        )
-//        val previousProject = createProjectHelper(
-//            name = "same",
-//            description = "same",
-//            state = listOf(state),
-//            users = listOf(assignedUser)
-//        )
-//
-//        val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
-//        val index = 0
-//
-//        displayProjectLog.displayProjectLog(index, projectLog)
-//
-//        // Then
-//        verify(exactly = 0) { viewer.printCorrectOutput(any()) }
-//    }
+    /** MORE TEST CASES **/
+    @Test
+    fun `should not print state change if states are same size but no changes`() {
+        runTest {
+            // Given
+            val user = createUserHelper()
+            coEvery { getUserByIdUseCase.getUser(any()) } returns user
+
+            // When
+            val state1 = createStateHelper(name = "s1")
+            val state2 = createStateHelper(name = "s2")
+
+            val currentStates = listOf(state1, state2)
+            val previousStates = listOf(state1, state2)
+
+            val currentProject = createProjectHelper(state = currentStates)
+            val previousProject = createProjectHelper(state = previousStates)
+
+            val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
+            val index = 0
+            projectLogUi.displayProjectLog(index, projectLog)
+
+            // Then
+            // Should not call printCorrectOutput with any state change message
+            verify(exactly = 0) {
+                printer.printCorrectOutput(
+                    match { it.contains("edited state") || it.contains("added new state") || it.contains("deleted state") }
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `should handle user being null when user not found`() {
+        runTest {
+            // Given
+            coEvery { getUserByIdUseCase.getUser(any()) } returns null
+
+            // When
+            val currentProject = createProjectHelper()
+            val projectLog = createProjectLogHelper(currentEntity = currentProject)
+            val index = 0
+            projectLogUi.displayProjectLog(index, projectLog)
+
+            // Then - should print with null userName
+            verify {
+                printer.printCorrectOutput(
+                    "${index + 1}. User null created new project ${currentProject?.title} at ${currentProject?.createdAt?.formatDateTime()}"
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `test isDeletion with both entities null`() {
+        runTest {
+            // Given - Creating a ProjectLog with both entities null
+            val projectLog = createProjectLogHelper(previousEntity = null, currentEntity = null)
+
+            // When & Then - Just execute to cover the branch
+            projectLogUi.displayProjectLog(0, projectLog)
+
+            // Verify no output was printed (already verified in previous test, but here for clarity)
+            verify(exactly = 0) {
+                printer.printCorrectOutput(any())
+            }
+        }
+    }
 
 }
 

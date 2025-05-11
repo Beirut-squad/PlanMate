@@ -91,7 +91,8 @@ open class ProjectLogUi(
             previousStates.size == currentStates.size -> handleStateEdition(
                 index, userName, previousProject, currentProject,
             )
-            previousStates.size > currentStates.size -> handleStateRemoval(
+
+            else -> handleStateRemoval(
                 index, userName, previousProject, currentProject,
             )
         }
