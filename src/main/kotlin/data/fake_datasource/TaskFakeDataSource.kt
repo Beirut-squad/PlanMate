@@ -1,7 +1,8 @@
-package org.example.data.fake_datasource
+package data.fake_datasource
 
-import data.datasource.task.TaskDataSource
+import data.exception.StateNotFoundException
 import data.exception.TaskNotFoundException
+import org.example.data.datasource.TaskDataSource
 import domain.model.Task
 import java.util.*
 
@@ -17,7 +18,7 @@ class TaskFakeDataSource : TaskDataSource {
             tasks.removeIf { it.id == task.id }.let {
                 tasks.add(task)
             }
-        } ?: throw NoSuchElementException("Task with id ${task.id} not found")
+        } ?: throw TaskNotFoundException()
 
     }
 
@@ -25,7 +26,7 @@ class TaskFakeDataSource : TaskDataSource {
         return tasks.find { it.id == id }?.let {
             tasks.removeIf { it.id == id }.let {
             }
-        } ?: throw NoSuchElementException("Task with id $id not found")
+        } ?: throw TaskNotFoundException()
     }
 
     override suspend fun getAllTasks(): List<Task> {
@@ -34,17 +35,17 @@ class TaskFakeDataSource : TaskDataSource {
 
     override suspend fun getTask(id: UUID): Task {
         return tasks.find { it.id == id }
-            ?: throw NoSuchElementException("Task with id $id not found")
+            ?: throw TaskNotFoundException()
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(
+    override suspend fun getTasksByStateAndProjectIds(
         projectId: UUID,
         stateId: UUID
     ): List<Task> {
         val tasks = getAllTasks()
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
-        return filteredTasks.ifEmpty { throw Exception("No tasks found for the given project and state.") }
+        return filteredTasks.ifEmpty { throw StateNotFoundException() }
 
     }
 

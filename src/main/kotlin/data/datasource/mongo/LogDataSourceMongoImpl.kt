@@ -1,17 +1,20 @@
-package data.datasource.log
+package data.datasource.mongo
 
 import com.mongodb.client.model.Filters
 import data.exception.NoProjectLogsFoundException
 import data.exception.NoTaskLogsFoundException
-import data.mongo_db.MongoConnection
-import domain.model.*
+import data.datasource.mapper.toDocument
+import data.datasource.mapper.toProjectLog
+import data.datasource.mapper.toTaskLog
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
+import domain.model.ProjectLog
+import domain.model.TaskLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.example.data.datasource.utils.*
+import org.example.data.datasource.LogDataSource
+import java.util.UUID
 
-import java.util.*
-
-class LogMongoDataSourceImpl(
+class LogDataSourceMongoImpl(
     private val mongoConnection: MongoConnection
 ) : LogDataSource {
 
@@ -48,8 +51,6 @@ class LogMongoDataSourceImpl(
         if (logs.isEmpty()) throw NoTaskLogsFoundException()
         logs.map { it.toTaskLog() }
     }
-
-
 
     companion object {
         private const val ENTITY_ID_FILED = "entityId"

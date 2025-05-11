@@ -5,7 +5,7 @@ import domain.exception.handler.ExceptionHandler
 import domain.model.Role
 import domain.model.User
 import domain.use_case.authentication.LoginUseCase
-import org.example.ui.admin.home.AdminUi
+import ui.admin.home.AdminUi
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen

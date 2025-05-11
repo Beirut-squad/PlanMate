@@ -1,4 +1,4 @@
-package org.example.ui.admin.home
+package ui.admin.home
 
 import org.example.ui.admin.log.project.ProjectLogsUi
 import org.example.ui.admin.project.CreateProjectUi
@@ -8,6 +8,7 @@ import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.admin.log.task.TaskLogsUi
 
 class AdminUi(
 
@@ -17,7 +18,7 @@ class AdminUi(
     private val projectsUi: ProjectsUi by inject()
     private val createProjectUi: CreateProjectUi by inject()
     private val projectLogs: ProjectLogsUi by inject()
-    private val allTaskLogsView: ProjectLogsUi by inject()
+    private val allTaskLogsView: TaskLogsUi by inject()
 
     override suspend fun show() {
 

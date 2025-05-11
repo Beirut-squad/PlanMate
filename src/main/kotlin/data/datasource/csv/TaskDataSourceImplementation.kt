@@ -1,11 +1,12 @@
-package data.datasource.task
+package data.datasource.csv
 
 import data.exception.*
 import domain.model.Task
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
-import java.util.*
+import org.example.data.datasource.TaskDataSource
+import java.util.UUID
 
 class TaskDataSourceImplementation(
     private val csvReader: CsvReader<Task>,
@@ -58,7 +59,7 @@ class TaskDataSourceImplementation(
         return tasks.find { it.id == id } ?: throw TaskNotFoundException()
     }
 
-    override suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task> {
+    override suspend fun getTasksByStateAndProjectIds(projectId: UUID, stateId: UUID): List<Task> {
         val tasks = getAllTasks()
 
         val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }

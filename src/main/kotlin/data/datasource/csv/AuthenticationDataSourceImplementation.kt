@@ -1,14 +1,14 @@
-package data.datasource.authentication
+package org.example.data.datasource.csv
 
+import data.datasource.authentication.AuthenticationDataSource
 import data.exception.*
 import domain.exception.handler.ExceptionHandler
-import org.example.data.csv.helper.FileName.CURRENT_USER_FILE
-import org.example.data.csv.helper.FileName.REGISTERED_USERS_FILE
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
 import domain.model.Role
 import domain.model.User
-import java.util.*
+import org.example.data.csv.helper.FileName
+import java.util.UUID
 
 class AuthenticationDataSourceImplementation(
     private val csvWriter: CsvWriter<User>,
@@ -24,11 +24,10 @@ class AuthenticationDataSourceImplementation(
 
     }
 
-    override suspend fun checkEmail(email: String) {
+    override suspend fun isValidEmail(email: String): Boolean {
         val users = readUsersFromCsv()
-        if (users.none { it.email == email }) {
-            throw EmailNotFoundException()
-        }
+        return users.none { it.email == email }
+
     }
 
     override suspend fun register(name: String, password: String, email: String): User {
@@ -80,22 +79,23 @@ class AuthenticationDataSourceImplementation(
         )
     }
 
-    override suspend fun checkIfFirstRegister() {
-        val users = readUsersFromCsv()
-        if (users.isNotEmpty()) {
-            throw UsersAlreadyExistException()
-        }
+    override suspend fun isFirstRegister(): Boolean {
+        return readUsersFromCsv().isEmpty()
     }
 
     private fun saveCurrentUser(user: User?) {
-        if (user != null) {
-            csvWriter.writeToFile(listOf(user), CURRENT_USER_FILE)
-        } else {
-            csvWriter.writeToFile(emptyList(), CURRENT_USER_FILE)
+         try {
+            if (user != null) {
+                csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
+            } else {
+                csvWriter.writeToFile(emptyList(), FileName.CURRENT_USER_FILE)
+            }
+        } catch (e: Exception) {
+            throw e
         }
     }
 
-    override suspend fun getCurrentLoggedInUser(): User {
+    override suspend fun getCurrentUser(): User {
         return readUsersFromCsv().singleOrNull() ?: throw UserNotLoggedInException()
     }
 
@@ -104,7 +104,7 @@ class AuthenticationDataSourceImplementation(
     }
 
     private fun readUsersFromCsv(): List<User> {
-        return csvReader.read(CURRENT_USER_FILE)
+        return csvReader.read(FileName.CURRENT_USER_FILE)
     }
 
     private fun addUserToCsv(user: User) {
@@ -113,6 +113,6 @@ class AuthenticationDataSourceImplementation(
     }
 
     private fun writeUsersToCsv(users: List<User>) {
-        csvWriter.writeToFile(users, REGISTERED_USERS_FILE)
+        csvWriter.writeToFile(users, FileName.REGISTERED_USERS_FILE)
     }
 }

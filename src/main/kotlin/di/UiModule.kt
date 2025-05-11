@@ -3,7 +3,7 @@ package org.example.di
 import domain.exception.handler.ExceptionHandler
 import domain.use_case.project.GetAllProjectsUseCase
 import domain.use_case.project.GetProjectByIdUseCase
-import org.example.ui.admin.home.AdminUi
+import ui.admin.home.AdminUi
 import org.example.ui.admin.log.project.ProjectLogUi
 import org.example.ui.admin.log.project.ProjectLogsUi
 import org.example.ui.admin.project.*

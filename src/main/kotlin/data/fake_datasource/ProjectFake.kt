@@ -1,26 +1,26 @@
-package org.example.data.fake_datasource
+package data.fake_datasource
 
-import data.datasource.project.ProjectDataSource
 import data.exception.ProjectNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User
+import org.example.data.datasource.ProjectDataSource
 import java.time.LocalDateTime
 import java.util.*
 
 class ProjectFakeDataSource : ProjectDataSource {
     private val projects = mutableListOf<Project>()
 
-    override suspend fun createProject(project: Project) {
+    override suspend fun createProject(project: domain.model.Project) {
         projects.add(project)
     }
 
-    override suspend fun editProject(project: Project) {
+    override suspend fun editProject(project: domain.model.Project) {
         val wasRemoved = projects.removeIf { it.id == project.id }
         if (wasRemoved) {
             projects.add(project)
         } else {
-            throw Exception("No project found with ID: ${project.id}")
+            throw ProjectNotFoundException()
         }
     }
 
@@ -28,45 +28,45 @@ class ProjectFakeDataSource : ProjectDataSource {
     override suspend fun deleteProject(id: UUID) {
         val wasRemoved = projects.removeIf { it.id == id }
         if (!wasRemoved) {
-            throw Exception("No project found with ID: $id")
+            throw ProjectNotFoundException()
         }
     }
 
 
-    override suspend fun getAllProjects(): List<Project> {
+    override suspend fun getAllProjects(): List<domain.model.Project> {
         return projects
     }
 
-    override suspend fun getProject(id: UUID): Project {
+    override suspend fun getProject(id: UUID): domain.model.Project {
         return projects.find { it.id == id } ?: throw ProjectNotFoundException()
     }
 
-    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun addState(projectId: UUID, state: State): domain.model.Project {
         return updateProjectState(projectId, state)
     }
 
 
-    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun editState(projectId: UUID, state: State): domain.model.Project {
         return editProjectState(projectId, state)
     }
 
-    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
+    override suspend fun deleteState(projectId: UUID, state: State): domain.model.Project {
         return deleteProjectState(projectId, state)
     }
 
-    override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
+    override suspend fun getUserProjectsById(userId: UUID): List<domain.model.Project> {
         return projects.filter { project ->
             project.users.any { user -> user.id == userId }
         }
     }
 
 
-    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    override suspend fun getMateProjectsByUserId(userId: UUID): List<domain.model.Project> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
-        var updatedProject: Project? = null
+    override suspend fun addMate(projectId: UUID, user: User): domain.model.Project {
+        var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val updatedUsers = if (user in project.users) project.users else project.users + user
@@ -84,8 +84,8 @@ class ProjectFakeDataSource : ProjectDataSource {
     }
 
 
-    private fun updateProjectState(projectId: UUID, state: State): Project {
-        var updatedProject: Project? = null
+    private fun updateProjectState(projectId: UUID, state: State): domain.model.Project {
+        var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val projectUpdated = project.copy(
@@ -101,8 +101,8 @@ class ProjectFakeDataSource : ProjectDataSource {
         return updatedProject ?: throw ProjectNotFoundException()
     }
 
-    private fun editProjectState(projectId: UUID, updatedState: State): Project {
-        var updatedProject: Project? = null
+    private fun editProjectState(projectId: UUID, updatedState: State): domain.model.Project {
+        var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val updatedStates = project.state.map { existingState ->
@@ -121,8 +121,8 @@ class ProjectFakeDataSource : ProjectDataSource {
         return updatedProject ?: throw ProjectNotFoundException()
     }
 
-    private fun deleteProjectState(projectId: UUID, state: State): Project {
-        var updatedProject: Project? = null
+    private fun deleteProjectState(projectId: UUID, state: State): domain.model.Project {
+        var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val projectUpdated = project.copy(

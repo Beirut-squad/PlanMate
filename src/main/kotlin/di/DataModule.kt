@@ -2,18 +2,18 @@ package org.example.di
 
 
 import data.datasource.authentication.AuthenticationDataSource
-import data.datasource.log.LogDataSource
-import data.datasource.log.LogMongoDataSourceImpl
-import data.datasource.project.ProjectDataSource
-import data.datasource.task.TaskDataSource
+import data.datasource.mongo.AuthenticationMongoDataSourceImpl
+import data.datasource.mongo.LogDataSourceMongoImpl
 import data.exception.handler.DataExceptionHandler
-import data.mongo_db.MongoConnection
 import domain.exception.handler.DomainExceptionHandler
 import domain.exception.handler.ExceptionHandler
-import org.example.data.datasource.authentication_data_source.AuthenticationMongoDataSourceImpl
-import org.example.data.datasource.project_data_source.ProjectMongoDataSourceImpl
-import org.example.data.datasource.task_data_source.TaskMongoDataSourceImpl
-import org.example.data.repository.AuthenticationRepositoryImpl
+import org.example.data.datasource.LogDataSource
+import org.example.data.datasource.ProjectDataSource
+import org.example.data.datasource.TaskDataSource
+import org.example.data.datasource.mongo.ProjectDataSourceMongoImpl
+import data.datasource.mongo.TaskMongoDataSourceImpl
+import data.repository.AuthenticationRepositoryImpl
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
 import org.example.data.repository.LogRepositoryImpl
 import org.example.data.repository.ProjectRepositoryImpl
 import org.example.data.repository.TaskRepositoryImpl
@@ -32,11 +32,11 @@ val dataModule = module {
     }
 
     single<LogDataSource> {
-        LogMongoDataSourceImpl(MongoConnection)
+        LogDataSourceMongoImpl(MongoConnection)
     }
 
     single<ProjectDataSource> {
-        ProjectMongoDataSourceImpl(MongoConnection)
+        ProjectDataSourceMongoImpl(MongoConnection)
     }
 
     single<TaskDataSource> {

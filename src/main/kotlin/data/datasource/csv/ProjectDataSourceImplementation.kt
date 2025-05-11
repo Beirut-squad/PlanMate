@@ -1,4 +1,4 @@
-package data.datasource.project
+package data.datasource.csv
 
 import data.exception.*
 import domain.model.Project
@@ -7,9 +7,12 @@ import domain.model.User
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
+import org.example.data.datasource.ProjectDataSource
 import java.io.FileNotFoundException
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
+import kotlin.collections.forEach
+import kotlin.collections.plusAssign
 
 class ProjectDataSourceImplementation(
     private val csvReader: CsvReader<Project>,
@@ -40,7 +43,7 @@ class ProjectDataSourceImplementation(
         return csvReader.read(fileName).find { it.id == id } ?: throw ProjectNotFoundException()
     }
 
-    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun addState(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             if (states.any { oldState -> haveSameStateName(oldState, state) }) {
                 throw DuplicateStateException()
@@ -50,7 +53,7 @@ class ProjectDataSourceImplementation(
     }
 
 
-    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
+    override suspend fun editState(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
@@ -66,7 +69,7 @@ class ProjectDataSourceImplementation(
         }
     }
 
-    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
+    override suspend fun deleteState(projectId: UUID, state: State): Project {
         return modifyProjectState(projectId) { states ->
             val updatedStates = mutableListOf<State>()
             var notFoundState = true
@@ -80,11 +83,11 @@ class ProjectDataSourceImplementation(
         }
     }
 
-    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
+    override suspend fun getMateProjectsByUserId(userId: UUID): List<Project> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMateToProject(projectId: UUID, user: User): Project {
+    override suspend fun addMate(projectId: UUID, user: User): Project {
         return modifyProjectUser(projectId) { users ->
             val updatedUser = mutableListOf<User>()
             var notFoundUser = true
@@ -101,7 +104,7 @@ class ProjectDataSourceImplementation(
         }
     }
 
-    override suspend fun getProjectsForUserById(userId: UUID): List<Project> {
+    override suspend fun getUserProjectsById(userId: UUID): List<Project> {
         val project = csvReader.read(fileName).filter { it.creatorUserID == userId }
         return project.ifEmpty { throw ProjectNotFoundException() }
     }

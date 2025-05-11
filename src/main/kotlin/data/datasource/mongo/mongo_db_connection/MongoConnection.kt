@@ -1,9 +1,10 @@
-package data.mongo_db
+package org.example.data.datasource.mongo.mongo_db
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import org.bson.Document
+
 object MongoConnection{
 
     private const val MONGO_URI = "mongodb+srv://beirut:beirut@planemate.hfrslta.mongodb.net/?retryWrites=true&w=majority&appName=PlaneMate"

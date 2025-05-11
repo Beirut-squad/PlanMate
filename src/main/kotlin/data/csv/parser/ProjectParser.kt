@@ -40,7 +40,7 @@ class ProjectParser(private val stateCsvParser: CsvParser<State>,
             updatedAt = LocalDateTime.parse(parts[ProjectColumnIndex.UPDATED_AT]),
             users = parseMultiUser(parts[ProjectColumnIndex.USER]),
             state = parseMultiStates(parts[ProjectColumnIndex.STATE]),
-            )
+        )
     }
      private fun parseMultiStates(line: String): List<State> {
         val statesLines = smartCsvSplit(line)

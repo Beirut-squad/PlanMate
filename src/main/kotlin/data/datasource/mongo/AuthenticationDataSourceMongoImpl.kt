@@ -1,16 +1,17 @@
-package org.example.data.datasource.authentication_data_source
+package data.datasource.mongo
 
 import data.datasource.authentication.AuthenticationDataSource
 import data.exception.*
-import data.mongo_db.MongoConnection
 import domain.exception.handler.ExceptionHandler
-import domain.model.*
+import data.datasource.mapper.toDocument
+import data.datasource.mapper.toUser
+import org.example.data.datasource.mongo.mongo_db.MongoConnection
+import domain.model.Role
+import domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import org.example.data.datasource.utils.toDocument
-import org.example.data.datasource.utils.toUser
-import java.util.*
+import java.util.UUID
 
 class AuthenticationMongoDataSourceImpl(
     private val mongoConnection: MongoConnection,
@@ -22,25 +23,17 @@ class AuthenticationMongoDataSourceImpl(
             val document = mongoConnection.users.find(filter).firstOrNull()
                 ?: throw InvalidCredentialsException()
 
-            val user = User(
-                id = UUID.fromString(document.getString(ID_FILED)),
-                name = document.getString(NAME_FILED),
-                password = document.getString(PASSWORD_FILED),
-                email = document.getString(EMAIL_FILED),
-                role = Role.valueOf(document.getString(ROLE_FILED)),
-                isDeleted = document.getBoolean(IS_DELETED_FILED, false)
-            )
-
+            val user = document.toUser()
             saveCurrentUser(user)
             user
         }
     }
 
-    override suspend fun checkEmail(email: String) {
-        withContext(Dispatchers.IO) {
+    override suspend fun isValidEmail(email: String): Boolean {
+        return withContext(Dispatchers.IO) {
             val filter = Document(EMAIL_FILED, email)
-            val exists = mongoConnection.users.find(filter).firstOrNull() != null
-            if (!exists) throw EmailNotFoundException()
+            mongoConnection.users.find(filter).firstOrNull() != null
+
         }
     }
 
@@ -71,14 +64,14 @@ class AuthenticationMongoDataSourceImpl(
         }
     }
 
-    override suspend fun checkIfFirstRegister() {
-        withContext(Dispatchers.IO) {
+    override suspend fun isFirstRegister(): Boolean {
+        return withContext(Dispatchers.IO) {
             val count = mongoConnection.users.countDocuments()
-            if (count > 0) throw UsersAlreadyExistException()
+            count.toInt() == 0
         }
     }
 
-    override suspend fun getCurrentLoggedInUser(): User {
+    override suspend fun getCurrentUser(): User {
         return withContext(Dispatchers.IO) {
             val document = mongoConnection.currentUser.find().firstOrNull()
             document?.toUser() ?: throw UserNotLoggedInException()
@@ -94,21 +87,13 @@ class AuthenticationMongoDataSourceImpl(
         }
     }
 
-    private suspend fun saveCurrentUser(user: User?) = withContext(Dispatchers.IO) {
+    private suspend fun saveCurrentUser(user: User) {
         exceptionHandler.tryCatchingAsync(
             action = {
-                val currentUser = MongoConnection.currentUser
-                currentUser.deleteMany(Document())
-
-                if (user != null) {
-                    val document = Document(ID_FILED, user.id.toString())
-                        .append(NAME_FILED, user.name)
-                        .append(EMAIL_FILED, user.email)
-                        .append(PASSWORD_FILED, user.password)
-                        .append(ROLE_FILED, user.role.name)
-                        .append(IS_DELETED_FILED, user.isDeleted)
-
-                    currentUser.insertOne(document)
+                withContext(Dispatchers.IO) {
+                    val currentUser = MongoConnection.currentUser
+                    currentUser.deleteMany(Document())
+                    currentUser.insertOne(user.toDocument())
                 }
             }
         )
@@ -130,14 +115,8 @@ class AuthenticationMongoDataSourceImpl(
         if (exists) throw EmailAlreadyExistsException()
     }
 
-
     companion object {
-        private const val ID_FILED = "_id"
-        private const val NAME_FILED = "name"
         private const val EMAIL_FILED = "email"
         private const val PASSWORD_FILED = "password"
-        private const val ROLE_FILED = "role"
-        private const val IS_DELETED_FILED = "isDeleted"
-
     }
 }
