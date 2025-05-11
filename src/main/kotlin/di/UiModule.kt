@@ -24,6 +24,8 @@ import org.example.ui.mate.MateUi
 import org.example.ui.mate.UserProjectsUi
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import ui.admin.log.task.TaskLogUi
+import ui.admin.log.task.TaskLogsUi
 
 val uiModule = module {
     singleOf(::StartUpMenuUi)
@@ -54,6 +56,8 @@ val uiModule = module {
     singleOf(::AddProjectUserUi)
     singleOf(::ProjectLogUi)
     singleOf(::ProjectsUi)
+    singleOf(::TaskLogsUi)
+    singleOf(::TaskLogUi)
     single<ExceptionHandler> {
         UIExceptionHandler(get())
     }

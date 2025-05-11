@@ -32,7 +32,7 @@ class MateUi : UiScreen, KoinComponent {
 
                 2 -> {
                     printer.printGoodbyeMessage("Goodbye")
-                    goToAuthenticationMainScreen()
+                    break
                 }
             }
         }

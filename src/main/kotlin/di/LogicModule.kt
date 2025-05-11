@@ -7,6 +7,7 @@ import domain.use_case.authentication.*
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.use_case.log.CreateTaskLogUseCase
 import domain.use_case.log.GetAllProjectLogsUseCase
+import domain.use_case.log.GetAllTaskLogsUseCase
 import domain.use_case.project.*
 import domain.use_case.state.CreateStateUseCase
 import domain.use_case.state.DeleteStateUseCase
@@ -59,6 +60,7 @@ val logicModule = module {
     singleOf(::GetProjectTasksUseCase)
     singleOf(::EditTaskUseCase)
     singleOf(::DeleteTaskUseCase)
+    singleOf(::GetAllTaskLogsUseCase)
 
     single<ExceptionHandler> {
         DomainExceptionHandler(get())

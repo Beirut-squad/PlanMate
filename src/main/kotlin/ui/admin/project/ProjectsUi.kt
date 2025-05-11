@@ -23,19 +23,20 @@ class ProjectsUi(
         running = true
         exceptionHandler.tryCatchingAsync(
             action = {
-                val projects = getAllProjectsUseCases.getAllProjects()
-                showProjectDetails(projects)
+                while (running) {
+                    val projects = getAllProjectsUseCases.getAllProjects()
+                    showProjectDetails(projects)
+                }
             })
     }
 
     private suspend fun showProjectDetails(projects: List<Project>) {
-        while (running) {
-            exceptionHandler.tryCatchingAsync(action = {
-                if (projects.isNotEmpty()) {
-                    printer.printTitle("Project: ")
-                    projects.forEachIndexed { index, project ->
-                        printer.printInfoLine(
-                            """
+        exceptionHandler.tryCatchingAsync(action = {
+            if (projects.isNotEmpty()) {
+                printer.printTitle("Project: ")
+                projects.forEachIndexed { index, project ->
+                    printer.printInfoLine(
+                        """
                             ${index + 1}.
                             - Made by: ${getUserById(project.creatorUserID).name}
                             - Name: ${project.title}
@@ -43,18 +44,17 @@ class ProjectsUi(
                             - Creation Date: ${project.createdAt}
                             - Update Date: ${project.updatedAt}
                         """.trimIndent()
-                        )
-                    }
-
-                    chooseProject(projects)
-                } else {
-                    printer.printInfoLine("No projects found.")
-                    running = false
+                    )
                 }
-            }, onError = {
+
+                chooseProject(projects)
+            } else {
+                printer.printInfoLine("No projects found.")
                 running = false
-            })
-        }
+            }
+        }, onError = {
+            running = false
+        })
     }
 
     private suspend fun chooseProject(projects: List<Project>) {
