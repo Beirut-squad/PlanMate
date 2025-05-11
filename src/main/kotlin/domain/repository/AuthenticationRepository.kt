@@ -9,7 +9,7 @@ interface AuthenticationRepository {
     suspend fun register(name: String, password: String, email: String): User
     suspend fun registerAdmin(name: String, password: String, email: String): User
     suspend fun logout()
-    suspend fun checkIfFirstRegister()
+    suspend fun isFirstRegister(): Boolean
     suspend fun getCurrentLoggedInUser(): User
     suspend fun getUsers(): List<User>
 }

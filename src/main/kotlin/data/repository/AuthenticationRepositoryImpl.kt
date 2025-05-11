@@ -27,8 +27,8 @@ class AuthenticationRepositoryImpl(
          authenticationDataSource.logout()
     }
 
-    override suspend fun checkIfFirstRegister() {
-         authenticationDataSource.isFirstRegister()
+    override suspend fun isFirstRegister(): Boolean {
+         return authenticationDataSource.isFirstRegister()
     }
 
     override suspend fun getCurrentLoggedInUser(): User {
