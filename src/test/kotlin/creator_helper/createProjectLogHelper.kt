@@ -23,78 +23,35 @@ fun createProjectLogHelper(
     )
 }
 
-val testUserId: UUID = UUID.randomUUID()
-
-val projectLogsForTestUser =
-    listOf(
-        createProjectLogHelper(
-            userId = testUserId,
-            previousEntity = createProjectHelper(name = "Project 1"),
-            currentEntity = createProjectHelper(name = "Project 2")
-        ),
-        createProjectLogHelper(
-            userId = testUserId,
-            previousEntity = createProjectHelper(name = "Project 2"),
-            currentEntity = createProjectHelper(name = "Project 3")
-        )
-    )
+val testUserId: UUID = UUID.fromString("10000000-0000-0000-0000-000000000000")
+val project1 = createProjectHelper(name = "Project 1")
+val project2 = createProjectHelper(name = "Project 2")
+val project3 = createProjectHelper(name = "Project 3")
 
 val projectLogsForAllUsers =
     listOf(
         createProjectLogHelper(
             userId = testUserId,
-            previousEntity = createProjectHelper(name = "Project 1"),
-            currentEntity = createProjectHelper(name = "Project 2")
+            entityId = listOfNotNull(project2.id, project1.id).first(),
+            previousEntity = project1,
+            currentEntity = project2
         ),
         createProjectLogHelper(
             userId = testUserId,
-            previousEntity = createProjectHelper(name = "Project 2"),
-            currentEntity = createProjectHelper(name = "Project 3")
+            entityId = listOfNotNull(project3.id, project2.id).first(),
+            previousEntity = project2,
+            currentEntity = project3
         ),
         createProjectLogHelper(
-            previousEntity = createProjectHelper(name = "Project 2"),
-            currentEntity = createProjectHelper(name = "Project 3")
+            entityId = listOfNotNull(project3.id, project2.id).first(),
+            previousEntity = project2,
+            currentEntity = project3
         )
     )
 
-val testProjectId: UUID = UUID.randomUUID()
-
 val projectLog = createProjectLogHelper(
-    previousEntity = createProjectHelper(name = "Project 1"),
-    currentEntity = createProjectHelper(name = "Project 2")
+    userId = testUserId,
+    entityId = listOfNotNull(project2.id, project1.id).first(),
+    previousEntity = project1,
+    currentEntity = project2
 )
-
-val projectLogsByProjectId = listOf(
-    createProjectLogHelper(
-        entityId = testProjectId,
-        previousEntity = createProjectHelper(name = "Project 1"),
-        currentEntity = createProjectHelper(name = "Project 2")
-    ),
-    createProjectLogHelper(
-        entityId = testProjectId,
-        previousEntity = createProjectHelper(name = "Project 2"),
-        currentEntity = createProjectHelper(name = "Project 3")
-    )
-)
-
-val testProjectLogs = listOf(
-    createProjectLogHelper(
-        userId = testUserId,
-        previousEntity = createProjectHelper(name = "Project 1"),
-        currentEntity = createProjectHelper(name = "Project 2")
-    ),
-    createProjectLogHelper(
-        userId = testUserId,
-        previousEntity = createProjectHelper(name = "Project 2"),
-        currentEntity = createProjectHelper(name = "Project 3")
-    ),
-    createProjectLogHelper(
-        userId = testUserId,
-        previousEntity = createProjectHelper(name = "Project 3"),
-        currentEntity = createProjectHelper(name = "Project 4")
-    )
-)
-
-
-
-

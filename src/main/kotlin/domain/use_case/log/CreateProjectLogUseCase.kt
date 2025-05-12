@@ -16,7 +16,7 @@ class CreateProjectLogUseCase(
 
         val entityId = listOfNotNull(currentProject?.id, previousProject?.id).first()
 
-        return logRepository.saveProjectLog(
+        logRepository.saveProjectLog(
             ProjectLog(
                 id = UUID.randomUUID(),
                 userId = userId,
