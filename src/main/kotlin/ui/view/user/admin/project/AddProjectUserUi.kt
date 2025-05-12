@@ -42,8 +42,8 @@ class AddProjectUserUi(
     }
 
     private fun showAllUsers(users: List<User>) {
+        printer.printTitle("These are all the registered users:")
         users.forEachIndexed { index, user ->
-            printer.printPlainText("These are all the registered users:")
             printer.printInfoLine(
                 "${index + 1}. " + user.name
             )

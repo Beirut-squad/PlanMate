@@ -40,6 +40,7 @@ class LoginUi(
                 handler.printHandledError(it)
             },
             onSuccess = {
+                printer.printCorrectOutput("Welcome ${it.name}")
                 printer.printCorrectOutput("Login successful!")
                 checkAdminOrMate(it)
             }

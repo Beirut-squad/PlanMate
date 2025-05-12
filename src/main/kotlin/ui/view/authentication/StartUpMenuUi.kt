@@ -11,7 +11,7 @@ class StartUpMenuUi(
     private val loginUi: LoginUi
 ) : UiScreen {
     override suspend fun show() {
-        printer.printTitle("Welcome to Plan Mate, what would you like to do?")
+        printer.printTitle("Welcome to Plan Mate\nwhat would you like to do?")
 
         while (true) {
             printer.printOptions(

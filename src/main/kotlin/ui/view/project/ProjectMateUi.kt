@@ -41,13 +41,13 @@ class ProjectMateUi(
         while (running) {
             printer.printInfoLine(
                 """
-                    - Project Name: ${project.title}
-                    - Description: ${project.description}
-                    - Created At: ${project.createdAt}
+                    - Project Name : ${project.title}
+                    - Description : ${project.description}
+                    - Created At : ${project.createdAt}
                     """.trimIndent()
             )
 
-            printer.printInfoLine("Choose an option:")
+            printer.printInfoLine("Choose an option :")
             printer.printOptions(
                 "View state for project", "View all task for project", "Create new task", "" +
                         "Enter Any Thing To Go Back"
@@ -69,7 +69,7 @@ class ProjectMateUi(
 
                 3 -> {
                     if (project.states.isEmpty()) {
-                        printer.printError("Cannot create a task because this project has no states.")
+                        printer.printError("Can't create a task because this project has no states.")
                         UserProjectsUi().show()
                     } else {
                         CreateTaskUi(projectId).show()

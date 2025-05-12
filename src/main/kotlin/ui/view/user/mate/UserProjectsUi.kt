@@ -10,10 +10,12 @@ import ui.components.UiScreen
 import ui.view.project.ProjectMateUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.components.Reader
 import java.util.*
 
 class UserProjectsUi : UiScreen, KoinComponent {
     private val printer: Printer by inject()
+    private val reader: Reader by inject()
     private val getCurrentLoggedInUserUseCase: GetCurrentUserUseCase by inject()
     private val getUserProjectsByIdUseCase: GetUserProjectsByIdUseCase by inject()
     private val executor: SafeExecutor by inject()
@@ -47,7 +49,8 @@ class UserProjectsUi : UiScreen, KoinComponent {
     private suspend fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
         while (isRunning) {
-            val input = printer.readIntInput("Enter project number (or any number to exit):")
+            printer.printOption("Enter project number (or any number to Go  Back):")
+            val input = reader.readInt()
             handleUserInput(input, projects).also { isRunning = it }
         }
     }
@@ -65,7 +68,6 @@ class UserProjectsUi : UiScreen, KoinComponent {
             }
 
             else -> {
-                printer.printGoodbyeMessage("Goodbye")
                 MateUi().show()
                 true
             }

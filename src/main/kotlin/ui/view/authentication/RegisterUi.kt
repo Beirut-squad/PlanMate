@@ -19,7 +19,7 @@ class RegisterUi(
     override suspend fun show() {
         printer.printTitle("Register for Plan Mate")
 
-        printer.printInfoLine("Please enter your details to register:")
+        printer.printInfoLine("Please enter your registration credentials :")
 
         takeUserRegisterInput()
     }
