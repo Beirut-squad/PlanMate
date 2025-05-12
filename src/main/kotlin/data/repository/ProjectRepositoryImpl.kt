@@ -1,10 +1,10 @@
-package org.example.data.repository
+package data.repository
 
 import domain.model.Project
 import domain.model.State
 import domain.model.User
-import org.example.data.datasource.ProjectDataSource
-import org.example.domain.repository.ProjectRepository
+import data.datasource.interfaces.ProjectDataSource
+import domain.repository.ProjectRepository
 import java.util.*
 
 class ProjectRepositoryImpl(
@@ -41,10 +41,6 @@ class ProjectRepositoryImpl(
 
     override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
         return projectDataSource.deleteState(projectId, state)
-    }
-
-    override suspend fun getProjectForMateByUserId(userId: UUID): List<Project> {
-        TODO("Not yet implemented")
     }
 
     override suspend fun addMateToProject(projectId: UUID, user: User): Project {

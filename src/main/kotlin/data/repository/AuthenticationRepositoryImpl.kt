@@ -1,8 +1,8 @@
 package data.repository
 
-import data.datasource.authentication.AuthenticationDataSource
+import data.datasource.interfaces.AuthenticationDataSource
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource

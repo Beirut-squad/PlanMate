@@ -4,7 +4,7 @@ import domain.exception.EmptyStateNameException
 import domain.model.State
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.domain.repository.ProjectRepository
+import domain.repository.ProjectRepository
 import java.util.*
 
 class AddProjectStateUseCase(

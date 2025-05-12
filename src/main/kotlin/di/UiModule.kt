@@ -1,29 +1,29 @@
-package org.example.di
+package di
 
 import domain.use_case.project.GetAllProjectsUseCase
 import domain.use_case.project.GetProjectByIdUseCase
-import ui.admin.home.AdminUi
-import org.example.ui.admin.log.project.ProjectLogUi
-import org.example.ui.admin.log.project.ProjectLogsUi
-import org.example.ui.admin.project.*
-import org.example.ui.common.authentication.LoginUi
-import org.example.ui.common.authentication.RegisterUi
-import org.example.ui.common.authentication.StartUpMenuUi
-import org.example.ui.common.components.Colors
-import org.example.ui.common.components.Printer
-import org.example.ui.common.components.Reader
-import org.example.ui.common.project.ProjectMateUi
-import org.example.ui.common.project.ProjectStateSelectedUi
-import org.example.ui.common.project.ProjectTasksUi
-import org.example.ui.common.project.ViewProjectsUi
-import org.example.ui.common.task.CreateTaskUi
-import org.example.ui.common.task.EditTaskUi
-import org.example.ui.mate.MateUi
-import org.example.ui.mate.UserProjectsUi
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ui.admin.log.task.TaskLogUi
-import ui.admin.log.task.TaskLogsUi
+import ui.components.Colors
+import ui.components.Printer
+import ui.components.Reader
+import ui.view.authentication.LoginUi
+import ui.view.authentication.RegisterUi
+import ui.view.authentication.StartUpMenuUi
+import ui.view.project.ProjectMateUi
+import ui.view.project.ProjectStateSelectedUi
+import ui.view.project.ProjectTasksUi
+import ui.view.project.ViewProjectsUi
+import ui.view.task.CreateTaskUi
+import ui.view.task.EditTaskUi
+import ui.view.user.admin.home.AdminUi
+import ui.view.user.admin.log.project.ProjectLogUi
+import ui.view.user.admin.log.project.ProjectLogsUi
+import ui.view.user.admin.log.task.TaskLogUi
+import ui.view.user.admin.log.task.TaskLogsUi
+import ui.view.user.admin.project.*
+import ui.view.user.mate.MateUi
+import ui.view.user.mate.UserProjectsUi
 
 val uiModule = module {
     singleOf(::StartUpMenuUi)

@@ -1,4 +1,4 @@
-package org.example.core.domain.exception
+package domain.exception
 
 open class FileException : Exception()
 

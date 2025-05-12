@@ -1,4 +1,4 @@
-package org.example.di
+package di
 
 import domain.exception.handler.SafeExecutor
 import domain.use_case.authentication.*
@@ -11,7 +11,7 @@ import domain.use_case.state.CreateStateUseCase
 import domain.use_case.state.DeleteStateUseCase
 import domain.use_case.state.EditStateUseCase
 import domain.use_case.task.*
-import org.example.core.domain.exception.handler.ExceptionHandler
+import domain.exception.handler.ExceptionHandler
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 import org.example.domain.use_cases.authentication.encryption.Encryptor
 import org.example.domain.use_cases.authentication.encryption.EncryptorMD5Impl

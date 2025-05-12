@@ -4,9 +4,9 @@ import domain.model.Project
 import domain.model.State
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.core.domain.exception.EmptyProjectDescriptionException
-import org.example.core.domain.exception.EmptyProjectTitleException
-import org.example.domain.repository.ProjectRepository
+import domain.exception.EmptyProjectDescriptionException
+import domain.exception.EmptyProjectTitleException
+import domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*
 

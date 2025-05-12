@@ -2,8 +2,8 @@ package domain.use_case.project
 
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.core.domain.exception.EmptyProjectDescriptionException
-import org.example.domain.repository.ProjectRepository
+import domain.exception.EmptyProjectDescriptionException
+import domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*
 

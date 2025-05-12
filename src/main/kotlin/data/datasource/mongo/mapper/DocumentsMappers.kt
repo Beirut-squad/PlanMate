@@ -1,4 +1,4 @@
-package data.datasource.mapper
+package data.datasource.mongo.mapper
 
 import domain.model.*
 import org.bson.Document

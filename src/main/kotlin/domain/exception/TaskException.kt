@@ -1,7 +1,4 @@
-package org.example.core.domain.exception
-
-import domain.exception.EmptyFieldException
-import domain.exception.NullInputException
+package domain.exception
 
 open class TaskException : Exception()
 
