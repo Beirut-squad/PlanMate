@@ -3,7 +3,7 @@ package domain.use_case.project
 import domain.exception.EmptyStateNameException
 import domain.model.Project
 import domain.model.State
-import org.example.domain.repository.ProjectRepository
+import domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase
 import java.util.*
 

@@ -3,9 +3,9 @@ package domain.use_case.task
 import domain.model.Task
 import domain.model.State
 import domain.use_case.log.CreateTaskLogUseCase
-import org.example.core.domain.exception.EmptyTaskDescriptionException
-import org.example.core.domain.exception.EmptyTaskTitleException
-import org.example.domain.repository.TaskRepository
+import domain.exception.EmptyTaskDescriptionException
+import domain.exception.EmptyTaskTitleException
+import domain.repository.TaskRepository
 import java.time.LocalDateTime
 import java.util.*
 

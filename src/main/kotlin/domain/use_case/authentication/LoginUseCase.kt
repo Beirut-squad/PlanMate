@@ -1,7 +1,7 @@
 package domain.use_case.authentication
 
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 
 class LoginUseCase(

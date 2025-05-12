@@ -1,22 +1,22 @@
-package org.example.di
+package di
 
-import data.datasource.authentication.AuthenticationDataSource
-import data.datasource.mongo.AuthenticationMongoDataSourceImpl
-import data.datasource.mongo.LogDataSourceMongoImpl
-import org.example.data.datasource.LogDataSource
-import org.example.data.datasource.ProjectDataSource
-import org.example.data.datasource.TaskDataSource
-import org.example.data.datasource.mongo.ProjectDataSourceMongoImpl
-import data.datasource.mongo.TaskMongoDataSourceImpl
+import data.datasource.interfaces.AuthenticationDataSource
+import data.datasource.mongo.implementation.AuthenticationMongoDataSourceImpl
+import data.datasource.mongo.implementation.LogDataSourceMongoImpl
+import data.datasource.interfaces.LogDataSource
+import data.datasource.interfaces.ProjectDataSource
+import data.datasource.interfaces.TaskDataSource
+import data.datasource.mongo.implementation.ProjectDataSourceMongoImpl
+import data.datasource.mongo.implementation.TaskMongoDataSourceImpl
 import data.repository.AuthenticationRepositoryImpl
-import org.example.data.datasource.mongo.mongo_db.MongoConnection
-import org.example.data.repository.LogRepositoryImpl
-import org.example.data.repository.ProjectRepositoryImpl
-import org.example.data.repository.TaskRepositoryImpl
-import org.example.domain.repository.AuthenticationRepository
-import org.example.domain.repository.LogRepository
-import org.example.domain.repository.ProjectRepository
-import org.example.domain.repository.TaskRepository
+import data.datasource.mongo.mongo_db_connection.MongoConnection
+import data.repository.LogRepositoryImpl
+import data.repository.ProjectRepositoryImpl
+import data.repository.TaskRepositoryImpl
+import domain.repository.AuthenticationRepository
+import domain.repository.LogRepository
+import domain.repository.ProjectRepository
+import domain.repository.TaskRepository
 import org.koin.dsl.module
 
 val dataModule = module {

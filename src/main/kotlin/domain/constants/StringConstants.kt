@@ -1,4 +1,4 @@
-package org.example.core.domain.constants
+package domain.constants
 
 object StringConstants {
 
