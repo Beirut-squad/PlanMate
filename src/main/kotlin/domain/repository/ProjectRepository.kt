@@ -1,4 +1,4 @@
-package org.example.domain.repository
+package domain.repository
 
 import domain.model.Project
 import domain.model.State
@@ -14,7 +14,6 @@ interface ProjectRepository {
     suspend fun addStateToProject(projectId: UUID, state: State): Project
     suspend fun editStateToProject(projectId: UUID, state: State): Project
     suspend fun removeStateFromProject(projectId: UUID, state: State): Project
-    suspend fun getProjectForMateByUserId(userId : UUID): List<Project>
     suspend fun addMateToProject(projectId: UUID, user: User): Project
     suspend fun getProjectsForUserById(userid : UUID): List<Project>
 }

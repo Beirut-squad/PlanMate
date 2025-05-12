@@ -1,9 +1,9 @@
-package org.example.data.repository
+package data.repository
 
-import org.example.data.datasource.LogDataSource
+import data.datasource.interfaces.LogDataSource
 import domain.model.ProjectLog
 import domain.model.TaskLog
-import org.example.domain.repository.LogRepository
+import domain.repository.LogRepository
 import java.util.*
 
 class LogRepositoryImpl(

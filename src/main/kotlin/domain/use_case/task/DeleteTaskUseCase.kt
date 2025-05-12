@@ -2,7 +2,7 @@ package domain.use_case.task
 
 import domain.model.Task
 import domain.use_case.log.CreateTaskLogUseCase
-import org.example.domain.repository.TaskRepository
+import domain.repository.TaskRepository
 import java.util.*
 
 class DeleteTaskUseCase(
