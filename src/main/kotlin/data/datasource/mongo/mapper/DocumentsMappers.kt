@@ -62,16 +62,22 @@ fun Document.toTask(): Task {
         projectId = UUID.fromString(this.getString(PROJECT_ID_FILED)),
         title = this.getString(TITLE_FILED),
         description = this.getString(DESCRIPTION_FILED),
-        state = this.toStateList().firstOrNull() ?: State(UUID.randomUUID(), "No state"),
+        state = this.toState(),
         creatorUserID = UUID.fromString(this.getString(CREATOR_USER_ID_FILED)),
         createdAt = LocalDateTime.parse(this.getString(CREATED_AT_FILED)),
         updatedAt = LocalDateTime.parse(this.getString(UPDATED_AT_FILED))
     )
 }
-
+fun Document.toState(): State {
+    val state = this[STATE_FILED] as Document
+    return State(
+        id = UUID.fromString(state.getString(ID_FILED)),
+        name = state.getString(NAME_FILED)
+    )
+}
 fun Document.toProject(): Project {
     val states = this.toStateList()
-    val users = this.toUserList("users")
+    val users = this.toUserList(USERS_FILED)
 
     return Project(
         id = UUID.fromString(this.getString(ID_FILED)),
