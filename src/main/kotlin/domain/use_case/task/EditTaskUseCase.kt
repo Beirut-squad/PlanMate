@@ -1,10 +1,12 @@
 package domain.use_case.task
 
+import domain.exception.EmptyFieldException
+import domain.exception.EmptyTaskDescriptionException
+import domain.exception.EmptyTaskTitleException
 import domain.model.Task
 import domain.model.State
 import domain.use_case.log.CreateTaskLogUseCase
-import domain.exception.EmptyTaskDescriptionException
-import domain.exception.EmptyTaskTitleException
+
 import domain.repository.TaskRepository
 import java.time.LocalDateTime
 import java.util.*
@@ -14,7 +16,7 @@ class EditTaskUseCase(
     private val createTaskLogUseCase: CreateTaskLogUseCase,
 ) {
     suspend fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: State, editorUserId: UUID) {
-        validateInputFields(newTitle, newDescription)
+        validateInputFields(newTitle, newDescription,newState,task)
 
         val updatedTask = createUpdatedTask(task, newTitle, newDescription, newState)
 
@@ -23,10 +25,9 @@ class EditTaskUseCase(
         createTaskLogUseCase.createTaskLog(editorUserId, task, updatedTask)
     }
 
-    private fun validateInputFields(newTitle: String?, newDescription: String?) {
-        when {
-            newTitle.isNullOrBlank() -> throw EmptyTaskTitleException()
-            newDescription.isNullOrBlank() -> throw EmptyTaskDescriptionException()
+    private fun validateInputFields(newTitle: String?, newDescription: String?,newState: State,task : Task) {
+            if (newState == task.state && newTitle.isNullOrBlank() && newDescription.isNullOrBlank()){
+                 throw EmptyFieldException()
         }
     }
 
