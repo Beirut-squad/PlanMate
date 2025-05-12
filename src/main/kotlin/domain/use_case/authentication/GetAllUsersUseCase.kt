@@ -1,7 +1,7 @@
 package domain.use_case.authentication
 
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 
 class GetAllUsersUseCase(
     private val authenticationRepository: AuthenticationRepository

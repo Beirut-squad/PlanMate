@@ -1,8 +1,8 @@
-package org.example.data.repository
+package data.repository
 
-import org.example.data.datasource.TaskDataSource
+import data.datasource.interfaces.TaskDataSource
 import domain.model.Task
-import org.example.domain.repository.TaskRepository
+import domain.repository.TaskRepository
 import java.util.*
 
 class TaskRepositoryImpl(

@@ -1,4 +1,4 @@
-package org.example.ui.extensions
+package ui.extensions
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,24 +1,20 @@
 package domain.use_case.authentication
 
-
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 
 class LoginUseCase(
     private val authenticationRepository: AuthenticationRepository,
-    private val encryptPassword: EncryptPassword
+    private val encryptPassword: EncryptPassword,
 ) {
-
     suspend fun login(
-        email: String,
-        password: String
+        email: String, password: String
     ): User {
         authenticationRepository.checkEmail(email)
         val encryptedPassword = encryptPassword.encryptPassword(password)
         return authenticationRepository.login(
-            email = email,
-            password = encryptedPassword
+            email = email, password = encryptedPassword
         )
     }
 

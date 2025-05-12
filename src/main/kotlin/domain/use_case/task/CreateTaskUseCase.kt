@@ -1,10 +1,11 @@
 package domain.use_case.task
 
 import domain.model.State
-import domain.exception.project.BlankFieldsException
 import domain.model.Task
 import domain.use_case.log.CreateTaskLogUseCase
-import org.example.domain.repository.TaskRepository
+import domain.exception.EmptyTaskDescriptionException
+import domain.exception.EmptyTaskTitleException
+import domain.repository.TaskRepository
 import java.time.LocalDateTime
 import java.util.*
 
@@ -20,8 +21,8 @@ class CreateTaskUseCase(
 
     private fun validateFields(title: String, description: String) {
         when {
-            title.isBlank() -> throw BlankFieldsException("Title must not be blank")
-            description.isBlank() -> throw BlankFieldsException("Description must not be blank")
+            title.isBlank() -> throw EmptyTaskTitleException()
+            description.isBlank() -> throw EmptyTaskDescriptionException()
         }
     }
 

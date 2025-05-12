@@ -1,4 +1,4 @@
-package org.example.data.datasource.mongo.mongo_db
+package data.datasource.mongo.mongo_db_connection
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients

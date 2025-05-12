@@ -2,7 +2,7 @@ package domain.use_case.project
 
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.domain.repository.ProjectRepository
+import domain.repository.ProjectRepository
 import java.util.*
 
 class DeleteProjectUseCase(

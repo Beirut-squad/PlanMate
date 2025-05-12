@@ -1,17 +1,13 @@
 package domain.use_case.authentication
 
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 
 class GetCurrentUserUseCase(
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
 ) {
 
-    suspend fun getCurrentUser(): User? {
-        return getCurrentUserFromRepository()
-    }
-
-    private suspend fun getCurrentUserFromRepository(): User? {
+    suspend fun getCurrentUser(): User {
         return authenticationRepository.getCurrentLoggedInUser()
     }
 }

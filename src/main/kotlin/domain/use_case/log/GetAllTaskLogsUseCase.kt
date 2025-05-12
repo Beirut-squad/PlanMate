@@ -1,7 +1,7 @@
 package domain.use_case.log
 
 import domain.model.TaskLog
-import org.example.domain.repository.LogRepository
+import domain.repository.LogRepository
 
 class GetAllTaskLogsUseCase(
     private val logRepository: LogRepository
