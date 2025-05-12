@@ -1,19 +1,19 @@
 package org.example.data.datasource.csv
 
 import data.datasource.authentication.AuthenticationDataSource
+import data.exception.*
+import domain.exception.handler.ExceptionHandler
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
 import domain.model.Role
 import domain.model.User
-import org.example.core.domain.exception.EmailAlreadyExistsException
-import org.example.core.domain.exception.InvalidCredentialsException
-import org.example.core.domain.exception.UserNotLoggedInException
 import org.example.data.csv.helper.FileName
 import java.util.UUID
 
 class AuthenticationDataSourceImplementation(
     private val csvWriter: CsvWriter<User>,
     private val csvReader: CsvReader<User>,
+    private val exceptionHandler: ExceptionHandler,
 ) : AuthenticationDataSource {
 
     override suspend fun login(email: String, password: String): User {
@@ -21,14 +21,16 @@ class AuthenticationDataSourceImplementation(
         val user = users.find { it.email == email && it.password == password } ?: throw InvalidCredentialsException()
         saveCurrentUser(user)
         return user
+
     }
 
     override suspend fun isValidEmail(email: String): Boolean {
         val users = readUsersFromCsv()
         return users.none { it.email == email }
+
     }
 
-    override suspend fun registerMate(name: String, password: String, email: String): User {
+    override suspend fun register(name: String, password: String, email: String): User {
         val users = readUsersFromCsv()
         validateUniqueEmail(users, email)
 
@@ -40,22 +42,29 @@ class AuthenticationDataSourceImplementation(
 
         saveCurrentUser(newUser)
         return newUser
+
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
-        val users = readUsersFromCsv()
-        validateUniqueEmail(users, email)
-        val newAdmin = User(
-            id = UUID.randomUUID(),
-            name = name,
-            password = password,
-            email = email,
-            role = Role.ADMIN,
-            isDeleted = false
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                val users = readUsersFromCsv()
+                validateUniqueEmail(users, email)
+                val newAdmin = User(
+                    id = UUID.randomUUID(),
+                    name = name,
+                    password = password,
+                    email = email,
+                    role = Role.ADMIN,
+                    isDeleted = false
+                )
+                newAdmin
+            },
+            onSuccess = {
+                addUserToCsv(it)
+                saveCurrentUser(it)
+            },
         )
-        addUserToCsv(newAdmin)
-        saveCurrentUser(newAdmin)
-        return newAdmin
     }
 
     private fun validateUniqueEmail(users: List<User>, email: String) {
@@ -65,7 +74,9 @@ class AuthenticationDataSourceImplementation(
     }
 
     override suspend fun logout() {
-        saveCurrentUser(null)
+        exceptionHandler.tryCatchingAsync(
+            action = { saveCurrentUser(null) }
+        )
     }
 
     override suspend fun isFirstRegister(): Boolean {
@@ -73,10 +84,14 @@ class AuthenticationDataSourceImplementation(
     }
 
     private suspend fun saveCurrentUser(user: User?) {
-        if (user != null) {
-            csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
-        } else {
-            csvWriter.writeToFile(emptyList(), FileName.CURRENT_USER_FILE)
+         try {
+            if (user != null) {
+                csvWriter.writeToFile(listOf(user), FileName.CURRENT_USER_FILE)
+            } else {
+                csvWriter.writeToFile(emptyList(), FileName.CURRENT_USER_FILE)
+            }
+        } catch (e: Exception) {
+            throw e
         }
     }
 

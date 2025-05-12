@@ -1,18 +1,18 @@
 package domain.use_case.project
 
+import domain.exception.EmptyProjectNameException
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.core.domain.exception.EmptyProjectTitleException
 import org.example.domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*
 
-class EditProjectTitleUseCase(
+class EditProjectNameUseCase(
     private val projectRepository: ProjectRepository,
     private val logUseCase: CreateProjectLogUseCase
 ) {
     suspend fun editProject(project: Project, newName: String?, editorUserId: UUID) {
-        if (newName.isNullOrBlank()) { throw EmptyProjectTitleException() }
+        if (newName.isNullOrBlank()) { throw EmptyProjectNameException() }
         if (project.title == newName) { return }
         val editedProject = project.copy(
             title = newName,

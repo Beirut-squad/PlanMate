@@ -1,11 +1,10 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.User
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.project.GetAllProjectsUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -17,24 +16,22 @@ class ProjectsUi(
     private val getAllProjectsUseCases: GetAllProjectsUseCase,
     private val singleProjectUi: SingleProjectUi,
     private val getUserByIdUseCase: GetUserByIdUseCase,
-    private val executor: SafeExecutor,
-    private val handler: ExceptionHandler
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private var running = true
     override suspend fun show() {
         running = true
-        executor.tryToExecute(action = {
-            while (running) {
-                val projects = getAllProjectsUseCases.getAllProjects()
-                showProjectDetails(projects)
-            }
-        }, onError = {
-            handler.printHandledError(it)
-        })
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                while (running) {
+                    val projects = getAllProjectsUseCases.getAllProjects()
+                    showProjectDetails(projects)
+                }
+            })
     }
 
     private suspend fun showProjectDetails(projects: List<Project>) {
-        executor.tryToExecute(action = {
+        exceptionHandler.tryCatchingAsync(action = {
             if (projects.isNotEmpty()) {
                 printer.printTitle("Project: ")
                 projects.forEachIndexed { index, project ->
@@ -56,7 +53,6 @@ class ProjectsUi(
                 running = false
             }
         }, onError = {
-            handler.printHandledError(it)
             running = false
         })
     }

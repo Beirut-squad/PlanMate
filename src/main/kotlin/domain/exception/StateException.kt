@@ -1,3 +1,3 @@
 package domain.exception
 
-class EmptyStateNameException : EmptyFieldException()
+class EmptyStateNameException: EmptyFieldException()

@@ -1,29 +1,24 @@
 package org.example.ui.common.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.project.GetAllProjectsUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.UiScreen
 
 class ViewProjectsUi(
     private val printer: Printer,
     private val getAllProjectsUseCases: GetAllProjectsUseCase,
-    private val executor: SafeExecutor,
-    private val handler: ExceptionHandler,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     override suspend fun show() {
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsyncWithResult(
             action = {
                 getAllProjectsUseCases.getAllProjects()
-            },
-            onError = {
-                handler.printHandledError(it)
             },
             onSuccess = { projects ->
                 if (projects.isEmpty()) {
                     printer.printError("No projects found.")
-                    return@tryToExecute
+                    return@tryCatchingAsyncWithResult
                 }
                 printer.printTitle("Project: ")
                 projects.forEachIndexed { index, project ->

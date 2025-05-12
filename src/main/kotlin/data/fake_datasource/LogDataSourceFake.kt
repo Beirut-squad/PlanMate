@@ -1,6 +1,6 @@
 package data.fake_datasource
 
-import org.example.core.domain.exception.NoProjectLogsFoundException
+import data.exception.NoProjectLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import org.example.data.datasource.LogDataSource

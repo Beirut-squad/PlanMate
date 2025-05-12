@@ -1,6 +1,6 @@
 package org.example.data.csv.reader
 
-import org.example.core.domain.exception.InvalidFileNameException
+import data.exception.InvalidFileNameException
 import org.example.data.csv.parser.CsvParser
 import org.example.data.csv.helper.FileName
 import java.io.File

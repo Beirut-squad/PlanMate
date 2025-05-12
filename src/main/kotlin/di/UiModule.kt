@@ -1,5 +1,6 @@
 package org.example.di
 
+import domain.exception.handler.ExceptionHandler
 import domain.use_case.project.GetAllProjectsUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import ui.admin.home.AdminUi
@@ -18,6 +19,7 @@ import org.example.ui.common.project.ProjectTasksUi
 import org.example.ui.common.project.ViewProjectsUi
 import org.example.ui.common.task.CreateTaskUi
 import org.example.ui.common.task.EditTaskUi
+import org.example.ui.exception.UIExceptionHandler
 import org.example.ui.mate.MateUi
 import org.example.ui.mate.UserProjectsUi
 import org.koin.core.module.dsl.singleOf
@@ -56,4 +58,7 @@ val uiModule = module {
     singleOf(::ProjectsUi)
     singleOf(::TaskLogsUi)
     singleOf(::TaskLogUi)
+    single<ExceptionHandler> {
+        UIExceptionHandler(get())
+    }
 }

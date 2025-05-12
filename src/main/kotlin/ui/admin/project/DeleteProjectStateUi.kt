@@ -1,11 +1,10 @@
 package org.example.ui.admin.project
 
 import domain.exception.NullInputException
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.state.DeleteStateUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -15,8 +14,7 @@ import org.koin.core.component.inject
 class DeleteProjectStateUi(
     private val project: Project, private val state: State
 ) : UiScreen, KoinComponent {
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val deleteStateUseCase: DeleteStateUseCase by inject()
@@ -32,12 +30,9 @@ class DeleteProjectStateUi(
     }
 
     private suspend fun deleteState() {
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsync(
             action = {
                 deleteStateUseCase.deleteState(project, state)
-            },
-            onError = {
-                handler.printHandledError(it)
             }
         )
     }

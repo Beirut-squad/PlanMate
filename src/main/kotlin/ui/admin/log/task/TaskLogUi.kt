@@ -1,5 +1,6 @@
 package ui.admin.log.task
 
+import domain.exception.handler.ExceptionHandler
 import domain.model.Task
 import domain.model.TaskLog
 import domain.use_case.authentication.GetUserByIdUseCase
@@ -10,9 +11,15 @@ import java.util.*
 open class TaskLogUi(
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val printer: Printer,
+    private val exceptionHandler: ExceptionHandler,
+
     ) {
     private suspend fun getUserName(userId: UUID): String {
-        return getUserByIdUseCase.getUser(userId).name
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getUserByIdUseCase.getUser(userId).name
+            }
+        )
     }
 
     protected suspend fun displayTaskLog(index: Int, taskLog: TaskLog) {

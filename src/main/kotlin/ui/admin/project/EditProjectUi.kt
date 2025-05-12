@@ -1,11 +1,10 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.EditProjectDescriptionUseCase
-import domain.use_case.project.EditProjectTitleUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
+import domain.use_case.project.EditProjectNameUseCase
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -13,11 +12,10 @@ import org.example.ui.common.components.UiScreen
 class EditProjectUi(
     private val printer: Printer,
     private val reader: Reader,
-    private val editProjectTitleUseCase: EditProjectTitleUseCase,
+    private val editProjectNameUseCase: EditProjectNameUseCase,
     private val editProjectDescriptionUseCase: EditProjectDescriptionUseCase,
     private val currentUserUseCase: GetCurrentUserUseCase,
-    private val executor: SafeExecutor,
-    private val handler: ExceptionHandler,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
 
     lateinit var project: Project
@@ -26,7 +24,7 @@ class EditProjectUi(
         var isContinueProcess = true
         while (isContinueProcess) {
             displayMenu()
-            executor.tryToExecute(
+            exceptionHandler.tryCatchingAsync(
                 action = {
                     val option = reader.readInt()
                     when (option) {
@@ -34,9 +32,6 @@ class EditProjectUi(
                         2 -> editProjectDescription()
                         3 -> isContinueProcess = false
                     }
-                },
-                onError = {
-                    handler.printHandledError(it)
                 }
             )
         }
@@ -53,7 +48,7 @@ class EditProjectUi(
         printer.printPlainText("Edit Project Name: ", withNewLine = false)
         val newProjectName = reader.readInput()
         val editorUserId = currentUserUseCase.getCurrentUser().id
-        editProjectTitleUseCase.editProject(project, newProjectName, editorUserId)
+        editProjectNameUseCase.editProject(project, newProjectName, editorUserId)
     }
 
     private suspend fun editProjectDescription() {

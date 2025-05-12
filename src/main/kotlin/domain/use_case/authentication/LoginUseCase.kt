@@ -1,5 +1,7 @@
 package domain.use_case.authentication
 
+
+import domain.exception.handler.ExceptionHandler
 import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword

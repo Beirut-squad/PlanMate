@@ -1,6 +1,6 @@
 package org.example.ui.common.task
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.Task
 import domain.model.User
@@ -8,7 +8,6 @@ import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.EditTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -27,23 +26,19 @@ class EditTaskUi(
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val editTaskUseCase: EditTaskUseCase by inject()
     private val getCurrentUserUseCase: GetCurrentUserUseCase by inject()
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsyncWithResult(
             action = {
                 getProjectTasksUseCase.getTasksForProject(projectId)
-            },
-            onError = {
-                handler.printHandledError(it)
             },
             onSuccess = { tasks ->
                 val user = getCurrentUserUseCase.getCurrentUser()
 
                 if (tasks.isEmpty()) {
                     printer.printInfoLine("No tasks available to edit.")
-                    return@tryToExecute
+                    return@tryCatchingAsyncWithResult
                 }
                 printer.printTitle("Select a Task to Edit:")
                 tasks.forEachIndexed { index, task ->
@@ -79,12 +74,9 @@ class EditTaskUi(
     }
 
     private suspend fun editSelectedTask(task: Task, currentUser: UUID) {
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsyncWithResult(
             action = {
                 getProjectByIdUseCase.getProjectById(task.projectId)
-            },
-            onError = {
-                handler.printHandledError(it)
             },
             onSuccess = { selectedProject ->
                 printer.printTitle("Edit Task - ${task.title}")
@@ -102,16 +94,13 @@ class EditTaskUi(
                     getValidInput("Enter new Description (Leave empty to keep the current):", task.description)
 
                 val selectedStateIndex = getValidStateInput(selectedProject, task.state.name)
-                val selectedState = selectedStateIndex?.let { selectedProject.states[it] } ?: task.state
+                val selectedState = selectedStateIndex?.let { selectedProject.state[it] } ?: task.state
 
-                executor.tryToExecute(
+                exceptionHandler.tryCatchingAsync(
                     action = {
                         editTaskUseCase.editTask(task, newTitle, newDescription, selectedState, currentUser)
                         printer.printInfoLine("Task updated successfully!")
                         UserProjectsUi().show()
-                    },
-                    onError = {
-                        handler.printHandledError(it)
                     }
                 )
             }
@@ -139,7 +128,7 @@ class EditTaskUi(
 
     private fun getValidStateInput(selectedProject: Project, currentStateName: String): Int? {
         printer.printOptions("Choose a state for the task (Current: $currentStateName):")
-        selectedProject.states.forEachIndexed { index, state ->
+        selectedProject.state.forEachIndexed { index, state ->
             printer.printInfoLine("${index + 1}. ${state.name}")
         }
         printer.printLoader("Enter a number from the list above, or any other number to keep the current state.")
@@ -147,7 +136,7 @@ class EditTaskUi(
         val input = reader.readInput()?.trim()
         val selectedIndex = input?.toIntOrNull()?.minus(1)
 
-        return if (selectedIndex != null && selectedIndex in selectedProject.states.indices) {
+        return if (selectedIndex != null && selectedIndex in selectedProject.state.indices) {
             selectedIndex
         } else {
             printer.printInfoLine("Keeping the current state: $currentStateName")

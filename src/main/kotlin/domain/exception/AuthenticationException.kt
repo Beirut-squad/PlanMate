@@ -1,17 +1,5 @@
-package org.example.core.domain.exception
+package domain.exception
 
-open class AuthenticationException : Exception()
-
-class EmailAlreadyExistsException : AuthenticationException()
-
-class InvalidEmailFormatException : AuthenticationException()
-
-class EmailNotFoundException : AuthenticationException()
-
-class InvalidCredentialsException : AuthenticationException()
-
-class UsersAlreadyExistException : AuthenticationException()
-
-class UserNotLoggedInException : AuthenticationException()
+import core.exception.AuthenticationException
 
 class UserNotFoundException : AuthenticationException()

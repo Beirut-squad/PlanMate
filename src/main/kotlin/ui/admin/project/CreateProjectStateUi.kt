@@ -1,9 +1,8 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.state.CreateStateUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.components.Printer
@@ -16,20 +15,16 @@ class CreateProjectStateUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val createStateUseCase: CreateStateUseCase by inject()
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        printer.printTitle("Create State")
-        printer.printInfoLine("Please, Write your state name")
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsync(
             action = {
+                printer.printTitle("Create State")
+                printer.printInfoLine("Please, Write your state name")
                 val stateName = reader.readInput().toString()
                 createStateUseCase.createState(name = stateName, project = project)
-            },
-            onError = {
-                handler.printHandledError(it)
-            },
+            }
         )
     }
 }

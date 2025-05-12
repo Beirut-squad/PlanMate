@@ -1,8 +1,8 @@
 package domain.use_case.log
 
+import domain.exception.NullProjectsComparisonException
 import domain.model.Project
 import domain.model.ProjectLog
-import org.example.core.domain.exception.NullProjectsComparisonException
 import org.example.domain.repository.LogRepository
 import java.time.LocalDateTime
 import java.util.*

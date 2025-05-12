@@ -1,7 +1,7 @@
 package data.datasource.csv
 
-import org.example.core.domain.exception.NoProjectLogsFoundException
-import org.example.core.domain.exception.NoTaskLogsFoundException
+import data.exception.NoProjectLogsFoundException
+import data.exception.NoTaskLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import org.example.data.csv.helper.FileName

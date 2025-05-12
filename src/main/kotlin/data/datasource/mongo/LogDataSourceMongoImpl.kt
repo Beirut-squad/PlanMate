@@ -1,8 +1,8 @@
 package data.datasource.mongo
 
 import com.mongodb.client.model.Filters
-import org.example.core.domain.exception.NoProjectLogsFoundException
-import org.example.core.domain.exception.NoTaskLogsFoundException
+import data.exception.NoProjectLogsFoundException
+import data.exception.NoTaskLogsFoundException
 import data.datasource.mapper.toDocument
 import data.datasource.mapper.toProjectLog
 import data.datasource.mapper.toTaskLog

@@ -1,6 +1,6 @@
 package domain.use_case.authentication
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.User
 import org.example.domain.repository.AuthenticationRepository
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
@@ -8,25 +8,35 @@ import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 class RegisterUserUseCase(
     private val authenticationRepository: AuthenticationRepository,
     private val encryptPassword: EncryptPassword,
+    private val registerMateUseCase: RegisterMateUseCase,
+    private val exceptionHandler: ExceptionHandler,
 ) {
-    suspend fun registerUser(
+
+    suspend fun add(
         name: String,
         password: String,
-        email: String
-    ) {
-        val encryptedPassword = encryptPassword.encryptPassword(password)
-        if (authenticationRepository.isFirstRegister()) {
-            authenticationRepository.registerAdmin(
-                name = name,
-                password = encryptedPassword,
-                email = email
-            )
-        } else {
-            authenticationRepository.registerMate(
-                name = name,
-                password = encryptedPassword,
-                email = email
-            )
-        }
+        email: String,
+    ): User {
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                val encryptedPassword = encryptPassword.encryptPassword(password)
+                if (authenticationRepository.isFirstRegister()) {
+                    authenticationRepository.registerAdmin(
+                        name = name,
+                        password = encryptedPassword,
+                        email = email
+                    )
+                }else{
+                    authenticationRepository.register(
+                        name = name,
+                        password = encryptedPassword,
+                        email = email
+                    )
+                }
+            },
+            onError = {
+                registerMateUseCase.addUser(name = name, password = password, email = email)
+            }
+        )
     }
 }

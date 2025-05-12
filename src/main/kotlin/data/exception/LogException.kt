@@ -1,4 +1,4 @@
-package org.example.core.domain.exception
+package data.exception
 
 open class LogException : Exception()
 

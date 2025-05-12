@@ -15,8 +15,8 @@ class AuthenticationRepositoryImpl(
          authenticationDataSource.isValidEmail(email)
     }
 
-    override suspend fun registerMate(name: String, password: String, email: String): User {
-        return authenticationDataSource.registerMate(email = email, password = password, name = name)
+    override suspend fun register(name: String, password: String, email: String): User {
+        return authenticationDataSource.register(email = email, password = password, name = name)
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {

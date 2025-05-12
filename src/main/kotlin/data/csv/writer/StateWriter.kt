@@ -1,6 +1,7 @@
 package org.example.data.csv.writer
 
-import org.example.core.domain.exception.InvalidFileNameException
+import data.exception.InvalidFileNameException
+import domain.exception.handler.ExceptionHandler
 import org.example.data.csv.helper.isValidFileName
 import domain.model.State
 import java.io.BufferedWriter
@@ -8,17 +9,23 @@ import java.io.File
 import java.io.FileWriter
 import java.util.UUID
 
-class StateWriter : CsvWriter<State> {
+class StateWriter(
+    private val exceptionHandler: ExceptionHandler
+) : CsvWriter<State> {
     override suspend fun writeToFile(items: List<State>, filePath: String) {
-        val file = File(filePath)
-        if (!isValidFileName(file.name))
-            throw InvalidFileNameException()
-        val writer = BufferedWriter(FileWriter(file))
-        if (file.length() == 0L)
-            writer.write("[id,name]\n")
-        if (items.isNotEmpty())
-            writeState(items, writer)
-        writer.close()
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val file = File(filePath)
+                if (!isValidFileName(file.name))
+                    throw InvalidFileNameException()
+                val writer = BufferedWriter(FileWriter(file))
+                if (file.length() == 0L)
+                    writer.write("[id,name]\n")
+                if (items.isNotEmpty())
+                    writeState(items, writer)
+                writer.close()
+            }
+        )
     }
 
     private fun writeState(items: List<State>, writer: BufferedWriter) {

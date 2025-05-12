@@ -1,10 +1,9 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -15,8 +14,7 @@ class ProjectStatesUi(
     private val singleStateUi: SingleStateUi,
     private val printer: Printer,
     private val reader: Reader,
-    private val executor: SafeExecutor,
-    private val handler: ExceptionHandler
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private lateinit var projectId: UUID
     private lateinit var project: Project
@@ -25,7 +23,7 @@ class ProjectStatesUi(
     suspend fun setProject(projectId: UUID) {
         this.projectId = projectId
         this.project = getProject()
-        this.states = project.states
+        this.states = project.state
     }
 
     override suspend fun show() {
@@ -60,7 +58,11 @@ class ProjectStatesUi(
     }
 
     private suspend fun getProject(): Project {
-        return getProjectByIdUseCase.getProjectById(projectId)
+        return exceptionHandler.tryCatchingAsyncWithResult(
+            action = {
+                getProjectByIdUseCase.getProjectById(projectId)
+            }
+        )
     }
 
     private suspend fun displayNoStatesAndGoToCreateState() {

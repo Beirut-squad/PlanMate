@@ -1,11 +1,10 @@
 package org.example.ui.common.task
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.CreateTaskUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -22,11 +21,10 @@ class CreateTaskUi(
     private val getCurrentUserUseCase: GetCurrentUserUseCase by inject()
     private val createTaskUseCase: CreateTaskUseCase by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val expectationHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        executor.tryToExecute(
+        expectationHandler.tryCatchingAsync(
             action = {
                 val selectedProject = getProjectByIdUseCase.getProjectById(projectId)
                 val user = getCurrentUserUseCase.getCurrentUser()
@@ -38,11 +36,8 @@ class CreateTaskUi(
 
                 val selectedStateIndex = getValidStateInput(selectedProject)
 
-                val selectedState = selectedProject.states[selectedStateIndex]
+                val selectedState = selectedProject.state[selectedStateIndex]
                 createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
-            },
-            onError = {
-                handler.printHandledError(it)
             }
         )
     }
@@ -64,7 +59,7 @@ class CreateTaskUi(
         var selectedStateIndex: Int? = null
         do {
             printer.printOptions("Choose a state for the task:")
-            selectedProject.states.forEachIndexed { index, state ->
+            selectedProject.state.forEachIndexed { index, state ->
                 printer.printInfoLine("${index + 1}. ${state.name}")
             }
 
@@ -77,10 +72,10 @@ class CreateTaskUi(
 
             selectedStateIndex = stateIndexInput.toIntOrNull()?.minus(1)
 
-            if (selectedStateIndex == null || selectedStateIndex !in selectedProject.states.indices) {
-                printer.printError("Invalid state selection. Please choose a valid number between 1 and ${selectedProject.states.size}.")
+            if (selectedStateIndex == null || selectedStateIndex !in selectedProject.state.indices) {
+                printer.printError("Invalid state selection. Please choose a valid number between 1 and ${selectedProject.state.size}.")
             }
-        } while (selectedStateIndex == null || selectedStateIndex !in selectedProject.states.indices)
+        } while (selectedStateIndex == null || selectedStateIndex !in selectedProject.state.indices)
 
         return selectedStateIndex
     }

@@ -1,6 +1,7 @@
 package org.example.data.csv.writer
 
-import org.example.core.domain.exception.InvalidFileNameException
+import data.exception.InvalidFileNameException
+import domain.exception.handler.ExceptionHandler
 import org.example.data.csv.helper.isValidFileName
 import domain.model.TaskLog
 import java.io.BufferedWriter
@@ -8,17 +9,23 @@ import java.io.File
 import java.io.FileWriter
 import java.util.*
 
-class TaskLogWriter : CsvWriter<TaskLog> {
+class TaskLogWriter(
+    private val exceptionHandler: ExceptionHandler
+) : CsvWriter<TaskLog> {
     override suspend fun writeToFile(items: List<TaskLog>, filePath: String) {
-        val file = File(filePath)
-        if (!isValidFileName(file.name))
-            throw InvalidFileNameException()
-        val writer = BufferedWriter(FileWriter(file))
-        if (file.length() == 0L)
-            writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
-        if (items.isNotEmpty())
-            writeTaskLog(items, writer)
-        writer.close()
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val file = File(filePath)
+                if (!isValidFileName(file.name))
+                    throw InvalidFileNameException()
+                val writer = BufferedWriter(FileWriter(file))
+                if (file.length() == 0L)
+                    writer.write("[id,userId,entityId,previousEntity,currentEntity,createdAt]\n")
+                if (items.isNotEmpty())
+                    writeTaskLog(items, writer)
+                writer.close()
+            }
+        )
     }
 
     private fun writeTaskLog(items: List<TaskLog>, writer: BufferedWriter) {

@@ -1,10 +1,9 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.User
 import domain.use_case.authentication.GetAllUsersUseCase
 import domain.use_case.project.AddProjectMateUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -19,26 +18,20 @@ class AddProjectUserUi(
     private val reader: Reader by inject()
     private val addMateToProjectUseCase: AddProjectMateUseCase by inject()
     private val getAllUsersUseCase: GetAllUsersUseCase by inject()
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val exceptionHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        executor.tryToExecute(
-            action = {
-                getAllUsersUseCase.getUsers()
-            }, onSuccess = { users ->
-                printer.printTitle("Add User")
-                if (users.isEmpty()) {
-                    printer.printInfoLine("No users available to add.")
-                    return@tryToExecute
-                }
-                showAllUsers(users)
-                handleUserAddition(users)
-            },
-            onError = {
-                handler.printHandledError(it)
+        exceptionHandler.tryCatchingAsyncWithResult(action = {
+            getAllUsersUseCase.getUsers()
+        }, onSuccess = { users ->
+            printer.printTitle("Add User")
+            if (users.isEmpty()) {
+                printer.printInfoLine("No users available to add.")
+                return@tryCatchingAsyncWithResult
             }
-        )
+            showAllUsers(users)
+            handleUserAddition(users)
+        })
     }
 
     private fun showAllUsers(users: List<User>) {
@@ -60,16 +53,10 @@ class AddProjectUserUi(
         }
 
         val selectedUser = users[selected - 1]
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsync(
             action = {
                 addMateToProjectUseCase.addMateToProject(projectId, selectedUser)
-            },
-            onSuccess = {
                 printer.printGoodbyeMessage("User added successfully")
-            },
-            onError = {
-                handler.printHandledError(it)
-            }
-        )
+            })
     }
 }

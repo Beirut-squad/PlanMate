@@ -1,10 +1,9 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -13,8 +12,7 @@ class SingleStateUi(
     private val printer: Printer,
     private val reader: Reader,
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
-    private val executor: SafeExecutor,
-    private val handler: ExceptionHandler,
+    private val exceptionHandler: ExceptionHandler,
 ) : UiScreen {
     private lateinit var project: Project
     private lateinit var state: State
@@ -71,13 +69,10 @@ class SingleStateUi(
     }
 
     private suspend fun updateProject() {
-        executor.tryToExecute(
+        exceptionHandler.tryCatchingAsync(
             action = {
                 project = getProjectByIdUseCase.getProjectById(project.id)
-                state = project.states.find { it.id == state.id }!! // Warning: Potential crash detected here!
-            },
-            onError = {
-                handler.printHandledError(it)
+                state = project.state.find { it.id == state.id }!! // Warning: Potential crash detected here!
             }
         )
     }

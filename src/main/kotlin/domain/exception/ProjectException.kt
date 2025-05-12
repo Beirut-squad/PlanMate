@@ -1,26 +1,7 @@
-package org.example.core.domain.exception
-
-import domain.exception.EmptyFieldException
-import domain.exception.NullInputException
-
-open class ProjectException : Exception()
-
-class ProjectNotFoundException : ProjectException()
-
-class ProjectCreationFailedException : ProjectException()
-
-class ProjectEditFailedException : ProjectException()
-
-class ProjectDeletionFailedException : ProjectException()
-
-class ProjectFetchAllFailedException : ProjectException()
-
-class DuplicateStateException : ProjectException()
-
-class StateNotFoundException : ProjectException()
+package domain.exception
 
 class EmptyProjectDescriptionException : EmptyFieldException()
 
-class EmptyProjectTitleException : EmptyFieldException()
+class EmptyProjectNameException : EmptyFieldException()
 
-class NullProjectsComparisonException : NullInputException()
+class NullProjectsComparisonException: NullInputException()

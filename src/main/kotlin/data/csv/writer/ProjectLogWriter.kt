@@ -1,6 +1,7 @@
 package org.example.data.csv.writer
 
-import org.example.core.domain.exception.InvalidFileNameException
+import data.exception.InvalidFileNameException
+import domain.exception.handler.ExceptionHandler
 import domain.model.ProjectLog
 import org.example.data.csv.helper.isValidFileName
 import java.io.BufferedWriter
@@ -8,16 +9,22 @@ import java.io.File
 import java.io.FileWriter
 import java.util.*
 
-class ProjectLogWriter : CsvWriter<ProjectLog> {
+class ProjectLogWriter(
+    private val exceptionHandler: ExceptionHandler,
+) : CsvWriter<ProjectLog> {
     override suspend fun writeToFile(items: List<ProjectLog>, filePath: String) {
-        if (items.isNotEmpty()) {
-            val file = File("src/main/kotlin/$filePath")
-            if (!isValidFileName(file.name))
-                throw InvalidFileNameException()
-            val writer = BufferedWriter(FileWriter(file))
-            writeProjectLog(items, writer)
-            writer.close()
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                if (items.isNotEmpty()) {
+                    val file = File("src/main/kotlin/$filePath")
+                    if (!isValidFileName(file.name))
+                        throw InvalidFileNameException()
+                    val writer = BufferedWriter(FileWriter(file))
+                    writeProjectLog(items, writer)
+                    writer.close()
+                }
+            }
+        )
     }
 
     private fun writeProjectLog(items: List<ProjectLog>, writer: BufferedWriter) {

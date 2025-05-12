@@ -24,6 +24,6 @@ fun createProjectHelper(
         createdAt = createdAt,
         updatedAt = updatedAt,
         users = users,
-        states = state
+        state = state
     )
 }

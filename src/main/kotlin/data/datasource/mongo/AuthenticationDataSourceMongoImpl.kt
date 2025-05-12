@@ -1,6 +1,8 @@
 package data.datasource.mongo
 
 import data.datasource.authentication.AuthenticationDataSource
+import data.exception.*
+import domain.exception.handler.ExceptionHandler
 import data.datasource.mapper.toDocument
 import data.datasource.mapper.toUser
 import org.example.data.datasource.mongo.mongo_db.MongoConnection
@@ -9,14 +11,11 @@ import domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import org.example.core.domain.exception.EmailAlreadyExistsException
-import org.example.core.domain.exception.InvalidCredentialsException
-import org.example.core.domain.exception.ProjectNotFoundException
-import org.example.core.domain.exception.UserNotLoggedInException
 import java.util.UUID
 
 class AuthenticationMongoDataSourceImpl(
     private val mongoConnection: MongoConnection,
+    private val exceptionHandler: ExceptionHandler,
 ) : AuthenticationDataSource {
     override suspend fun login(email: String, password: String): User {
         return withContext(Dispatchers.IO) {
@@ -34,10 +33,11 @@ class AuthenticationMongoDataSourceImpl(
         return withContext(Dispatchers.IO) {
             val filter = Document(EMAIL_FILED, email)
             mongoConnection.users.find(filter).firstOrNull() != null
+
         }
     }
 
-    override suspend fun registerMate(name: String, password: String, email: String): User {
+    override suspend fun register(name: String, password: String, email: String): User {
         return withContext(Dispatchers.IO) {
             checkIfEmailExists(email)
             val newUser = createUser(name, password, email, Role.MATE)
@@ -59,7 +59,7 @@ class AuthenticationMongoDataSourceImpl(
 
     override suspend fun logout() {
         withContext(Dispatchers.IO) {
-//            val currentUser = mongoConnection.currentUser.find().firstOrNull() ?: throw UserNotLoggedInException()
+            val currentUser = mongoConnection.currentUser.find().firstOrNull() ?: throw UserNotLoggedInException()
             mongoConnection.currentUser.deleteMany(Document())
         }
     }
@@ -88,11 +88,15 @@ class AuthenticationMongoDataSourceImpl(
     }
 
     private suspend fun saveCurrentUser(user: User) {
-        withContext(Dispatchers.IO) {
-            val currentUser = MongoConnection.currentUser
-            currentUser.deleteMany(Document())
-            currentUser.insertOne(user.toDocument())
-        }
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                withContext(Dispatchers.IO) {
+                    val currentUser = MongoConnection.currentUser
+                    currentUser.deleteMany(Document())
+                    currentUser.insertOne(user.toDocument())
+                }
+            }
+        )
     }
 
     private fun createUser(name: String, password: String, email: String, role: Role): User {

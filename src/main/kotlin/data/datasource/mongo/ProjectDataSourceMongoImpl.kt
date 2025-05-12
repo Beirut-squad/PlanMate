@@ -4,8 +4,8 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import data.datasource.mapper.toDocument
 import data.datasource.mapper.toProject
-import org.example.core.domain.exception.ProjectNotFoundException
-import org.example.core.domain.exception.StateNotFoundException
+import data.exception.ProjectNotFoundException
+import data.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User

@@ -1,16 +1,25 @@
 package org.example.data.csv.writer
 
-import org.example.core.domain.exception.InvalidFileNameException
+import data.exception.InvalidFileNameException
+import domain.exception.handler.ExceptionHandler
 import domain.model.User
 import org.example.data.csv.helper.isValidFileName
 import java.io.File
 import java.util.*
 
-class UserWriter : CsvWriter<User> {
+class UserWriter(
+    private val exceptionHandler: ExceptionHandler
+) : CsvWriter<User> {
     override suspend fun writeToFile(items: List<User>, filePath: String) {
-        val file = File("src/main/kotlin/$filePath")
-        if (!isValidFileName(file.name)) throw InvalidFileNameException()
-        writeUser(items, file)
+
+        exceptionHandler.tryCatchingAsync(
+            action = {
+                val file = File("src/main/kotlin/$filePath")
+                if (!isValidFileName(file.name))
+                    throw InvalidFileNameException()
+                writeUser(items, file)
+            }
+        )
     }
 
     private fun writeUser(items: List<User>, file: File) {

@@ -80,7 +80,7 @@ fun Document.toProject(): Project {
         creatorUserID = UUID.fromString(this.getString(CREATOR_USER_ID_FILED)),
         createdAt = LocalDateTime.parse(this.getString(CREATED_AT_FILED)),
         updatedAt = LocalDateTime.parse(this.getString(UPDATED_AT_FILED)),
-        states = states,
+        state = states,
         users = users
     )
 }
@@ -88,7 +88,7 @@ fun Document.toProject(): Project {
 fun Project.toDocument(): Document {
     return Document(ID_FILED, id.toString()).append(NAME_FILED, title).append(DESCRIPTION_FILED, description)
         .append(CREATOR_USER_ID_FILED, creatorUserID.toString()).append(CREATED_AT_FILED, createdAt.toString())
-        .append(UPDATED_AT_FILED, updatedAt.toString()).append(STATE_FILED, states.map {
+        .append(UPDATED_AT_FILED, updatedAt.toString()).append(STATE_FILED, state.map {
             Document(ID_FILED, it.id.toString()).append(NAME_FILED, it.name)
         }).append(USERS_FILED, users.map {
             Document(ID_FILED, it.id.toString()).append(NAME_FILED, it.name).append(PASSWORD_FILED, it.password)

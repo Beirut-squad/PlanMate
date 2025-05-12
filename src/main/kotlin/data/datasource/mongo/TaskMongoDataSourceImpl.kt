@@ -3,9 +3,9 @@ package data.datasource.mongo
 import com.mongodb.client.model.Filters
 import data.datasource.mapper.toDocument
 import data.datasource.mapper.toTask
-import org.example.core.domain.exception.TaskDeletionFailedException
-import org.example.core.domain.exception.TaskEditFailedException
-import org.example.core.domain.exception.TaskNotFoundException
+import data.exception.TaskDeletionFailedException
+import data.exception.TaskEditFailedException
+import data.exception.TaskNotFoundException
 import org.example.data.datasource.mongo.mongo_db.MongoConnection
 import domain.model.Task
 import kotlinx.coroutines.Dispatchers

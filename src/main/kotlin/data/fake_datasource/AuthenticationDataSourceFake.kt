@@ -1,8 +1,9 @@
 package org.example.data.fake_datasource
 
-import org.example.core.domain.exception.EmailAlreadyExistsException
-import org.example.core.domain.exception.InvalidCredentialsException
-import org.example.core.domain.exception.UserNotLoggedInException
+import data.exception.EmailAlreadyExistsException
+import data.exception.InvalidCredentialsException
+import data.exception.UserNotLoggedInException
+import data.exception.UsersAlreadyExistException
 import data.datasource.authentication.AuthenticationDataSource
 import domain.model.Role
 import domain.model.User
@@ -26,7 +27,7 @@ class AuthenticationDataSourceFake : AuthenticationDataSource {
 
     }
 
-    override suspend fun registerMate(name: String, password: String, email: String): User {
+    override suspend fun register(name: String, password: String, email: String): User {
          if (users.any { it.email == email }) {
             throw EmailAlreadyExistsException()
         }else{

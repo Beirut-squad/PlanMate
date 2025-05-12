@@ -1,6 +1,6 @@
 package org.example.data.csv.parser
 
-import org.example.core.domain.exception.CsvValidationException
+import data.exception.CsvValidationException
 import org.example.data.csv.column_index.TaskLogColumnIndex
 import org.example.data.csv.helper.smartCsvSplit
 import domain.model.TaskLog

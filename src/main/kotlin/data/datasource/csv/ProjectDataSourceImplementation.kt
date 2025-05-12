@@ -1,9 +1,9 @@
 package data.datasource.csv
 
+import data.exception.*
 import domain.model.Project
 import domain.model.State
 import domain.model.User
-import org.example.core.domain.exception.*
 import org.example.data.csv.helper.FileName
 import org.example.data.csv.reader.CsvReader
 import org.example.data.csv.writer.CsvWriter
@@ -130,7 +130,7 @@ class ProjectDataSourceImplementation(
     ): Project {
         val projects = getAllProjects()
         val (updatedProject, project) = findAndUpdateProject(projects, projectId) { project ->
-            project.copy(states = stateModifier(project.states), updatedAt = LocalDateTime.now())
+            project.copy(state = stateModifier(project.state), updatedAt = LocalDateTime.now())
         }
 
         csvWriter.writeToFile(updatedProject, fileName)

@@ -1,6 +1,6 @@
 package data.fake_datasource
 
-import org.example.core.domain.exception.ProjectNotFoundException
+import data.exception.ProjectNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User
@@ -89,7 +89,7 @@ class ProjectFakeDataSource : ProjectDataSource {
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val projectUpdated = project.copy(
-                    states = project.states + listOf(state),
+                    state = project.state + listOf(state),
                     updatedAt = LocalDateTime.now()
                 )
                 updatedProject = projectUpdated
@@ -105,11 +105,11 @@ class ProjectFakeDataSource : ProjectDataSource {
         var updatedProject: domain.model.Project? = null
         projects.replaceAll { project ->
             if (project.id == projectId) {
-                val updatedStates = project.states.map { existingState ->
+                val updatedStates = project.state.map { existingState ->
                     if (existingState.id == updatedState.id) updatedState else existingState
                 }
                 val projectUpdated = project.copy(
-                    states = updatedStates,
+                    state = updatedStates,
                     updatedAt = LocalDateTime.now()
                 )
                 updatedProject = projectUpdated
@@ -126,7 +126,7 @@ class ProjectFakeDataSource : ProjectDataSource {
         projects.replaceAll { project ->
             if (project.id == projectId) {
                 val projectUpdated = project.copy(
-                    states = project.states.filterNot { it.id == state.id },
+                    state = project.state.filterNot { it.id == state.id },
                     updatedAt = LocalDateTime.now()
                 )
                 updatedProject = projectUpdated

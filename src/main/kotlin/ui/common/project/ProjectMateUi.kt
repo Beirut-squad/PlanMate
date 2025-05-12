@@ -1,9 +1,8 @@
 package org.example.ui.common.project
 
-import domain.exception.handler.SafeExecutor
+import domain.exception.handler.ExceptionHandler
 import domain.model.Project
 import domain.use_case.project.GetProjectByIdUseCase
-import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -19,19 +18,15 @@ class ProjectMateUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
-    private val executor: SafeExecutor by inject()
-    private val handler: ExceptionHandler by inject()
+    private val expectationHandler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        executor.tryToExecute(
+        expectationHandler.tryCatchingAsyncWithResult(
             action = {
                 getProjectByIdUseCase.getProjectById(projectId)
             },
             onSuccess = { project ->
                 displayProjectOptions(project)
-            },
-            onError = {
-                handler.printHandledError(it)
             }
         )
     }
@@ -68,7 +63,7 @@ class ProjectMateUi(
                 }
 
                 3 -> {
-                    if (project.states.isEmpty()) {
+                    if (project.state.isEmpty()) {
                         printer.printError("Cannot create a task because this project has no states.")
                         UserProjectsUi().show()
                     } else {
