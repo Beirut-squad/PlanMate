@@ -1,8 +1,9 @@
 package org.example.ui.common.authentication
 
 import domain.exception.EmptyFieldException
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.use_case.authentication.RegisterUserUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -12,7 +13,8 @@ class RegisterUi(
     private val printer: Printer,
     private val registerUseCase: RegisterUserUseCase,
     private val loginUi: LoginUi,
-    private val exceptionHandler: ExceptionHandler,
+    private val executor: SafeExecutor,
+    private val handler: ExceptionHandler
 ) : UiScreen {
     override suspend fun show() {
         printer.printTitle("Register for Plan Mate")
@@ -23,20 +25,19 @@ class RegisterUi(
     }
 
     private suspend fun takeUserRegisterInput() {
-        exceptionHandler.tryCatchingAsync(
+        val name = takeUserInput("Name")
+        val email = takeUserInput("Email")
+        val password = takeUserInput("Password")
+        executor.tryToExecute(
             action = {
-                val name = takeUserInput("Name")
-                val email = takeUserInput("Email")
-                val password = takeUserInput("Password")
-
-                registerUseCase.add(name = name, email = email, password = password)
-
+                registerUseCase.registerUser(name = name, email = email, password = password)
+            },
+            onSuccess = {
                 printer.printCorrectOutput("Register successfully!")
                 goToLoginScreen()
             },
             onError = {
-                printer.printError("Register failed!")
-                takeUserRegisterInput()
+                handler.printHandledError(it)
             }
         )
     }

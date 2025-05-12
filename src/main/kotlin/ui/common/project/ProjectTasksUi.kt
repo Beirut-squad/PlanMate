@@ -1,8 +1,9 @@
 package org.example.ui.common.project
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.use_case.task.GetProjectTasksUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -19,12 +20,16 @@ class ProjectTasksUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val getTasksForProjectUseCase: GetProjectTasksUseCase by inject()
-    private val exceptionHandler: ExceptionHandler by inject()
+    private val executor: SafeExecutor by inject()
+    private val handler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        exceptionHandler.tryCatchingAsyncWithResult(
+        executor.tryToExecute(
             action = {
                 getTasksForProjectUseCase.getTasksForProject(projectId)
+            },
+            onError = {
+                handler.printHandledError(it)
             },
             onSuccess = {
                 printer.printTitle("Tasks for Project:")

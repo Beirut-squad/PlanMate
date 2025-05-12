@@ -1,11 +1,12 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.DeleteProjectUseCase
 import domain.use_case.project.GetProjectByIdUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -19,7 +20,8 @@ class SingleProjectUi(
     private val editProjectUi: EditProjectUi,
     private val getProjectByIdUseCase: GetProjectByIdUseCase,
     private val viewProjectStates: ProjectStatesUi,
-    private val exceptionHandler: ExceptionHandler,
+    private val executor: SafeExecutor,
+    private val handler: ExceptionHandler
 ) : UiScreen {
     lateinit var project: Project
     lateinit var user: User
@@ -41,9 +43,12 @@ class SingleProjectUi(
                 "Add task to project",
                 "Exit"
             )
-            exceptionHandler.tryCatchingAsync(
+            executor.tryToExecute(
                 action = {
                     takeUserInput()
+                },
+                onError = {
+                    handler.printHandledError(it)
                 }
             )
         }
@@ -79,7 +84,7 @@ class SingleProjectUi(
             }
 
             6 -> {
-                if (project.state.isEmpty()) {
+                if (project.states.isEmpty()) {
                     printer.printError("Cannot create a task because this project has no states.")
                 } else {
                     CreateTaskUi(projectId = project.id).show()

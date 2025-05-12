@@ -1,9 +1,10 @@
 package org.example.ui.common.project
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.GetTaskByStateIdAndProjectId
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.UiScreen
 import org.koin.core.component.KoinComponent
@@ -16,9 +17,10 @@ class ProjectStateSelectedUi(
     private val printer: Printer by inject()
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId by inject()
-    private val expectationHandler: ExceptionHandler by inject()
-
+    private val executor: SafeExecutor by inject()
+    private val handler: ExceptionHandler by inject()
     private var running = true
+
     override suspend fun show() {
         running = true
         val states = getProjectStates()
@@ -34,12 +36,7 @@ class ProjectStateSelectedUi(
 
     private suspend fun getProjectStates(): List<State> {
         printer.printTitle("State Details")
-        return expectationHandler.tryCatchingAsyncWithResult(
-            action = {
-                val project = getProjectByIdUseCase.getProjectById(projectId)
-                project.state
-            }
-        )
+        return getProjectByIdUseCase.getProjectById(projectId).states
     }
 
     private fun displayStateOptions(states: List<State>) {
@@ -70,7 +67,7 @@ class ProjectStateSelectedUi(
         printer.printTitle("State Details")
         printer.printInfoLine("Name: ${selectedState.name}")
 
-        expectationHandler.tryCatchingAsync(
+        executor.tryToExecute(
             action = {
                 val tasks = getTaskByStateIdAndProjectId
                     .getTaskByStateIdAndProjectId(projectId, selectedState.id)
@@ -86,6 +83,9 @@ class ProjectStateSelectedUi(
                     printer.printInfoLine("No tasks available for this state.")
                     running = false
                 }
+            },
+            onError = {
+                handler.printHandledError(it)
             }
         )
     }

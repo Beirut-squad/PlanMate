@@ -1,8 +1,6 @@
 package org.example.di
 
-import core.exception.handler.DefaultExceptionHandler
-import domain.exception.handler.DomainExceptionHandler
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.use_case.authentication.*
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.use_case.log.CreateTaskLogUseCase
@@ -13,6 +11,7 @@ import domain.use_case.state.CreateStateUseCase
 import domain.use_case.state.DeleteStateUseCase
 import domain.use_case.state.EditStateUseCase
 import domain.use_case.task.*
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 import org.example.domain.use_cases.authentication.encryption.Encryptor
 import org.example.domain.use_cases.authentication.encryption.EncryptorMD5Impl
@@ -22,7 +21,6 @@ import org.koin.dsl.module
 val logicModule = module {
     singleOf(::GetCurrentUserUseCase)
     singleOf(::LoginUseCase)
-    singleOf(::RegisterMateUseCase)
     singleOf(::RegisterUserUseCase)
     singleOf(::GetUserByIdUseCase)
     singleOf(::EncryptPassword)
@@ -38,7 +36,6 @@ val logicModule = module {
     singleOf(::CreateTaskLogUseCase)
     singleOf(::GetCurrentUserUseCase)
     singleOf(::LoginUseCase)
-    singleOf(::RegisterMateUseCase)
     singleOf(::RegisterUserUseCase)
     singleOf(::GetUserByIdUseCase)
     singleOf(::EncryptPassword)
@@ -46,7 +43,7 @@ val logicModule = module {
     singleOf(::GetAllProjectsUseCase)
     singleOf(::CreateProjectLogUseCase)
     singleOf(::DeleteProjectUseCase)
-    singleOf(::EditProjectNameUseCase)
+    singleOf(::EditProjectTitleUseCase)
     singleOf(::EditProjectDescriptionUseCase)
     singleOf(::DeleteStateUseCase)
     singleOf(::DeleteProjectStateUseCase)
@@ -61,13 +58,6 @@ val logicModule = module {
     singleOf(::EditTaskUseCase)
     singleOf(::DeleteTaskUseCase)
     singleOf(::GetAllTaskLogsUseCase)
-
-    single<ExceptionHandler> {
-        DomainExceptionHandler(get())
-    }
-
-    single<ExceptionHandler> {
-        DefaultExceptionHandler(get())
-    }
-
+    singleOf(::ExceptionHandler)
+    singleOf(::SafeExecutor)
 }

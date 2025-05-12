@@ -1,12 +1,8 @@
 package org.example.di
 
-
 import data.datasource.authentication.AuthenticationDataSource
 import data.datasource.mongo.AuthenticationMongoDataSourceImpl
 import data.datasource.mongo.LogDataSourceMongoImpl
-import data.exception.handler.DataExceptionHandler
-import domain.exception.handler.DomainExceptionHandler
-import domain.exception.handler.ExceptionHandler
 import org.example.data.datasource.LogDataSource
 import org.example.data.datasource.ProjectDataSource
 import org.example.data.datasource.TaskDataSource
@@ -25,7 +21,7 @@ import org.koin.dsl.module
 
 val dataModule = module {
     single<AuthenticationDataSource> {
-        AuthenticationMongoDataSourceImpl(MongoConnection, DomainExceptionHandler(get()))
+        AuthenticationMongoDataSourceImpl(MongoConnection)
     }
     single<AuthenticationRepository> {
         AuthenticationRepositoryImpl(get())
@@ -60,9 +56,5 @@ val dataModule = module {
 
     single<TaskRepository> {
         TaskRepositoryImpl(get())
-    }
-
-    single<ExceptionHandler> {
-        DataExceptionHandler(get())
     }
 }
