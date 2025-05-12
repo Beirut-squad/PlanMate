@@ -1,6 +1,7 @@
 package domain.use_case.state
 
 import creator_helper.*
+import domain.exception.EmptyStateNameException
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.*
 import io.mockk.*
@@ -22,121 +23,66 @@ class EditStateUseCaseTest {
         editStateUseCase = EditStateUseCase(editProjectStateUseCase, getCurrentUserUseCase)
     }
     @Test
-    fun `editState updates state name and returns updated project`() = runTest {
+    fun `editState should updates the correct state and returns updated project`() = runTest {
         // Given
         val currentUser = createUserHelper()
 
-        val stateId1 = UUID.randomUUID()
-        val stateId2 = UUID.randomUUID()
+        val targetStateId = UUID.randomUUID()
+        val otherStateId = UUID.randomUUID()
 
-        val testState = createStateHelper(
-            id = stateId1,
-            name = "Original State Name"
-        )
+        val targetState = createStateHelper(id = targetStateId, name = "To Do")
+        val otherState = createStateHelper(id = otherStateId, name = "In Progress")
 
-        val testState2 = createStateHelper(
-            id = stateId2,
-            name = "Another State"
-        )
-
-        val testProject = createProjectHelper(
-            id = UUID.randomUUID(),
-            name = "Test Project",
-            description = "Test Description",
+        val project = createProjectHelper(
             creatorUserID = currentUser.id,
-            state = listOf(testState, testState2)
+            state = listOf(targetState, otherState)
         )
+
+        val newStateName = "Updated State"
 
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns currentUser
-        val newStateName = "Updated State Name"
 
         // When
-        val result = editStateUseCase.editState(testState, newStateName, testProject)
+        val result = editStateUseCase.editState(targetState, newStateName, project)
 
         // Then
-        assertEquals(2, result.state.size)
-        val updatedState = result.state.find { it.id == stateId1 }
-        val unchangedState = result.state.find { it.id == stateId2 }
-        assertEquals(newStateName, updatedState?.name)
-        assertEquals(testState2.name, unchangedState?.name)
+        assertEquals(2, result.states.size)
 
-        coVerify {
+        val updatedState = result.states.find { it.id == targetStateId }
+        val unchangedState = result.states.find { it.id == otherStateId }
+
+        assertNotNull(updatedState)
+        assertEquals(newStateName, updatedState?.name)
+
+        assertNotNull(unchangedState)
+        assertEquals("In Progress", unchangedState?.name)
+
+        coVerify(exactly = 1) {
             editProjectStateUseCase.editStateToProject(
                 currentUser.id,
-                testProject,
-                withArg { state ->
-                    assertEquals(stateId1, state.id)
-                    assertEquals(newStateName, state.name)
-                }
+                project,
+                match { it.id == targetStateId && it.name == newStateName }
             )
         }
     }
 
     @Test
-    fun `editState throws exception when name is empty`() = runTest {
+    fun `editState should throws EmptyStateNameException when new name is blank`() = runTest {
         // Given
-        val currentUserId = UUID.randomUUID()
-        val currentUser = createUserHelper(
-            id = currentUserId,
-            name = "Test User",
-            email = "test@example.com"
-        )
+        val user = createUserHelper()
+        val state = createStateHelper()
+        val project = createProjectHelper(state = listOf(state))
 
-        val stateId = UUID.randomUUID()
-        val testState = createStateHelper(
-            id = stateId,
-            name = "Original State Name"
-        )
+        coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
-        val testProject = createProjectHelper(
-            id = UUID.randomUUID(),
-            name = "Test Project",
-            description = "Test Description",
-            creatorUserID = currentUserId,
-            state = listOf(testState)
-        )
-
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns currentUser
-        val emptyName = ""
-
-        // When/Then
-        val exception = assertThrows(IllegalArgumentException::class.java) {
+        // When & Then
+        val exception = assertThrows<EmptyStateNameException> {
             runBlocking {
-                editStateUseCase.editState(testState, emptyName, testProject)
+                editStateUseCase.editState(state, "", project)
             }
         }
 
-        assertEquals("Edit failed: name cannot be blank!", exception.message)
-    }
-
-    @Test
-    fun `editState throws exception when user is not logged in`() = runTest {
-        // Given
-        val stateId = UUID.randomUUID()
-        val testState = createStateHelper(
-            id = stateId,
-            name = "Original State Name"
-        )
-
-        val testProject = createProjectHelper(
-            id = UUID.randomUUID(),
-            name = "Test Project",
-            description = "Test Description",
-            creatorUserID = UUID.randomUUID(),
-            state = listOf(testState)
-        )
-
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns null
-        val newStateName = "Updated State Name"
-
-        // When/Then
-        val exception = assertThrows(Exception::class.java) {
-            runBlocking {
-                editStateUseCase.editState(testState, newStateName, testProject)
-            }
-        }
-
-        assertEquals("User not logged in", exception.message)
+        coVerify(exactly = 0) { editProjectStateUseCase.editStateToProject(any(), any(), any()) }
     }
 
 

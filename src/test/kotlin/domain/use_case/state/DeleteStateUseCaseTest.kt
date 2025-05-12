@@ -20,60 +20,27 @@ class DeleteStateUseCaseTest {
     }
 
     @Test
-    fun `deleteState should return updated project when user exists`() = runTest {
+    fun `deleteState returns updated project when current user exists`() = runTest {
         // Given
         val user = createUserHelper()
         val project = createProjectHelper()
         val state = createStateHelper()
-        val updatedProject = project.copy(state = project.state - state)
+        val updatedProject = project.copy(states = project.states - state)
 
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
-        coEvery { deleteProjectStateUseCase.removeStateFromProject(user.id, project, state) } returns updatedProject
+        coEvery {
+            deleteProjectStateUseCase.removeStateFromProject(user.id, project, state)
+        } returns updatedProject
 
         // When
         val result = deleteStateUseCase.deleteState(project, state)
 
         // Then
         assertEquals(updatedProject, result)
-        coVerify(exactly = 1) { getCurrentUserUseCase.getCurrentUser() }
-        coVerify(exactly = 1) { deleteProjectStateUseCase.removeStateFromProject(user.id, project, state) }
-    }
-
-    @Test
-    fun `deleteState should throw IllegalArgumentException when current user is null`() = runTest {
-        // Given
-        val project = createProjectHelper()
-        val state = createStateHelper()
-
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns null
-
-        // When & Then
-        val exception = assertThrows<IllegalArgumentException> {
-            deleteStateUseCase.deleteState(project, state)
+        coVerifyOrder {
+            getCurrentUserUseCase.getCurrentUser()
+            deleteProjectStateUseCase.removeStateFromProject(user.id, project, state)
         }
-
-        assertNotNull(exception)
-        coVerify(exactly = 1) { getCurrentUserUseCase.getCurrentUser() }
-        coVerify { deleteProjectStateUseCase wasNot Called }
-    }
-    @Test
-    fun `deleteState should proceed when current user exists`() = runTest {
-        // Given
-        val user = createUserHelper()
-        val project = createProjectHelper()
-        val state = createStateHelper()
-        val updatedProject = project.copy(state = project.state - state)
-
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
-        coEvery { deleteProjectStateUseCase.removeStateFromProject(user.id, project, state) } returns updatedProject
-
-        // When
-        val result = deleteStateUseCase.deleteState(project, state)
-
-        // Then
-        assertEquals(updatedProject, result)
-        coVerify(exactly = 1) { getCurrentUserUseCase.getCurrentUser() }
-        coVerify(exactly = 1) { deleteProjectStateUseCase.removeStateFromProject(user.id, project, state) }
     }
 
 

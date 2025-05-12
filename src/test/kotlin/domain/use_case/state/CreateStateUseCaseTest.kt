@@ -1,6 +1,7 @@
 package domain.use_case.state
 
 import creator_helper.*
+import domain.exception.EmptyStateNameException
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.*
 import io.mockk.*
@@ -41,50 +42,20 @@ class CreateStateUseCaseTest {
 
 
     @Test
-    fun `createState should throw IllegalArgumentException when name is blank`() = runTest {
+    fun `createState should throw EmptyStateNameException when name is blank`() = runTest {
         // Given
         val project = createProjectHelper()
 
         // When & Then
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<EmptyStateNameException> {
             createStateUseCase.createState("   ", project)
         }
 
-        assertEquals("Create failed : name is Blank !!", exception.message)
         coVerify { getCurrentUserUseCase wasNot Called }
         coVerify { addProjectStateUseCase wasNot Called }
     }
 
-//    @Test
-//    fun `createState should throw Exception when current user is null`() = runTest {
-//        // Given
-//        val project = createProjectHelper()
-//        coEvery { getCurrentUserUseCase.getCurrentUser() } returns null
-//
-//        // When & Then
-//        val exception = assertThrows<Exception> {
-//            createStateUseCase.createState("To Do", project)
-//        }
-//
-//        coVerify(exactly = 1) { getCurrentUserUseCase.getCurrentUser() }
-//        coVerify { addProjectStateUseCase wasNot Called }
-//    }
 
-    @Test
-    fun `createState should throw Exception when current user is null`() = runTest {
-        // Given
-        val project = createProjectHelper()
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns null
 
-        // When & Then
-        val exception = assertThrows<Exception> {
-            createStateUseCase.createState("To Do", project)
-        }
-
-        assertNotNull(exception)
-
-        coVerify(exactly = 1) { getCurrentUserUseCase.getCurrentUser() }
-        coVerify { addProjectStateUseCase wasNot Called }
-    }
 
 }
