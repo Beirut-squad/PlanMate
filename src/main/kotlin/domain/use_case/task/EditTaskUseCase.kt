@@ -3,8 +3,9 @@ package domain.use_case.task
 import domain.model.Task
 import domain.model.State
 import domain.use_case.log.CreateTaskLogUseCase
-import org.example.domain.exceptions.task_management_exception.NoFieldsToUpdateException
-import org.example.domain.repository.TaskRepository
+import domain.exception.EmptyTaskDescriptionException
+import domain.exception.EmptyTaskTitleException
+import domain.repository.TaskRepository
 import java.time.LocalDateTime
 import java.util.*
 
@@ -12,7 +13,7 @@ class EditTaskUseCase(
     private val taskRepository: TaskRepository,
     private val createTaskLogUseCase: CreateTaskLogUseCase,
 ) {
-    suspend fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: State, editorUserId : UUID) {
+    suspend fun editTask(task: Task, newTitle: String?, newDescription: String?, newState: State, editorUserId: UUID) {
         validateInputFields(newTitle, newDescription)
 
         val updatedTask = createUpdatedTask(task, newTitle, newDescription, newState)
@@ -23,11 +24,9 @@ class EditTaskUseCase(
     }
 
     private fun validateInputFields(newTitle: String?, newDescription: String?) {
-        val isTitleEmpty = newTitle.isNullOrBlank()
-        val isDescriptionEmpty = newDescription.isNullOrBlank()
-
-        if (isTitleEmpty && isDescriptionEmpty) {
-            throw NoFieldsToUpdateException("At least one non-blank field must be provided")
+        when {
+            newTitle.isNullOrBlank() -> throw EmptyTaskTitleException()
+            newDescription.isNullOrBlank() -> throw EmptyTaskDescriptionException()
         }
     }
 

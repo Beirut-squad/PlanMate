@@ -1,10 +1,10 @@
 package domain.use_case.project
 
+import domain.exception.EmptyStateNameException
 import domain.model.State
-import domain.exception.project.BlankFieldsException
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import org.example.domain.repository.ProjectRepository
+import domain.repository.ProjectRepository
 import java.util.*
 
 class AddProjectStateUseCase(
@@ -13,10 +13,14 @@ class AddProjectStateUseCase(
 ) {
     suspend fun addStateToProject(currentUserID: UUID, project: Project, state: State): Project {
         if (state.name.isBlank()) {
-            throw BlankFieldsException("State name is required.")
+            throw EmptyStateNameException()
         }
         return repository.addStateToProject(project.id, state).also { updatedProject ->
-            logUseCase.createProjectLog(userId = currentUserID, previousProject = project, currentProject = updatedProject)
+            logUseCase.createProjectLog(
+                userId = currentUserID,
+                previousProject = project,
+                currentProject = updatedProject
+            )
         }
     }
 }
