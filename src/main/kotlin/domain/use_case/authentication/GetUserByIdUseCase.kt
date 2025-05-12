@@ -1,7 +1,7 @@
 package domain.use_case.authentication
 
-import domain.exception.UserNotFoundException
 import domain.model.User
+import org.example.core.domain.exception.UserNotFoundException
 import org.example.domain.repository.AuthenticationRepository
 import java.util.*
 

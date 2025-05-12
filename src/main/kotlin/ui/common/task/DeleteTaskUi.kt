@@ -1,11 +1,12 @@
 package org.example.ui.common.task
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.model.User
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.task.DeleteTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -23,19 +24,23 @@ class DeleteTaskUI(
     private val getProjectTasksUseCase: GetProjectTasksUseCase by inject()
     private val deleteTaskUseCase: DeleteTaskUseCase by inject()
     private val getCurrentUserUseCase: GetCurrentUserUseCase by inject()
-    private val exceptionHandler: ExceptionHandler by inject()
+    private val executor: SafeExecutor by inject()
+    private val handler: ExceptionHandler by inject()
 
     override suspend fun show() {
-        exceptionHandler.tryCatchingAsyncWithResult(
+        executor.tryToExecute(
             action = {
                 getProjectTasksUseCase.getTasksForProject(projectId)
+            },
+            onError = {
+                handler.printHandledError(it)
             },
             onSuccess = { tasks ->
                 val user = getCurrentUserUseCase.getCurrentUser()
 
                 if (tasks.isEmpty()) {
                     printer.printInfoLine("No tasks available to delete.")
-                    return@tryCatchingAsyncWithResult
+                    return@tryToExecute
                 }
                 printer.printTitle("Select a Task to Delete:")
                 tasks.forEachIndexed { index, task ->
@@ -73,11 +78,14 @@ class DeleteTaskUI(
         printer.printInfoLine("Are you sure you want to delete the task: '${task.title}'? (yes/no)")
         val confirmation = reader.readInput()?.trim()?.lowercase()
         if (confirmation == "yes") {
-            exceptionHandler.tryCatchingAsync(
+            executor.tryToExecute(
                 action = {
                     deleteTaskUseCase.deleteTask(task, currentUser)
                     printer.printInfoLine("Task deleted successfully.")
                     UserProjectsUi().show()
+                },
+                onError = {
+                    handler.printHandledError(it)
                 }
             )
         } else {

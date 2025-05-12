@@ -1,6 +1,6 @@
 package org.example.data.csv.parser
 
-import data.exception.StateNotFoundException
+import org.example.core.domain.exception.StateNotFoundException
 import domain.model.State
 import domain.model.Task
 import org.example.data.csv.column_index.TaskColumnIndex

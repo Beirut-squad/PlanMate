@@ -1,6 +1,6 @@
 package org.example.data.csv.parser
 
-import data.exception.StateNotFoundException
+import org.example.core.domain.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.User
 import domain.model.State
@@ -41,7 +41,7 @@ class ProjectParser(
             createdAt = LocalDateTime.parse(parts[ProjectColumnIndex.CREATED_AT]),
             updatedAt = LocalDateTime.parse(parts[ProjectColumnIndex.UPDATED_AT]),
             users = parseMultiUser(parts[ProjectColumnIndex.USER]),
-            state = parseMultiStates(parts[ProjectColumnIndex.STATE]),
+            states = parseMultiStates(parts[ProjectColumnIndex.STATE]),
         )
     }
 

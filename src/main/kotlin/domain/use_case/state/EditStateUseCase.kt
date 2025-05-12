@@ -17,12 +17,12 @@ class EditStateUseCase(
 
         val updatedState = stateToEdit.copy(name = newName)
 
-        val updatedStates = project.state.map { state ->
+        val updatedStates = project.states.map { state ->
             if (state.id == stateToEdit.id) updatedState else state
         }
 
         editProjectStateUseCase.editStateToProject(currentUserId, project, updatedState)
         
-        return project.copy(state = updatedStates)
+        return project.copy(states = updatedStates)
     }
 }
