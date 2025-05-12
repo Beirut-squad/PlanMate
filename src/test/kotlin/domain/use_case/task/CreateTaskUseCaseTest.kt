@@ -2,13 +2,14 @@ package domain.use_case.task
 
 import creator_helper.createStateHelper
 import creator_helper.createTaskHelper
-import domain.exception.project.BlankFieldsException
+import domain.exception.EmptyTaskDescriptionException
+import domain.exception.EmptyTaskTitleException
 import domain.model.Task
+import domain.repository.TaskRepository
 import domain.use_case.log.CreateTaskLogUseCase
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.example.domain.repository.TaskRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +18,7 @@ import java.util.*
 
 class CreateTaskUseCaseTest {
     private var taskRepository: TaskRepository = mockk(relaxed = true)
-    private var createTaskLogUseCase : CreateTaskLogUseCase = mockk(relaxed = true)
+    private var createTaskLogUseCase: CreateTaskLogUseCase = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
 
     @BeforeEach
@@ -78,13 +79,12 @@ class CreateTaskUseCaseTest {
         val creatorUserId = UUID.randomUUID()
 
         // When & Then
-        val exception = assertThrows<BlankFieldsException> {
+        assertThrows<EmptyTaskTitleException> {
             runBlocking {
                 createTaskUseCase.createTask(title, description, state, projectId, creatorUserId)
             }
         }
 
-        assertEquals("Title must not be blank", exception.message)
         coVerify(exactly = 0) { taskRepository.createTask(any()) }
         coVerify(exactly = 0) { createTaskLogUseCase.createTaskLog(any(), any(), any()) }
     }
@@ -99,13 +99,12 @@ class CreateTaskUseCaseTest {
         val creatorUserId = UUID.randomUUID()
 
         // When & Then
-        val exception = assertThrows<BlankFieldsException> {
+        assertThrows<EmptyTaskDescriptionException> {
             runBlocking {
                 createTaskUseCase.createTask(title, description, state, projectId, creatorUserId)
             }
         }
 
-        assertEquals("Description must not be blank", exception.message)
         coVerify(exactly = 0) { taskRepository.createTask(any()) }
         coVerify(exactly = 0) { createTaskLogUseCase.createTaskLog(any(), any(), any()) }
     }

@@ -1,9 +1,9 @@
 package domain.use_case.task
 
 import creator_helper.createTaskHelper
+import domain.repository.TaskRepository
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import org.example.domain.repository.TaskRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.*
 import java.util.UUID
