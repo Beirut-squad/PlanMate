@@ -1,8 +1,8 @@
-package org.example.data.repository
+package data.repository
 
-import org.example.data.datasource.AuthenticationDataSource
+import data.datasource.interfaces.AuthenticationDataSource
 import domain.model.User
-import org.example.domain.repository.AuthenticationRepository
+import domain.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource
@@ -15,8 +15,8 @@ class AuthenticationRepositoryImpl(
          authenticationDataSource.isValidEmail(email)
     }
 
-    override suspend fun register(name: String, password: String, email: String): User {
-        return authenticationDataSource.register(email = email, password = password, name = name)
+    override suspend fun registerMate(name: String, password: String, email: String): User {
+        return authenticationDataSource.registerMate(email = email, password = password, name = name)
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
@@ -31,7 +31,7 @@ class AuthenticationRepositoryImpl(
          return authenticationDataSource.isFirstRegister()
     }
 
-    override suspend fun getCurrentLoggedInUser(): User? {
+    override suspend fun getCurrentLoggedInUser(): User {
         return authenticationDataSource.getCurrentUser()
     }
 
