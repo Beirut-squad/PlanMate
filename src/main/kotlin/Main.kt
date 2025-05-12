@@ -1,4 +1,4 @@
-package org.example.core
+package org.example
 
 import org.example.di.dataModule
 import org.example.di.logicModule

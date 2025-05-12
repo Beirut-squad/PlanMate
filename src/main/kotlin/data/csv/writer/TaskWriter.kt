@@ -1,7 +1,6 @@
 package org.example.data.csv.writer
 
-import data.exception.InvalidFileNameException
-import domain.exception.handler.ExceptionHandler
+import org.example.core.domain.exception.InvalidFileNameException
 import domain.model.Task
 import org.example.data.csv.helper.isValidFileName
 import java.io.BufferedWriter
@@ -9,21 +8,15 @@ import java.io.File
 import java.io.FileWriter
 import java.util.UUID
 
-class TaskWriter(
-    private val exceptionHandler: ExceptionHandler
-) : CsvWriter<Task> {
+class TaskWriter : CsvWriter<Task> {
 
     override suspend fun writeToFile(items: List<Task>, filePath: String) {
-        exceptionHandler.tryCatchingAsync(
-            action = {
-                val file = File("src/main/kotlin/$filePath")
-                if (!isValidFileName(file.name))
-                    throw InvalidFileNameException()
-                val writer = BufferedWriter(FileWriter(file, false))
-                writeTask(items, writer)
-                writer.close()
-            }
-        )
+        val file = File("src/main/kotlin/$filePath")
+        if (!isValidFileName(file.name))
+            throw InvalidFileNameException()
+        val writer = BufferedWriter(FileWriter(file, false))
+        writeTask(items, writer)
+        writer.close()
     }
 
     private fun writeTask(items: List<Task>, writer: BufferedWriter) {

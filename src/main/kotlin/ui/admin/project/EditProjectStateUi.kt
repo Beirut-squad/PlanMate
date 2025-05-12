@@ -1,9 +1,10 @@
 package org.example.ui.admin.project
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.model.State
 import domain.use_case.state.EditStateUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.Reader
 import org.example.ui.common.components.UiScreen
@@ -17,7 +18,8 @@ class EditProjectStateUi(
     private val printer: Printer by inject()
     private val reader: Reader by inject()
     private val editStateUseCase: EditStateUseCase by inject()
-    private val exceptionHandler: ExceptionHandler by inject()
+    private val executor: SafeExecutor by inject()
+    private val handler: ExceptionHandler by inject()
 
     override suspend fun show() {
         printer.printTitle("Edit State")
@@ -26,10 +28,13 @@ class EditProjectStateUi(
         printer.printTitle("Enter new state name:")
         val newName = reader.readInput().toString()
 
-        exceptionHandler.tryCatchingAsync(
+        executor.tryToExecute(
             action = {
                 editStateUseCase.editState(state, newName, project)
                 printer.printTitle("State updated successfully to: $newName")
+            },
+            onError = {
+                handler.printHandledError(it)
             }
         )
     }

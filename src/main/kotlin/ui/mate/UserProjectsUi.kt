@@ -1,9 +1,10 @@
 package org.example.ui.mate
 
-import domain.exception.handler.ExceptionHandler
+import domain.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetUserProjectsByIdUseCase
+import org.example.core.domain.exception.handler.ExceptionHandler
 import org.example.ui.common.components.Printer
 import org.example.ui.common.components.UiScreen
 import org.example.ui.common.project.ProjectMateUi
@@ -15,14 +16,18 @@ class UserProjectsUi : UiScreen, KoinComponent {
     private val printer: Printer by inject()
     private val getCurrentLoggedInUserUseCase: GetCurrentUserUseCase by inject()
     private val getUserProjectsByIdUseCase: GetUserProjectsByIdUseCase by inject()
-    private val expectationHandle: ExceptionHandler by inject()
+    private val executor: SafeExecutor by inject()
+    private val handler: ExceptionHandler by inject()
 
     override suspend fun show() {
         val currentUserResult = getCurrentLoggedInUserUseCase.getCurrentUser()
 
-        expectationHandle.tryCatchingAsyncWithResult(
+        executor.tryToExecute(
             action = {
                 getUserProjectsByIdUseCase.getProjectForUserById(currentUserResult.id)
+            },
+            onError = {
+                handler.printHandledError(it)
             },
             onSuccess = { projects ->
                 if (projects.isNotEmpty()) {
