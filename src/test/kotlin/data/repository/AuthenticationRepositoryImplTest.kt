@@ -5,7 +5,6 @@ import data.datasource.interfaces.AuthenticationDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +22,7 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `login should return user when credentials are valid`() = runBlocking {
+    fun `login should return user when credentials are valid`() = runTest {
         coEvery { authenticationDataSource.login(any(), any()) } returns testUser
         val result = authenticationRepository.login("test@test.com", "password123")
         assertEquals(testUser, result)
@@ -52,7 +51,7 @@ class AuthenticationRepositoryImplTest {
 
     
     @Test
-    fun `registerAdmin should return registered admin user`() = runBlocking {
+    fun `registerAdmin should return registered admin user`() = runTest {
         coEvery {
             authenticationDataSource.registerAdmin(any(), any(), any())
         } returns testUser
@@ -68,14 +67,14 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `logout should call datasource`() = runBlocking {
+    fun `logout should call datasource`() = runTest {
         coEvery { authenticationDataSource.logout() } returns Unit
         authenticationRepository.logout()
         coVerify { authenticationDataSource.logout() }
     }
 
     @Test
-    fun `isFirstRegister should return boolean from datasource`() = runBlocking {
+    fun `isFirstRegister should return boolean from datasource`() = runTest {
         coEvery { authenticationDataSource.isFirstRegister() } returns true
         val result = authenticationRepository.isFirstRegister()
         assertTrue(result)
@@ -83,7 +82,7 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `getCurrentLoggedInUser should return current user`() = runBlocking {
+    fun `getCurrentLoggedInUser should return current user`() = runTest {
         coEvery { authenticationDataSource.getCurrentUser() } returns testUser
         val result = authenticationRepository.getCurrentLoggedInUser()
         assertEquals(testUser, result)
@@ -91,7 +90,7 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `getUsers should return list of users`() = runBlocking {
+    fun `getUsers should return list of users`() = runTest {
         val usersList = listOf(testUser)
         coEvery { authenticationDataSource.getUsers() } returns usersList
         val result = authenticationRepository.getUsers()
