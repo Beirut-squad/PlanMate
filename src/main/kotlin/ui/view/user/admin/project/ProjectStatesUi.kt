@@ -3,9 +3,9 @@ package ui.view.user.admin.project
 import domain.model.Project
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 import java.util.*
 
 class ProjectStatesUi(

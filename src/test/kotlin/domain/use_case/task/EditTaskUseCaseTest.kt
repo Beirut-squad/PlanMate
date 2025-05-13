@@ -2,7 +2,7 @@ package domain.use_case.task
 
 import creator_helper.createStateHelper
 import creator_helper.createTaskHelper
-import domain.exception.EmptyFieldException
+import ui.common.exception.EmptyFieldException
 import domain.repository.TaskRepository
 import domain.use_case.log.CreateTaskLogUseCase
 import io.mockk.*

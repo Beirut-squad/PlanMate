@@ -1,6 +1,6 @@
 package data.datasource.csv.reader
 
-import domain.exception.InvalidFileNameException
+import ui.common.exception.InvalidFileNameException
 import data.datasource.csv.helper.FileName
 import data.datasource.csv.parser.CsvParser
 import java.io.File

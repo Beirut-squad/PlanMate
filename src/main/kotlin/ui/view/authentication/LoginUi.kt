@@ -1,15 +1,16 @@
 package ui.view.authentication
 
-import domain.exception.EmptyFieldException
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.model.Role
 import domain.model.User
 import domain.use_case.authentication.LoginUseCase
 import ui.view.user.mate.MateUi
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
+import ui.common.Validator
 import ui.view.user.admin.home.AdminUi
 
 class LoginUi(
@@ -20,6 +21,7 @@ class LoginUi(
     private val mateUI: MateUi,
     private val executor: SafeExecutor,
     private val handler: ExceptionHandler,
+    private val validator: Validator
 ) : UiScreen {
     override suspend fun show() {
         printer.printTitle("Login for Plan Mate")
@@ -30,10 +32,14 @@ class LoginUi(
     }
 
     private suspend fun takeUserLoginInput() {
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
         executor.tryToExecute(
             action = {
+                val email = takeUserInput("Email")
+                validator.checkEmail(email)
+
+                val password = takeUserInput("Password")
+                validator.checkPassword(password)
+
                 loginUseCase.login(email, password)
             },
             onError = {

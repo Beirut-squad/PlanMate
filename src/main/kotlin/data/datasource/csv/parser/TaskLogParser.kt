@@ -1,6 +1,6 @@
 package data.datasource.csv.parser
 
-import domain.exception.CsvValidationException
+import ui.common.exception.CsvValidationException
 import domain.model.TaskLog
 import java.time.LocalDateTime
 import java.util.*

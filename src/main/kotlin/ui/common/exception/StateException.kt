@@ -1,3 +1,3 @@
-package domain.exception
+package ui.common.exception
 
 class EmptyStateNameException : EmptyFieldException()

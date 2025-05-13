@@ -1,12 +1,12 @@
 package ui.view.project
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.model.State
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.GetTaskByStateIdAndProjectId
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.UiScreen
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*

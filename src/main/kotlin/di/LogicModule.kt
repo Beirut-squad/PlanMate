@@ -1,6 +1,6 @@
 package di
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.*
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.use_case.log.CreateTaskLogUseCase
@@ -11,7 +11,7 @@ import domain.use_case.state.CreateStateUseCase
 import domain.use_case.state.DeleteStateUseCase
 import domain.use_case.state.EditStateUseCase
 import domain.use_case.task.*
-import domain.exception.handler.ExceptionHandler
+import ui.common.exception.handler.ExceptionHandler
 import org.example.domain.use_cases.authentication.encryption.EncryptPassword
 import org.example.domain.use_cases.authentication.encryption.Encryptor
 import org.example.domain.use_cases.authentication.encryption.EncryptorMD5Impl

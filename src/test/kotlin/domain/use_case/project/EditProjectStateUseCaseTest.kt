@@ -1,8 +1,7 @@
 package domain.use_case.project
 
 import creator_helper.createProjectHelper
-import domain.exception.EmptyStateNameException
-import domain.model.Project
+import ui.common.exception.EmptyStateNameException
 import domain.model.State
 import domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase

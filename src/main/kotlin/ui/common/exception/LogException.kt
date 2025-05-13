@@ -1,4 +1,4 @@
-package domain.exception
+package ui.common.exception
 
 open class LogException : Exception()
 

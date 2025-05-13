@@ -7,9 +7,9 @@ import com.mongodb.client.result.UpdateResult
 import creator_helper.createTaskHelper
 import data.datasource.mongo.mapper.toDocument
 import data.datasource.mongo.mongo_db_connection.MongoConnection
-import domain.exception.TaskDeletionFailedException
-import domain.exception.TaskEditFailedException
-import domain.exception.TaskNotFoundException
+import ui.common.exception.TaskDeletionFailedException
+import ui.common.exception.TaskEditFailedException
+import ui.common.exception.TaskNotFoundException
 import io.mockk.*
 import org.bson.Document
 import kotlinx.coroutines.runBlocking

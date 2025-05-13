@@ -1,12 +1,13 @@
 package ui.view.authentication
 
-import domain.exception.EmptyFieldException
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.RegisterUserUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
+import ui.common.Validator
 
 class RegisterUi(
     private val reader: Reader,
@@ -14,7 +15,8 @@ class RegisterUi(
     private val registerUseCase: RegisterUserUseCase,
     private val loginUi: LoginUi,
     private val executor: SafeExecutor,
-    private val handler: ExceptionHandler
+    private val handler: ExceptionHandler,
+    private val validator: Validator
 ) : UiScreen {
     override suspend fun show() {
         printer.printTitle("Register for Plan Mate")
@@ -25,11 +27,17 @@ class RegisterUi(
     }
 
     private suspend fun takeUserRegisterInput() {
-        val name = takeUserInput("Name")
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
         executor.tryToExecute(
             action = {
+                val name = takeUserInput("Name")
+                validator.checkName(name)
+
+                val email = takeUserInput("Email")
+                validator.checkEmail(email)
+
+                val password = takeUserInput("Password")
+                validator.checkPassword(password)
+
                 registerUseCase.registerUser(name = name, email = email, password = password)
             },
             onSuccess = {

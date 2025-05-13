@@ -1,11 +1,11 @@
 package ui.view.user.admin.log.task
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllTaskLogsUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.UiScreen
 
 class TaskLogsUi(
     private val getAllTaskLogsUseCase: GetAllTaskLogsUseCase,

@@ -2,7 +2,7 @@ package domain.use_case.state
 
 import creator_helper.createProjectHelper
 import creator_helper.createUserHelper
-import domain.exception.EmptyStateNameException
+import ui.common.exception.EmptyStateNameException
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.AddProjectStateUseCase
 import io.mockk.*

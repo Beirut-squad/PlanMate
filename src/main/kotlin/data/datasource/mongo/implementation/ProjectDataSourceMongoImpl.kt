@@ -5,8 +5,8 @@ import com.mongodb.client.model.Updates
 import data.datasource.interfaces.ProjectDataSource
 import data.datasource.mongo.mapper.toDocument
 import data.datasource.mongo.mapper.toProject
-import domain.exception.ProjectNotFoundException
-import domain.exception.StateNotFoundException
+import ui.common.exception.ProjectNotFoundException
+import ui.common.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User

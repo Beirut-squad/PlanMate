@@ -1,4 +1,4 @@
-package ui.components
+package ui.common
 
 class Reader {
     fun readInput(): String? {

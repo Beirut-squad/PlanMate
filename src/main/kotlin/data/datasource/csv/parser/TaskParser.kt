@@ -1,7 +1,7 @@
 package data.datasource.csv.parser
 
 import data.datasource.csv.column_index.TaskColumnIndex
-import domain.exception.StateNotFoundException
+import ui.common.exception.StateNotFoundException
 import domain.model.State
 import domain.model.Task
 import java.time.LocalDateTime

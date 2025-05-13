@@ -6,8 +6,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import ui.components.Printer
-import ui.components.Reader
+import ui.common.Printer
+import ui.common.Reader
 import kotlin.test.Test
 
 class StartUpMenuUiTest {

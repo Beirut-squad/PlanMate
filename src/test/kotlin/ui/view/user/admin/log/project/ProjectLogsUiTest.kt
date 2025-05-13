@@ -1,15 +1,15 @@
 package ui.view.user.admin.log.project
 
 import creator_helper.createProjectLogHelper
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllProjectLogsUseCase
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.components.Printer
+import ui.common.Printer
 
 class ProjectLogsUiTest{
 

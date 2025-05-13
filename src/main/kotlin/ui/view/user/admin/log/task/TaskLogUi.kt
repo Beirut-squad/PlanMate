@@ -3,7 +3,7 @@ package ui.view.user.admin.log.task
 import domain.model.Task
 import domain.model.TaskLog
 import domain.use_case.authentication.GetUserByIdUseCase
-import ui.components.Printer
+import ui.common.Printer
 import ui.extensions.formatDateTime
 import java.util.*
 

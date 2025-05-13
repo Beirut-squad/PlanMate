@@ -2,7 +2,7 @@ package domain.use_case.log
 
 import domain.model.Task
 import domain.model.TaskLog
-import domain.exception.NullTasksComparisonException
+import ui.common.exception.NullTasksComparisonException
 import domain.repository.LogRepository
 import java.time.LocalDateTime
 import java.util.*

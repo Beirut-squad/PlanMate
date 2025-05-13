@@ -2,9 +2,9 @@ package ui.view.user.mate
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 
 class MateUi : UiScreen, KoinComponent {
     private val printer: Printer by inject()

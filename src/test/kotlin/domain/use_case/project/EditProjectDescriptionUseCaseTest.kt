@@ -2,8 +2,8 @@ package domain.use_case.project
 
 import com.google.common.truth.Truth.assertThat
 import creator_helper.createProjectHelper
-import domain.exception.DuplicateDescriptionException
-import domain.exception.EmptyProjectDescriptionException
+import ui.common.exception.DuplicateDescriptionException
+import ui.common.exception.EmptyProjectDescriptionException
 import domain.model.Project
 import domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase
@@ -11,7 +11,6 @@ import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.assertFailsWith
 

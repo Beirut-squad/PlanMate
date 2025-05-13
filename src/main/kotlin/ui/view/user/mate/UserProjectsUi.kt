@@ -1,16 +1,16 @@
 package ui.view.user.mate
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetUserProjectsByIdUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.UiScreen
 import ui.view.project.ProjectMateUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ui.components.Reader
+import ui.common.Reader
 import java.util.*
 
 class UserProjectsUi : UiScreen, KoinComponent {

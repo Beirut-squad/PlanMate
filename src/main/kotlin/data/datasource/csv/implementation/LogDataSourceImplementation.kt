@@ -4,8 +4,8 @@ import data.datasource.csv.helper.FileName
 import data.datasource.csv.reader.CsvReader
 import data.datasource.csv.writer.CsvWriter
 import data.datasource.interfaces.LogDataSource
-import domain.exception.NoProjectLogsFoundException
-import domain.exception.NoTaskLogsFoundException
+import ui.common.exception.NoProjectLogsFoundException
+import ui.common.exception.NoTaskLogsFoundException
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import java.util.*

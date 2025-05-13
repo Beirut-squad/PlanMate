@@ -1,7 +1,7 @@
 package data.datasource.csv.parser
 
-import domain.exception.EmptyCSVFileException
-import domain.exception.InvalidDataFileException
+import ui.common.exception.EmptyCSVFileException
+import ui.common.exception.InvalidDataFileException
 import domain.model.Role
 import domain.model.User
 import java.util.*

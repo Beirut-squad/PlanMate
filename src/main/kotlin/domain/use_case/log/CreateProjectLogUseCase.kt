@@ -2,7 +2,7 @@ package domain.use_case.log
 
 import domain.model.Project
 import domain.model.ProjectLog
-import domain.exception.NullProjectsComparisonException
+import ui.common.exception.NullProjectsComparisonException
 import domain.repository.LogRepository
 import java.time.LocalDateTime
 import java.util.*

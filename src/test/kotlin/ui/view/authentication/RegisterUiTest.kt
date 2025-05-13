@@ -1,9 +1,9 @@
 package ui.view.authentication
 
-import domain.exception.EmailAlreadyExistsException
-import domain.exception.EmptyFieldException
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.EmailAlreadyExistsException
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.RegisterUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,8 +13,9 @@ import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import ui.components.Printer
-import ui.components.Reader
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.Validator
 import kotlin.test.Test
 
 class RegisterUiTest {
@@ -25,6 +26,7 @@ class RegisterUiTest {
     private val loginUi: LoginUi = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val handler: ExceptionHandler = mockk(relaxed = true)
+    private val validator: Validator = mockk(relaxed = true)
 
     private lateinit var registerUi: RegisterUi
 
@@ -36,7 +38,8 @@ class RegisterUiTest {
             registerUseCase,
             loginUi,
             executor,
-            handler
+            handler,
+            validator
         )
     }
 

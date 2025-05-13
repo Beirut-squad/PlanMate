@@ -1,7 +1,7 @@
 package data.datasource.csv.parser
 
 import data.datasource.csv.column_index.ProjectColumnIndex
-import domain.exception.StateNotFoundException
+import ui.common.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.User
 import domain.model.State

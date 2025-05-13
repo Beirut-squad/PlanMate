@@ -1,51 +1,53 @@
-package domain.exception.handler
+package ui.common.exception.handler
 
-import domain.constants.ErrorMessageConstants.Authentication.EMAIL_ALREADY_EXISTS
-import domain.constants.ErrorMessageConstants.Authentication.EMAIL_NOT_FOUND
-import domain.constants.ErrorMessageConstants.Authentication.INVALID_CREDENTIALS
-import domain.constants.ErrorMessageConstants.Authentication.INVALID_EMAIL_FORMAT
-import domain.constants.ErrorMessageConstants.Authentication.UNKNOWN_AUTH_ERROR
-import domain.constants.ErrorMessageConstants.Authentication.USERS_ALREADY_EXIST
-import domain.constants.ErrorMessageConstants.Authentication.USER_NOT_LOGGED_IN
-import domain.constants.ErrorMessageConstants.File.EMPTY_CSV_FILE
-import domain.constants.ErrorMessageConstants.File.INVALID_DATA_FILE
-import domain.constants.ErrorMessageConstants.File.INVALID_FILE_NAME
-import domain.constants.ErrorMessageConstants.File.MISSING_ENTITY
-import domain.constants.ErrorMessageConstants.File.UNKNOWN_FILE_ERROR
-import domain.constants.ErrorMessageConstants.General.UNEXPECTED_ERROR
-import domain.constants.ErrorMessageConstants.General.UNKNOWN_ERROR
-import domain.constants.ErrorMessageConstants.Logs.NO_PROJECT_LOGS_AVAILABLE
-import domain.constants.ErrorMessageConstants.Logs.NO_TASK_LOGS_AVAILABLE
-import domain.constants.ErrorMessageConstants.Logs.UNKNOWN_LOG_ERROR
-import domain.constants.ErrorMessageConstants.Project.NO_PROJECT_FOUND
-import domain.constants.ErrorMessageConstants.Project.PROJECT_CREATION_FAILED
-import domain.constants.ErrorMessageConstants.Project.PROJECT_DELETION_FAILED
-import domain.constants.ErrorMessageConstants.Project.PROJECT_EDIT_FAILED
-import domain.constants.ErrorMessageConstants.Project.PROJECT_FETCH_ALL_FAILED
-import domain.constants.ErrorMessageConstants.Project.DUPLICATE_STATE
-import domain.constants.ErrorMessageConstants.Project.NO_STATE_FOUND
-import domain.constants.ErrorMessageConstants.Project.UNKNOWN_PROJECT_ERROR
-import domain.constants.ErrorMessageConstants.Task.FAILED_TO_READ_TASK
-import domain.constants.ErrorMessageConstants.Task.TASK_CREATION_FAILED
-import domain.constants.ErrorMessageConstants.Task.TASK_DELETION_FAILED
-import domain.constants.ErrorMessageConstants.Task.TASK_EDIT_FAILED
-import domain.constants.ErrorMessageConstants.Task.TASK_FETCH_ALL_FAILED
-import domain.constants.ErrorMessageConstants.Task.TASK_NOT_FOUND
-import domain.constants.ErrorMessageConstants.Task.UNKNOWN_TASK_ERROR
-import domain.exception.*
-import domain.constants.ErrorMessageConstants.Authentication.USER_NOT_FOUND
-import domain.constants.ErrorMessageConstants.General.EMPTY_INPUT
-import domain.constants.ErrorMessageConstants.General.NULL_INPUT
-import domain.constants.ErrorMessageConstants.Project.DUPLICATE_DESCRIPTION
-import domain.constants.ErrorMessageConstants.Project.DUPLICATE_TITLE
-import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_DESCRIPTION
-import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_TITLE
-import domain.constants.ErrorMessageConstants.Project.NULL_PROJECT_COMPARISON
-import domain.constants.ErrorMessageConstants.State.EMPTY_STATE_NAME
-import domain.constants.ErrorMessageConstants.Task.EMPTY_TASK_DESCRIPTION
-import domain.constants.ErrorMessageConstants.Task.EMPTY_TASK_TITLE
-import domain.constants.ErrorMessageConstants.Task.NULL_TASK_COMPARISON
-import ui.components.Printer
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.EMAIL_ALREADY_EXISTS
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.EMAIL_NOT_FOUND
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.INVALID_CREDENTIALS
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.UNKNOWN_AUTH_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.USERS_ALREADY_EXIST
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.USER_NOT_FOUND
+import ui.common.exception.constants.ErrorMessageConstants.Authentication.USER_NOT_LOGGED_IN
+import ui.common.exception.constants.ErrorMessageConstants.File.EMPTY_CSV_FILE
+import ui.common.exception.constants.ErrorMessageConstants.File.INVALID_DATA_FILE
+import ui.common.exception.constants.ErrorMessageConstants.File.INVALID_FILE_NAME
+import ui.common.exception.constants.ErrorMessageConstants.File.MISSING_ENTITY
+import ui.common.exception.constants.ErrorMessageConstants.File.UNKNOWN_FILE_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.General.EMPTY_INPUT
+import ui.common.exception.constants.ErrorMessageConstants.General.NULL_INPUT
+import ui.common.exception.constants.ErrorMessageConstants.General.UNEXPECTED_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.General.UNKNOWN_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.Logs.NO_PROJECT_LOGS_AVAILABLE
+import ui.common.exception.constants.ErrorMessageConstants.Logs.NO_TASK_LOGS_AVAILABLE
+import ui.common.exception.constants.ErrorMessageConstants.Logs.UNKNOWN_LOG_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.Project.DUPLICATE_DESCRIPTION
+import ui.common.exception.constants.ErrorMessageConstants.Project.DUPLICATE_STATE
+import ui.common.exception.constants.ErrorMessageConstants.Project.DUPLICATE_TITLE
+import ui.common.exception.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_DESCRIPTION
+import ui.common.exception.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_TITLE
+import ui.common.exception.constants.ErrorMessageConstants.Project.NO_PROJECT_FOUND
+import ui.common.exception.constants.ErrorMessageConstants.Project.NO_STATE_FOUND
+import ui.common.exception.constants.ErrorMessageConstants.Project.NULL_PROJECT_COMPARISON
+import ui.common.exception.constants.ErrorMessageConstants.Project.PROJECT_CREATION_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Project.PROJECT_DELETION_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Project.PROJECT_EDIT_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Project.PROJECT_FETCH_ALL_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Project.UNKNOWN_PROJECT_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.State.EMPTY_STATE_NAME
+import ui.common.exception.constants.ErrorMessageConstants.Task.EMPTY_TASK_DESCRIPTION
+import ui.common.exception.constants.ErrorMessageConstants.Task.EMPTY_TASK_TITLE
+import ui.common.exception.constants.ErrorMessageConstants.Task.FAILED_TO_READ_TASK
+import ui.common.exception.constants.ErrorMessageConstants.Task.NULL_TASK_COMPARISON
+import ui.common.exception.constants.ErrorMessageConstants.Task.TASK_CREATION_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Task.TASK_DELETION_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Task.TASK_EDIT_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Task.TASK_FETCH_ALL_FAILED
+import ui.common.exception.constants.ErrorMessageConstants.Task.TASK_NOT_FOUND
+import ui.common.exception.constants.ErrorMessageConstants.Task.UNKNOWN_TASK_ERROR
+import ui.common.exception.constants.ErrorMessageConstants.Validator.INVALID_EMAIL_FORMAT
+import ui.common.exception.constants.ErrorMessageConstants.Validator.NAME_TOO_SHORT
+import ui.common.exception.constants.ErrorMessageConstants.Validator.WEAK_PASSWORD
+import ui.common.Printer
+import ui.common.exception.*
 
 class ExceptionHandler(
     private val printer: Printer
@@ -55,7 +57,7 @@ class ExceptionHandler(
         printer.printError(mapExceptionToMessage(exception))
     }
 
-    fun mapExceptionToMessage(exception: Throwable): String {
+    private fun mapExceptionToMessage(exception: Throwable): String {
         return when (exception) {
             is GeneralException -> handleGeneralException(exception)
             is FileException -> handleFileException(exception)
@@ -63,6 +65,7 @@ class ExceptionHandler(
             is ProjectException -> handleProjectException(exception)
             is TaskException -> handleTaskException(exception)
             is LogException -> handleLogException(exception)
+            is ValidationException -> handleValidationException(exception)
             else -> handleUnexpectedException(exception = exception)
         }
     }
@@ -107,7 +110,6 @@ class ExceptionHandler(
     private fun handleAuthenticationException(exception: Throwable): String {
         return when (exception) {
             is EmailAlreadyExistsException -> EMAIL_ALREADY_EXISTS
-            is InvalidEmailFormatException -> INVALID_EMAIL_FORMAT
             is EmailNotFoundException -> EMAIL_NOT_FOUND
             is InvalidCredentialsException -> INVALID_CREDENTIALS
             is UsersAlreadyExistException -> USERS_ALREADY_EXIST
@@ -154,5 +156,14 @@ class ExceptionHandler(
 
     private fun handleUnexpectedException(exceptionType: String = UNEXPECTED_ERROR, exception: Throwable): String {
         return "${exceptionType}: ${exception.message ?: UNKNOWN_ERROR}"
+    }
+
+    private fun handleValidationException(exception: Throwable): String {
+        return when (exception) {
+            is InvalidEmailFormatException -> INVALID_EMAIL_FORMAT
+            is ShortNameException -> NAME_TOO_SHORT
+            is WeekPasswordException -> WEAK_PASSWORD
+            else -> handleUnexpectedException(UNKNOWN_LOG_ERROR, exception)
+        }
     }
 }

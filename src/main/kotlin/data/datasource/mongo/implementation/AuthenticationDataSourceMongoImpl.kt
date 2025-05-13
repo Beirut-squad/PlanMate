@@ -4,15 +4,15 @@ import data.datasource.interfaces.AuthenticationDataSource
 import data.datasource.mongo.mapper.toDocument
 import data.datasource.mongo.mapper.toUser
 import data.datasource.mongo.mongo_db_connection.MongoConnection
-import domain.exception.EmailAlreadyExistsException
+import ui.common.exception.EmailAlreadyExistsException
 import domain.model.Role
 import domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import domain.exception.InvalidCredentialsException
-import domain.exception.ProjectNotFoundException
-import domain.exception.UserNotLoggedInException
+import ui.common.exception.InvalidCredentialsException
+import ui.common.exception.ProjectNotFoundException
+import ui.common.exception.UserNotLoggedInException
 import java.util.*
 
 class AuthenticationMongoDataSourceImpl(

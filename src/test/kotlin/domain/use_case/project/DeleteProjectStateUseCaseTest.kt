@@ -2,7 +2,7 @@ package domain.use_case.project
 
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
-import domain.exception.EmptyStateNameException
+import ui.common.exception.EmptyStateNameException
 import domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase
 import io.mockk.coEvery

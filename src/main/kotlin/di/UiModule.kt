@@ -4,9 +4,10 @@ import domain.use_case.project.GetAllProjectsUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ui.components.Colors
-import ui.components.Printer
-import ui.components.Reader
+import ui.common.Colors
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.Validator
 import ui.view.authentication.LoginUi
 import ui.view.authentication.RegisterUi
 import ui.view.authentication.StartUpMenuUi
@@ -56,4 +57,5 @@ val uiModule = module {
     singleOf(::ProjectsUi)
     singleOf(::TaskLogsUi)
     singleOf(::TaskLogUi)
+    singleOf(::Validator)
 }

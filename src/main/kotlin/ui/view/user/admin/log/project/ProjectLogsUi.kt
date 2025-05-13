@@ -1,11 +1,11 @@
 package ui.view.user.admin.log.project
 
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllProjectLogsUseCase
-import ui.components.Printer
-import ui.components.UiScreen
+import ui.common.Printer
+import ui.common.UiScreen
 
 class ProjectLogsUi(
     private val getAllProjectLogsUseCase: GetAllProjectLogsUseCase,

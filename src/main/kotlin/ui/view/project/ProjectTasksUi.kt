@@ -1,12 +1,12 @@
 package ui.view.project
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.use_case.task.GetProjectTasksUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 import ui.view.task.DeleteTaskUI
 import ui.view.task.EditTaskUi
 import ui.view.user.mate.UserProjectsUi
