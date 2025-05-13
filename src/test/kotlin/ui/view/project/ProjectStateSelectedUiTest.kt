@@ -1,6 +1,7 @@
 package ui.view.project
 
 import creator_helper.createProjectHelper
+import creator_helper.createTaskHelper
 import domain.exception.TaskNotFoundException
 import domain.exception.handler.ExceptionHandler
 import domain.exception.handler.SafeExecutor
@@ -105,6 +106,61 @@ class ProjectStateSelectedUiTest {
 
         // Assert
         coVerify { exceptionHandler.printHandledError(exception) }
+    }
+
+    @Test
+    fun `printStateDetails prints task details when tasks exist`() = runTest {
+        // Arrange
+        val stateId = UUID.randomUUID()
+        val state = State(id = stateId, name = "In Progress")
+        val project = createProjectHelper(id = projectId, state = listOf(state))
+
+        val tasks = listOf(
+            createTaskHelper(title = "Task 1", description = "Desc 1", state = state),
+            createTaskHelper(title = "Task 2", description = "Desc 2", state = state),
+        )
+
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
+        coEvery {
+            getTaskByStateIdAndProjectId.getTaskByStateIdAndProjectId(projectId, stateId)
+        } returns tasks
+        every { printer.readIntInput(any()) } returns 1
+
+        // Act
+        projectStateSelectedUi.show()
+
+        // Assert
+        verify {
+            printer.printTitle("State Details")
+            printer.printInfoLine("Name: In Progress")
+            printer.printInfoLine("Tasks:")
+            printer.printInfoLine(" - Name: Task 1, Description: Desc 1")
+            printer.printInfoLine(" - Name: Task 2, Description: Desc 2")
+        }
+    }
+
+    @Test
+    fun `printStateDetails prints no tasks message when no tasks exist`() = runTest {
+        // Arrange
+        val stateId = UUID.randomUUID()
+        val state = State(id = stateId, name = "Review")
+        val project = createProjectHelper(id = projectId, state = listOf(state))
+
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
+        coEvery {
+            getTaskByStateIdAndProjectId.getTaskByStateIdAndProjectId(projectId, stateId)
+        } returns emptyList()
+        every { printer.readIntInput(any()) } returns 1
+
+        // Act
+        projectStateSelectedUi.show()
+
+        // Assert
+        verify {
+            printer.printTitle("State Details")
+            printer.printInfoLine("Name: Review")
+            printer.printInfoLine("No tasks available for this state.")
+        }
     }
 
 }

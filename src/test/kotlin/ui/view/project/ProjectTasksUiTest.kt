@@ -161,5 +161,47 @@ class ProjectTasksUiTest {
         coVerify { anyConstructed<UserProjectsUi>().show() }
     }
 
+    @Test
+    fun `should handle null input gracefully and go back`() = runTest {
+        val state = State(UUID.randomUUID(), "To Do")
+        val task = createTaskHelper(state = state)
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns listOf(task)
+        every { reader.readInput() } returns null
+
+        mockkConstructor(UserProjectsUi::class)
+        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
+
+        projectTasksUi.show()
+
+        verify { printer.printGoodbyeMessage("Goodbye") }
+        coVerify { anyConstructed<UserProjectsUi>().show() }
+    }
+
+    @Test
+    fun `should print tasks grouped by state in multiple rows`() = runTest {
+        val state1 = State(UUID.randomUUID(), "To Do")
+        val state2 = State(UUID.randomUUID(), "In Progress")
+
+        val tasks = listOf(
+            createTaskHelper(title = "Task A", state = state1),
+            createTaskHelper(title = "Task B", state = state1),
+            createTaskHelper(title = "Task C", state = state2)
+        )
+
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns tasks
+        every { reader.readInput() } returns "invalid"
+
+        mockkConstructor(UserProjectsUi::class)
+        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
+
+        projectTasksUi.show()
+
+        verify {
+            printer.printInfoLine("To Do                         In Progress                   ")
+            printer.printInfoLine("------------------------------------------------------------")
+            printer.printInfoLine("Task A                        Task C                        ")
+            printer.printInfoLine("Task B                                                      ")
+        }
+    }
 }
 

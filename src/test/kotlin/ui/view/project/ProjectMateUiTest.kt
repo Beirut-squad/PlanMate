@@ -14,6 +14,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import ui.components.Printer
 import ui.components.Reader
+import ui.view.user.mate.UserProjectsUi
 import java.util.*
 import kotlin.test.Test
 
@@ -144,4 +145,25 @@ class ProjectMateUiTest {
         projectMateUi.show()
 
     }
+
+    @Test
+    fun `redirects to UserProjectsUi when trying to create task with no states`() = runTest {
+        // Arrange
+        val mockProject = createProjectHelper(state = emptyList())
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+        every { reader.readInt() } returns 3 andThen 4
+
+        mockkConstructor(UserProjectsUi::class)
+        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
+
+        // Act
+        projectMateUi.show()
+
+        // Assert
+        verify {
+            printer.printError("Can't create a task because this project has no states.")
+        }
+        coVerify { anyConstructed<UserProjectsUi>().show() }
+    }
+
 }

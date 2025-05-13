@@ -41,7 +41,6 @@ class ViewProjectsUiTest {
 
         // Assert
         verify { printer.printTitle("Project: ") }
-//        verify { printer.printInfoLine(("Test Project")}
     }
 
     @Test
