@@ -1,14 +1,17 @@
 package domain.use_case.state
 
-import creator_helper.*
+import creator_helper.createProjectHelper
+import creator_helper.createUserHelper
 import domain.exception.EmptyStateNameException
 import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.*
+import domain.use_case.project.AddProjectStateUseCase
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.*
-import java.util.UUID
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class CreateStateUseCaseTest {
     private val addProjectStateUseCase: AddProjectStateUseCase = mockk(relaxed = true)
@@ -47,15 +50,13 @@ class CreateStateUseCaseTest {
         val project = createProjectHelper()
 
         // When & Then
-        val exception = assertThrows<EmptyStateNameException> {
+        assertThrows<EmptyStateNameException> {
             createStateUseCase.createState("   ", project)
         }
 
         coVerify { getCurrentUserUseCase wasNot Called }
         coVerify { addProjectStateUseCase wasNot Called }
     }
-
-
 
 
 }

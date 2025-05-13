@@ -1,15 +1,23 @@
 package domain.use_case.state
 
-import creator_helper.*
+import creator_helper.createProjectHelper
+import creator_helper.createStateHelper
+import creator_helper.createUserHelper
 import domain.exception.EmptyStateNameException
 import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.*
-import io.mockk.*
+import domain.use_case.project.EditProjectStateUseCase
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.*
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.*
-import java.util.UUID
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 class EditStateUseCaseTest {
 
@@ -22,6 +30,7 @@ class EditStateUseCaseTest {
         clearAllMocks()
         editStateUseCase = EditStateUseCase(editProjectStateUseCase, getCurrentUserUseCase)
     }
+
     @Test
     fun `editState should updates the correct state and returns updated project`() = runTest {
         // Given
@@ -76,7 +85,7 @@ class EditStateUseCaseTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
         // When & Then
-        val exception = assertThrows<EmptyStateNameException> {
+        assertThrows<EmptyStateNameException> {
             runBlocking {
                 editStateUseCase.editState(state, "", project)
             }
@@ -84,7 +93,6 @@ class EditStateUseCaseTest {
 
         coVerify(exactly = 0) { editProjectStateUseCase.editStateToProject(any(), any(), any()) }
     }
-
 
 
 }
