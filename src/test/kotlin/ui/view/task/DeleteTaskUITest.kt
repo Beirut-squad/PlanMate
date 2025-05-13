@@ -1,12 +1,12 @@
 package ui.view.task
 
-import org.junit.jupiter.api.Assertions.*
 import creator_helper.createTaskHelper
 import creator_helper.createUserHelper
 import domain.exception.handler.ExceptionHandler
 import domain.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
+import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.DeleteTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
 import io.mockk.*
@@ -14,6 +14,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.koin.core.component.inject
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
@@ -21,6 +22,8 @@ import ui.components.Printer
 import ui.components.Reader
 import ui.view.user.mate.UserProjectsUi
 import java.util.*
+import kotlin.getValue
+
 class DeleteTaskUITest {
     private val printer: Printer = mockk(relaxed = true)
     private val reader: Reader = mockk()
@@ -30,7 +33,6 @@ class DeleteTaskUITest {
     private val exceptionHandler: ExceptionHandler = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val projectId = UUID.randomUUID()
-    private val userProjectsUi = mockk<UserProjectsUi>(relaxed = true)
 
     private lateinit var deleteTaskUI: DeleteTaskUI
 
