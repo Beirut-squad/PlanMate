@@ -203,5 +203,25 @@ class ProjectTasksUiTest {
             printer.printInfoLine("Task B                                                      ")
         }
     }
+    @Test
+    fun `should handle empty task list and print only headers`() = runTest {
+        // Arrange
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns emptyList()
+        every { reader.readInput() } returns "invalid"
+
+        mockkConstructor(UserProjectsUi::class)
+        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
+
+        // Act
+        projectTasksUi.show()
+
+        // Assert
+        verify { printer.printTitle("Tasks for Project:") }
+        // Expect no headers or tasks printed because groupedTasks is empty
+        verify { printer.printInfoLine("Please choose an option:") }
+        verify { printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back") }
+        coVerify { anyConstructed<UserProjectsUi>().show() }
+    }
+
 }
 
