@@ -30,7 +30,7 @@ class DeleteTaskUI(
     override suspend fun show() {
         executor.tryToExecute(
             action = {
-                getProjectTasksUseCase.getTasksForProject(projectId)
+                getProjectTasksUseCase.getProjectTasks(projectId)
             },
             onError = {
                 handler.printHandledError(it)
