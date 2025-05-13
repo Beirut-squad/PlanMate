@@ -98,7 +98,7 @@ class SingleProjectUi(
 
             else -> {
                 printer.printError("Invalid option")
-                takeUserInput()
+                show()
             }
         }
 

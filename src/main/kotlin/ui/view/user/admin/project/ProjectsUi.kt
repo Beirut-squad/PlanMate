@@ -84,7 +84,7 @@ class ProjectsUi(
 
             else -> {
                 printer.printError("Invalid project number")
-                enterProject(projects)
+                showProjectDetails(projects)
             }
         }
     }
