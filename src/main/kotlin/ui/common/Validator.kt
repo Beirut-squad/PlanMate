@@ -1,19 +1,36 @@
 package ui.common
 
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.InvalidEmailFormatException
+import ui.common.exception.ShortNameException
+import ui.common.exception.WeekPasswordException
+
 class Validator {
 
     fun checkEmail(email: String) {
         val emailRegex = Regex("""^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$""")
-        if (email.isBlank() || !emailRegex.matches(email)) {
-            throw IllegalArgumentException("Invalid email address")
+        if (!emailRegex.matches(email)) {
+            throw InvalidEmailFormatException()
+        } else if (email.isBlank()) {
+            throw EmptyFieldException()
         }
     }
 
-    fun checkPassword(password: String): Boolean {
-        return password.length >= 8
+    fun checkPassword(password: String) {
+        if (password.isBlank()) {
+            throw EmptyFieldException()
+        }
+        else if (password.length < 8) {
+            throw WeekPasswordException()
+        }
     }
 
-    fun checkName(name: String): Boolean {
-        return name.length >= 2
+    fun checkName(name: String) {
+        if (name.isBlank()) {
+            throw EmptyFieldException()
+        }
+        else if (name.length < 2) {
+            throw ShortNameException()
+        }
     }
 }

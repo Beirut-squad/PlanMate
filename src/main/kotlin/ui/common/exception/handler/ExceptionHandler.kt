@@ -161,7 +161,6 @@ class ExceptionHandler(
     private fun handleValidationException(exception: Throwable): String {
         return when (exception) {
             is InvalidEmailFormatException -> INVALID_EMAIL_FORMAT
-            is EmptyInputException -> EMPTY_INPUT
             is ShortNameException -> NAME_TOO_SHORT
             is WeekPasswordException -> WEAK_PASSWORD
             else -> handleUnexpectedException(UNKNOWN_LOG_ERROR, exception)
