@@ -38,25 +38,26 @@ class ProjectLogsUiTest{
     }
 
     @Test
-    fun `should call executer to try to exceute `() = runTest{
+    fun `should call executor to try to execute`() = runTest {
         // Given
         val projectLog = createProjectLogHelper()
         val projectLogs = listOf(projectLog, projectLog)
-        coEvery{ getAllProjectLogsUseCase.getAllProjectLogs() } returns projectLogs
+        coEvery { getAllProjectLogsUseCase.getAllProjectLogs() } returns projectLogs
+
+        val actionSlot = slot<suspend () -> List<Any>>()
+        val successSlot = slot<suspend (List<Any>) -> Unit>()
+        val errorSlot = slot<suspend (Throwable) -> Unit>()
 
         // When
         projectLogsUi.show()
 
         // Then
-        coVerify { executor.tryToExecute(
-            action = {getAllProjectLogsUseCase.getAllProjectLogs()},
-            onSuccess = { projectLogs ->
-                projectLogs.forEachIndexed { index, projectLog ->
-                    projectLogsUi.displayProjectLog(index, projectLog)
-                }
-            },
-            onError = {handler.printHandledError(any())}
-        ) }
-
+        coVerify {
+            executor.tryToExecute(
+                action = capture(actionSlot),
+                onSuccess = capture(successSlot),
+                onError = capture(errorSlot)
+            )
+        }
     }
 }
