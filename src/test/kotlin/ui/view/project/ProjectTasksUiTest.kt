@@ -1,5 +1,6 @@
 package ui.view.project
 
+import creator_helper.createProjectHelper
 import creator_helper.createTaskHelper
 import domain.exception.TaskNotFoundException
 import domain.exception.handler.ExceptionHandler
@@ -58,7 +59,7 @@ class ProjectTasksUiTest {
 
     @Test
     fun `should display tasks and navigate to EditTaskUi when user chooses 1`() = runTest {
-        // Arrange
+        // Given
         val mockTasks = listOf(
             createTaskHelper(title = "Task 1", description = "", state = State(UUID.randomUUID(), "To Do")),
             createTaskHelper(title = "Task 2", description = "", state = State(UUID.randomUUID(), "In Progress"))
@@ -69,10 +70,10 @@ class ProjectTasksUiTest {
         mockkConstructor(EditTaskUi::class)
         coEvery { anyConstructed<EditTaskUi>().show() } just Runs
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         verify { printer.printTitle("Tasks for Project:") }
         verify { printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back") }
         coVerify { anyConstructed<EditTaskUi>().show() }
@@ -80,89 +81,93 @@ class ProjectTasksUiTest {
 
     @Test
     fun `should display tasks and navigate to DeleteTaskUI when user chooses 2`() = runTest {
-        // Arrange
-        val mockTasks = listOf(
+        // Given
+        val tasks = listOf(
             createTaskHelper(title = "Task 1", description = "", state = State(UUID.randomUUID(), "Done"))
         )
-        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns mockTasks
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns tasks
         every { reader.readInput() } returns "2"
 
         mockkConstructor(DeleteTaskUI::class)
         coEvery { anyConstructed<DeleteTaskUI>().show() } just Runs
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         coVerify { anyConstructed<DeleteTaskUI>().show() }
     }
 
     @Test
     fun `should go back to UserProjectsUi on invalid input`() = runTest {
-        // Arrange
-        val mockTasks = listOf(
+        // Given
+        val tasks = listOf(
             createTaskHelper(title = "Task 1", description = "", state = State(UUID.randomUUID(), "To Do"))
         )
-        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns mockTasks
-        every { reader.readInput() } returns "invalid" // non-numeric input
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns tasks
+        every { reader.readInput() } returns "invalid"
 
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         coVerify{ anyConstructed<UserProjectsUi>().show() }
     }
 
     @Test
     fun `should handle exception when task fetching fails`() = runTest {
-        // Arrange
+        // Given
         val exception = RuntimeException("Something went wrong")
         coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } throws exception
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         verify { exceptionHandler.printHandledError(exception) }
     }
 
     @Test
-    fun `handle error when fetching tasks fails`() = runTest {
-        // Arrange
+    fun `should handle error when fetching tasks fails`() = runTest {
+        // Given
         val exception = TaskNotFoundException()
 
         coEvery {
             getTasksForProjectUseCase.getProjectTasks(projectId)
         } throws exception
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         coVerify { exceptionHandler.printHandledError(exception) }
     }
 
     @Test
     fun `should print goodbye and show UserProjectsUi on invalid input`() = runTest {
+        //Given
         val state = State(UUID.randomUUID(), "To Do")
         val task = createTaskHelper(state = state)
         coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns listOf(task)
-        every { reader.readInput() } returns "invalid" // Triggers the else branch
+        every { reader.readInput() } returns "invalid"
 
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
+        //When
         projectTasksUi.show()
 
+        //Then
         verify { printer.printGoodbyeMessage("Goodbye") }
         coVerify { anyConstructed<UserProjectsUi>().show() }
     }
 
     @Test
     fun `should handle null input gracefully and go back`() = runTest {
+        //Given
         val state = State(UUID.randomUUID(), "To Do")
         val task = createTaskHelper(state = state)
         coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns listOf(task)
@@ -171,14 +176,17 @@ class ProjectTasksUiTest {
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
+        //When
         projectTasksUi.show()
 
+        //Then
         verify { printer.printGoodbyeMessage("Goodbye") }
         coVerify { anyConstructed<UserProjectsUi>().show() }
     }
 
     @Test
     fun `should print tasks grouped by state in multiple rows`() = runTest {
+        //Given
         val state1 = State(UUID.randomUUID(), "To Do")
         val state2 = State(UUID.randomUUID(), "In Progress")
 
@@ -194,8 +202,10 @@ class ProjectTasksUiTest {
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
+        //When
         projectTasksUi.show()
 
+        //Then
         verify {
             printer.printInfoLine("To Do                         In Progress                   ")
             printer.printInfoLine("------------------------------------------------------------")
@@ -205,23 +215,41 @@ class ProjectTasksUiTest {
     }
     @Test
     fun `should handle empty task list and print only headers`() = runTest {
-        // Arrange
+        // Given
         coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns emptyList()
         every { reader.readInput() } returns "invalid"
 
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
-        // Act
+        // When
         projectTasksUi.show()
 
-        // Assert
+        // Then
         verify { printer.printTitle("Tasks for Project:") }
-        // Expect no headers or tasks printed because groupedTasks is empty
         verify { printer.printInfoLine("Please choose an option:") }
         verify { printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back") }
         coVerify { anyConstructed<UserProjectsUi>().show() }
     }
+
+    @Test
+    fun `should navigate to previous screen when option is null`() = runTest {
+        // Given
+        val tasks = listOf(createTaskHelper(title = "Task A"))
+        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns tasks
+        every { reader.readInput() } returns null
+
+        mockkConstructor(UserProjectsUi::class)
+        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
+
+        // When
+        projectTasksUi.show()
+
+        // Then
+        verify { printer.printTitle("Tasks for Project:") }
+        coVerify { anyConstructed<UserProjectsUi>().show() }
+    }
+
 
 }
 

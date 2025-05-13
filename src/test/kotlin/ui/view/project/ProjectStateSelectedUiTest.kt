@@ -52,39 +52,39 @@ class ProjectStateSelectedUiTest {
     }
 
     @Test
-    fun `show displays no states message when project has no states`() = runTest {
-        // Arrange
+    fun `should show displays no states message when project has no states`() = runTest {
+        // Given
         val project = createProjectHelper(state = emptyList())
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
         every { printer.readIntInput(any()) } returns null
 
-        // Act
+        // Then
         projectStateSelectedUi.show()
 
-        // Assert
+        // When
         verify {
             printer.printInfoLine("No states available for this project.")
         }
     }
 
     @Test
-    fun `getProjectStates returns project states`() = runTest {
-        // Arrange
+    fun `should call getProjectStates when project states exist`() = runTest {
+        // Given
         val state = State(id = UUID.randomUUID(), name = "To Do")
         val project = createProjectHelper(id = projectId, state = listOf(state))
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        // Act
+        // When
         projectStateSelectedUi.show()
 
-        // Assert
+        // Then
         coVerify { getProjectByIdUseCase.getProjectById(projectId) }
         verify { printer.printTitle("State Details") }
     }
 
     @Test
-    fun `handle error when fetching tasks fails`() = runTest {
-        // Arrange
+    fun `should handle error when fetching tasks fails`() = runTest {
+        // Given
         val exception = TaskNotFoundException()
         val state = State(id = UUID.randomUUID(), name = "To Do")
         val project = createProjectHelper(id = projectId, state = listOf(state))
@@ -101,16 +101,16 @@ class ProjectStateSelectedUiTest {
 
         every { printer.readIntInput(any()) } returns 1
 
-        // Act
+        // When
         projectStateSelectedUi.show()
 
-        // Assert
+        // Then
         coVerify { exceptionHandler.printHandledError(exception) }
     }
 
     @Test
-    fun `printStateDetails prints task details when tasks exist`() = runTest {
-        // Arrange
+    fun `should print state details prints task details when tasks exist`() = runTest {
+        // Given
         val stateId = UUID.randomUUID()
         val state = State(id = stateId, name = "In Progress")
         val project = createProjectHelper(id = projectId, state = listOf(state))
@@ -126,10 +126,10 @@ class ProjectStateSelectedUiTest {
         } returns tasks
         every { printer.readIntInput(any()) } returns 1
 
-        // Act
+        // When
         projectStateSelectedUi.show()
 
-        // Assert
+        // Then
         verify {
             printer.printTitle("State Details")
             printer.printInfoLine("Name: In Progress")
@@ -140,8 +140,8 @@ class ProjectStateSelectedUiTest {
     }
 
     @Test
-    fun `printStateDetails prints no tasks message when no tasks exist`() = runTest {
-        // Arrange
+    fun `should print state details prints no tasks message when no tasks exist`() = runTest {
+        // Given
         val stateId = UUID.randomUUID()
         val state = State(id = stateId, name = "Review")
         val project = createProjectHelper(id = projectId, state = listOf(state))
@@ -152,15 +152,14 @@ class ProjectStateSelectedUiTest {
         } returns emptyList()
         every { printer.readIntInput(any()) } returns 1
 
-        // Act
+        // When
         projectStateSelectedUi.show()
 
-        // Assert
+        // Then
         verify {
             printer.printTitle("State Details")
             printer.printInfoLine("Name: Review")
             printer.printInfoLine("No tasks available for this state.")
         }
     }
-
 }

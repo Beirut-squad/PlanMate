@@ -14,6 +14,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import ui.components.Printer
 import ui.components.Reader
+import ui.view.task.CreateTaskUi
 import ui.view.user.mate.UserProjectsUi
 import java.util.*
 import kotlin.test.Test
@@ -22,6 +23,7 @@ class ProjectMateUiTest {
     private val printer: Printer = mockk(relaxed = true)
     private val reader: Reader = mockk()
     private val getProjectByIdUseCase: GetProjectByIdUseCase = mockk(relaxed = true)
+    private val userProjectsUi: UserProjectsUi = mockk(relaxed = true)
     private val exceptionHandler: ExceptionHandler = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val projectId = UUID.randomUUID()
@@ -51,23 +53,23 @@ class ProjectMateUiTest {
     }
 
     @Test
-    fun `show project details when project exists`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper()
+    fun `should display project details when project exists`() = runTest {
+        // Given
+        val project = createProjectHelper()
 
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
         every { reader.readInt() } returns 4 // Option to go back
 
-        // Act
+        // When
         projectMateUi.show()
 
-        // Assert
-        coVerify {
+        // Then
+        verify {
             printer.printInfoLine(
                 """
-                - Project Name : ${mockProject.title}
-                - Description : ${mockProject.description}
-                - Created At : ${mockProject.createdAt}
+                - Project Name : ${project.title}
+                - Description : ${project.description}
+                - Created At : ${project.createdAt}
             """.trimIndent(),
                 true
             )
@@ -82,88 +84,101 @@ class ProjectMateUiTest {
     }
 
     @Test
-    fun `handle error when fetching project fails`() = runTest {
-        // Arrange
+    fun `should handle error when fetching project fails`() = runTest {
+        // Given
         val exception =  ProjectNotFoundException()
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } throws exception
 
-        // Act
+        // When
         projectMateUi.show()
 
-        // Assert
+        // Then
         coVerify {
             exceptionHandler.printHandledError(exception)
         }
     }
 
     @Test
-    fun `cannot create task when project has no states`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper(state = emptyList())
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+    fun `should cannot create task when project has no states`() = runTest {
+        // Given
+        val project = createProjectHelper(state = emptyList())
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
         every { reader.readInt() } returns 3 andThen 4 // First try to create task, then exit
-
-        // Act
-        projectMateUi.show()
-
-        // Assert
-        verify {
-            printer.printError("Can't create a task because this project has no states.")
-        }
-    }
-
-    @Test
-    fun `navigate to project states when option 1 is selected`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper()
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
-        every { reader.readInt() } returns 1 andThen 4 // First select view states, then exit
-
-        // Act
-        projectMateUi.show()
-    }
-
-    @Test
-    fun `navigate to project tasks when option 2 is selected`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper()
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
-        every { reader.readInt() } returns 2 andThen 4 // First select view tasks, then exit
-
-        // Act
-        projectMateUi.show()
-    }
-
-    @Test
-    fun `navigate to create task when option 3 is selected and project has states`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper()
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
-        every { reader.readInt() } returns 3 andThen 4 // First select create task, then exit
-
-        // Act
-        projectMateUi.show()
-
-    }
-
-    @Test
-    fun `redirects to UserProjectsUi when trying to create task with no states`() = runTest {
-        // Arrange
-        val mockProject = createProjectHelper(state = emptyList())
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
-        every { reader.readInt() } returns 3 andThen 4
 
         mockkConstructor(UserProjectsUi::class)
         coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
 
-        // Act
+        // When
         projectMateUi.show()
 
-        // Assert
+        // Then
         verify {
             printer.printError("Can't create a task because this project has no states.")
         }
         coVerify { anyConstructed<UserProjectsUi>().show() }
+    }
+
+    @Test
+    fun `should navigate to project states when option 1 is selected`() = runTest {
+        // Given
+        val project = createProjectHelper()
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
+        every { reader.readInt() } returns 1 andThen 4 // First select view states, then exit
+
+        mockkConstructor(ProjectStateSelectedUi::class)
+        coEvery { anyConstructed<ProjectStateSelectedUi>().show() } just Runs
+        // When
+        projectMateUi.show()
+
+        //Then
+        coVerify { anyConstructed<ProjectStateSelectedUi>().show() }
+    }
+
+    @Test
+    fun `should navigate to project tasks when option 2 is selected`() = runTest {
+        // Given
+        val mockProject = createProjectHelper()
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+        every { reader.readInt() } returns 2 andThen 4 // First select view tasks, then exit
+
+        mockkConstructor(ProjectTasksUi::class)
+        coEvery { anyConstructed<ProjectTasksUi>().show() } just Runs
+        // When
+        projectMateUi.show()
+
+        //Then
+        coVerify { anyConstructed<ProjectTasksUi>().show() }
+    }
+
+    @Test
+    fun `should navigate to create task when option 3 is selected and project has states`() = runTest {
+        // Given
+        val mockProject = createProjectHelper()
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+        every { reader.readInt() } returns 3 andThen 4 // First select create task, then exit
+
+        mockkConstructor(CreateTaskUi::class)
+        coEvery { anyConstructed<CreateTaskUi>().show() } just Runs
+        // When
+        projectMateUi.show()
+
+        //Then
+        coVerify { anyConstructed<CreateTaskUi>().show() }
+
+    }
+
+    @Test
+    fun `should navigate to previous screen when option null `() = runTest {
+        // Given
+        val mockProject = createProjectHelper()
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns mockProject
+        every { reader.readInt() } returns null
+
+        // When
+        projectMateUi.show()
+
+        //Then
+        coVerify(exactly = 0) { projectMateUi.show() }
     }
 
 }

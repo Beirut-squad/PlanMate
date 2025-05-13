@@ -32,39 +32,39 @@ class ViewProjectsUiTest {
 
     @Test
     fun `should display projects when available`() = runTest {
-        // Arrange
+        // Given
         val projects = listOf(createProjectHelper())
         coEvery { getAllProjectsUseCase.getAllProjects() } returns projects
 
-        // Act
+        // When
         viewProjectsUi.show()
 
-        // Assert
+        // Then
         verify { printer.printTitle("Project: ") }
     }
 
     @Test
     fun `should print error when no projects found`() = runTest {
-        // Arrange
+        // Given
         coEvery { getAllProjectsUseCase.getAllProjects() } returns emptyList()
 
-        // Act
+        // When
         viewProjectsUi.show()
 
-        // Assert
+        // Then
         verify { printer.printError("No projects found.") }
     }
 
     @Test
     fun `should handle exception during fetching`() = runTest {
-        // Arrange
+        // Given
         val exception = RuntimeException("Failed to load")
         coEvery { getAllProjectsUseCase.getAllProjects() } throws exception
 
-        // Act
+        // When
         viewProjectsUi.show()
 
-        // Assert
+        // Then
         verify { exceptionHandler.printHandledError(exception) }
     }
 }
