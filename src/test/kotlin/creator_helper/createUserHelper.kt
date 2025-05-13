@@ -21,3 +21,17 @@ fun createUserHelper(
         isDeleted = isDeleted,
     )
 }
+
+val adminUser = createUserHelper(
+    name = "admin",
+    email = "admin@gmail.com",
+    password = "admin123",
+    role = Role.ADMIN
+)
+
+val mateUser = createUserHelper(
+    name = "mate",
+    email = "mate@gmail.com",
+    password = "mate123",
+    role = Role.MATE
+)
