@@ -32,10 +32,14 @@ class LoginUi(
     }
 
     private suspend fun takeUserLoginInput() {
-        val email = takeUserInput("Email")
-        val password = takeUserInput("Password")
         executor.tryToExecute(
             action = {
+                val email = takeUserInput("Email")
+                validator.checkEmail(email)
+
+                val password = takeUserInput("Password")
+                validator.checkPassword(password)
+
                 loginUseCase.login(email, password)
             },
             onError = {
