@@ -26,7 +26,7 @@ class ProjectTasksUi(
     override suspend fun show() {
         executor.tryToExecute(
             action = {
-                getTasksForProjectUseCase.getTasksForProject(projectId)
+                getTasksForProjectUseCase.getProjectTasks(projectId)
             },
             onError = {
                 handler.printHandledError(it)
@@ -34,7 +34,7 @@ class ProjectTasksUi(
             onSuccess = {
                 printer.printTitle("Tasks for Project:")
                 displayTasksInColumns(it)
-                printer.printInfoLine("\nPlease choose an option:")
+                printer.printInfoLine("Please choose an option:")
                 printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
                 val choice = reader.readInput()?.toIntOrNull()
                 when (choice) {
