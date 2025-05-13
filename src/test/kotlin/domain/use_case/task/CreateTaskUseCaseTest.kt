@@ -17,8 +17,8 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class CreateTaskUseCaseTest {
-    private var taskRepository: TaskRepository = mockk(relaxed = true)
-    private var createTaskLogUseCase: CreateTaskLogUseCase = mockk(relaxed = true)
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
+    private val createTaskLogUseCase: CreateTaskLogUseCase = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
 
     @BeforeEach

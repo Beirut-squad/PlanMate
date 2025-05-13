@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*
 import java.util.UUID
 
 class GetTaskByStateIdAndProjectIdTest {
-    private var taskRepository: TaskRepository = mockk(relaxed = true)
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var getTaskByStateIdAndProjectId: GetTaskByStateIdAndProjectId
 
     @BeforeEach

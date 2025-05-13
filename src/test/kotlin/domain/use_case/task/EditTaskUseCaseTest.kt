@@ -13,8 +13,8 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class EditTaskUseCaseTest {
-    private var taskRepository: TaskRepository = mockk(relaxed = true)
-    private var createTaskLogUseCase : CreateTaskLogUseCase = mockk(relaxed = true)
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
+    private val createTaskLogUseCase : CreateTaskLogUseCase = mockk(relaxed = true)
     private lateinit var editTaskUseCase: EditTaskUseCase
 
     @BeforeEach

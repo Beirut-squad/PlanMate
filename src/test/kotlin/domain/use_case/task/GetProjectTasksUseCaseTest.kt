@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*
 import java.util.UUID
 
 class GetProjectTasksUseCaseTest {
-    private var taskRepository: TaskRepository = mockk(relaxed = true)
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var getProjectTasksUseCase: GetProjectTasksUseCase
 
     @BeforeEach

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.*
 import java.util.UUID
 
 class DeleteTaskUseCaseTest {
-    private var taskRepository: TaskRepository = mockk(relaxed = true)
-    private var createTaskLogUseCase : CreateTaskLogUseCase = mockk(relaxed = true)
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
+    private val createTaskLogUseCase : CreateTaskLogUseCase = mockk(relaxed = true)
     private lateinit var deleteTaskUseCase: DeleteTaskUseCase
 
     @BeforeEach
