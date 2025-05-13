@@ -11,5 +11,4 @@ class GetTaskByStateIdAndProjectId(
         return taskRepository.getTaskByStateIdAndProjectId(projectId ,stateId)
 
     }
-
 }
