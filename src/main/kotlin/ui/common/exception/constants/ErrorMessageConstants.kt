@@ -1,4 +1,4 @@
-package domain.constants
+package ui.common.exception.constants
 
 object ErrorMessageConstants {
 
