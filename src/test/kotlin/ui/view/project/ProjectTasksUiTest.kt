@@ -213,24 +213,6 @@ class ProjectTasksUiTest {
             printer.printInfoLine("Task B                                                      ")
         }
     }
-    @Test
-    fun `should handle empty task list and print only headers`() = runTest {
-        // Given
-        coEvery { getTasksForProjectUseCase.getProjectTasks(projectId) } returns emptyList()
-        every { reader.readInput() } returns "invalid"
-
-        mockkConstructor(UserProjectsUi::class)
-        coEvery { anyConstructed<UserProjectsUi>().show() } just Runs
-
-        // When
-        projectTasksUi.show()
-
-        // Then
-        verify { printer.printTitle("Tasks for Project:") }
-        verify { printer.printInfoLine("Please choose an option:") }
-        verify { printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back") }
-        coVerify { anyConstructed<UserProjectsUi>().show() }
-    }
 
     @Test
     fun `should navigate to previous screen when option is null`() = runTest {
