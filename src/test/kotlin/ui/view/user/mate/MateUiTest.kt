@@ -7,8 +7,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import ui.components.Printer
-import ui.components.Reader
+import ui.common.Printer
+import ui.common.Reader
+
 import kotlin.test.Test
 
 class MateUiTest {
