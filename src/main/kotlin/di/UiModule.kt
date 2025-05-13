@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ui.components.Colors
 import ui.components.Printer
 import ui.components.Reader
+import ui.components.Validator
 import ui.view.authentication.LoginUi
 import ui.view.authentication.RegisterUi
 import ui.view.authentication.StartUpMenuUi
@@ -56,4 +57,5 @@ val uiModule = module {
     singleOf(::ProjectsUi)
     singleOf(::TaskLogsUi)
     singleOf(::TaskLogUi)
+    singleOf(::Validator)
 }
