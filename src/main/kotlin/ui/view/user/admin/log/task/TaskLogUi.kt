@@ -15,7 +15,7 @@ open class TaskLogUi(
         return getUserByIdUseCase.getUser(userId).name
     }
 
-    protected suspend fun displayTaskLog(index: Int, taskLog: TaskLog) {
+     suspend fun displayTaskLog(index: Int, taskLog: TaskLog) {
         when {
             taskLog.isCreation() -> handleTaskCreation(index, taskLog)
             taskLog.isDeletion() -> handleTaskDeletion(index, taskLog)
