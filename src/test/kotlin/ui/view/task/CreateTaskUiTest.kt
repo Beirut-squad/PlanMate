@@ -1,29 +1,24 @@
 package ui.view.task
 
-import creator_helper.*
+import creator_helper.createProjectHelper
+import creator_helper.createStateHelper
+import creator_helper.createUserHelper
 import domain.exception.handler.ExceptionHandler
 import domain.exception.handler.SafeExecutor
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.CreateTaskUseCase
-import io.mockk.Runs
-import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.spyk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
 import ui.components.Printer
 import ui.components.Reader
-import java.util.UUID
+import java.util.*
 
 class CreateTaskUiTest {
     private val printer: Printer = mockk(relaxed = true)
