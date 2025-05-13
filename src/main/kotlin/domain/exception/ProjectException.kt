@@ -21,3 +21,5 @@ class EmptyProjectDescriptionException : EmptyFieldException()
 class EmptyProjectTitleException : EmptyFieldException()
 
 class NullProjectsComparisonException : NullInputException()
+
+class DuplicateDescriptionException : ProjectException()

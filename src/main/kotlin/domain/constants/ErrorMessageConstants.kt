@@ -1,6 +1,6 @@
 package domain.constants
 
-object StringConstants {
+object ErrorMessageConstants {
 
     object General {
         const val UNEXPECTED_ERROR = "Unexpected error"
@@ -35,6 +35,7 @@ object StringConstants {
 
         const val NO_PROJECT_FOUND = "No project found."
         const val DUPLICATE_STATE = "State already exists in this project."
+        const val DUPLICATE_DESCRIPTION = "Description already exists in this project."
         const val NO_STATE_FOUND = "No state found."
 
         const val PROJECT_CREATION_FAILED = "Failed to create project"

@@ -1,48 +1,49 @@
 package domain.exception.handler
 
-import domain.constants.StringConstants.Authentication.EMAIL_ALREADY_EXISTS
-import domain.constants.StringConstants.Authentication.EMAIL_NOT_FOUND
-import domain.constants.StringConstants.Authentication.INVALID_CREDENTIALS
-import domain.constants.StringConstants.Authentication.INVALID_EMAIL_FORMAT
-import domain.constants.StringConstants.Authentication.UNKNOWN_AUTH_ERROR
-import domain.constants.StringConstants.Authentication.USERS_ALREADY_EXIST
-import domain.constants.StringConstants.Authentication.USER_NOT_LOGGED_IN
-import domain.constants.StringConstants.File.EMPTY_CSV_FILE
-import domain.constants.StringConstants.File.INVALID_DATA_FILE
-import domain.constants.StringConstants.File.INVALID_FILE_NAME
-import domain.constants.StringConstants.File.MISSING_ENTITY
-import domain.constants.StringConstants.File.UNKNOWN_FILE_ERROR
-import domain.constants.StringConstants.General.UNEXPECTED_ERROR
-import domain.constants.StringConstants.General.UNKNOWN_ERROR
-import domain.constants.StringConstants.Logs.NO_PROJECT_LOGS_AVAILABLE
-import domain.constants.StringConstants.Logs.NO_TASK_LOGS_AVAILABLE
-import domain.constants.StringConstants.Logs.UNKNOWN_LOG_ERROR
-import domain.constants.StringConstants.Project.NO_PROJECT_FOUND
-import domain.constants.StringConstants.Project.PROJECT_CREATION_FAILED
-import domain.constants.StringConstants.Project.PROJECT_DELETION_FAILED
-import domain.constants.StringConstants.Project.PROJECT_EDIT_FAILED
-import domain.constants.StringConstants.Project.PROJECT_FETCH_ALL_FAILED
-import domain.constants.StringConstants.Project.DUPLICATE_STATE
-import domain.constants.StringConstants.Project.NO_STATE_FOUND
-import domain.constants.StringConstants.Project.UNKNOWN_PROJECT_ERROR
-import domain.constants.StringConstants.Task.FAILED_TO_READ_TASK
-import domain.constants.StringConstants.Task.TASK_CREATION_FAILED
-import domain.constants.StringConstants.Task.TASK_DELETION_FAILED
-import domain.constants.StringConstants.Task.TASK_EDIT_FAILED
-import domain.constants.StringConstants.Task.TASK_FETCH_ALL_FAILED
-import domain.constants.StringConstants.Task.TASK_NOT_FOUND
-import domain.constants.StringConstants.Task.UNKNOWN_TASK_ERROR
+import domain.constants.ErrorMessageConstants.Authentication.EMAIL_ALREADY_EXISTS
+import domain.constants.ErrorMessageConstants.Authentication.EMAIL_NOT_FOUND
+import domain.constants.ErrorMessageConstants.Authentication.INVALID_CREDENTIALS
+import domain.constants.ErrorMessageConstants.Authentication.INVALID_EMAIL_FORMAT
+import domain.constants.ErrorMessageConstants.Authentication.UNKNOWN_AUTH_ERROR
+import domain.constants.ErrorMessageConstants.Authentication.USERS_ALREADY_EXIST
+import domain.constants.ErrorMessageConstants.Authentication.USER_NOT_LOGGED_IN
+import domain.constants.ErrorMessageConstants.File.EMPTY_CSV_FILE
+import domain.constants.ErrorMessageConstants.File.INVALID_DATA_FILE
+import domain.constants.ErrorMessageConstants.File.INVALID_FILE_NAME
+import domain.constants.ErrorMessageConstants.File.MISSING_ENTITY
+import domain.constants.ErrorMessageConstants.File.UNKNOWN_FILE_ERROR
+import domain.constants.ErrorMessageConstants.General.UNEXPECTED_ERROR
+import domain.constants.ErrorMessageConstants.General.UNKNOWN_ERROR
+import domain.constants.ErrorMessageConstants.Logs.NO_PROJECT_LOGS_AVAILABLE
+import domain.constants.ErrorMessageConstants.Logs.NO_TASK_LOGS_AVAILABLE
+import domain.constants.ErrorMessageConstants.Logs.UNKNOWN_LOG_ERROR
+import domain.constants.ErrorMessageConstants.Project.NO_PROJECT_FOUND
+import domain.constants.ErrorMessageConstants.Project.PROJECT_CREATION_FAILED
+import domain.constants.ErrorMessageConstants.Project.PROJECT_DELETION_FAILED
+import domain.constants.ErrorMessageConstants.Project.PROJECT_EDIT_FAILED
+import domain.constants.ErrorMessageConstants.Project.PROJECT_FETCH_ALL_FAILED
+import domain.constants.ErrorMessageConstants.Project.DUPLICATE_STATE
+import domain.constants.ErrorMessageConstants.Project.NO_STATE_FOUND
+import domain.constants.ErrorMessageConstants.Project.UNKNOWN_PROJECT_ERROR
+import domain.constants.ErrorMessageConstants.Task.FAILED_TO_READ_TASK
+import domain.constants.ErrorMessageConstants.Task.TASK_CREATION_FAILED
+import domain.constants.ErrorMessageConstants.Task.TASK_DELETION_FAILED
+import domain.constants.ErrorMessageConstants.Task.TASK_EDIT_FAILED
+import domain.constants.ErrorMessageConstants.Task.TASK_FETCH_ALL_FAILED
+import domain.constants.ErrorMessageConstants.Task.TASK_NOT_FOUND
+import domain.constants.ErrorMessageConstants.Task.UNKNOWN_TASK_ERROR
 import domain.exception.*
-import domain.constants.StringConstants.Authentication.USER_NOT_FOUND
-import domain.constants.StringConstants.General.EMPTY_INPUT
-import domain.constants.StringConstants.General.NULL_INPUT
-import domain.constants.StringConstants.Project.EMPTY_PROJECT_DESCRIPTION
-import domain.constants.StringConstants.Project.EMPTY_PROJECT_TITLE
-import domain.constants.StringConstants.Project.NULL_PROJECT_COMPARISON
-import domain.constants.StringConstants.State.EMPTY_STATE_NAME
-import domain.constants.StringConstants.Task.EMPTY_TASK_DESCRIPTION
-import domain.constants.StringConstants.Task.EMPTY_TASK_TITLE
-import domain.constants.StringConstants.Task.NULL_TASK_COMPARISON
+import domain.constants.ErrorMessageConstants.Authentication.USER_NOT_FOUND
+import domain.constants.ErrorMessageConstants.General.EMPTY_INPUT
+import domain.constants.ErrorMessageConstants.General.NULL_INPUT
+import domain.constants.ErrorMessageConstants.Project.DUPLICATE_DESCRIPTION
+import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_DESCRIPTION
+import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_TITLE
+import domain.constants.ErrorMessageConstants.Project.NULL_PROJECT_COMPARISON
+import domain.constants.ErrorMessageConstants.State.EMPTY_STATE_NAME
+import domain.constants.ErrorMessageConstants.Task.EMPTY_TASK_DESCRIPTION
+import domain.constants.ErrorMessageConstants.Task.EMPTY_TASK_TITLE
+import domain.constants.ErrorMessageConstants.Task.NULL_TASK_COMPARISON
 import ui.components.Printer
 
 class ExceptionHandler(
@@ -124,6 +125,7 @@ class ExceptionHandler(
             is ProjectFetchAllFailedException -> PROJECT_FETCH_ALL_FAILED
             is DuplicateStateException -> DUPLICATE_STATE
             is StateNotFoundException -> NO_STATE_FOUND
+            is DuplicateDescriptionException -> DUPLICATE_DESCRIPTION
             else -> handleUnexpectedException(UNKNOWN_PROJECT_ERROR, exception)
         }
     }
