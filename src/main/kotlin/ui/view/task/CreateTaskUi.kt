@@ -63,7 +63,7 @@ class CreateTaskUi(
     private fun getValidStateInput(selectedProject: Project): Int {
         var selectedStateIndex: Int? = null
         do {
-            printer.printOptions("Choose a state for the task:")
+            printer.printInfoLine("Choose a state for the task:")
             selectedProject.states.forEachIndexed { index, state ->
                 printer.printInfoLine("${index + 1}. ${state.name}")
             }
