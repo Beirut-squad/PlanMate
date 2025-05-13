@@ -16,13 +16,12 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class TaskRepositoryImplTest {
-    private lateinit var taskDataSource: TaskDataSource
+    private val taskDataSource: TaskDataSource = mockk()
     private lateinit var taskRepository: TaskRepositoryImpl
     private val testTask = createTaskHelper()
 
     @BeforeEach
     fun setUp() {
-        taskDataSource = mockk()
         taskRepository = TaskRepositoryImpl(taskDataSource)
     }
 
