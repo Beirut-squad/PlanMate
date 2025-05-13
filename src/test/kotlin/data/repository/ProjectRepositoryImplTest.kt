@@ -17,13 +17,12 @@ import java.util.*
 
 
 class ProjectRepositoryImplTest {
-    private lateinit var projectDataSource: ProjectDataSource
+    private val projectDataSource: ProjectDataSource = mockk()
     private lateinit var projectRepository: ProjectRepositoryImpl
     private val testProject = createProjectHelper()
 
     @BeforeEach
     fun setup() {
-        projectDataSource = mockk()
         projectRepository = ProjectRepositoryImpl(projectDataSource)
     }
 

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class LogRepositoryImplTest {
-    private lateinit var logDataSource: LogDataSource
+    private val logDataSource: LogDataSource = mockk()
     private lateinit var logRepository: LogRepositoryImpl
     private val testProjectId = UUID.randomUUID()
     private val testTaskId = UUID.randomUUID()
@@ -22,7 +22,6 @@ class LogRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
-        logDataSource = mockk()
         logRepository = LogRepositoryImpl(logDataSource)
     }
 

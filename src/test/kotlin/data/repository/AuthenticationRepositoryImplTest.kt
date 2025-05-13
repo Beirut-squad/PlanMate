@@ -11,13 +11,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class AuthenticationRepositoryImplTest {
-    private lateinit var authenticationDataSource: AuthenticationDataSource
+    private val authenticationDataSource: AuthenticationDataSource = mockk()
     private lateinit var authenticationRepository: AuthenticationRepositoryImpl
     private val testUser = createUserHelper()
 
     @BeforeEach
     fun setup() {
-        authenticationDataSource = mockk()
         authenticationRepository = AuthenticationRepositoryImpl(authenticationDataSource)
     }
 
