@@ -6,7 +6,6 @@ import domain.exception.handler.ExceptionHandler
 import domain.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.GetProjectByIdUseCase
 import domain.use_case.task.DeleteTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
 import io.mockk.*
@@ -14,7 +13,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.koin.core.component.inject
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
@@ -22,7 +20,6 @@ import ui.components.Printer
 import ui.components.Reader
 import ui.view.user.mate.UserProjectsUi
 import java.util.*
-import kotlin.getValue
 
 class DeleteTaskUITest {
     private val printer: Printer = mockk(relaxed = true)
@@ -72,7 +69,7 @@ class DeleteTaskUITest {
         val task2 = createTaskHelper(projectId)
         val tasks = listOf(task1, task2)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf("1", "yes")
 
@@ -94,7 +91,7 @@ class DeleteTaskUITest {
         val task = createTaskHelper(projectId)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf("1", "no")
 
@@ -113,7 +110,7 @@ class DeleteTaskUITest {
     fun `should handle exception when fetching tasks fails`() = runTest {
         // Given
         val exception = RuntimeException("Error fetching tasks")
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } throws exception
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } throws exception
 
         // When
         deleteTaskUI.show()
@@ -129,7 +126,7 @@ class DeleteTaskUITest {
         val task = createTaskHelper(projectId)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf(null, "yes")
 
@@ -150,7 +147,7 @@ class DeleteTaskUITest {
         // Given
         val tasks = emptyList<Task>()
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns createUserHelper()
 
         // When
@@ -171,7 +168,7 @@ class DeleteTaskUITest {
         val task = createTaskHelper(projectId)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf("5", "yes")
 
@@ -195,7 +192,7 @@ class DeleteTaskUITest {
         val tasks = listOf(task)
         val exception = RuntimeException("Failed to delete task")
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf("1", "yes")
         coEvery { deleteTaskUseCase.deleteTask(task, user.id) } throws exception
@@ -214,7 +211,7 @@ class DeleteTaskUITest {
         val task = createTaskHelper(projectId)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         every { reader.readInput() } returnsMany listOf("1",null)
 

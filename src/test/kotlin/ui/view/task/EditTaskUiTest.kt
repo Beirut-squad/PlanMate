@@ -1,14 +1,14 @@
 package ui.view.task
 
-import org.junit.jupiter.api.Assertions.*
-import creator_helper.*
-
+import creator_helper.createProjectHelper
+import creator_helper.createStateHelper
+import creator_helper.createTaskHelper
+import creator_helper.createUserHelper
 import domain.exception.handler.ExceptionHandler
 import domain.exception.handler.SafeExecutor
-import domain.model.*
+import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
-import domain.use_case.task.DeleteTaskUseCase
 import domain.use_case.task.EditTaskUseCase
 import domain.use_case.task.GetProjectTasksUseCase
 import io.mockk.*
@@ -76,7 +76,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state1, state2))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
@@ -99,7 +99,7 @@ class EditTaskUiTest {
         // Given
         val tasks = emptyList<Task>()
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns createUserHelper()
 
         // When
@@ -119,7 +119,7 @@ class EditTaskUiTest {
         val task = createTaskHelper(projectId = projectId, state = state)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
         every { reader.readInput() } returns "99"
@@ -145,7 +145,7 @@ class EditTaskUiTest {
         val task = createTaskHelper(projectId = projectId, state = state)
         val tasks = listOf(task)
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
         // Non-numeric input
@@ -164,7 +164,7 @@ class EditTaskUiTest {
     fun `should handle exception during task fetch`() = runTest {
         // Given
         val exception = RuntimeException("Failed to fetch tasks")
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } throws exception
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } throws exception
 
         // When
         editTaskUi.show()
@@ -182,7 +182,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val exception = RuntimeException("Failed to fetch project")
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } throws exception
 
@@ -205,7 +205,7 @@ class EditTaskUiTest {
         val project = createProjectHelper(id = projectId, state = listOf(state))
         val exception = RuntimeException("Failed to edit task")
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
         coEvery { editTaskUseCase.editTask(any(), any(), any(), any(), any()) } throws exception
@@ -227,7 +227,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
@@ -253,7 +253,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state1, state2))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
@@ -278,7 +278,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state1, state2))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
@@ -303,7 +303,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state1, state2))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
@@ -328,7 +328,7 @@ class EditTaskUiTest {
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, state = listOf(state1, state2))
 
-        coEvery { getProjectTasksUseCase.getTasksForProject(projectId) } returns tasks
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
