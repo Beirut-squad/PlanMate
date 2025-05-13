@@ -119,20 +119,12 @@ class EditTaskUi(
     }
 
 
-    private fun getValidInput(message: String, currentValue: String): String {
+    private fun getValidInput(message: String, currentValue: String): String? {
         while (true) {
             printer.printLoader("$message (Current value: $currentValue)")
             val input = reader.readInput()?.trim()
 
-            if (!input.isNullOrBlank()) {
-                return input
-            }
-
-            if (currentValue.isNotBlank()) {
-                return currentValue
-            }
-
-            printer.printError("Input cannot be blank.")
+            return input
         }
     }
 

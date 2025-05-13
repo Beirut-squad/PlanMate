@@ -32,7 +32,9 @@ class ProjectTasksUi(
                 handler.printHandledError(it)
             },
             onSuccess = {
-                printer.printTitle("Tasks for Project:")
+                if (it.isNotEmpty()) {
+                    printer.printTitle("Tasks for Project:")
+                }
                 displayTasksInColumns(it)
                 printer.printInfoLine("Please choose an option:")
                 printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")

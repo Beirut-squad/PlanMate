@@ -1,5 +1,6 @@
 package domain.use_case.project
 
+import domain.exception.DuplicateDescriptionException
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
 import domain.exception.EmptyProjectDescriptionException
@@ -13,7 +14,7 @@ class EditProjectDescriptionUseCase(
 ) {
     suspend fun editProject(project: Project, newDescription: String?, editorUserId: UUID) {
         if (newDescription.isNullOrBlank()) { throw EmptyProjectDescriptionException() }
-        if (project.description == newDescription) { return }
+        if (project.description == newDescription) { throw DuplicateDescriptionException() }
         val editedProject = project.copy(
             description = newDescription,
             updatedAt = LocalDateTime.now()
