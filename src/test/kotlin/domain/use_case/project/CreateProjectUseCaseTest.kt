@@ -39,22 +39,24 @@ class CreateProjectUseCaseTest {
  @Test
  fun `GIVEN valid input WHEN createProject THEN project is created and logged`() = runTest {
   // Given
-  val name = "My Project"
+  val title = "My Project"
   val description = "Some description"
   val stateNames = listOf("To Do", "In Progress")
+  val currentUser = createUserHelper()
 
+  coEvery { getCurrentUserUseCase.getCurrentUser() } returns currentUser
   // When
-  createProjectUseCase.createProject(name, description, stateNames)
+  createProjectUseCase.createProject(title, description, stateNames)
 
   // Then
-  coVerify(exactly = 1) { projectRepository.createProject(withArg {
-   assert(it.title == name)
-   assert(it.description == description)
-   assert(it.states.size == 2)
-   assert(it.creatorUserID == userId)
+  coVerify(exactly = 1) { projectRepository.createProject(match  {
+           it.title == title &&
+           it.description == description &&
+           it.creatorUserID == currentUser.id
+           it.states.map { s -> s.name }.containsAll(listOf("To Do", "In Progress"))
   }) }
 
-  coVerify(exactly = 1) { logUseCase.createProjectLog(userId, previousProject = null, any()) }
+  coVerify(exactly = 1) { logUseCase.createProjectLog(currentUser.id, previousProject = null, any()) }
  }
 
  @Test
