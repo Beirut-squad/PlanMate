@@ -120,12 +120,10 @@ class EditTaskUi(
 
 
     private fun getValidInput(message: String, currentValue: String): String? {
-        while (true) {
             printer.printLoader("$message (Current value: $currentValue)")
             val input = reader.readInput()?.trim()
-
             return input
-        }
+
     }
 
 
