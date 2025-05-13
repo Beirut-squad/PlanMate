@@ -27,7 +27,7 @@ class MateUi : UiScreen, KoinComponent {
                     goToViewProjectsScreen()
                 }
 
-                2 -> {
+                else -> {
                     printer.printGoodbyeMessage("Goodbye")
                     break
                 }
