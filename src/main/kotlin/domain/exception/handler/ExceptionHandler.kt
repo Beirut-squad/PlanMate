@@ -37,6 +37,7 @@ import domain.constants.ErrorMessageConstants.Authentication.USER_NOT_FOUND
 import domain.constants.ErrorMessageConstants.General.EMPTY_INPUT
 import domain.constants.ErrorMessageConstants.General.NULL_INPUT
 import domain.constants.ErrorMessageConstants.Project.DUPLICATE_DESCRIPTION
+import domain.constants.ErrorMessageConstants.Project.DUPLICATE_TITLE
 import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_DESCRIPTION
 import domain.constants.ErrorMessageConstants.Project.EMPTY_PROJECT_TITLE
 import domain.constants.ErrorMessageConstants.Project.NULL_PROJECT_COMPARISON
@@ -126,6 +127,7 @@ class ExceptionHandler(
             is DuplicateStateException -> DUPLICATE_STATE
             is StateNotFoundException -> NO_STATE_FOUND
             is DuplicateDescriptionException -> DUPLICATE_DESCRIPTION
+            is DuplicateTitleException -> DUPLICATE_TITLE
             else -> handleUnexpectedException(UNKNOWN_PROJECT_ERROR, exception)
         }
     }

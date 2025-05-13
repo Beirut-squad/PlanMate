@@ -37,6 +37,7 @@ object ErrorMessageConstants {
         const val DUPLICATE_STATE = "State already exists in this project."
         const val DUPLICATE_DESCRIPTION = "Description already exists in this project."
         const val NO_STATE_FOUND = "No state found."
+        const val DUPLICATE_TITLE = "Title already exists in this project."
 
         const val PROJECT_CREATION_FAILED = "Failed to create project"
         const val PROJECT_EDIT_FAILED = "Failed to edit project"
