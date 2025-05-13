@@ -4,10 +4,16 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import org.bson.Document
+import java.io.FileInputStream
+import java.util.Properties
 
 object MongoConnection{
 
-    private const val MONGO_URI = "mongodb+srv://beirut:beirut@planemate.hfrslta.mongodb.net/?retryWrites=true&w=majority&appName=PlaneMate"
+    private val properties = Properties().apply {
+        load(FileInputStream("local.properties"))
+    }
+    private val MONGO_URI = properties.getProperty("mongodb.uri")
+        ?: throw IllegalStateException("MongoDB URI not found in local.properties")
     private const val DATABASE_NAME = "PlaneMate"
 
     private val client: MongoClient = MongoClients.create(MONGO_URI)

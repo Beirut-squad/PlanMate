@@ -4,6 +4,7 @@ import data.datasource.interfaces.AuthenticationDataSource
 import data.datasource.mongo.mapper.toDocument
 import data.datasource.mongo.mapper.toUser
 import data.datasource.mongo.mongo_db_connection.MongoConnection
+import domain.exception.EmailAlreadyExistsException
 import domain.model.Role
 import domain.model.User
 import kotlinx.coroutines.Dispatchers
@@ -38,21 +39,27 @@ class AuthenticationMongoDataSourceImpl(
 
     override suspend fun registerMate(name: String, password: String, email: String): User {
         return withContext(Dispatchers.IO) {
-            ifEmailExists(email)
-            val newUser = createUser(name, password, email, Role.MATE)
-            mongoConnection.users.insertOne(newUser.toDocument())
-            saveCurrentUser(newUser)
-            newUser
+            if (!isEmailExists(email)) {
+                val newUser = createUser(name, password, email, Role.MATE)
+                mongoConnection.users.insertOne(newUser.toDocument())
+                saveCurrentUser(newUser)
+                newUser
+            }else
+                throw EmailAlreadyExistsException()
         }
     }
 
     override suspend fun registerAdmin(name: String, password: String, email: String): User {
         return withContext(Dispatchers.IO) {
-            ifEmailExists(email)
-            val newAdmin = createUser(name, password, email, Role.ADMIN)
-            mongoConnection.users.insertOne(newAdmin.toDocument())
-            saveCurrentUser(newAdmin)
-            newAdmin
+            if (!isEmailExists(email)) {
+                val newAdmin = createUser(name, password, email, Role.ADMIN)
+                mongoConnection.users.insertOne(newAdmin.toDocument())
+                saveCurrentUser(newAdmin)
+                newAdmin
+
+            } else {
+                throw EmailAlreadyExistsException()
+            }
         }
     }
 
@@ -105,7 +112,7 @@ class AuthenticationMongoDataSourceImpl(
         )
     }
 
-    private fun ifEmailExists(email: String):Boolean {
+    private fun isEmailExists(email: String):Boolean {
         return  mongoConnection.users.find(Document(EMAIL_FILED, email)).first() != null
     }
 
