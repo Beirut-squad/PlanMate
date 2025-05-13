@@ -9,10 +9,10 @@ class Validator {
 
     fun checkEmail(email: String) {
         val emailRegex = Regex("""^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$""")
-        if (!emailRegex.matches(email)) {
-            throw InvalidEmailFormatException()
-        } else if (email.isBlank()) {
+        if (email.isBlank()) {
             throw EmptyFieldException()
+        } else if (!emailRegex.matches(email)) {
+            throw InvalidEmailFormatException()
         }
     }
 

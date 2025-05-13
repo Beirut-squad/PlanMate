@@ -18,6 +18,7 @@ import ui.common.Printer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import ui.common.Reader
+import ui.common.Validator
 import ui.view.user.admin.home.AdminUi
 import ui.view.user.mate.MateUi
 import kotlin.test.Test
@@ -31,6 +32,7 @@ class LoginUiTest {
     private val mateUi: MateUi = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val handler: ExceptionHandler = mockk(relaxed = true)
+    private val validator: Validator = mockk(relaxed = true)
 
     private lateinit var loginUi: LoginUi
 
@@ -43,7 +45,8 @@ class LoginUiTest {
             adminUi,
             mateUi,
             executor,
-            handler
+            handler,
+            validator
         )
     }
 

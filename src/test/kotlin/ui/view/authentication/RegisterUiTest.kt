@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import ui.common.Printer
 import ui.common.Reader
+import ui.common.Validator
 import kotlin.test.Test
 
 class RegisterUiTest {
@@ -25,6 +26,7 @@ class RegisterUiTest {
     private val loginUi: LoginUi = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val handler: ExceptionHandler = mockk(relaxed = true)
+    private val validator: Validator = mockk(relaxed = true)
 
     private lateinit var registerUi: RegisterUi
 
@@ -36,7 +38,8 @@ class RegisterUiTest {
             registerUseCase,
             loginUi,
             executor,
-            handler
+            handler,
+            validator
         )
     }
 
