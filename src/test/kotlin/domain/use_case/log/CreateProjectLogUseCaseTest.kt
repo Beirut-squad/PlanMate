@@ -3,7 +3,6 @@ package domain.use_case.log
 import com.google.common.truth.Truth.assertThat
 import creator_helper.projectLog
 import creator_helper.testUserId
-import domain.exception.NullProjectsComparisonException
 import domain.model.ProjectLog
 import domain.repository.LogRepository
 import io.mockk.*
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import ui.common.exception.NullProjectsComparisonException
 
 class CreateProjectLogUseCaseTest {
 

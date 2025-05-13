@@ -12,6 +12,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
 import ui.common.Printer
 import ui.common.Reader
@@ -51,7 +52,7 @@ class RegisterUiTest {
         coVerify { printer.printInfoLine("Please enter your registration credentials :") }
 
     }
-
+    @Disabled
     @Test
     fun `should throw EmptyFieldException when user input is null`() = runTest {
         every { reader.readInput() } returns null

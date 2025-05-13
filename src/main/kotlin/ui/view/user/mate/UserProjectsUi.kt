@@ -68,8 +68,7 @@ class UserProjectsUi : UiScreen, KoinComponent {
             }
 
             else -> {
-                MateUi().show()
-                true
+                false
             }
         }
     }

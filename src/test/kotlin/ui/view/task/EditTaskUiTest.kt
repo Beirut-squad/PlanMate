@@ -4,8 +4,7 @@ import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
 import creator_helper.createTaskHelper
 import creator_helper.createUserHelper
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+
 import domain.model.Task
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.project.GetProjectByIdUseCase
@@ -19,8 +18,11 @@ import org.junit.jupiter.api.Test
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
-import ui.components.Printer
-import ui.components.Reader
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
+
 import ui.view.user.mate.UserProjectsUi
 import java.util.*
 

@@ -3,7 +3,6 @@ package domain.use_case.log
 import com.google.common.truth.Truth.assertThat
 import creator_helper.taskLog
 import creator_helper.testUserId
-import domain.exception.NullTasksComparisonException
 import domain.model.TaskLog
 import domain.repository.LogRepository
 import io.mockk.coEvery
@@ -13,6 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
+import ui.common.exception.NullTasksComparisonException
 
 class CreateTaskLogUseCaseTest {
 

@@ -37,8 +37,7 @@ class ProjectMateUi(
     }
 
     private suspend fun displayProjectOptions(project: Project) {
-        var running = true
-        while (running) {
+        while (true) {
             printer.printInfoLine(
                 """
                     - Project Name : ${project.title}
@@ -75,9 +74,8 @@ class ProjectMateUi(
                         CreateTaskUi(projectId).show()
                     }
                 }
-
                 else -> {
-                    running = false
+                   break
                 }
             }
         }

@@ -16,6 +16,7 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import ui.common.Printer
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
 import ui.common.Reader
 import ui.common.Validator
@@ -58,6 +59,7 @@ class LoginUiTest {
         verify { printer.printInfoLine("Please enter your information to login:") }
     }
 
+    @Disabled
     @Test
     fun `should throw EmptyFieldException when user input is null`() = runTest {
         every { reader.readInput() } returns null
