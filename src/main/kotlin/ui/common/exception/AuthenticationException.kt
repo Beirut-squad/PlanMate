@@ -1,10 +1,8 @@
-package domain.exception
+package ui.common.exception
 
 open class AuthenticationException : Exception()
 
 class EmailAlreadyExistsException : AuthenticationException()
-
-class InvalidEmailFormatException : AuthenticationException()
 
 class EmailNotFoundException : AuthenticationException()
 

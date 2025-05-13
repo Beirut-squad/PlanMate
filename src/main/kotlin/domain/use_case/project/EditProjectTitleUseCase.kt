@@ -1,9 +1,9 @@
 package domain.use_case.project
 
-import domain.exception.DuplicateTitleException
+import ui.common.exception.DuplicateTitleException
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import domain.exception.EmptyProjectTitleException
+import ui.common.exception.EmptyProjectTitleException
 import domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*
@@ -14,7 +14,8 @@ class EditProjectTitleUseCase(
 ) {
     suspend fun editProject(project: Project, newName: String?, editorUserId: UUID) {
         if (newName.isNullOrBlank()) { throw EmptyProjectTitleException() }
-        if (project.title == newName) { throw  DuplicateTitleException()}
+        if (project.title == newName) { throw  DuplicateTitleException()
+        }
         val editedProject = project.copy(
             title = newName,
             updatedAt = LocalDateTime.now()

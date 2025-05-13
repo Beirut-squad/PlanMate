@@ -1,7 +1,7 @@
 package data.datasource.csv.parser
 
 import data.datasource.csv.column_index.ProjectLogColumnIndex
-import domain.exception.CsvValidationException
+import ui.common.exception.CsvValidationException
 import domain.model.ProjectLog
 import java.time.LocalDateTime
 import java.util.*

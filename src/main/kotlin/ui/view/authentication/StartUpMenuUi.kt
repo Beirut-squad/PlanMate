@@ -1,8 +1,8 @@
 package ui.view.authentication
 
-import ui.components.Reader
-import ui.components.UiScreen
-import ui.components.Printer
+import ui.common.Reader
+import ui.common.UiScreen
+import ui.common.Printer
 
 class StartUpMenuUi(
     private val reader: Reader,

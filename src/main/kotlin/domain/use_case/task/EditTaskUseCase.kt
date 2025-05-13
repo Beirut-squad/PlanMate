@@ -1,8 +1,6 @@
 package domain.use_case.task
 
-import domain.exception.EmptyFieldException
-import domain.exception.EmptyTaskDescriptionException
-import domain.exception.EmptyTaskTitleException
+import ui.common.exception.EmptyFieldException
 import domain.model.Task
 import domain.model.State
 import domain.use_case.log.CreateTaskLogUseCase

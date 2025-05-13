@@ -4,9 +4,9 @@ import data.datasource.csv.helper.FileName
 import data.datasource.csv.reader.CsvReader
 import data.datasource.csv.writer.CsvWriter
 import data.datasource.interfaces.AuthenticationDataSource
-import domain.exception.EmailAlreadyExistsException
-import domain.exception.InvalidCredentialsException
-import domain.exception.UserNotLoggedInException
+import ui.common.exception.EmailAlreadyExistsException
+import ui.common.exception.InvalidCredentialsException
+import ui.common.exception.UserNotLoggedInException
 import domain.model.Role
 import domain.model.User
 import java.util.*

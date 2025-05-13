@@ -2,7 +2,7 @@ package domain.use_case.project
 
 import creator_helper.createProjectHelper
 import creator_helper.createUserHelper
-import domain.exception.ProjectNotFoundException
+import ui.common.exception.ProjectNotFoundException
 import domain.repository.ProjectRepository
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase

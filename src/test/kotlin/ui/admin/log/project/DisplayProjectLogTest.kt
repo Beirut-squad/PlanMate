@@ -4,7 +4,6 @@ import creator_helper.createProjectHelper
 import creator_helper.createProjectLogHelper
 import creator_helper.createStateHelper
 import creator_helper.createUserHelper
-import domain.model.Project
 import domain.use_case.authentication.GetUserByIdUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -12,7 +11,7 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.components.Printer
+import ui.common.Printer
 import ui.extensions.formatDateTime
 import ui.view.user.admin.log.project.ProjectLogUi
 

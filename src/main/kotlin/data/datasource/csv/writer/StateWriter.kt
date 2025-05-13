@@ -1,6 +1,6 @@
 package data.datasource.csv.writer
 
-import domain.exception.InvalidFileNameException
+import ui.common.exception.InvalidFileNameException
 import data.datasource.csv.helper.isValidFileName
 import domain.model.State
 import java.io.BufferedWriter

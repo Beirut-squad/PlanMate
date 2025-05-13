@@ -1,8 +1,8 @@
 package data.datasource.fake
 
-import domain.exception.EmailAlreadyExistsException
-import domain.exception.InvalidCredentialsException
-import domain.exception.UserNotLoggedInException
+import ui.common.exception.EmailAlreadyExistsException
+import ui.common.exception.InvalidCredentialsException
+import ui.common.exception.UserNotLoggedInException
 import data.datasource.interfaces.AuthenticationDataSource
 import domain.model.Role
 import domain.model.User

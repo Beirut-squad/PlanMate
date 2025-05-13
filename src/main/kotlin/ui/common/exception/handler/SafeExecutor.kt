@@ -1,4 +1,4 @@
-package domain.exception.handler
+package ui.common.exception.handler
 
 class SafeExecutor {
     suspend fun <T> tryToExecute(

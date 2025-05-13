@@ -1,34 +1,25 @@
 package ui.view.authentication
 
 import creator_helper.adminUser
-import creator_helper.createUserHelper
 import creator_helper.mateUser
-import domain.constants.StringConstants.Authentication.INVALID_CREDENTIALS
-import domain.constants.StringConstants.Authentication.USER_NOT_LOGGED_IN
-import domain.exception.EmptyFieldException
-import domain.exception.InvalidCredentialsException
-import domain.exception.UserNotLoggedInException
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
-import domain.model.Role
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.InvalidCredentialsException
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.LoginUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import ui.components.Printer
+import ui.common.Printer
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
-import ui.components.Reader
+import ui.common.Reader
 import ui.view.user.admin.home.AdminUi
 import ui.view.user.mate.MateUi
-import kotlin.math.log
 import kotlin.test.Test
 
 class LoginUiTest {

@@ -4,8 +4,8 @@ import domain.model.Project
 import domain.model.State
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase
-import domain.exception.EmptyProjectDescriptionException
-import domain.exception.EmptyProjectTitleException
+import ui.common.exception.EmptyProjectDescriptionException
+import ui.common.exception.EmptyProjectTitleException
 import domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*

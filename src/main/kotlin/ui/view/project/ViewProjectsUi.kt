@@ -1,10 +1,10 @@
 package ui.view.project
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.project.GetAllProjectsUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.UiScreen
 
 class ViewProjectsUi(
     private val printer: Printer,

@@ -1,6 +1,6 @@
 package domain.use_case.state
 
-import domain.exception.EmptyStateNameException
+import ui.common.exception.EmptyStateNameException
 import domain.model.Project
 import domain.model.State
 import domain.use_case.authentication.GetCurrentUserUseCase

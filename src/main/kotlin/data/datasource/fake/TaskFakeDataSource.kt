@@ -1,7 +1,7 @@
 package data.datasource.fake
 
-import domain.exception.StateNotFoundException
-import domain.exception.TaskNotFoundException
+import ui.common.exception.StateNotFoundException
+import ui.common.exception.TaskNotFoundException
 import data.datasource.interfaces.TaskDataSource
 import domain.model.Task
 import java.util.*

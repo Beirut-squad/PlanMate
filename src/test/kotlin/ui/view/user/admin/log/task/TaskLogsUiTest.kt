@@ -1,8 +1,8 @@
 package ui.view.user.admin.log.task
 
 import creator_helper.createTaskLogHelper
-import domain.exception.handler.ExceptionHandler
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.GetUserByIdUseCase
 import domain.use_case.log.GetAllTaskLogsUseCase
 import io.mockk.coEvery
@@ -10,11 +10,9 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.components.Printer
-import ui.view.user.admin.log.task.TaskLogsUi
+import ui.common.Printer
 
 class TaskLogsUiTest{
 

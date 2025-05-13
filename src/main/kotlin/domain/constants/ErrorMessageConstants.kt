@@ -20,7 +20,6 @@ object ErrorMessageConstants {
     object Authentication {
         const val USER_NOT_FOUND = "User not found with the provided credentials."
         const val EMAIL_ALREADY_EXISTS = "This email is already registered."
-        const val INVALID_EMAIL_FORMAT = "Invalid email format."
         const val EMAIL_NOT_FOUND = "This email is not associated with any account."
         const val INVALID_CREDENTIALS = "Incorrect email or password."
         const val USERS_ALREADY_EXIST = "Users already exist in the system."
@@ -68,5 +67,11 @@ object ErrorMessageConstants {
 
     object State {
         const val EMPTY_STATE_NAME = "State name cannot be empty."
+    }
+
+    object Validator {
+        const val INVALID_EMAIL_FORMAT = "Invalid email format."
+        const val NAME_TOO_SHORT = "Name must be at least 2 characters long."
+        const val WEAK_PASSWORD = "Password must be at least 8 characters long."
     }
 }

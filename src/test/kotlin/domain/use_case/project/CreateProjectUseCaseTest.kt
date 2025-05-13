@@ -1,11 +1,8 @@
 package domain.use_case.project
 
 import creator_helper.createUserHelper
-import domain.exception.EmptyProjectDescriptionException
-import domain.exception.EmptyProjectTitleException
-import domain.model.Project
-import domain.model.State
-import domain.model.User
+import ui.common.exception.EmptyProjectDescriptionException
+import ui.common.exception.EmptyProjectTitleException
 import domain.repository.ProjectRepository
 import domain.use_case.authentication.GetCurrentUserUseCase
 import domain.use_case.log.CreateProjectLogUseCase

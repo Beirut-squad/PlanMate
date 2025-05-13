@@ -1,10 +1,12 @@
-package ui.components
+package ui.common
 
 class Validator {
 
-    fun checkEmail(email: String): Boolean {
+    fun checkEmail(email: String) {
         val emailRegex = Regex("""^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$""")
-        return email.isNotBlank() && emailRegex.matches(email)
+        if (email.isBlank() || !emailRegex.matches(email)) {
+            throw IllegalArgumentException("Invalid email address")
+        }
     }
 
     fun checkPassword(password: String): Boolean {

@@ -1,13 +1,13 @@
 package ui.view.user.admin.project
 
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.handler.SafeExecutor
 import domain.model.User
 import domain.use_case.authentication.GetAllUsersUseCase
 import domain.use_case.project.AddProjectMateUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*

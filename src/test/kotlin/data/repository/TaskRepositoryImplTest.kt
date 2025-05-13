@@ -2,9 +2,9 @@ package data.repository
 
 import creator_helper.createTaskHelper
 import data.datasource.interfaces.TaskDataSource
-import domain.exception.TaskDeletionFailedException
-import domain.exception.TaskEditFailedException
-import domain.exception.TaskNotFoundException
+import ui.common.exception.TaskDeletionFailedException
+import ui.common.exception.TaskEditFailedException
+import ui.common.exception.TaskNotFoundException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

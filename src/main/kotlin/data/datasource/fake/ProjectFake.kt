@@ -1,7 +1,7 @@
 package data.datasource.fake
 
 import data.datasource.interfaces.ProjectDataSource
-import domain.exception.ProjectNotFoundException
+import ui.common.exception.ProjectNotFoundException
 import domain.model.Project
 import domain.model.State
 import domain.model.User

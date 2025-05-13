@@ -1,12 +1,12 @@
 package ui.view.authentication
 
-import domain.exception.EmptyFieldException
-import domain.exception.handler.SafeExecutor
+import ui.common.exception.EmptyFieldException
+import ui.common.exception.handler.SafeExecutor
 import domain.use_case.authentication.RegisterUserUseCase
-import domain.exception.handler.ExceptionHandler
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.exception.handler.ExceptionHandler
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 
 class RegisterUi(
     private val reader: Reader,

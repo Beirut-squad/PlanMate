@@ -1,9 +1,8 @@
 package domain.use_case.project
 
 import creator_helper.createProjectHelper
-import domain.exception.DuplicateTitleException
-import domain.exception.EmptyProjectTitleException
-import domain.model.Project
+import ui.common.exception.DuplicateTitleException
+import ui.common.exception.EmptyProjectTitleException
 import domain.repository.ProjectRepository
 import domain.use_case.log.CreateProjectLogUseCase
 import io.mockk.*

@@ -2,9 +2,9 @@ package ui.view.user.admin.home
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ui.components.Printer
-import ui.components.Reader
-import ui.components.UiScreen
+import ui.common.Printer
+import ui.common.Reader
+import ui.common.UiScreen
 import ui.view.user.admin.log.project.ProjectLogsUi
 import ui.view.user.admin.log.task.TaskLogsUi
 import ui.view.user.admin.project.CreateProjectUi

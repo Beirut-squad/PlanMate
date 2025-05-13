@@ -2,8 +2,8 @@ package domain.use_case.task
 
 import creator_helper.createStateHelper
 import creator_helper.createTaskHelper
-import domain.exception.EmptyTaskDescriptionException
-import domain.exception.EmptyTaskTitleException
+import ui.common.exception.EmptyTaskDescriptionException
+import ui.common.exception.EmptyTaskTitleException
 import domain.model.Task
 import domain.repository.TaskRepository
 import domain.use_case.log.CreateTaskLogUseCase

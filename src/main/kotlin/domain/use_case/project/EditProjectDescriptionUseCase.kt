@@ -1,9 +1,9 @@
 package domain.use_case.project
 
-import domain.exception.DuplicateDescriptionException
+import ui.common.exception.DuplicateDescriptionException
 import domain.model.Project
 import domain.use_case.log.CreateProjectLogUseCase
-import domain.exception.EmptyProjectDescriptionException
+import ui.common.exception.EmptyProjectDescriptionException
 import domain.repository.ProjectRepository
 import java.time.LocalDateTime
 import java.util.*
