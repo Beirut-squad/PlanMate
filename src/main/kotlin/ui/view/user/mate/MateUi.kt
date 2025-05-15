@@ -27,9 +27,12 @@ class MateUi : UiScreen, KoinComponent {
                     goToViewProjectsScreen()
                 }
 
-                else -> {
-                    printer.printGoodbyeMessage("Goodbye")
+                2 -> {
                     break
+                }
+
+                else -> {
+                    printer.printError("Invalid option")
                 }
             }
         }

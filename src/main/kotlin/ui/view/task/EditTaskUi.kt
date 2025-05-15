@@ -15,6 +15,7 @@ import ui.common.UiScreen
 import ui.view.user.mate.UserProjectsUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.view.project.ProjectTasksUi
 import java.util.*
 
 class EditTaskUi(
@@ -56,6 +57,7 @@ class EditTaskUi(
                         """.trimIndent()
                     )
                 }
+                printer.printOption("${tasks.size + 1}. Go Back")
                 handleEditTask(tasks, user)
             }
         )
@@ -65,17 +67,29 @@ class EditTaskUi(
         tasks: List<Task>,
         user: User
     ) {
-        printer.printLoader("Enter the task number to edit(or any thing to Go Back ):")
-        val input = reader.readInput()?.trim()
-        val number = input?.toIntOrNull()
+        printer.printLoader("Enter the task number to edit:")
 
-        if (number == null || number !in 1..tasks.size) {
-            printer.printError("Invalid input. Returning to the projects screen.")
-            return
+        val input = reader.readInt()
+
+        var running = true
+        while (running) {
+            when {
+                input != null && input in 1..tasks.size -> {
+                    val selectedTask = tasks[input - 1]
+                    editSelectedTask(selectedTask, user.id)
+                }
+
+                input == tasks.size + 1 -> {
+                    ProjectTasksUi(projectId).show()
+                    running = false
+                }
+
+                else -> {
+                    printer.printError("Invalid option")
+                    break
+                }
+            }
         }
-
-        val selectedTask = tasks[number - 1]
-        editSelectedTask(selectedTask, user.id)
     }
 
     private suspend fun editSelectedTask(task: Task, currentUser: UUID) {
@@ -120,9 +134,9 @@ class EditTaskUi(
 
 
     private fun getValidInput(message: String, currentValue: String): String? {
-            printer.printLoader("$message (Current value: $currentValue)")
-            val input = reader.readInput()?.trim()
-            return input
+        printer.printLoader("$message (Current value: $currentValue)")
+        val input = reader.readInput()?.trim()
+        return input
 
     }
 

@@ -39,26 +39,30 @@ class ProjectStateSelectedUi(
         return getProjectByIdUseCase.getProjectById(projectId).taskStates
     }
 
-    private fun displayStateOptions(TaskStates: List<TaskState>) {
-        TaskStates.forEachIndexed { index, state ->
+    private fun displayStateOptions(taskStates: List<TaskState>) {
+        taskStates.forEachIndexed { index, state ->
             printer.printInfoLine("${index + 1}. ${state.name}")
         }
+        printer.printOption("${taskStates.size + 1}. Go Back")
     }
 
-    private suspend fun handleUserSelection(TaskStates: List<TaskState>) {
+    private suspend fun handleUserSelection(taskStates: List<TaskState>) {
         val choice = printer.readIntInput(
-            "Enter the number of the state to view (Enter Any Thing To Go Back): "
+            "Enter the number of the state to view: "
         )
         when {
-            choice != null && choice in 1..TaskStates.size -> {
-                val selectedState = TaskStates[choice - 1]
+            choice != null && choice in 1..taskStates.size -> {
+                val selectedState = taskStates[choice - 1]
                 printStateDetails(selectedState)
                 running = false
             }
 
-            else -> {
-                printer.printGoodbyeMessage("Goodbye")
+            choice == taskStates.size + 1 -> {
                 running = false
+            }
+
+            else -> {
+                printer.printError("Invalid option")
             }
         }
     }

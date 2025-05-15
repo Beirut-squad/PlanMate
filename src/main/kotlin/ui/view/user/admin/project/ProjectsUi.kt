@@ -9,6 +9,7 @@ import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
 import ui.common.UiScreen
+import ui.extensions.formatDateTime
 import java.util.*
 
 class ProjectsUi(
@@ -44,8 +45,8 @@ class ProjectsUi(
                             - Made by: ${getUserById(project.creatorUserID).name}
                             - Name: ${project.title}
                             - Description: ${project.description}
-                            - Creation Date: ${project.createdAt}
-                            - Update Date: ${project.updatedAt}
+                            - Creation Date: ${project.createdAt.formatDateTime()}
+                            - Update Date: ${project.updatedAt.formatDateTime()}
                         """.trimIndent()
                     )
                 }
@@ -84,7 +85,9 @@ class ProjectsUi(
 
             else -> {
                 printer.printError("Invalid project number")
-                enterProject(projects)
+//                enterProject(projects)
+                showProjectDetails(projects)
+
             }
         }
     }

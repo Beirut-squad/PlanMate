@@ -92,19 +92,16 @@ class SingleProjectUi(
             }
 
             7 -> {
-                printer.printGoodbyeMessage("Goodbye!")
                 running = false
             }
 
             else -> {
                 printer.printError("Invalid option")
-                takeUserInput()
+                show()
+
             }
         }
-
-            updateProject()
-
-
+        updateProject()
     }
 
     private suspend fun updateProject() {

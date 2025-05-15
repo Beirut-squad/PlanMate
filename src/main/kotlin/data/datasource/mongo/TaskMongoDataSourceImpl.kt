@@ -1,6 +1,7 @@
 package data.datasource.mongo
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.and
 import data.datasource.mongo.mapper.toDocument
 import data.datasource.mongo.mapper.toTask
 import ui.common.exception.TaskDeletionFailedException
@@ -52,7 +53,7 @@ class TaskMongoDataSourceImpl(
         return withContext(Dispatchers.IO) {
             val documents = mongoConnection.tasks.find().toList()
 
-            documents.map {document ->
+            documents.map { document ->
                 document?.toTask() ?: throw TaskNotFoundException()
             }
         }
@@ -69,12 +70,13 @@ class TaskMongoDataSourceImpl(
 
     override suspend fun getTasksByStateAndProjectIds(projectId: UUID, stateId: UUID): List<Task> {
         return withContext(Dispatchers.IO) {
-            val filter = Document(PROJECT_ID_FILED, projectId.toString())
-                .append(ID_FILED, stateId.toString())
-
+            val filter = and(
+                Document(PROJECT_ID_FILED, projectId.toString()),
+                Document("$STATE_FILED.$ID_FILED", stateId.toString())
+            )
             val documents = mongoConnection.tasks.find(filter).toList()
 
-            documents.map {document ->
+            documents.map { document ->
                 document?.toTask() ?: throw TaskNotFoundException()
             }
         }
@@ -85,7 +87,7 @@ class TaskMongoDataSourceImpl(
             val filter = Document(PROJECT_ID_FILED, projectId.toString())
             val documents = mongoConnection.tasks.find(filter).toList()
 
-            documents.map {document ->
+            documents.map { document ->
                 document?.toTask() ?: throw TaskNotFoundException()
             }
         }
@@ -94,5 +96,6 @@ class TaskMongoDataSourceImpl(
     companion object {
         private const val ID_FILED = "_id"
         private const val PROJECT_ID_FILED = "projectId"
+        const val STATE_FILED = "state"
     }
 }

@@ -16,19 +16,19 @@ class ProjectStatesUi(
 ) : UiScreen {
     private lateinit var projectId: UUID
     private lateinit var project: Project
-    private lateinit var TaskStates: List<TaskState>
+    private lateinit var taskStates: List<TaskState>
 
     suspend fun setProject(projectId: UUID) {
         this.projectId = projectId
         this.project = getProject()
-        this.TaskStates = project.taskStates
+        this.taskStates = project.taskStates
     }
 
     override suspend fun show() {
         while (true) {
             printer.printTitle("Project states")
 
-            if (TaskStates.isEmpty()) {
+            if (taskStates.isEmpty()) {
                 displayNoStatesAndGoToCreateState()
                 break
             } else {
@@ -38,16 +38,16 @@ class ProjectStatesUi(
                 val selectedIndex = reader.readInput().toString().toIntOrNull()?.minus(1) ?: -1
 
                 when (selectedIndex) {
-                    in TaskStates.indices -> {
-                        goToSingleStateUi(TaskStates[selectedIndex])
+                    in taskStates.indices -> {
+                        goToSingleStateUi(taskStates[selectedIndex])
                     }
 
-                    TaskStates.size -> {
+                    taskStates.size -> {
                         break
                     }
 
                     else -> {
-                        printer.printError("Invalid selection")
+                        printer.printError("Invalid option")
                     }
                 }
             }
@@ -66,7 +66,8 @@ class ProjectStatesUi(
 
     private fun displayAvailableStates() {
         printer.printCorrectOutput("Available States:")
-        printer.printOptions(TaskStates.map { it.name } + "Go Back")
+        printer.printOptions(taskStates.map { it.name })
+        printer.printInfoLine("${taskStates.size + 1}. Go Back ")
     }
 
     private suspend fun goToSingleStateUi(taskState: TaskState) {

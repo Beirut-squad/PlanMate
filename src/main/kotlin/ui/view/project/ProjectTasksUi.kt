@@ -9,7 +9,6 @@ import ui.common.Reader
 import ui.common.UiScreen
 import ui.view.task.DeleteTaskUI
 import ui.view.task.EditTaskUi
-import ui.view.user.mate.UserProjectsUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
@@ -37,20 +36,26 @@ class ProjectTasksUi(
                 }
                 displayTasksInColumns(it)
                 printer.printInfoLine("Please choose an option:")
-                printer.printOptions("Edit a task", "Delete a task", "Enter Any Thing To Go Back")
+                printer.printOptions("Edit a task", "Delete a task", "Go Back")
                 val choice = reader.readInput()?.toIntOrNull()
-                when (choice) {
-                    1 -> {
-                        EditTaskUi(projectId).show()
-                    }
 
-                    2 -> {
-                        DeleteTaskUI(projectId).show()
-                    }
+                while (true) {
+                    when (choice) {
+                        1 -> {
+                            EditTaskUi(projectId).show()
+                        }
 
-                    else -> {
-                        printer.printGoodbyeMessage("Goodbye")
-                        UserProjectsUi().show()
+                        2 -> {
+                            DeleteTaskUI(projectId).show()
+                        }
+
+                        3 -> {
+                            break
+                        }
+
+                        else -> {
+                            printer.printError("Invalid option")
+                        }
                     }
                 }
             }

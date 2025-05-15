@@ -11,6 +11,7 @@ import ui.view.task.CreateTaskUi
 import ui.view.user.mate.UserProjectsUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.extensions.formatDateTime
 import java.util.*
 
 class ProjectMateUi(
@@ -21,6 +22,8 @@ class ProjectMateUi(
     private val getProjectByIdUseCase: GetProjectByIdUseCase by inject()
     private val executor: SafeExecutor by inject()
     private val handler: ExceptionHandler by inject()
+
+    var running = true
 
     override suspend fun show() {
         executor.tryToExecute(
@@ -37,19 +40,22 @@ class ProjectMateUi(
     }
 
     private suspend fun displayProjectOptions(project: Project) {
-        while (true) {
+
+        while (running) {
             printer.printInfoLine(
                 """
                     - Project Name : ${project.title}
                     - Description : ${project.description}
-                    - Created At : ${project.createdAt}
+                    - Created At : ${project.createdAt.formatDateTime()}
                     """.trimIndent()
             )
 
             printer.printInfoLine("Choose an option :")
             printer.printOptions(
-                "View state for project", "View all task for project", "Create new task", "" +
-                        "Enter Any Thing To Go Back"
+                "View state for project",
+                "View all task for project",
+                "Create new task",
+                "Go Back"
             )
 
             val option = reader.readInt()
@@ -74,8 +80,13 @@ class ProjectMateUi(
                         CreateTaskUi(projectId).show()
                     }
                 }
+
+                4 -> {
+                    running = false
+                }
+
                 else -> {
-                   break
+                    printer.printError("Invalid option")
                 }
             }
         }
