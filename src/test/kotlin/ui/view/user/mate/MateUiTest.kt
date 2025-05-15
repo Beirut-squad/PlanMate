@@ -9,13 +9,12 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import ui.common.Printer
 import ui.common.Reader
-
 import kotlin.test.Test
 
 class MateUiTest {
 
     private val printer: Printer = mockk(relaxed = true)
-    private val reader: Reader = mockk()
+    private val reader: Reader = mockk(relaxed = true)
     private val userProjectsUI: UserProjectsUi = mockk(relaxed = true)
 
     private val mateUi = MateUi()
@@ -55,29 +54,42 @@ class MateUiTest {
     }
 
     @Test
-    fun `test show - choose log out option`() = runTest {
-        // Arrange: mock the reader input for "Log out" option (option 2)
-        every { reader.readInt() } returns 2
-
-        // Act: call the show method
-        mateUi.show()
-
-        // Assert: verify interactions with the printer and the goodbye message
-        verify { printer.printTitle("Welcome to Plan Mate") }
-        verify { printer.printInfoLine("Choose an option:") }
-        verify { printer.printOptions("View Projects", "Log out") }
-        verify { printer.printGoodbyeMessage("Goodbye") }
-    }
-
-    @Test
-    fun `should not call user project ui screen when in reader input is wrong`() = runTest {
+    fun `should logout and return to the startup menu when chooses logout option`() = runTest {
         // Given
-        every { reader.readInt() } returns null
+        every { reader.readInt() } returns 2
 
         // When
         mateUi.show()
 
         // Then
+        coVerify(exactly = 0) { userProjectsUI.show() }
+        verify { printer.printTitle("Welcome to Plan Mate") }
+        verify { printer.printOptions("View Projects", "Log out") }
+    }
+
+    @Test
+    fun `should not call user project ui screen and print error message when choose invalid option`() = runTest {
+        // Given
+        every { reader.readInt() } returnsMany listOf(20, 2)
+
+        // When
+        mateUi.show()
+
+        // Then
+        verify { printer.printError("Invalid option") }
+        coVerify(exactly = 0) { userProjectsUI.show() }
+    }
+
+    @Test
+    fun `should not call user project ui screen and print invalid option message when input is null`() = runTest {
+        // Given
+        every { reader.readInt() } returnsMany listOf(null, 2)
+
+        // When
+        mateUi.show()
+
+        // Then
+        verify { printer.printError("Invalid option") }
         coVerify(exactly = 0) { userProjectsUI.show() }
     }
 }
