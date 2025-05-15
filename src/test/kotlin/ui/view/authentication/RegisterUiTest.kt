@@ -4,7 +4,7 @@ import ui.common.exception.EmailAlreadyExistsException
 import ui.common.exception.EmptyFieldException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.RegisterUserUseCase
+import domain.useCase.authentication.RegisterUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

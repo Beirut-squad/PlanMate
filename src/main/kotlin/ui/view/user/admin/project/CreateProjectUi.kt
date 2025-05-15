@@ -2,7 +2,7 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.project.CreateProjectUseCase
+import domain.useCase.project.CreateProjectUseCase
 import ui.common.Printer
 import ui.common.Reader
 import ui.common.UiScreen

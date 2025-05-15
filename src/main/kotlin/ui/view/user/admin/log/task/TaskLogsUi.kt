@@ -1,8 +1,8 @@
 package ui.view.user.admin.log.task
 
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.GetUserByIdUseCase
-import domain.use_case.log.GetAllTaskLogsUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
+import domain.useCase.log.GetAllTaskLogsUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.UiScreen

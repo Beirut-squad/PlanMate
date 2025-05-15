@@ -4,12 +4,12 @@ import data.datasource.csv.column_index.ProjectColumnIndex
 import ui.common.exception.StateNotFoundException
 import domain.model.Project
 import domain.model.User
-import domain.model.State
+import domain.model.TaskState
 import java.time.LocalDateTime
 import java.util.*
 
 class ProjectParser(
-    private val stateCsvParser: CsvParser<State>,
+    private val taskStateCsvParser: CsvParser<TaskState>,
     private val userCsvParser: CsvParser<User>
 ) : CsvParser<Project> {
 
@@ -29,7 +29,7 @@ class ProjectParser(
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = data.datasource.csv.helper.smartCsvSplit(cleanedLine)
 
-        if (stateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null) {
+        if (taskStateCsvParser.parseLine(parts[ProjectColumnIndex.STATE]) == null) {
             throw StateNotFoundException()
         }
         return Project(
@@ -40,13 +40,13 @@ class ProjectParser(
             createdAt = LocalDateTime.parse(parts[ProjectColumnIndex.CREATED_AT]),
             updatedAt = LocalDateTime.parse(parts[ProjectColumnIndex.UPDATED_AT]),
             users = parseMultiUser(parts[ProjectColumnIndex.USER]),
-            states = parseMultiStates(parts[ProjectColumnIndex.STATE]),
+            taskStates = parseMultiStates(parts[ProjectColumnIndex.STATE]),
         )
     }
 
-    private suspend fun parseMultiStates(line: String): List<State> {
+    private suspend fun parseMultiStates(line: String): List<TaskState> {
         val statesLines = data.datasource.csv.helper.smartCsvSplit(line)
-        return stateCsvParser.parseFile(statesLines)
+        return taskStateCsvParser.parseFile(statesLines)
     }
 
     private suspend fun parseMultiUser(line: String): List<User> {

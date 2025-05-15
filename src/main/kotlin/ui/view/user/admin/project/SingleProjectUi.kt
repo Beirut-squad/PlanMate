@@ -3,9 +3,9 @@ package ui.view.user.admin.project
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.model.User
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.DeleteProjectUseCase
-import domain.use_case.project.GetProjectByIdUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.project.DeleteProjectUseCase
+import domain.useCase.project.GetProjectByIdUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -84,7 +84,7 @@ class SingleProjectUi(
             }
 
             6 -> {
-                if (project.states.isEmpty()) {
+                if (project.taskStates.isEmpty()) {
                     printer.printError("Cannot create a task because this project has no states.")
                 } else {
                     CreateTaskUi(projectId = project.id).show()

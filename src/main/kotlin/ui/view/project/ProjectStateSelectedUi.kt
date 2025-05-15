@@ -1,9 +1,9 @@
 package ui.view.project
 
 import ui.common.exception.handler.SafeExecutor
-import domain.model.State
-import domain.use_case.project.GetProjectByIdUseCase
-import domain.use_case.task.GetTaskByStateIdAndProjectId
+import domain.model.TaskState
+import domain.useCase.project.GetProjectByIdUseCase
+import domain.useCase.task.GetTaskByStateIdAndProjectId
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.UiScreen
@@ -34,24 +34,24 @@ class ProjectStateSelectedUi(
         }
     }
 
-    private suspend fun getProjectStates(): List<State> {
+    private suspend fun getProjectStates(): List<TaskState> {
         printer.printTitle("State Details")
-        return getProjectByIdUseCase.getProjectById(projectId).states
+        return getProjectByIdUseCase.getProjectById(projectId).taskStates
     }
 
-    private fun displayStateOptions(states: List<State>) {
-        states.forEachIndexed { index, state ->
+    private fun displayStateOptions(TaskStates: List<TaskState>) {
+        TaskStates.forEachIndexed { index, state ->
             printer.printInfoLine("${index + 1}. ${state.name}")
         }
     }
 
-    private suspend fun handleUserSelection(states: List<State>) {
+    private suspend fun handleUserSelection(TaskStates: List<TaskState>) {
         val choice = printer.readIntInput(
             "Enter the number of the state to view (Enter Any Thing To Go Back): "
         )
         when {
-            choice != null && choice in 1..states.size -> {
-                val selectedState = states[choice - 1]
+            choice != null && choice in 1..TaskStates.size -> {
+                val selectedState = TaskStates[choice - 1]
                 printStateDetails(selectedState)
                 running = false
             }
@@ -63,14 +63,14 @@ class ProjectStateSelectedUi(
         }
     }
 
-    private suspend fun printStateDetails(selectedState: State) {
+    private suspend fun printStateDetails(selectedTaskState: TaskState) {
         printer.printTitle("State Details")
-        printer.printInfoLine("Name: ${selectedState.name}")
+        printer.printInfoLine("Name: ${selectedTaskState.name}")
 
         executor.tryToExecute(
             action = {
                 val tasks = getTaskByStateIdAndProjectId
-                    .getTaskByStateIdAndProjectId(projectId, selectedState.id)
+                    .getTaskByStateIdAndProjectId(projectId, selectedTaskState.id)
 
                 if (tasks.isNotEmpty()) {
                     printer.printInfoLine("Tasks:")

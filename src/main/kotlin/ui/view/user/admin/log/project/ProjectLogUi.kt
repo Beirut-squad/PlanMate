@@ -2,8 +2,8 @@ package ui.view.user.admin.log.project
 
 import domain.model.Project
 import domain.model.ProjectLog
-import domain.model.State
-import domain.use_case.authentication.GetUserByIdUseCase
+import domain.model.TaskState
+import domain.useCase.authentication.GetUserByIdUseCase
 import ui.common.Printer
 import ui.extensions.formatDateTime
 import java.util.*
@@ -85,8 +85,8 @@ open class ProjectLogUi(
     private fun handleStateChanges(
         index: Int, userName: String?, previousProject: Project, currentProject: Project
     ) {
-        val previousStates = previousProject.states
-        val currentStates = currentProject.states
+        val previousStates = previousProject.taskStates
+        val currentStates = currentProject.taskStates
         when {
             previousStates.size < currentStates.size -> handleStateAddition(index, userName, currentProject)
             previousStates.size == currentStates.size -> handleStateEdition(
@@ -104,7 +104,7 @@ open class ProjectLogUi(
     ) {
         val projectName = currentProject.title
         printer.printCorrectOutput(
-            "${index + 1}. User $userName added new state ${currentProject.states.last().name} to project $projectName at ${currentProject.updatedAt.formatDateTime()}"
+            "${index + 1}. User $userName added new state ${currentProject.taskStates.last().name} to project $projectName at ${currentProject.updatedAt.formatDateTime()}"
         )
     }
 
@@ -112,18 +112,18 @@ open class ProjectLogUi(
         index: Int, userName: String?, previousProject: Project, currentProject: Project
     ) {
         val projectName = currentProject.title
-        val previousState = previousProject.states
-        val currentState = currentProject.states
-        findFirstStateChange(oldStates = previousState, updatedStates = currentState)?.let { (oldState, newState) ->
+        val previousState = previousProject.taskStates
+        val currentState = currentProject.taskStates
+        findFirstStateChange(oldTaskStates = previousState, updatedTaskStates = currentState)?.let { (oldState, newState) ->
             printer.printCorrectOutput(
                 "${index + 1}. User $userName edited state form ${oldState.name} to ${newState.name} project $projectName at ${currentProject.updatedAt.formatDateTime()}"
             )
         }
     }
 
-    private fun findFirstStateChange(oldStates: List<State>, updatedStates: List<State>): Pair<State, State>? {
-        updatedStates.forEach { updatedState ->
-            oldStates.find { it.id == updatedState.id }?.let { oldState ->
+    private fun findFirstStateChange(oldTaskStates: List<TaskState>, updatedTaskStates: List<TaskState>): Pair<TaskState, TaskState>? {
+        updatedTaskStates.forEach { updatedState ->
+            oldTaskStates.find { it.id == updatedState.id }?.let { oldState ->
                 if (oldState.name != updatedState.name) return oldState to updatedState
             }
         }
@@ -134,7 +134,7 @@ open class ProjectLogUi(
         index: Int, userName: String?, previousProject: Project, currentProject: Project
     ) {
         val projectName = currentProject.title
-        val deletedState = (previousProject.states - currentProject.states.toSet()).first()
+        val deletedState = (previousProject.taskStates - currentProject.taskStates.toSet()).first()
         printer.printCorrectOutput(
             "${index + 1}. User $userName deleted state ${deletedState.name} from project $projectName at ${currentProject.updatedAt.formatDateTime()}"
         )

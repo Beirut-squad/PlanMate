@@ -1,6 +1,6 @@
 package creator_helper
 
-import domain.model.Role
+import domain.model.UserRole
 import domain.model.User
 import java.util.*
 
@@ -17,7 +17,7 @@ fun createUserForCsvWriter(
         password = password,
         email =email,
         id = id,
-        role = Role.valueOf(role),
+        userRole = UserRole.valueOf(role),
         isDeleted = isDeleted,
     )
 }
@@ -36,7 +36,7 @@ fun createUserForCsvWriterInvalid(
         password = password,
         email =email,
         id = id,
-        role = Role.valueOf(role),
+        userRole = UserRole.valueOf(role),
         isDeleted = isDeleted,
     )
 }

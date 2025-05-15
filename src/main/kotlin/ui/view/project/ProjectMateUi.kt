@@ -2,7 +2,7 @@ package ui.view.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.use_case.project.GetProjectByIdUseCase
+import domain.useCase.project.GetProjectByIdUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -67,7 +67,7 @@ class ProjectMateUi(
                 }
 
                 3 -> {
-                    if (project.states.isEmpty()) {
+                    if (project.taskStates.isEmpty()) {
                         printer.printError("Can't create a task because this project has no states.")
                         UserProjectsUi().show()
                     } else {

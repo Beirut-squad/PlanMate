@@ -2,7 +2,7 @@ package ui.view.user.admin.log.task
 
 import domain.model.Task
 import domain.model.TaskLog
-import domain.use_case.authentication.GetUserByIdUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
 import ui.common.Printer
 import ui.extensions.formatDateTime
 import java.util.*
@@ -82,8 +82,8 @@ open class TaskLogUi(
         index: Int, userName: String?, previousTask: Task, currentTask: Task
     ) {
         val taskName = currentTask.title
-        val previousStates = previousTask.state
-        val currentStates = currentTask.state
+        val previousStates = previousTask.taskState
+        val currentStates = currentTask.taskState
         printer.printCorrectOutput(
             "${index + 1}. User $userName changed state from ${previousStates.name} to ${currentStates.name} in task $taskName at ${currentTask.updatedAt.formatDateTime()}"
         )

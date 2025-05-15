@@ -6,7 +6,7 @@ import ui.common.exception.EmptyFieldException
 import ui.common.exception.InvalidCredentialsException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.LoginUseCase
+import domain.useCase.authentication.LoginUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

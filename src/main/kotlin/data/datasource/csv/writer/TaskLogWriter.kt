@@ -24,11 +24,20 @@ class TaskLogWriter : CsvWriter<TaskLog> {
     private fun writeTaskLog(items: List<TaskLog>, writer: BufferedWriter) {
         items.forEach { taskLog ->
             if (isValidTaskLog(taskLog))
-                writer.write("${taskLog.id},${taskLog.userId},${taskLog.entityId},${taskLog.currentEntity},${taskLog.currentEntity},${taskLog.createdAt}\n")
+                writer.write(
+                    "${taskLog.id}," +
+                        "${taskLog.userId}," +
+                        "${taskLog.entityId}," +
+                        "${taskLog.currentEntity}," +
+                        "${taskLog.currentEntity}," +
+                        "${taskLog.createdAt}\n"
+                )
         }
     }
 
     private fun isValidTaskLog(taskLog: TaskLog): Boolean {
-        return taskLog.id != UUID(0, 0) && taskLog.userId != UUID(0, 0) && taskLog.entityId != UUID(0, 0)
+        return taskLog.id != UUID(0, 0)
+                && taskLog.userId != UUID(0, 0)
+                && taskLog.entityId != UUID(0, 0)
     }
 }

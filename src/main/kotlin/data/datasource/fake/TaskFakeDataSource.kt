@@ -2,7 +2,7 @@ package data.datasource.fake
 
 import ui.common.exception.StateNotFoundException
 import ui.common.exception.TaskNotFoundException
-import data.datasource.interfaces.TaskDataSource
+import data.datasource.TaskDataSource
 import domain.model.Task
 import java.util.*
 
@@ -44,12 +44,15 @@ class TaskFakeDataSource : TaskDataSource {
     ): List<Task> {
         val tasks = getAllTasks()
 
-        val filteredTasks = tasks.filter { it.projectId == projectId && it.state.id == stateId }
+        val filteredTasks = tasks.filter {
+            it.projectId == projectId && it.taskState.id == stateId
+        }
         return filteredTasks.ifEmpty { throw StateNotFoundException() }
 
     }
 
     override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
-        return tasks.filter { it.projectId == projectId }.ifEmpty { throw TaskNotFoundException() }
+        return tasks.filter { it.projectId == projectId }
+                    .ifEmpty { throw TaskNotFoundException() }
     }
 }

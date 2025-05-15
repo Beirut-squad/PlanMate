@@ -3,8 +3,8 @@ package ui.view.user.admin.project
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.model.User
-import domain.use_case.authentication.GetUserByIdUseCase
-import domain.use_case.project.GetAllProjectsUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
+import domain.useCase.project.GetAllProjectsUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader

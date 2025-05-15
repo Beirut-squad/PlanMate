@@ -2,8 +2,8 @@ package ui.view.user.admin.log.project
 
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.GetUserByIdUseCase
-import domain.use_case.log.GetAllProjectLogsUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
+import domain.useCase.log.GetAllProjectLogsUseCase
 import ui.common.Printer
 import ui.common.UiScreen
 

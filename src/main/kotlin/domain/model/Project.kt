@@ -11,4 +11,5 @@ data class Project(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
     val users: List<User>,
-    val states: List<State>)
+    val taskStates: List<TaskState>
+)

@@ -10,6 +10,6 @@ interface AuthenticationRepository {
     suspend fun registerAdmin(name: String, password: String, email: String): User
     suspend fun logout()
     suspend fun isFirstRegister(): Boolean
-    suspend fun getCurrentLoggedInUser(): User
+    suspend fun getCurrentUser(): User
     suspend fun getUsers(): List<User>
 }

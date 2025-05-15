@@ -2,7 +2,7 @@ package ui.view.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Task
-import domain.use_case.task.GetProjectTasksUseCase
+import domain.useCase.task.GetProjectTasksUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -58,7 +58,7 @@ class ProjectTasksUi(
     }
 
     private fun displayTasksInColumns(tasks: List<Task>) {
-        val groupedTasks = tasks.groupBy { it.state.name }
+        val groupedTasks = tasks.groupBy { it.taskState.name }
 
         val stateNames = groupedTasks.keys.toList()
 

@@ -27,7 +27,7 @@ class TaskWriter : CsvWriter<Task> {
                             "${task.projectId}," +
                             "${task.title}," +
                             "${task.description}," +
-                            "[${task.state.id},${task.state.name}]," +
+                            "[${task.taskState.id},${task.taskState.name}]," +
                             "${task.creatorUserID}," +
                             "${task.createdAt}," +
                             "${task.updatedAt}\n"

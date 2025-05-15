@@ -2,7 +2,7 @@ package data.repository
 
 import creator_helper.createProjectLogHelper
 import creator_helper.createTaskLogHelper
-import data.datasource.interfaces.LogDataSource
+import data.datasource.LogDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

@@ -4,7 +4,7 @@ import creator_helper.createProjectHelper
 import creator_helper.createProjectLogHelper
 import creator_helper.createStateHelper
 import creator_helper.createUserHelper
-import domain.use_case.authentication.GetUserByIdUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -169,8 +169,8 @@ class ProjectLogUiTest {
             val currentStates = listOf(state1, state2)
             val previousState = listOf(state1)
 
-            val currentProject = createProjectHelper(state = currentStates)
-            val previousProject = createProjectHelper(state = previousState)
+            val currentProject = createProjectHelper(taskState = currentStates)
+            val previousProject = createProjectHelper(taskState = previousState)
 
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
@@ -180,7 +180,7 @@ class ProjectLogUiTest {
             // Then
             verify {
                 printer.printCorrectOutput(
-                    "${index + 1}. User $userName added new state ${currentProject?.states?.last()?.name} to project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
+                    "${index + 1}. User $userName added new state ${currentProject?.taskStates?.last()?.name} to project ${currentProject.title} at ${currentProject?.updatedAt?.formatDateTime()}"
                 )
             }
         }
@@ -201,8 +201,8 @@ class ProjectLogUiTest {
             val currentStates = listOf(state1)
             val previousStates = listOf(state1,state2)
 
-            val currentProject = createProjectHelper(state = currentStates)
-            val previousProject = createProjectHelper(state = previousStates)
+            val currentProject = createProjectHelper(taskState = currentStates)
+            val previousProject = createProjectHelper(taskState = previousStates)
 
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
@@ -233,8 +233,8 @@ class ProjectLogUiTest {
             val currentStates = listOf(state1)
             val previousStates = listOf(state1,state2)
 
-            val currentProject = createProjectHelper(state = currentStates)
-            val previousProject = createProjectHelper(state = previousStates)
+            val currentProject = createProjectHelper(taskState = currentStates)
+            val previousProject = createProjectHelper(taskState = previousStates)
 
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
@@ -266,8 +266,8 @@ class ProjectLogUiTest {
             val currentStates = listOf(state2,state3)
             val previousStates = listOf(state1,state3)
 
-            val currentProject = createProjectHelper(state = currentStates)
-            val previousProject = createProjectHelper(state = previousStates)
+            val currentProject = createProjectHelper(taskState = currentStates)
+            val previousProject = createProjectHelper(taskState = previousStates)
 
             val projectLog = createProjectLogHelper(previousEntity = previousProject , currentEntity = currentProject)
             val index = 0
@@ -325,8 +325,8 @@ class ProjectLogUiTest {
             val currentStates = listOf(state1, state2)
             val previousStates = listOf(state1, state2)
 
-            val currentProject = createProjectHelper(state = currentStates)
-            val previousProject = createProjectHelper(state = previousStates)
+            val currentProject = createProjectHelper(taskState = currentStates)
+            val previousProject = createProjectHelper(taskState = previousStates)
 
             val projectLog = createProjectLogHelper(previousEntity = previousProject, currentEntity = currentProject)
             val index = 0

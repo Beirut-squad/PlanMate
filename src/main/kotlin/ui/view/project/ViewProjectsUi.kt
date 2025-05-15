@@ -1,7 +1,7 @@
 package ui.view.project
 
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.project.GetAllProjectsUseCase
+import domain.useCase.project.GetAllProjectsUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.UiScreen

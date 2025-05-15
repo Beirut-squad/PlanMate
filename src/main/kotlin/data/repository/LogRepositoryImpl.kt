@@ -1,6 +1,6 @@
 package data.repository
 
-import data.datasource.interfaces.LogDataSource
+import data.datasource.LogDataSource
 import domain.model.ProjectLog
 import domain.model.TaskLog
 import domain.repository.LogRepository

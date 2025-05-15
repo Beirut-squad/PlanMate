@@ -3,8 +3,8 @@ package ui.view.user.admin.project
 import ui.common.exception.NullInputException
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.model.State
-import domain.use_case.state.DeleteStateUseCase
+import domain.model.TaskState
+import domain.useCase.state.DeleteStateUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -13,7 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class DeleteProjectStateUi(
-    private val project: Project, private val state: State
+    private val project: Project, private val taskState: TaskState
 ) : UiScreen, KoinComponent {
     private val executor: SafeExecutor by inject()
     private val handler: ExceptionHandler by inject()
@@ -22,7 +22,7 @@ class DeleteProjectStateUi(
     private val deleteStateUseCase: DeleteStateUseCase by inject()
 
     override suspend fun show() {
-        printer.printTitle("Confirm deletion of state '${state.name}': Y/N")
+        printer.printTitle("Confirm deletion of state '${taskState.name}': Y/N")
         when (reader.readInput()?.uppercase()) {
             "Y" -> deleteState()
             "N" -> return
@@ -34,7 +34,7 @@ class DeleteProjectStateUi(
     private suspend fun deleteState() {
         executor.tryToExecute(
             action = {
-                deleteStateUseCase.deleteState(project, state)
+                deleteStateUseCase.deleteState(project, taskState)
             },
             onError = {
                 handler.printHandledError(it)

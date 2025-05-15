@@ -2,7 +2,7 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.use_case.state.CreateStateUseCase
+import domain.useCase.state.CreateStateUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Reader
 import ui.common.UiScreen

@@ -1,7 +1,7 @@
 package di
 
-import domain.use_case.project.GetAllProjectsUseCase
-import domain.use_case.project.GetProjectByIdUseCase
+import domain.useCase.project.GetAllProjectsUseCase
+import domain.useCase.project.GetProjectByIdUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import ui.common.Colors

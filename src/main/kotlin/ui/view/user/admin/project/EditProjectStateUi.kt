@@ -2,8 +2,8 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.model.State
-import domain.use_case.state.EditStateUseCase
+import domain.model.TaskState
+import domain.useCase.state.EditStateUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -13,7 +13,7 @@ import org.koin.core.component.inject
 
 class EditProjectStateUi(
     private val project: Project,
-    private val state: State
+    private val taskState: TaskState
 ) : UiScreen, KoinComponent {
     private val printer: Printer by inject()
     private val reader: Reader by inject()
@@ -24,13 +24,13 @@ class EditProjectStateUi(
     override suspend fun show() {
         printer.printTitle("Edit State")
 
-        printer.printTitle("Current state name: ${state.name}")
+        printer.printTitle("Current state name: ${taskState.name}")
         printer.printTitle("Enter new state name:")
         val newName = reader.readInput().toString()
 
         executor.tryToExecute(
             action = {
-                editStateUseCase.editState(state, newName, project)
+                editStateUseCase.editState(taskState, newName, project)
                 printer.printTitle("State updated successfully to: $newName")
             },
             onError = {

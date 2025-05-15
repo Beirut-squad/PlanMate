@@ -2,8 +2,8 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.model.State
-import domain.use_case.project.GetProjectByIdUseCase
+import domain.model.TaskState
+import domain.useCase.project.GetProjectByIdUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -17,14 +17,14 @@ class SingleStateUi(
     private val handler: ExceptionHandler,
 ) : UiScreen {
     private lateinit var project: Project
-    private lateinit var state: State
+    private lateinit var taskState: TaskState
 
     fun setProject(project: Project) {
         this.project = project
     }
 
-    fun setState(state: State) {
-        this.state = state
+    fun setState(taskState: TaskState) {
+        this.taskState = taskState
     }
 
     override suspend fun show() {
@@ -36,11 +36,11 @@ class SingleStateUi(
 
             when (input) {
                 1 -> {
-                    EditProjectStateUi(project, state).show()
+                    EditProjectStateUi(project, taskState).show()
                 }
 
                 2 -> {
-                    DeleteProjectStateUi(project, state).show()
+                    DeleteProjectStateUi(project, taskState).show()
                     break
                 }
 
@@ -66,7 +66,7 @@ class SingleStateUi(
     }
 
     private fun displayHeader() {
-        printer.printTitle("State '${state.name}'")
+        printer.printTitle("State '${taskState.name}'")
         printer.printInfoLine("What would you like to do?")
     }
 
@@ -74,7 +74,7 @@ class SingleStateUi(
         executor.tryToExecute(
             action = {
                 project = getProjectByIdUseCase.getProjectById(project.id)
-                state = project.states.find { it.id == state.id }!! // Warning: Potential crash detected here!
+                taskState = project.taskStates.find { it.id == taskState.id }!! // Warning: Potential crash detected here!
             },
             onError = {
                 handler.printHandledError(it)

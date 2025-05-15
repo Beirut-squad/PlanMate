@@ -3,8 +3,8 @@ package ui.view.user.admin.log.task
 import creator_helper.createTaskLogHelper
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.GetUserByIdUseCase
-import domain.use_case.log.GetAllTaskLogsUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
+import domain.useCase.log.GetAllTaskLogsUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

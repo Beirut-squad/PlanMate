@@ -5,18 +5,20 @@ import domain.model.TaskLog
 import java.time.LocalDateTime
 import java.util.*
 
-class TaskLogParser (private val taskParser: TaskParser): CsvParser<TaskLog> {
+class TaskLogParser (
+    private val taskParser: TaskParser
+): CsvParser<TaskLog> {
 
-
-
-    override suspend fun parseFile(csvLines: List<String>): List<TaskLog> {
+    override suspend fun parseFile(csvLines: List<String>)
+    : List<TaskLog> {
         if (csvLines.isEmpty())
             return emptyList()
         csvLines.drop(1)
         return csvLines.mapNotNull { parseLine(it) }
     }
 
-    override suspend fun parseLine(line: String): TaskLog? {
+    override suspend fun parseLine(line: String)
+    : TaskLog? {
         var cleanedLine = line.replace(" ", "")
 
         if (cleanedLine == "[]" || cleanedLine == "")
