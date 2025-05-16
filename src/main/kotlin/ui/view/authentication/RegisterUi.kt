@@ -2,7 +2,7 @@ package ui.view.authentication
 
 import ui.common.exception.EmptyFieldException
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.RegisterUserUseCase
+import domain.useCase.authentication.RegisterUserUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader

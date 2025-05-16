@@ -1,8 +1,8 @@
 package ui.view.user.admin.project
 
 import domain.model.Project
-import domain.model.State
-import domain.use_case.project.GetProjectByIdUseCase
+import domain.model.TaskState
+import domain.useCase.project.GetProjectByIdUseCase
 import ui.common.Printer
 import ui.common.Reader
 import ui.common.UiScreen
@@ -16,19 +16,19 @@ class ProjectStatesUi(
 ) : UiScreen {
     private lateinit var projectId: UUID
     private lateinit var project: Project
-    private lateinit var states: List<State>
+    private lateinit var taskStates: List<TaskState>
 
     suspend fun setProject(projectId: UUID) {
         this.projectId = projectId
         this.project = getProject()
-        this.states = project.states
+        this.taskStates = project.taskStates
     }
 
     override suspend fun show() {
         while (true) {
             printer.printTitle("Project states")
 
-            if (states.isEmpty()) {
+            if (taskStates.isEmpty()) {
                 displayNoStatesAndGoToCreateState()
                 break
             } else {
@@ -38,16 +38,16 @@ class ProjectStatesUi(
                 val selectedIndex = reader.readInput().toString().toIntOrNull()?.minus(1) ?: -1
 
                 when (selectedIndex) {
-                    in states.indices -> {
-                        goToSingleStateUi(states[selectedIndex])
+                    in taskStates.indices -> {
+                        goToSingleStateUi(taskStates[selectedIndex])
                     }
 
-                    states.size -> {
+                    taskStates.size -> {
                         break
                     }
 
                     else -> {
-                        printer.printError("Invalid selection")
+                        printer.printError("Invalid option")
                     }
                 }
             }
@@ -66,13 +66,14 @@ class ProjectStatesUi(
 
     private fun displayAvailableStates() {
         printer.printCorrectOutput("Available States:")
-        printer.printOptions(states.map { it.name } + "Go Back")
+        printer.printOptions(taskStates.map { it.name })
+        printer.printInfoLine("${taskStates.size + 1}. Go Back ")
     }
 
-    private suspend fun goToSingleStateUi(state: State) {
+    private suspend fun goToSingleStateUi(taskState: TaskState) {
         setProject(projectId)
         singleStateUi.setProject(project)
-        singleStateUi.setState(state)
+        singleStateUi.setState(taskState)
         singleStateUi.show()
     }
 }

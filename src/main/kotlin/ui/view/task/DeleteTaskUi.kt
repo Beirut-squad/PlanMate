@@ -3,9 +3,9 @@ package ui.view.task
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Task
 import domain.model.User
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.task.DeleteTaskUseCase
-import domain.use_case.task.GetProjectTasksUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.task.DeleteTaskUseCase
+import domain.useCase.task.GetProjectTasksUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -49,7 +49,7 @@ class DeleteTaskUI(
                         Task #${index + 1}
                         - Title: ${task.title}
                         - Description: ${task.description}
-                        - State: ${task.state.name}
+                        - State: ${task.taskState.name}
                         """.trimIndent()
                     )
                 }

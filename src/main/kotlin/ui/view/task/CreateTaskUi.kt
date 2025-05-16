@@ -2,9 +2,9 @@ package ui.view.task
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.GetProjectByIdUseCase
-import domain.use_case.task.CreateTaskUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.project.GetProjectByIdUseCase
+import domain.useCase.task.CreateTaskUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -38,7 +38,7 @@ class CreateTaskUi(
 
                 val selectedStateIndex = getValidStateInput(selectedProject)
 
-                val selectedState = selectedProject.states[selectedStateIndex]
+                val selectedState = selectedProject.taskStates[selectedStateIndex]
                 createTaskUseCase.createTask(name, description, selectedState, selectedProject.id, user.id)
             },
             onError = {
@@ -64,7 +64,7 @@ class CreateTaskUi(
         var selectedStateIndex: Int? = null
         do {
             printer.printInfoLine("Choose a state for the task:")
-            selectedProject.states.forEachIndexed { index, state ->
+            selectedProject.taskStates.forEachIndexed { index, state ->
                 printer.printInfoLine("${index + 1}. ${state.name}")
             }
 
@@ -77,10 +77,10 @@ class CreateTaskUi(
 
             selectedStateIndex = stateIndexInput.toIntOrNull()?.minus(1)
 
-            if (selectedStateIndex == null || selectedStateIndex !in selectedProject.states.indices) {
-                printer.printError("Invalid state selection. Please choose a valid number between 1 and ${selectedProject.states.size}.")
+            if (selectedStateIndex == null || selectedStateIndex !in selectedProject.taskStates.indices) {
+                printer.printError("Invalid state selection. Please choose a valid number between 1 and ${selectedProject.taskStates.size}.")
             }
-        } while (selectedStateIndex == null || selectedStateIndex !in selectedProject.states.indices)
+        } while (selectedStateIndex == null || selectedStateIndex !in selectedProject.taskStates.indices)
 
         return selectedStateIndex
     }

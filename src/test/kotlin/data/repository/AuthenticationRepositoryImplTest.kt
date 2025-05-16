@@ -1,7 +1,7 @@
 package data.repository
 
 import creator_helper.createUserHelper
-import data.datasource.interfaces.AuthenticationDataSource
+import data.datasource.AuthenticationDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -83,7 +83,7 @@ class AuthenticationRepositoryImplTest {
     @Test
     fun `getCurrentLoggedInUser should return current user`() = runTest {
         coEvery { authenticationDataSource.getCurrentUser() } returns testUser
-        val result = authenticationRepository.getCurrentLoggedInUser()
+        val result = authenticationRepository.getCurrentUser()
         assertEquals(testUser, result)
         coVerify { authenticationDataSource.getCurrentUser() }
     }

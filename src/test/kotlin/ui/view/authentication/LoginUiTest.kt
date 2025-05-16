@@ -6,7 +6,7 @@ import ui.common.exception.EmptyFieldException
 import ui.common.exception.InvalidCredentialsException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.LoginUseCase
+import domain.useCase.authentication.LoginUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -16,8 +16,6 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import ui.common.Printer
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.assertThrows
 import ui.common.Reader
 import ui.common.Validator
 import ui.view.user.admin.home.AdminUi
@@ -59,14 +57,14 @@ class LoginUiTest {
         verify { printer.printInfoLine("Please enter your information to login:") }
     }
 
-    @Disabled
     @Test
-    fun `should throw EmptyFieldException when user input is null`() = runTest {
+    fun `should print error message empty field when user input is null`() = runTest {
+        val exception = EmptyFieldException()
         every { reader.readInput() } returns null
 
-        assertThrows<EmptyFieldException> {
-            loginUi.show()
-        }
+        loginUi.show()
+
+        handler.printHandledError(exception)
     }
 
     @Test
@@ -76,9 +74,9 @@ class LoginUiTest {
 
         loginUi.show()
 
-        coVerify { adminUi.show() }
         verify { printer.printCorrectOutput("Welcome ${adminUser.name}") }
         verify { printer.printCorrectOutput("Login successful!") }
+        coVerify { adminUi.show() }
     }
 
 
@@ -90,9 +88,9 @@ class LoginUiTest {
 
         loginUi.show()
 
-        coVerify { mateUi.show() }
         verify { printer.printCorrectOutput("Welcome ${mateUser.name}") }
         verify { printer.printCorrectOutput("Login successful!") }
+        coVerify { mateUi.show() }
     }
 
     @Test

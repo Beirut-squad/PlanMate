@@ -1,20 +1,20 @@
 package di
 
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.*
-import domain.use_case.log.CreateProjectLogUseCase
-import domain.use_case.log.CreateTaskLogUseCase
-import domain.use_case.log.GetAllProjectLogsUseCase
-import domain.use_case.log.GetAllTaskLogsUseCase
-import domain.use_case.project.*
-import domain.use_case.state.CreateStateUseCase
-import domain.use_case.state.DeleteStateUseCase
-import domain.use_case.state.EditStateUseCase
-import domain.use_case.task.*
+import domain.useCase.authentication.*
+import domain.useCase.log.CreateProjectLogUseCase
+import domain.useCase.log.CreateTaskLogUseCase
+import domain.useCase.log.GetAllProjectLogsUseCase
+import domain.useCase.log.GetAllTaskLogsUseCase
+import domain.useCase.project.*
+import domain.useCase.state.CreateStateUseCase
+import domain.useCase.state.DeleteStateUseCase
+import domain.useCase.state.EditStateUseCase
+import domain.useCase.task.*
 import ui.common.exception.handler.ExceptionHandler
-import org.example.domain.use_cases.authentication.encryption.EncryptPassword
-import org.example.domain.use_cases.authentication.encryption.Encryptor
-import org.example.domain.use_cases.authentication.encryption.EncryptorMD5Impl
+import domain.useCase.authentication.encryption.EncryptPassword
+import domain.useCase.authentication.encryption.Encryptor
+import domain.useCase.authentication.encryption.EncryptorMD5Impl
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

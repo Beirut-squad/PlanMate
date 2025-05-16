@@ -3,9 +3,9 @@ package ui.view.task
 import creator_helper.createTaskHelper
 import creator_helper.createUserHelper
 import domain.model.Task
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.task.DeleteTaskUseCase
-import domain.use_case.task.GetProjectTasksUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.task.DeleteTaskUseCase
+import domain.useCase.task.GetProjectTasksUseCase
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach

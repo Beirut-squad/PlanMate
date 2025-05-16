@@ -2,8 +2,8 @@ package ui.view.user.mate
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.GetUserProjectsByIdUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.project.GetUserProjectsByIdUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.UiScreen
@@ -49,26 +49,22 @@ class UserProjectsUi : UiScreen, KoinComponent {
     private suspend fun handleProjectSelection(projects: List<Project>) {
         var isRunning = true
         while (isRunning) {
-            printer.printOption("Enter project number (or any number to Go  Back):")
+            printer.printOption("Enter project number:")
             val input = reader.readInt()
             handleUserInput(input, projects).also { isRunning = it }
         }
     }
 
     private suspend fun handleUserInput(input: Int?, projects: List<Project>): Boolean {
-        return when (input) {
-            null -> {
-                printer.printError("Please enter a valid number.")
-                true
-            }
-
-            in 1..projects.size -> {
+        return when {
+            input != null && input in 1..projects.size -> {
                 handleProjectSelectionById(projects[input - 1].id)
                 false
             }
 
             else -> {
-                false
+                printer.printError("Invalid option")
+                true
             }
         }
     }

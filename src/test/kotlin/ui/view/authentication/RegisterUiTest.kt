@@ -4,7 +4,7 @@ import ui.common.exception.EmailAlreadyExistsException
 import ui.common.exception.EmptyFieldException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.authentication.RegisterUserUseCase
+import domain.useCase.authentication.RegisterUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -12,8 +12,6 @@ import io.mockk.mockk
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.assertThrows
 import ui.common.Printer
 import ui.common.Reader
 import ui.common.Validator
@@ -52,14 +50,15 @@ class RegisterUiTest {
         coVerify { printer.printInfoLine("Please enter your registration credentials :") }
 
     }
-    @Disabled
+
     @Test
     fun `should throw EmptyFieldException when user input is null`() = runTest {
+        val exception = EmptyFieldException()
         every { reader.readInput() } returns null
 
-        assertThrows<EmptyFieldException> {
-            registerUi.show()
-        }
+        registerUi.show()
+
+        handler.printHandledError(exception)
     }
 
     @Test

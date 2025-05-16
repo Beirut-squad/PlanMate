@@ -5,7 +5,9 @@ import data.datasource.csv.helper.FileName
 import data.datasource.csv.parser.CsvParser
 import java.io.File
 
-class CsvReader<T>(private val parser: CsvParser<T>){
+class CsvReader<T>(
+    private val parser: CsvParser<T>
+){
     suspend fun read(fileName: String): List<T>{
         if (fileName !in FileName.allFiles)
             throw InvalidFileNameException()

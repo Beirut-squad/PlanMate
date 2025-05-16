@@ -1,7 +1,7 @@
 package ui.view.user.admin.log.task
 
 import creator_helper.*
-import domain.use_case.authentication.GetUserByIdUseCase
+import domain.useCase.authentication.GetUserByIdUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -135,8 +135,8 @@ class TaskLogUiTest{
             val state2 = createStateHelper(name = "s2")
 
 
-            val currentTask = createTaskHelper(state = state1)
-            val previousTask = createTaskHelper(state = state2)
+            val currentTask = createTaskHelper(taskState = state1)
+            val previousTask = createTaskHelper(taskState = state2)
 
             val taskLog = createTaskLogHelper(previousEntity = previousTask , currentEntity = currentTask)
             val index = 0

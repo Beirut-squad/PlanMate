@@ -4,10 +4,10 @@ import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
 import domain.model.Task
 import domain.model.User
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.GetProjectByIdUseCase
-import domain.use_case.task.EditTaskUseCase
-import domain.use_case.task.GetProjectTasksUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.project.GetProjectByIdUseCase
+import domain.useCase.task.EditTaskUseCase
+import domain.useCase.task.GetProjectTasksUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader
@@ -15,6 +15,7 @@ import ui.common.UiScreen
 import ui.view.user.mate.UserProjectsUi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ui.view.project.ProjectTasksUi
 import java.util.*
 
 class EditTaskUi(
@@ -52,10 +53,11 @@ class EditTaskUi(
                         Task #${index + 1}
                         - Title: ${task.title}
                         - Description: ${task.description}
-                        - State: ${task.state.name}
+                        - State: ${task.taskState.name}
                         """.trimIndent()
                     )
                 }
+                printer.printOption("${tasks.size + 1}. Go Back")
                 handleEditTask(tasks, user)
             }
         )
@@ -65,17 +67,29 @@ class EditTaskUi(
         tasks: List<Task>,
         user: User
     ) {
-        printer.printLoader("Enter the task number to edit(or any thing to Go Back ):")
-        val input = reader.readInput()?.trim()
-        val number = input?.toIntOrNull()
+        printer.printLoader("Enter the task number to edit:")
 
-        if (number == null || number !in 1..tasks.size) {
-            printer.printError("Invalid input. Returning to the projects screen.")
-            return
+        var running = true
+        while (running) {
+            val input = reader.readInt()
+
+            when {
+                input != null && input in 1..tasks.size -> {
+                    val selectedTask = tasks[input - 1]
+                    editSelectedTask(selectedTask, user.id)
+                }
+
+                input == tasks.size + 1 -> {
+                    ProjectTasksUi(projectId).show()
+                    running = false
+                }
+
+                else -> {
+                    printer.printError("Invalid option")
+                    break
+                }
+            }
         }
-
-        val selectedTask = tasks[number - 1]
-        editSelectedTask(selectedTask, user.id)
     }
 
     private suspend fun editSelectedTask(task: Task, currentUser: UUID) {
@@ -93,7 +107,7 @@ class EditTaskUi(
                     """
             Title: ${task.title}
             Description: ${task.description}
-            State: ${task.state.name}
+            State: ${task.taskState.name}
             """.trimIndent()
                 )
 
@@ -101,8 +115,8 @@ class EditTaskUi(
                 val newDescription =
                     getValidInput("Enter new Description (Leave empty to keep the current):", task.description)
 
-                val selectedStateIndex = getValidStateInput(selectedProject, task.state.name)
-                val selectedState = selectedStateIndex?.let { selectedProject.states[it] } ?: task.state
+                val selectedStateIndex = getValidStateInput(selectedProject, task.taskState.name)
+                val selectedState = selectedStateIndex?.let { selectedProject.taskStates[it] } ?: task.taskState
 
                 executor.tryToExecute(
                     action = {
@@ -120,16 +134,16 @@ class EditTaskUi(
 
 
     private fun getValidInput(message: String, currentValue: String): String? {
-            printer.printLoader("$message (Current value: $currentValue)")
-            val input = reader.readInput()?.trim()
-            return input
+        printer.printLoader("$message (Current value: $currentValue)")
+        val input = reader.readInput()?.trim()
+        return input
 
     }
 
 
     private fun getValidStateInput(selectedProject: Project, currentStateName: String): Int? {
         printer.printOptions("Choose a state for the task (Current: $currentStateName):")
-        selectedProject.states.forEachIndexed { index, state ->
+        selectedProject.taskStates.forEachIndexed { index, state ->
             printer.printInfoLine("${index + 1}. ${state.name}")
         }
         printer.printLoader("Enter a number from the list above, or any other number to keep the current state.")
@@ -137,7 +151,7 @@ class EditTaskUi(
         val input = reader.readInput()?.trim()
         val selectedIndex = input?.toIntOrNull()?.minus(1)
 
-        return if (selectedIndex != null && selectedIndex in selectedProject.states.indices) {
+        return if (selectedIndex != null && selectedIndex in selectedProject.taskStates.indices) {
             selectedIndex
         } else {
             printer.printInfoLine("Keeping the current state: $currentStateName")

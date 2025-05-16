@@ -3,9 +3,9 @@ package ui.view.authentication
 import ui.common.exception.EmptyFieldException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-import domain.model.Role
+import domain.model.UserRole
 import domain.model.User
-import domain.use_case.authentication.LoginUseCase
+import domain.useCase.authentication.LoginUseCase
 import ui.view.user.mate.MateUi
 import ui.common.Printer
 import ui.common.Reader
@@ -60,7 +60,7 @@ class LoginUi(
     }
 
     private suspend fun checkAdminOrMate(user: User) {
-        if (user.role == Role.ADMIN) {
+        if (user.userRole == UserRole.ADMIN) {
             goToAminHomeScreen()
         } else {
             goToMateHomeScreen()

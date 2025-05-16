@@ -10,5 +10,5 @@ interface TaskRepository {
     suspend fun getAllTasks(): List<Task>
     suspend fun getTask(id: UUID): Task
     suspend fun getTaskByStateIdAndProjectId(projectId: UUID, stateId: UUID): List<Task>
-    suspend fun getAllTasksForProject(projectId: UUID): List<Task>
+    suspend fun getAllProjectTasks(projectId: UUID): List<Task>
 }

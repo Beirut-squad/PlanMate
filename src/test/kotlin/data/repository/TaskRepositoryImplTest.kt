@@ -1,7 +1,7 @@
 package data.repository
 
 import creator_helper.createTaskHelper
-import data.datasource.interfaces.TaskDataSource
+import data.datasource.TaskDataSource
 import ui.common.exception.TaskDeletionFailedException
 import ui.common.exception.TaskEditFailedException
 import ui.common.exception.TaskNotFoundException
@@ -123,7 +123,7 @@ class TaskRepositoryImplTest {
         val tasksList = listOf(testTask)
         coEvery { taskDataSource.getAllTasksForProject(any()) } returns tasksList
 
-        val result = taskRepository.getAllTasksForProject(projectId)
+        val result = taskRepository.getAllProjectTasks(projectId)
 
         assertEquals(tasksList, result)
         coVerify { taskDataSource.getAllTasksForProject(projectId) }

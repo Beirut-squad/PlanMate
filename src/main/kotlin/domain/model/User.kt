@@ -7,11 +7,11 @@ data class User(
     val name: String,
     val password: String,
     val email: String,
-    val role: Role,
+    val userRole: UserRole,
     val isDeleted: Boolean = false
 )
 
-enum class Role {
+enum class UserRole {
     ADMIN, MATE
 }
 

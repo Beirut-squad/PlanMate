@@ -2,7 +2,7 @@ package data.datasource.csv.parser
 
 import ui.common.exception.EmptyCSVFileException
 import ui.common.exception.InvalidDataFileException
-import domain.model.Role
+import domain.model.UserRole
 import domain.model.User
 import java.util.*
 
@@ -12,21 +12,32 @@ class UserParser : CsvParser<User> {
         if (trimmedLine.isBlank()) {
             throw EmptyCSVFileException()
         }
-        val fields = data.datasource.csv.helper.smartCsvSplit(trimmedLine).map { it.trim().removeSurrounding("[", "]").removeSurrounding("\"") }
+        val fields = data.datasource.csv.helper.smartCsvSplit(trimmedLine)
+            .map { it.trim()
+            .removeSurrounding("[", "]")
+            .removeSurrounding("\"") }
         val stringIdToUUID = UUID.fromString(fields[data.datasource.csv.column_index.UserColumnIndex.ID])
         val name = fields[data.datasource.csv.column_index.UserColumnIndex.NAME]
         val password = fields[data.datasource.csv.column_index.UserColumnIndex.PASSWORD]
         val email = fields[data.datasource.csv.column_index.UserColumnIndex.EMAIL]
-        val role = Role.valueOf(fields[data.datasource.csv.column_index.UserColumnIndex.ROLE])
+        val userRole = UserRole.valueOf(fields[data.datasource.csv.column_index.UserColumnIndex.ROLE])
         val isDeleted = fields[data.datasource.csv.column_index.UserColumnIndex.IS_DELETED].toBoolean()
-        if (stringIdToUUID == UUID(
-                0, 0
-            ) || name.isBlank() || password.isBlank() || email.isBlank() || role.toString().isBlank()
+
+        if (stringIdToUUID == UUID(0, 0)
+            || name.isBlank()
+            || password.isBlank()
+            || email.isBlank()
+            || userRole.toString().isBlank()
         ) {
             throw InvalidDataFileException()
         }
         return User(
-            id = stringIdToUUID, name = name, password = password, email = email, role = role, isDeleted = isDeleted
+            id = stringIdToUUID,
+            name = name,
+            password = password,
+            email = email,
+            userRole = userRole,
+            isDeleted = isDeleted
         )
     }
 

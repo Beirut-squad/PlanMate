@@ -1,6 +1,6 @@
 package data.repository
 
-import data.datasource.interfaces.TaskDataSource
+import data.datasource.TaskDataSource
 import domain.model.Task
 import domain.repository.TaskRepository
 import java.util.*
@@ -32,7 +32,7 @@ class TaskRepositoryImpl(
         return taskDataSource.getTasksByStateAndProjectIds(projectId, stateId)
     }
 
-    override suspend fun getAllTasksForProject(projectId: UUID): List<Task> {
+    override suspend fun getAllProjectTasks(projectId: UUID): List<Task> {
         return taskDataSource.getAllTasksForProject(projectId)
     }
 }

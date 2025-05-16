@@ -22,7 +22,8 @@ class ProjectLogParser(private val projectParser: ProjectParser): CsvParser<Proj
         cleanedLine = line.removeSurrounding("[", "]")
         val parts = data.datasource.csv.helper.smartCsvSplit(cleanedLine)
 
-        if (projectParser.parseLine(parts[ProjectLogColumnIndex.PREVIOUS_ENTITY]) == null || projectParser.parseLine(parts[ProjectLogColumnIndex.CURRENT_ENTITY]) == null)
+        if (projectParser.parseLine(parts[ProjectLogColumnIndex.PREVIOUS_ENTITY]) == null
+            || projectParser.parseLine(parts[ProjectLogColumnIndex.CURRENT_ENTITY]) == null)
             throw CsvValidationException()
 
         return ProjectLog(

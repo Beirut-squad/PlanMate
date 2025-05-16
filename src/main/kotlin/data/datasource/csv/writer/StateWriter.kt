@@ -2,14 +2,14 @@ package data.datasource.csv.writer
 
 import ui.common.exception.InvalidFileNameException
 import data.datasource.csv.helper.isValidFileName
-import domain.model.State
+import domain.model.TaskState
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.util.UUID
 
-class StateWriter : CsvWriter<State> {
-    override suspend fun writeToFile(items: List<State>, filePath: String) {
+class StateWriter : CsvWriter<TaskState> {
+    override suspend fun writeToFile(items: List<TaskState>, filePath: String) {
         val file = File(filePath)
         if (!isValidFileName(file.name))
             throw InvalidFileNameException()
@@ -21,14 +21,14 @@ class StateWriter : CsvWriter<State> {
         writer.close()
     }
 
-    private fun writeState(items: List<State>, writer: BufferedWriter) {
+    private fun writeState(items: List<TaskState>, writer: BufferedWriter) {
         items.forEach { state ->
             if (isValidState(state))
                 writer.write("[${state.id},${state.name}]\n")
         }
     }
 
-    private fun isValidState(state: State): Boolean {
-        return state.name.isNotBlank() && state.id != UUID(0, 0)
+    private fun isValidState(taskState: TaskState): Boolean {
+        return taskState.name.isNotBlank() && taskState.id != UUID(0, 0)
     }
 }

@@ -2,9 +2,9 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.Project
-import domain.use_case.authentication.GetCurrentUserUseCase
-import domain.use_case.project.EditProjectDescriptionUseCase
-import domain.use_case.project.EditProjectTitleUseCase
+import domain.useCase.authentication.GetCurrentUserUseCase
+import domain.useCase.project.EditProjectDescriptionUseCase
+import domain.useCase.project.EditProjectTitleUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader

@@ -1,13 +1,13 @@
 package di
 
-import data.datasource.interfaces.AuthenticationDataSource
-import data.datasource.mongo.implementation.AuthenticationMongoDataSourceImpl
-import data.datasource.mongo.implementation.LogDataSourceMongoImpl
-import data.datasource.interfaces.LogDataSource
-import data.datasource.interfaces.ProjectDataSource
-import data.datasource.interfaces.TaskDataSource
-import data.datasource.mongo.implementation.ProjectDataSourceMongoImpl
-import data.datasource.mongo.implementation.TaskMongoDataSourceImpl
+import data.datasource.AuthenticationDataSource
+import data.datasource.mongo.AuthenticationMongoDataSourceImpl
+import data.datasource.mongo.LogDataSourceMongoImpl
+import data.datasource.LogDataSource
+import data.datasource.ProjectDataSource
+import data.datasource.TaskDataSource
+import data.datasource.mongo.ProjectDataSourceMongoImpl
+import data.datasource.mongo.TaskMongoDataSourceImpl
 import data.repository.AuthenticationRepositoryImpl
 import data.datasource.mongo.mongo_db_connection.MongoConnection
 import data.repository.LogRepositoryImpl

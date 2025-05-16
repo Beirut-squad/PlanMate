@@ -49,8 +49,11 @@ class AdminUi : UiScreen, KoinComponent {
                 }
 
                 5 -> {
-                    printer.printGoodbyeMessage("Goodbye")
                     break
+                }
+
+                else -> {
+                    printer.printError("Invalid option")
                 }
 
             }

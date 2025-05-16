@@ -2,8 +2,8 @@ package ui.view.user.admin.project
 
 import ui.common.exception.handler.SafeExecutor
 import domain.model.User
-import domain.use_case.authentication.GetAllUsersUseCase
-import domain.use_case.project.AddProjectMateUseCase
+import domain.useCase.authentication.GetAllUsersUseCase
+import domain.useCase.project.AddProjectMateUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.Reader

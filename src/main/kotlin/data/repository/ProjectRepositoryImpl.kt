@@ -1,9 +1,9 @@
 package data.repository
 
 import domain.model.Project
-import domain.model.State
+import domain.model.TaskState
 import domain.model.User
-import data.datasource.interfaces.ProjectDataSource
+import data.datasource.ProjectDataSource
 import domain.repository.ProjectRepository
 import java.util.*
 
@@ -31,23 +31,23 @@ class ProjectRepositoryImpl(
         return projectDataSource.getProject(id)
     }
 
-    override suspend fun addStateToProject(projectId: UUID, state: State): Project {
-        return projectDataSource.addState(projectId, state)
+    override suspend fun addStateToProject(projectId: UUID, taskState: TaskState): Project {
+        return projectDataSource.addState(projectId, taskState)
     }
 
-    override suspend fun editStateToProject(projectId: UUID, state: State): Project {
-        return projectDataSource.editState(projectId, state)
+    override suspend fun editStateToProject(projectId: UUID, taskState: TaskState): Project {
+        return projectDataSource.editState(projectId, taskState)
     }
 
-    override suspend fun removeStateFromProject(projectId: UUID, state: State): Project {
-        return projectDataSource.deleteState(projectId, state)
+    override suspend fun deleteStateFromProject(projectId: UUID, taskState: TaskState): Project {
+        return projectDataSource.deleteState(projectId, taskState)
     }
 
     override suspend fun addMateToProject(projectId: UUID, user: User): Project {
         return projectDataSource.addMate(projectId, user)
     }
 
-    override suspend fun getProjectsForUserById(userid: UUID): List<Project> {
+    override suspend fun getUserProjectsById(userid: UUID): List<Project> {
         return projectDataSource.getUserProjectsById(userid)
     }
 

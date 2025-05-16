@@ -1,10 +1,11 @@
 package ui.view.project
 
 import ui.common.exception.handler.SafeExecutor
-import domain.use_case.project.GetAllProjectsUseCase
+import domain.useCase.project.GetAllProjectsUseCase
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.Printer
 import ui.common.UiScreen
+import ui.extensions.formatDateTime
 
 class ViewProjectsUi(
     private val printer: Printer,
@@ -33,8 +34,8 @@ class ViewProjectsUi(
                         - Made by: ${project.creatorUserID}
                         - Name: ${project.title}
                         - Description: ${project.description}
-                        - Creation Date: ${project.createdAt}
-                        - Update Date: ${project.updatedAt}
+                        - Creation Date: ${project.createdAt.formatDateTime()}
+                        - Update Date: ${project.updatedAt.formatDateTime()}
                     """.trimIndent()
                     )
                 }

@@ -16,11 +16,21 @@ class UserWriter : CsvWriter<User> {
     private fun writeUser(items: List<User>, file: File) {
         file.writeText("")
         items.forEach { user ->
-            file.appendText("[${user.id},${user.name},${user.password},${user.email},${user.role},${user.isDeleted}]\n")
+            file.appendText("[" +
+                    "${user.id}," +
+                    "${user.name}," +
+                    "${user.password}," +
+                    "${user.email}," +
+                    "${user.userRole}," +
+                    "${user.isDeleted}]\n"
+            )
         }
     }
 
     internal fun isValidUser(user: User): Boolean {
-        return user.id != UUID(0, 0) && user.name.isNotBlank() && user.password.isNotBlank() && user.email.isNotBlank()
+        return user.id != UUID(0, 0)
+                && user.name.isNotBlank()
+                && user.password.isNotBlank()
+                && user.email.isNotBlank()
     }
 }

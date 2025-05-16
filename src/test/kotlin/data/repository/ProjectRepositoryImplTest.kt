@@ -4,8 +4,8 @@ package data.repository
 import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
 import creator_helper.createUserHelper
-import data.datasource.interfaces.ProjectDataSource
-import domain.model.Role
+import data.datasource.ProjectDataSource
+import domain.model.UserRole
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -115,7 +115,7 @@ class ProjectRepositoryImplTest {
         val project = testProject
         coEvery { projectDataSource.deleteState(projectId, state) } returns project
 
-        val result = projectRepository.removeStateFromProject(projectId, state)
+        val result = projectRepository.deleteStateFromProject(projectId, state)
 
         assertEquals(project, result)
         coVerify { projectDataSource.deleteState(projectId, state) }
@@ -124,7 +124,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `test add mate to project`() = runTest {
         val projectId = UUID.randomUUID()
-        val user = createUserHelper(role = Role.MATE)
+        val user = createUserHelper(userRole = UserRole.MATE)
         val project = testProject
         coEvery { projectDataSource.addMate(projectId, user) } returns project
 
@@ -144,7 +144,7 @@ class ProjectRepositoryImplTest {
         )
         coEvery { projectDataSource.getUserProjectsById(userId) } returns projects
 
-        val result = projectRepository.getProjectsForUserById(userId)
+        val result = projectRepository.getUserProjectsById(userId)
 
         assertEquals(projects, result)
         coVerify { projectDataSource.getUserProjectsById(userId) }
