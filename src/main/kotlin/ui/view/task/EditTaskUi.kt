@@ -69,10 +69,10 @@ class EditTaskUi(
     ) {
         printer.printLoader("Enter the task number to edit:")
 
-        val input = reader.readInt()
-
         var running = true
         while (running) {
+            val input = reader.readInt()
+
             when {
                 input != null && input in 1..tasks.size -> {
                     val selectedTask = tasks[input - 1]

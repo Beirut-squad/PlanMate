@@ -4,7 +4,6 @@ import creator_helper.createProjectHelper
 import creator_helper.createStateHelper
 import creator_helper.createTaskHelper
 import creator_helper.createUserHelper
-
 import domain.model.Task
 import domain.useCase.authentication.GetCurrentUserUseCase
 import domain.useCase.project.GetProjectByIdUseCase
@@ -20,22 +19,23 @@ import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
 import ui.common.Printer
 import ui.common.Reader
+import ui.common.exception.TaskEditFailedException
 import ui.common.exception.handler.ExceptionHandler
 import ui.common.exception.handler.SafeExecutor
-
 import ui.view.user.mate.UserProjectsUi
 import java.util.*
 
 class EditTaskUiTest {
     private val printer: Printer = mockk(relaxed = true)
-    private val reader: Reader = mockk()
-    private val getCurrentUserUseCase: GetCurrentUserUseCase = mockk()
-    private val getProjectTasksUseCase: GetProjectTasksUseCase = mockk()
-    private val getProjectByIdUseCase: GetProjectByIdUseCase = mockk()
+    private val reader: Reader = mockk(relaxed = true)
+    private val getCurrentUserUseCase: GetCurrentUserUseCase = mockk(relaxed = true)
+    private val getProjectTasksUseCase: GetProjectTasksUseCase = mockk(relaxed = true)
+    private val getProjectByIdUseCase: GetProjectByIdUseCase = mockk(relaxed = true)
     private val editTaskUseCase: EditTaskUseCase = mockk(relaxed = true)
     private val exceptionHandler: ExceptionHandler = mockk(relaxed = true)
     private val executor: SafeExecutor = spyk()
     private val projectId = UUID.randomUUID()
+    private val user = createUserHelper(id = UUID.randomUUID())
 
     private lateinit var editTaskUi: EditTaskUi
 
@@ -70,29 +70,37 @@ class EditTaskUiTest {
 
     @Test
     fun `should edit task when valid inputs are provided`() = runTest {
-        // Given
-        val user = createUserHelper()
+        // Arrange
         val state1 = createStateHelper(name = "To Do")
         val state2 = createStateHelper(name = "In Progress")
         val task = createTaskHelper(projectId = projectId, taskState = state1)
         val tasks = listOf(task)
         val project = createProjectHelper(id = projectId, taskState = listOf(state1, state2))
 
+        // Mocks for dependencies
         coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        every { reader.readInput() } returnsMany listOf("1", "New Title", "New Description", "2")
 
-        // When
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf("New Title", "New Description", "2")
+
+        // Act
         editTaskUi.show()
 
-        // Then
-        coVerify {
-            editTaskUseCase.editTask(task, "New Title", "New Description", state2, user.id)
-            printer.printInfoLine("Task updated successfully!")
-            anyConstructed<UserProjectsUi>().show()
+        // Assert
+        coVerify(exactly = 1) {
+            editTaskUseCase.editTask(
+                match { it.id == task.id },
+                "New Title",
+                "New Description",
+                match { it.name == "In Progress" },
+                user.id
+            )
         }
+        verify { printer.printInfoLine("Task updated successfully!") }
+
     }
 
 
@@ -116,7 +124,6 @@ class EditTaskUiTest {
     @Test
     fun `should return to projects screen for invalid task number`() = runTest {
         // Given
-        val user = createUserHelper()
         val state = createStateHelper()
         val task = createTaskHelper(projectId = projectId, taskState = state)
         val tasks = listOf(task)
@@ -124,14 +131,14 @@ class EditTaskUiTest {
         coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
-        every { reader.readInput() } returns "99"
+        every { reader.readInt() } returns 99
 
         // When
         editTaskUi.show()
 
         // Then
         verify {
-            printer.printError("Invalid input. Returning to the projects screen.")
+            printer.printError("Invalid option")
         }
 
         coVerify(exactly = 0) {
@@ -142,7 +149,6 @@ class EditTaskUiTest {
     @Test
     fun `should return to projects screen for non-numeric task input`() = runTest {
         // Given
-        val user = createUserHelper()
         val state = createStateHelper()
         val task = createTaskHelper(projectId = projectId, taskState = state)
         val tasks = listOf(task)
@@ -151,15 +157,45 @@ class EditTaskUiTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
 
         // Non-numeric input
-        every { reader.readInput() } returns "abc"
+        every { reader.readInt() } returns null
 
         // When
         editTaskUi.show()
 
         // Then
         verify {
-            printer.printError("Invalid input. Returning to the projects screen.")
+            printer.printError("Invalid option")
         }
+    }
+
+    @Test
+    fun `should handle exception during task edit`() = runTest {
+        // Given
+        val state = createStateHelper()
+        val task = createTaskHelper(projectId = projectId, taskState = state)
+        val tasks = listOf(task)
+        val project = createProjectHelper(id = projectId, taskState = listOf(state))
+        val exception = TaskEditFailedException()
+
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
+        coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
+        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
+        coEvery { editTaskUseCase.editTask(any(), any(), any(), any(), any()) } throws exception
+
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf(
+            "New Title",
+            "New Description",
+            "1"
+        )
+
+        // When
+        editTaskUi.show()
+
+        // Then
+        coVerify { exceptionHandler.printHandledError(exception) }
+        verify(exactly = 0) { printer.printInfoLine("Task updated successfully!") }
+        coVerify(exactly = 0) { UserProjectsUi().show() }
     }
 
     @Test
@@ -178,17 +214,8 @@ class EditTaskUiTest {
     @Test
     fun `should handle exception during project fetch`() = runTest {
         // Given
-        val user = createUserHelper()
-        val state = createStateHelper()
-        val task = createTaskHelper(projectId = projectId, taskState = state)
-        val tasks = listOf(task)
-        val exception = RuntimeException("Failed to fetch project")
-
-        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
-        coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } throws exception
-
-        every { reader.readInput() } returns "1"
+        val exception = Exception()
+        coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } throws exception
 
         // When
         editTaskUi.show()
@@ -198,21 +225,25 @@ class EditTaskUiTest {
     }
 
     @Test
-    fun `should handle exception during task edit`() = runTest {
+    fun `should handle exception when calling getProjectById in editSelectedTask`() = runTest {
         // Given
-        val user = createUserHelper()
         val state = createStateHelper()
         val task = createTaskHelper(projectId = projectId, taskState = state)
         val tasks = listOf(task)
-        val project = createProjectHelper(id = projectId, taskState = listOf(state))
-        val exception = RuntimeException("Failed to edit task")
+        val exception = TaskEditFailedException()
 
         coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
-        coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
-        coEvery { editTaskUseCase.editTask(any(), any(), any(), any(), any()) } throws exception
+        coEvery {
+            getProjectByIdUseCase.getProjectById(task.projectId)
+        } throws exception
 
-        every { reader.readInput() } returnsMany listOf("1", "New Title", "New Description", "1")
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf(
+            "New Title",
+            "New Description",
+            "1"
+        )
 
         // When
         editTaskUi.show()
@@ -220,35 +251,41 @@ class EditTaskUiTest {
         // Then
         coVerify { exceptionHandler.printHandledError(exception) }
     }
+
     @Test
     fun `should accept empty input for title and description`() = runTest {
         // Given
-        val user = createUserHelper()
-        val state = createStateHelper()
-        val task = createTaskHelper(projectId = projectId, taskState = state, title = "Original Title")
+        val state1 = createStateHelper(name = "To Do")
+        val state2 = createStateHelper(name = "In Progress")
+        val task = createTaskHelper(projectId = projectId, taskState = state1, title = "Original Title")
         val tasks = listOf(task)
-        val project = createProjectHelper(id = projectId, taskState = listOf(state))
+        val project = createProjectHelper(id = projectId, taskState = listOf(state1, state2))
 
         coEvery { getProjectTasksUseCase.getProjectTasks(projectId) } returns tasks
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        // Empty inputs for title and description
-        every { reader.readInput() } returnsMany listOf("1", "", "", "1")
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf("", "", "2")
 
         // When
         editTaskUi.show()
 
         // Then
         coVerify {
-            editTaskUseCase.editTask(task, "", "", state, user.id)
+            editTaskUseCase.editTask(
+                task,
+                "",
+                "",
+                state2,
+                user.id
+            )
         }
     }
 
     @Test
     fun `should change state when valid state number is provided`() = runTest {
         // Given
-        val user = createUserHelper()
         val state1 = createStateHelper(name = "To Do")
         val state2 = createStateHelper(name = "In Progress")
         val task = createTaskHelper(projectId = projectId, taskState = state1)
@@ -259,8 +296,8 @@ class EditTaskUiTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        // Keep original title and description, change state
-        every { reader.readInput() } returnsMany listOf("1", task.title, task.description, "2")
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf(task.title, task.description, "2")
 
         // When
         editTaskUi.show()
@@ -270,10 +307,10 @@ class EditTaskUiTest {
             editTaskUseCase.editTask(task, task.title, task.description, state2, user.id)
         }
     }
+
     @Test
     fun `should keep current state when state input is invalid`() = runTest {
         // Given
-        val user = createUserHelper()
         val state1 = createStateHelper(name = "To Do")
         val state2 = createStateHelper(name = "In Progress")
         val task = createTaskHelper(projectId = projectId, taskState = state1)
@@ -284,7 +321,8 @@ class EditTaskUiTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        every { reader.readInput() } returnsMany listOf("1", "", "", "99")
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf("", "", "99")
 
         // When
         editTaskUi.show()
@@ -295,10 +333,10 @@ class EditTaskUiTest {
             editTaskUseCase.editTask(task, "", "", state1, user.id)
         }
     }
+
     @Test
     fun `should keep current state when state input is non-numeric`() = runTest {
         // Given
-        val user = createUserHelper()
         val state1 = createStateHelper(name = "To Do")
         val state2 = createStateHelper(name = "In Progress")
         val task = createTaskHelper(projectId = projectId, taskState = state1)
@@ -309,7 +347,8 @@ class EditTaskUiTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        every { reader.readInput() } returnsMany listOf("1", "", "", "abc")
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf("", "", "abc")
 
         // When
         editTaskUi.show()
@@ -320,10 +359,10 @@ class EditTaskUiTest {
             editTaskUseCase.editTask(task, "", "", state1, user.id)
         }
     }
+
     @Test
     fun `should keep current state when state input is null`() = runTest {
         // Given
-        val user = createUserHelper()
         val state1 = createStateHelper(name = "To Do")
         val state2 = createStateHelper(name = "In Progress")
         val task = createTaskHelper(projectId = projectId, taskState = state1)
@@ -334,7 +373,8 @@ class EditTaskUiTest {
         coEvery { getCurrentUserUseCase.getCurrentUser() } returns user
         coEvery { getProjectByIdUseCase.getProjectById(projectId) } returns project
 
-        every { reader.readInput() } returnsMany listOf("1", "", "", null)
+        every { reader.readInt() } returnsMany listOf(1, 99)
+        every { reader.readInput() } returnsMany listOf("", "", null)
 
         // When
         editTaskUi.show()
@@ -345,5 +385,4 @@ class EditTaskUiTest {
             editTaskUseCase.editTask(task, "", "", state1, user.id)
         }
     }
-
 }
